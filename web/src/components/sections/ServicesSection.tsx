@@ -20,6 +20,7 @@ export function ServicesSection() {
                   <img src={service.image} alt={service.name} className={styles.image} loading="lazy" />
                 </div>
                 <h3 className={styles.name}>{service.name}</h3>
+                <p className={styles.description}>{service.description}</p>
               </article>
             ))}
           </div>

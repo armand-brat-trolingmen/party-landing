@@ -1,38 +1,34 @@
 .scene {
   position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(17rem, 1.3fr) minmax(0, 1fr);
-  align-items: end;
-  gap: var(--space-4);
+  display: block;
   min-height: clamp(25rem, 42vw, 33rem);
-  padding: clamp(1rem, 2vw, 1.5rem);
 }
 
-.sideCard,
-.centerCard {
+.frame {
   position: relative;
-  border-radius: calc(var(--radius-card) - 6px);
+  min-height: inherit;
+  border-radius: calc(var(--radius-card) + 0.85rem);
+  padding: clamp(1rem, 2.8vw, 1.8rem);
   overflow: hidden;
-  box-shadow: 0 22px 40px rgba(107, 74, 53, 0.14);
+  background:
+    radial-gradient(circle at 20% 18%, rgba(247, 166, 195, 0.22), transparent 38%),
+    radial-gradient(circle at 82% 20%, rgba(246, 220, 107, 0.16), transparent 42%),
+    linear-gradient(160deg, #5d3d2d 0%, #4a3025 44%, #3a251d 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 30px 56px rgba(63, 40, 29, 0.3);
 }
 
-.sideCard {
-  align-self: center;
-  background: linear-gradient(180deg, rgba(255, 253, 245, 0.98), rgba(255, 243, 228, 0.92));
-  border: 1px solid rgba(228, 87, 69, 0.12);
-}
-
-.sideCardLeft {
-  transform: rotate(-7deg) translateY(1rem);
-}
-
-.sideCardRight {
-  transform: rotate(7deg) translateY(2rem);
-}
-
-.sideMedia {
-  aspect-ratio: 4 / 5;
-  background: linear-gradient(180deg, rgba(247, 166, 195, 0.18), rgba(246, 220, 107, 0.15));
+.card {
+  position: relative;
+  display: grid;
+  width: clamp(9.5rem, 24vw, 13rem);
+  border-radius: calc(var(--radius-card) - 4px);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 0 18px 38px rgba(30, 19, 14, 0.36);
+  background: linear-gradient(180deg, rgba(255, 253, 245, 0.96), rgba(255, 243, 229, 0.91));
 }
 
 .vector {
@@ -40,70 +36,111 @@
   height: 100%;
 }
 
-.sideLabel,
-.centerLabel {
+.media {
+  aspect-ratio: 4 / 5;
+}
+
+.label {
   position: absolute;
-  left: 1rem;
-  bottom: 1rem;
+  left: 0.8rem;
+  bottom: 0.8rem;
   z-index: 1;
-  padding: 0.45rem 0.85rem;
+  padding: 0.4rem 0.72rem;
   border-radius: var(--radius-pill);
-  background: rgba(255, 253, 245, 0.9);
+  background: rgba(255, 252, 246, 0.88);
   backdrop-filter: blur(10px);
   color: var(--accent-chocolate);
-  font-size: 0.95rem;
+  font-size: 0.88rem;
   font-weight: 600;
 }
 
-.centerCard {
-  align-self: stretch;
-  display: grid;
-  min-height: 100%;
-  padding: 1rem;
-  background:
-    radial-gradient(circle at top, rgba(247, 166, 195, 0.34), transparent 38%),
-    linear-gradient(180deg, rgba(255, 252, 244, 0.98), rgba(255, 243, 227, 0.96));
-  border: 1px solid rgba(107, 74, 53, 0.08);
-}
-
-.centerMedia {
-  position: relative;
-  z-index: 1;
-  align-self: end;
-  aspect-ratio: 4 / 3;
-  padding-inline: clamp(0.25rem, 1vw, 0.75rem);
-}
-
-.centerGlow {
+.cardCottonCandy {
   position: absolute;
-  inset: auto 14% 6% 14%;
-  height: 18%;
-  border-radius: 50%;
-  background: rgba(246, 220, 107, 0.42);
-  filter: blur(28px);
+  left: 7%;
+  bottom: 16%;
+  z-index: 2;
+  transform: rotate(-11deg);
 }
 
-.centerLabel {
-  bottom: 1.25rem;
+.cardFoodTruck {
+  position: absolute;
   left: 50%;
-  transform: translateX(-50%);
+  bottom: 8%;
+  z-index: 3;
+  width: clamp(14rem, 38vw, 20rem);
+  transform: translateX(-50%) rotate(-1.5deg);
+}
+
+.cardChocolateFountain {
+  position: absolute;
+  right: 7%;
+  bottom: 14%;
+  z-index: 1;
+  transform: rotate(10deg);
+}
+
+.cardFoodTruck .media {
+  aspect-ratio: 4 / 3;
+}
+
+.cardCottonCandy .media {
+  background: linear-gradient(180deg, rgba(247, 166, 195, 0.27), rgba(255, 231, 240, 0.24));
+}
+
+.cardFoodTruck .media {
+  background: linear-gradient(180deg, rgba(246, 220, 107, 0.3), rgba(255, 249, 228, 0.2));
+}
+
+.cardChocolateFountain .media {
+  background: linear-gradient(180deg, rgba(121, 82, 62, 0.2), rgba(247, 218, 190, 0.22));
+}
+
+.frame::after {
+  content: '';
+  position: absolute;
+  inset: auto 12% 7% 12%;
+  z-index: 0;
+  height: 16%;
+  border-radius: 50%;
+  background: rgba(246, 220, 107, 0.34);
+  filter: blur(26px);
 }
 
 @media (max-width: 900px) {
   .scene {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    min-height: auto;
-    gap: var(--space-3);
+    min-height: clamp(19rem, 78vw, 24rem);
   }
 
-  .centerCard {
-    grid-column: 1 / -1;
-    order: -1;
-    min-height: 18rem;
+  .frame {
+    min-height: inherit;
+    padding: 0.85rem;
   }
 
-  .sideCardLeft,
-  .sideCardRight {
-    transform: rotate(0deg) translateY(0);
+  .card {
+    width: clamp(7.6rem, 36vw, 10.8rem);
+  }
+
+  .cardCottonCandy {
+    left: 2%;
+    bottom: 17%;
+    transform: rotate(-7deg);
+  }
+
+  .cardFoodTruck {
+    width: clamp(11.5rem, 57vw, 16rem);
+    bottom: 8%;
+    transform: translateX(-50%) rotate(-1deg);
+  }
+
+  .cardChocolateFountain {
+    right: 2%;
+    bottom: 15%;
+    transform: rotate(6deg);
+  }
+
+  .label {
+    left: 0.6rem;
+    bottom: 0.6rem;
+    font-size: 0.8rem;
   }
 }

@@ -1,5 +1,6 @@
 import { render, screen, within } from '@testing-library/react';
 import { ServicesSection } from './ServicesSection';
+import { services } from '../../data/siteContent';
 
 test('renders the services showcase with horizontal mobile scroll snap', () => {
   render(<ServicesSection />);
@@ -12,8 +13,8 @@ test('renders the services showcase with horizontal mobile scroll snap', () => {
 
   const stripQueries = within(strip);
 
-  expect(stripQueries.getByText('Фудтраки')).toBeInTheDocument();
-  expect(stripQueries.getByText('Сладкая вата')).toBeInTheDocument();
-  expect(stripQueries.getByText('Шоколадный фонтан')).toBeInTheDocument();
-  expect(stripQueries.getByText('Аниматоры')).toBeInTheDocument();
+  services.forEach((service) => {
+    expect(stripQueries.getByText(service.name)).toBeInTheDocument();
+    expect(stripQueries.getByText(service.description)).toBeInTheDocument();
+  });
 });

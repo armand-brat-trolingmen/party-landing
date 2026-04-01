@@ -41,8 +41,9 @@ export const galleryItems = [
   },
 ] as const;
 
-export const heroSceneCards = [
+export const heroSceneItems = [
   { id: 'cotton-candy', label: 'Сладкая вата', image: '/images/hero/cotton-candy-card.svg' },
+  { id: 'food-trucks', label: 'Фудтраки', image: '/images/hero/food-truck-card.svg' },
   {
     id: 'chocolate-fountain',
     label: 'Шоколадный фонтан',
@@ -50,30 +51,29 @@ export const heroSceneCards = [
   },
 ] as const;
 
-export const heroSceneCenter = {
-  label: 'Фудтраки',
-  image: '/images/hero/food-truck-card.svg',
-};
-
 export const services = [
   {
     id: 'food-trucks',
     name: 'Фудтраки',
     image: '/images/hero/food-truck-card.svg',
+    description: 'Собираем меню под вас: горячо, красиво, и гости просят добавку весь вечер.',
   },
   {
     id: 'cotton-candy',
     name: 'Сладкая вата',
     image: '/images/hero/cotton-candy-card.svg',
+    description: 'Легкие облака сладкой ваты добавляют кадрам магию и вам чуть больше флирта.',
   },
   {
     id: 'chocolate-fountain',
     name: 'Шоколадный фонтан',
     image: '/images/hero/chocolate-fountain-card.svg',
+    description: 'Текучий шоколад, фрукты и вау-эффект: к столу тянутся даже самые серьезные.',
   },
   {
     id: 'animators',
     name: 'Аниматоры',
     image: '/images/reference/animators-placeholder.svg',
+    description: 'Аниматоры держат ритм праздника, вовлекают гостей и снимают неловкость с первых минут.',
   },
 ] as const;
