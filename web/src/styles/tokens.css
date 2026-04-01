@@ -1,0 +1,15 @@
+:root {
+  --font-display: 'Cormorant Garamond', serif;
+  --font-body: 'Poppins', sans-serif;
+  --bg-page: #fffbe8;
+  --bg-surface: #fffdf5;
+  --accent-yellow: #f6dc6b;
+  --accent-red: #e45745;
+  --accent-pink: #f7a6c3;
+  --accent-chocolate: #6b4a35;
+  --text-primary: #3d2d25;
+  --text-muted: #756257;
+  --radius-pill: 999px;
+  --radius-card: 32px;
+  --shadow-soft: 0 18px 48px rgba(122, 89, 63, 0.12);
+}
