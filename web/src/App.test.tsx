@@ -22,3 +22,22 @@ test('renders the one-page anchor shell', () => {
   expect(screen.getByRole('heading', { name: 'О нас', level: 2 })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Частые вопросы', level: 2 })).toBeInTheDocument();
 });
+
+test('renders filled about and gallery sections with editorial object scenes', () => {
+  render(<App />);
+
+  const aboutSection = screen.getByTestId('section-about');
+  const gallerySection = screen.getByTestId('section-gallery');
+
+  expect(within(aboutSection).getByRole('heading', { level: 2, name: 'О нас' })).toBeInTheDocument();
+  expect(within(aboutSection).getByText('Собираем праздник как редакционную историю бренда.')).toBeInTheDocument();
+  expect(within(aboutSection).getByText('Продумываем свет, фактуры и сервировку до мелочей.')).toBeInTheDocument();
+  expect(within(aboutSection).getByText('Работаем бережно к площадке и вашему таймингу.')).toBeInTheDocument();
+
+  const gallery = within(gallerySection);
+
+  expect(gallery.getByRole('heading', { level: 2, name: 'Галерея' })).toBeInTheDocument();
+  expect(gallery.getByRole('img', { name: 'Фудтрак с вечерней неоновой вывеской' })).toBeInTheDocument();
+  expect(gallery.getByRole('img', { name: 'Шоколадный фонтан с ягодным декором' })).toBeInTheDocument();
+  expect(gallery.getByRole('img', { name: 'Тележка со сладкой ватой в пастельных тонах' })).toBeInTheDocument();
+});

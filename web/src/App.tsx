@@ -1,22 +1,12 @@
 import { SiteHeader } from './components/layout/SiteHeader';
+import { AboutSection } from './components/sections/AboutSection';
+import { GallerySection } from './components/sections/GallerySection';
 import { HeroSection } from './components/sections/HeroSection';
 import { ServicesSection } from './components/sections/ServicesSection';
 import { SectionHeading } from './components/ui/SectionHeading';
 import './styles/global.css';
 
 const shellSections = [
-  {
-    id: 'about',
-    title: 'О нас',
-    eyebrow: 'Кто мы',
-    description: 'Подготовим короткий рассказ о команде, подходе к организации и атмосфере каждого события.',
-  },
-  {
-    id: 'gallery',
-    title: 'Галерея',
-    eyebrow: 'Моменты праздника',
-    description: 'Этот блок станет витриной фотографий и ярких деталей прошедших мероприятий.',
-  },
   {
     id: 'reviews',
     title: 'Отзывы',
@@ -44,6 +34,8 @@ export default function App() {
       <main className="site-shell">
         <HeroSection />
         <ServicesSection />
+        <AboutSection />
+        <GallerySection />
         {shellSections.map((section) => (
           <section
             key={section.id}

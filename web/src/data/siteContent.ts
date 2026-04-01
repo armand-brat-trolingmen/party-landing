@@ -14,6 +14,33 @@ export const siteContent = {
     'Яркие фудтраки, сладкая вата, шоколадный фонтан и аниматоры для событий, которые хочется запомнить.',
 };
 
+export const aboutPoints = [
+  'Собираем праздник как редакционную историю бренда.',
+  'Продумываем свет, фактуры и сервировку до мелочей.',
+  'Работаем бережно к площадке и вашему таймингу.',
+] as const;
+
+export const galleryItems = [
+  {
+    id: 'food-truck-neon',
+    title: 'Фудтрак в вечернем свете',
+    image: '/images/hero/food-truck-card.svg',
+    alt: 'Фудтрак с вечерней неоновой вывеской',
+  },
+  {
+    id: 'chocolate-fountain-berries',
+    title: 'Шоколадный акцент',
+    image: '/images/hero/chocolate-fountain-card.svg',
+    alt: 'Шоколадный фонтан с ягодным декором',
+  },
+  {
+    id: 'cotton-candy-pastel',
+    title: 'Пастельная сладкая зона',
+    image: '/images/hero/cotton-candy-card.svg',
+    alt: 'Тележка со сладкой ватой в пастельных тонах',
+  },
+] as const;
+
 export const heroSceneCards = [
   { id: 'cotton-candy', label: 'Сладкая вата', image: '/images/hero/cotton-candy-card.svg' },
   {

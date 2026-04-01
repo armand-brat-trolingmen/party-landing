@@ -1,0 +1,40 @@
+.frame {
+  display: grid;
+  gap: clamp(1.25rem, 2.8vw, 2rem);
+  padding: clamp(1.5rem, 3.2vw, 2.3rem);
+  border-radius: calc(var(--radius-card) + 0.25rem);
+  background:
+    radial-gradient(circle at 12% 10%, rgba(247, 166, 195, 0.22), transparent 36%),
+    radial-gradient(circle at 90% 88%, rgba(246, 220, 107, 0.2), transparent 44%),
+    linear-gradient(160deg, rgba(255, 253, 245, 0.98), rgba(255, 246, 236, 0.96));
+  box-shadow: 0 22px 46px rgba(122, 89, 63, 0.12);
+}
+
+.points {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 0.9rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.point {
+  position: relative;
+  padding: 1.05rem 1.1rem 1.05rem 2rem;
+  border-radius: 1.1rem;
+  border: 1px solid rgba(122, 89, 63, 0.1);
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--text-primary);
+  font-size: 0.98rem;
+}
+
+.point::before {
+  content: '';
+  position: absolute;
+  inset: 1.45rem auto auto 0.95rem;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--accent-red), #f08d7f);
+}
