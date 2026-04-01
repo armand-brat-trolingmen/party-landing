@@ -1,15 +1,10 @@
 import { SiteHeader } from './components/layout/SiteHeader';
 import { HeroSection } from './components/sections/HeroSection';
+import { ServicesSection } from './components/sections/ServicesSection';
 import { SectionHeading } from './components/ui/SectionHeading';
 import './styles/global.css';
 
 const shellSections = [
-  {
-    id: 'services',
-    title: 'Услуги',
-    eyebrow: 'Что мы делаем',
-    description: 'Скоро здесь появится обзор фудтраков, сладкой ваты, аниматоров и праздничных сценариев.',
-  },
   {
     id: 'about',
     title: 'О нас',
@@ -48,6 +43,7 @@ export default function App() {
       <SiteHeader />
       <main className="site-shell">
         <HeroSection />
+        <ServicesSection />
         {shellSections.map((section) => (
           <section
             key={section.id}

@@ -27,3 +27,26 @@ export const heroSceneCenter = {
   label: 'Фудтраки',
   image: '/images/hero/food-truck-card.svg',
 };
+
+export const services = [
+  {
+    id: 'food-trucks',
+    name: 'Фудтраки',
+    image: '/images/hero/food-truck-card.svg',
+  },
+  {
+    id: 'cotton-candy',
+    name: 'Сладкая вата',
+    image: '/images/hero/cotton-candy-card.svg',
+  },
+  {
+    id: 'chocolate-fountain',
+    name: 'Шоколадный фонтан',
+    image: '/images/hero/chocolate-fountain-card.svg',
+  },
+  {
+    id: 'animators',
+    name: 'Аниматоры',
+    image: '/images/reference/animators-placeholder.svg',
+  },
+] as const;
