@@ -14,8 +14,13 @@ test('renders the approved Russian hero copy without a CTA and shows the food tr
 
   const scene = screen.getByTestId('hero-scene');
 
-  expect(within(scene).getByLabelText('Фудтраки')).toBeInTheDocument();
+  const truck = within(scene).getByRole('img', { name: 'Фудтраки' });
+  const cottonCandy = within(scene).getByRole('img', { name: 'Сладкая вата' });
+  const chocolateFountain = within(scene).getByRole('img', { name: 'Шоколадный фонтан' });
+
   expect(within(scene).getByText('Сладкая вата')).toBeInTheDocument();
   expect(within(scene).getByText('Шоколадный фонтан')).toBeInTheDocument();
-  expect(scene.querySelectorAll('img')).toHaveLength(0);
+  expect(truck).toHaveAttribute('src', expect.stringContaining('.svg'));
+  expect(cottonCandy).toHaveAttribute('src', expect.stringContaining('.svg'));
+  expect(chocolateFountain).toHaveAttribute('src', expect.stringContaining('.svg'));
 });
