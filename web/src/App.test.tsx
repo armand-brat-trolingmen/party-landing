@@ -1,10 +1,13 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import App from './App';
 
 test('renders the one-page anchor shell', () => {
   render(<App />);
 
-  expect(screen.getByRole('banner')).toBeInTheDocument();
+  const [pageBanner] = screen.getAllByRole('banner');
+
+  expect(pageBanner).toBeInTheDocument();
+  expect(within(pageBanner).getByRole('link', { name: 'Party' })).toBeInTheDocument();
   expect(screen.getByRole('main')).toBeInTheDocument();
   expect(screen.getByRole('navigation', { name: 'Основная навигация' })).toBeInTheDocument();
   expect(screen.getByTestId('section-hero')).toBeInTheDocument();
@@ -15,4 +18,7 @@ test('renders the one-page anchor shell', () => {
   expect(screen.getByTestId('section-faq')).toBeInTheDocument();
   expect(screen.getByLabelText('Частые вопросы')).toBeInTheDocument();
   expect(screen.getByTestId('section-contact')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Услуги', level: 2 })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'О нас', level: 2 })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Частые вопросы', level: 2 })).toBeInTheDocument();
 });

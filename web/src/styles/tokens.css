@@ -9,7 +9,17 @@
   --accent-chocolate: #6b4a35;
   --text-primary: #3d2d25;
   --text-muted: #756257;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
   --radius-pill: 999px;
   --radius-card: 32px;
   --shadow-soft: 0 18px 48px rgba(122, 89, 63, 0.12);
+  --shell-max-width: 1120px;
+  --header-offset: 7.5rem;
 }

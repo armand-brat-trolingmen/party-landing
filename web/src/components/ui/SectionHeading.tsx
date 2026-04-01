@@ -8,10 +8,10 @@ type SectionHeadingProps = {
 
 export function SectionHeading({ eyebrow, title, description }: SectionHeadingProps) {
   return (
-    <div>
-      {eyebrow ? <p>{eyebrow}</p> : null}
+    <header className="site-section__header">
+      {eyebrow ? <p className="site-section__eyebrow">{eyebrow}</p> : null}
       <h2>{title}</h2>
-      {description ? <p>{description}</p> : null}
-    </div>
+      {description ? <p className="site-section__description">{description}</p> : null}
+    </header>
   );
 }
