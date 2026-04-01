@@ -1,0 +1,20 @@
+.frame {
+  display: grid;
+  gap: clamp(1.3rem, 3vw, 2rem);
+  padding: clamp(1.25rem, 3vw, 2.1rem);
+  border-radius: calc(var(--radius-card) + 0.4rem);
+  background:
+    radial-gradient(circle at 14% 12%, rgba(246, 220, 107, 0.2), transparent 38%),
+    radial-gradient(circle at 88% 84%, rgba(247, 166, 195, 0.16), transparent 42%),
+    linear-gradient(170deg, rgba(255, 253, 246, 0.99), rgba(255, 246, 236, 0.97));
+  box-shadow: 0 22px 46px rgba(122, 89, 63, 0.14);
+}
+
+.note {
+  padding: 1rem 1.15rem;
+  border-radius: 1rem;
+  border: 1px dashed rgba(122, 89, 63, 0.24);
+  background: rgba(255, 255, 255, 0.78);
+  color: var(--text-primary);
+  font-size: 0.98rem;
+}

@@ -1,5 +1,6 @@
 import { render, screen, within } from '@testing-library/react';
 import App from './App';
+import { contactPlaceholderContent, faqPlaceholderContent } from './data/siteContent';
 
 test('renders the one-page anchor shell', () => {
   render(<App />);
@@ -22,14 +23,17 @@ test('renders the one-page anchor shell', () => {
   expect(screen.getByRole('heading', { name: 'Услуги', level: 2 })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'О нас', level: 2 })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Частые вопросы', level: 2 })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Контакты', level: 2 })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Отзывы', level: 2 })).toBeInTheDocument();
 });
 
-test('renders filled about section and real-photo reviews section', () => {
+test('renders filled about section, real-photo reviews, and blank-page faq/contact placeholders', () => {
   render(<App />);
 
   const aboutSection = screen.getByTestId('section-about');
   const reviewsSection = screen.getByTestId('section-reviews');
+  const faqSection = screen.getByTestId('section-faq');
+  const contactSection = screen.getByTestId('section-contact');
 
   expect(within(aboutSection).getByRole('heading', { level: 2, name: 'О нас' })).toBeInTheDocument();
   expect(within(aboutSection).getByText('Собираем праздник как редакционную историю бренда.')).toBeInTheDocument();
@@ -44,4 +48,11 @@ test('renders filled about section and real-photo reviews section', () => {
     'src',
     expect.stringContaining('/images/reviews/review-party-1.png'),
   );
+
+  const faq = within(faqSection);
+  const contact = within(contactSection);
+
+  expect(faq.getByText(faqPlaceholderContent.note)).toBeInTheDocument();
+
+  expect(contact.getByText(contactPlaceholderContent.note)).toBeInTheDocument();
 });

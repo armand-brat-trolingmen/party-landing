@@ -1,8 +1,10 @@
 .hero {
   position: relative;
   overflow: hidden;
-  padding-block: clamp(2rem, 6vw, 4.5rem);
-  min-height: clamp(30rem, 78vh, 44rem);
+  display: grid;
+  align-items: center;
+  padding-block: clamp(var(--space-8), 7vh, var(--space-16));
+  min-height: clamp(34rem, 100svh, 56rem);
   background:
     radial-gradient(circle at top left, rgba(247, 166, 195, 0.3), transparent 30%),
     radial-gradient(circle at right center, rgba(246, 220, 107, 0.28), transparent 32%),
@@ -54,8 +56,8 @@
 
 @media (max-width: 900px) {
   .hero {
-    min-height: auto;
-    padding-block: var(--space-10);
+    min-height: clamp(30rem, 100svh, 48rem);
+    padding-block: clamp(var(--space-8), 10vh, var(--space-12));
   }
 
   .container {
