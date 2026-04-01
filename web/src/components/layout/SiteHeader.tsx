@@ -1,4 +1,5 @@
 import { navItems, siteContent } from '../../data/siteContent';
+import { DonutLogo } from '../branding/DonutLogo';
 import styles from './SiteHeader.module.css';
 
 export function SiteHeader() {
@@ -6,7 +7,10 @@ export function SiteHeader() {
     <header className={styles.header}>
       <div className={styles.inner}>
         <a className={styles.brand} href="#hero">
-          {siteContent.brand}
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.6rem' }}>
+            <DonutLogo />
+            <span>{siteContent.brand}</span>
+          </span>
         </a>
         <p className={styles.tagline}>{siteContent.tagline}</p>
         <nav aria-label="Основная навигация" className={styles.nav}>

@@ -1,6 +1,6 @@
 import { SiteHeader } from './components/layout/SiteHeader';
+import { HeroSection } from './components/sections/HeroSection';
 import { SectionHeading } from './components/ui/SectionHeading';
-import { siteContent } from './data/siteContent';
 import './styles/global.css';
 
 const shellSections = [
@@ -47,23 +47,7 @@ export default function App() {
     <>
       <SiteHeader />
       <main className="site-shell">
-        <section
-          id="hero"
-          className="site-section site-section--hero"
-          data-testid="section-hero"
-          aria-label="Главный экран"
-        >
-          <div className="site-container">
-            <article className="site-section__content">
-              <div className="site-section__header">
-                <p className="site-section__eyebrow">Атмосфера праздника</p>
-                <h1>{siteContent.brand}</h1>
-                <p className="site-section__description">{siteContent.tagline}</p>
-                <p className="site-section__description">{siteContent.heroDescription}</p>
-              </div>
-            </article>
-          </div>
-        </section>
+        <HeroSection />
         {shellSections.map((section) => (
           <section
             key={section.id}

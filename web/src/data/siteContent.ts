@@ -13,3 +13,17 @@ export const siteContent = {
   heroDescription:
     'Яркие фудтраки, сладкая вата, шоколадный фонтан и аниматоры для событий, которые хочется запомнить.',
 };
+
+export const heroSceneCards = [
+  { id: 'cotton-candy', label: 'Сладкая вата', image: '/images/reference/cotton-candy-1.png' },
+  {
+    id: 'chocolate-fountain',
+    label: 'Шоколадный фонтан',
+    image: '/images/reference/chocolate-fountain-1.png',
+  },
+] as const;
+
+export const heroSceneCenter = {
+  label: 'Фудтраки',
+  image: '/images/reference/food-truck-1.png',
+};
