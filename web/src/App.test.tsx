@@ -13,5 +13,6 @@ test('renders the one-page anchor shell', () => {
   expect(screen.getByTestId('section-gallery')).toBeInTheDocument();
   expect(screen.getByTestId('section-reviews')).toBeInTheDocument();
   expect(screen.getByTestId('section-faq')).toBeInTheDocument();
+  expect(screen.getByLabelText('Частые вопросы')).toBeInTheDocument();
   expect(screen.getByTestId('section-contact')).toBeInTheDocument();
 });

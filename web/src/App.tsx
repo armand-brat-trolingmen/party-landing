@@ -16,7 +16,7 @@ export default function App() {
         <section id="about" data-testid="section-about" aria-label="О нас" />
         <section id="gallery" data-testid="section-gallery" aria-label="Галерея" />
         <section id="reviews" data-testid="section-reviews" aria-label="Отзывы" />
-        <section id="faq" data-testid="section-faq" aria-label="FAQ" />
+        <section id="faq" data-testid="section-faq" aria-label="Частые вопросы" />
         <section id="contact" data-testid="section-contact" aria-label="Контакты" />
       </main>
     </>

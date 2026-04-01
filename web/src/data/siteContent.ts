@@ -3,7 +3,7 @@ export const navItems = [
   { id: 'services', label: 'Услуги' },
   { id: 'gallery', label: 'Галерея' },
   { id: 'reviews', label: 'Отзывы' },
-  { id: 'faq', label: 'FAQ' },
+  { id: 'faq', label: 'Частые вопросы' },
   { id: 'contact', label: 'Контакты' },
 ] as const;
 
