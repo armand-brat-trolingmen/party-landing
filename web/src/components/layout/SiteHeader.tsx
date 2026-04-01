@@ -7,7 +7,7 @@ export function SiteHeader() {
     <header className={styles.header}>
       <div className={styles.inner}>
         <a className={styles.brand} href="#hero">
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.6rem' }}>
+          <span className={styles.brandInner}>
             <DonutLogo />
             <span>{siteContent.brand}</span>
           </span>

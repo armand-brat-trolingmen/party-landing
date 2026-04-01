@@ -12,9 +12,8 @@ export function HeroSection() {
     >
       <div className={`site-container ${styles.container}`}>
         <div className={styles.copyColumn}>
-          <p className={styles.eyebrow}>Атмосфера праздника</p>
-          <h1 className={styles.brand}>{siteContent.brand}</h1>
-          <p className={styles.tagline}>{siteContent.tagline}</p>
+          <p className={styles.brand}>{siteContent.brand}</p>
+          <h1 className={styles.tagline}>{siteContent.tagline}</h1>
           <p className={styles.description}>{siteContent.heroDescription}</p>
         </div>
 

@@ -15,15 +15,15 @@ export const siteContent = {
 };
 
 export const heroSceneCards = [
-  { id: 'cotton-candy', label: 'Сладкая вата', image: '/images/reference/cotton-candy-1.png' },
+  { id: 'cotton-candy', label: 'Сладкая вата', accent: 'pink' },
   {
     id: 'chocolate-fountain',
     label: 'Шоколадный фонтан',
-    image: '/images/reference/chocolate-fountain-1.png',
+    accent: 'chocolate',
   },
 ] as const;
 
 export const heroSceneCenter = {
   label: 'Фудтраки',
-  image: '/images/reference/food-truck-1.png',
+  accent: 'cream',
 };
