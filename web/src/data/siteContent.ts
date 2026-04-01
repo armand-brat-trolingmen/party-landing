@@ -1,7 +1,6 @@
 export const navItems = [
   { id: 'about', label: 'О нас' },
   { id: 'services', label: 'Услуги' },
-  { id: 'gallery', label: 'Галерея' },
   { id: 'reviews', label: 'Отзывы' },
   { id: 'faq', label: 'Частые вопросы' },
   { id: 'contact', label: 'Контакты' },
@@ -75,5 +74,13 @@ export const services = [
     name: 'Аниматоры',
     image: '/images/reference/animators-placeholder.svg',
     description: 'Аниматоры держат ритм праздника, вовлекают гостей и снимают неловкость с первых минут.',
+  },
+] as const;
+
+export const reviewPhotos = [
+  {
+    id: 'review-party-1',
+    image: '/images/reviews/review-party-1.png',
+    alt: 'Гости на празднике Party',
   },
 ] as const;

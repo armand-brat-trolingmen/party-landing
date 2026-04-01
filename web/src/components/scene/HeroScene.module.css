@@ -1,6 +1,5 @@
 .scene {
   position: relative;
-  display: block;
   min-height: clamp(25rem, 42vw, 33rem);
 }
 
@@ -16,94 +15,60 @@
     linear-gradient(160deg, #5d3d2d 0%, #4a3025 44%, #3a251d 100%);
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
     0 30px 56px rgba(63, 40, 29, 0.3);
-}
-
-.card {
-  position: relative;
-  display: grid;
-  width: clamp(9.5rem, 24vw, 13rem);
-  border-radius: calc(var(--radius-card) - 4px);
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  box-shadow: 0 18px 38px rgba(30, 19, 14, 0.36);
-  background: linear-gradient(180deg, rgba(255, 253, 245, 0.96), rgba(255, 243, 229, 0.91));
-}
-
-.vector {
-  width: 100%;
-  height: 100%;
-}
-
-.media {
-  aspect-ratio: 4 / 5;
-}
-
-.label {
-  position: absolute;
-  left: 0.8rem;
-  bottom: 0.8rem;
-  z-index: 1;
-  padding: 0.4rem 0.72rem;
-  border-radius: var(--radius-pill);
-  background: rgba(255, 252, 246, 0.88);
-  backdrop-filter: blur(10px);
-  color: var(--accent-chocolate);
-  font-size: 0.88rem;
-  font-weight: 600;
-}
-
-.cardCottonCandy {
-  position: absolute;
-  left: 7%;
-  bottom: 16%;
-  z-index: 2;
-  transform: rotate(-11deg);
-}
-
-.cardFoodTruck {
-  position: absolute;
-  left: 50%;
-  bottom: 8%;
-  z-index: 3;
-  width: clamp(14rem, 38vw, 20rem);
-  transform: translateX(-50%) rotate(-1.5deg);
-}
-
-.cardChocolateFountain {
-  position: absolute;
-  right: 7%;
-  bottom: 14%;
-  z-index: 1;
-  transform: rotate(10deg);
-}
-
-.cardFoodTruck .media {
-  aspect-ratio: 4 / 3;
-}
-
-.cardCottonCandy .media {
-  background: linear-gradient(180deg, rgba(247, 166, 195, 0.27), rgba(255, 231, 240, 0.24));
-}
-
-.cardFoodTruck .media {
-  background: linear-gradient(180deg, rgba(246, 220, 107, 0.3), rgba(255, 249, 228, 0.2));
-}
-
-.cardChocolateFountain .media {
-  background: linear-gradient(180deg, rgba(121, 82, 62, 0.2), rgba(247, 218, 190, 0.22));
 }
 
 .frame::after {
   content: '';
   position: absolute;
-  inset: auto 12% 7% 12%;
+  inset: auto 12% 8% 12%;
   z-index: 0;
-  height: 16%;
+  height: 14%;
   border-radius: 50%;
-  background: rgba(246, 220, 107, 0.34);
-  filter: blur(26px);
+  background: rgba(246, 220, 107, 0.3);
+  filter: blur(24px);
+}
+
+.item {
+  position: absolute;
+  z-index: 1;
+}
+
+.itemMedia {
+  width: clamp(9.5rem, 24vw, 13rem);
+  aspect-ratio: 4 / 5;
+}
+
+.vector {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 16px 22px rgba(31, 20, 15, 0.45));
+}
+
+.itemCottonCandy {
+  left: 7%;
+  bottom: 16%;
+  transform: rotate(-11deg);
+}
+
+.itemFoodTruck {
+  left: 50%;
+  bottom: 8%;
+  z-index: 2;
+  transform: translateX(-50%) rotate(-1.5deg);
+}
+
+.itemFoodTruck .itemMedia {
+  width: clamp(14rem, 38vw, 20rem);
+  aspect-ratio: 4 / 3;
+}
+
+.itemChocolateFountain {
+  right: 7%;
+  bottom: 14%;
+  transform: rotate(10deg);
 }
 
 @media (max-width: 900px) {
@@ -116,31 +81,28 @@
     padding: 0.85rem;
   }
 
-  .card {
+  .itemMedia {
     width: clamp(7.6rem, 36vw, 10.8rem);
   }
 
-  .cardCottonCandy {
+  .itemCottonCandy {
     left: 2%;
     bottom: 17%;
     transform: rotate(-7deg);
   }
 
-  .cardFoodTruck {
-    width: clamp(11.5rem, 57vw, 16rem);
+  .itemFoodTruck {
     bottom: 8%;
     transform: translateX(-50%) rotate(-1deg);
   }
 
-  .cardChocolateFountain {
+  .itemFoodTruck .itemMedia {
+    width: clamp(11.5rem, 57vw, 16rem);
+  }
+
+  .itemChocolateFountain {
     right: 2%;
     bottom: 15%;
     transform: rotate(6deg);
-  }
-
-  .label {
-    left: 0.6rem;
-    bottom: 0.6rem;
-    font-size: 0.8rem;
   }
 }

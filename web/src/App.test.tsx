@@ -13,7 +13,8 @@ test('renders the one-page anchor shell', () => {
   expect(screen.getByTestId('section-hero')).toBeInTheDocument();
   expect(screen.getByTestId('section-services')).toBeInTheDocument();
   expect(screen.getByTestId('section-about')).toBeInTheDocument();
-  expect(screen.getByTestId('section-gallery')).toBeInTheDocument();
+  expect(screen.queryByTestId('section-gallery')).not.toBeInTheDocument();
+  expect(screen.queryByRole('link', { name: 'Галерея' })).not.toBeInTheDocument();
   expect(screen.getByTestId('section-reviews')).toBeInTheDocument();
   expect(screen.getByTestId('section-faq')).toBeInTheDocument();
   expect(screen.getByLabelText('Частые вопросы')).toBeInTheDocument();
@@ -21,23 +22,26 @@ test('renders the one-page anchor shell', () => {
   expect(screen.getByRole('heading', { name: 'Услуги', level: 2 })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'О нас', level: 2 })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Частые вопросы', level: 2 })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'Отзывы', level: 2 })).toBeInTheDocument();
 });
 
-test('renders filled about and gallery sections with editorial object scenes', () => {
+test('renders filled about section and real-photo reviews section', () => {
   render(<App />);
 
   const aboutSection = screen.getByTestId('section-about');
-  const gallerySection = screen.getByTestId('section-gallery');
+  const reviewsSection = screen.getByTestId('section-reviews');
 
   expect(within(aboutSection).getByRole('heading', { level: 2, name: 'О нас' })).toBeInTheDocument();
   expect(within(aboutSection).getByText('Собираем праздник как редакционную историю бренда.')).toBeInTheDocument();
   expect(within(aboutSection).getByText('Продумываем свет, фактуры и сервировку до мелочей.')).toBeInTheDocument();
   expect(within(aboutSection).getByText('Работаем бережно к площадке и вашему таймингу.')).toBeInTheDocument();
 
-  const gallery = within(gallerySection);
+  const reviews = within(reviewsSection);
 
-  expect(gallery.getByRole('heading', { level: 2, name: 'Галерея' })).toBeInTheDocument();
-  expect(gallery.getByRole('img', { name: 'Фудтрак с вечерней неоновой вывеской' })).toBeInTheDocument();
-  expect(gallery.getByRole('img', { name: 'Шоколадный фонтан с ягодным декором' })).toBeInTheDocument();
-  expect(gallery.getByRole('img', { name: 'Тележка со сладкой ватой в пастельных тонах' })).toBeInTheDocument();
+  expect(reviews.getByRole('heading', { level: 2, name: 'Отзывы' })).toBeInTheDocument();
+  expect(reviews.getAllByRole('img')).not.toHaveLength(0);
+  expect(reviews.getByRole('img', { name: /гости на празднике party/i })).toHaveAttribute(
+    'src',
+    expect.stringContaining('/images/reviews/review-party-1.png'),
+  );
 });

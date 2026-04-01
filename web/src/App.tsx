@@ -1,18 +1,12 @@
 import { SiteHeader } from './components/layout/SiteHeader';
 import { AboutSection } from './components/sections/AboutSection';
-import { GallerySection } from './components/sections/GallerySection';
 import { HeroSection } from './components/sections/HeroSection';
+import { ReviewsSection } from './components/sections/ReviewsSection';
 import { ServicesSection } from './components/sections/ServicesSection';
 import { SectionHeading } from './components/ui/SectionHeading';
 import './styles/global.css';
 
 const shellSections = [
-  {
-    id: 'reviews',
-    title: 'Отзывы',
-    eyebrow: 'Нам доверяют',
-    description: 'Здесь будут собраны реальные впечатления гостей и заказчиков после проведенных праздников.',
-  },
   {
     id: 'faq',
     title: 'Частые вопросы',
@@ -35,7 +29,7 @@ export default function App() {
         <HeroSection />
         <ServicesSection />
         <AboutSection />
-        <GallerySection />
+        <ReviewsSection />
         {shellSections.map((section) => (
           <section
             key={section.id}
