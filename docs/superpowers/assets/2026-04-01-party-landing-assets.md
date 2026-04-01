@@ -1,0 +1,6 @@
+- Hero: stylized food truck cutout or collage source
+- Hero side cards: cotton candy source image, chocolate fountain source image
+- Services: one image or treatment per service
+- Services: non-photo placeholder or illustration for animators
+- Reviews: real review photo set with captions and author names
+- Logo: donut mark in SVG plus wordmark lockup
