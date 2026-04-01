@@ -1,7 +1,9 @@
 .frame {
   display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
   gap: clamp(1.25rem, 3vw, 2rem);
   padding: clamp(1.25rem, 3vw, 2.15rem);
+  min-height: 100%;
   border-radius: calc(var(--radius-card) + 0.4rem);
   background:
     radial-gradient(circle at 88% 12%, rgba(247, 166, 195, 0.2), transparent 36%),
@@ -12,11 +14,15 @@
 
 .grid {
   display: grid;
+  align-content: stretch;
+  grid-auto-rows: 1fr;
   gap: 0.9rem;
+  min-height: 0;
 }
 
 .photoCard {
   overflow: hidden;
+  min-height: clamp(14rem, 36vh, 24rem);
   border-radius: calc(var(--radius-card) - 4px);
   border: 1px solid rgba(122, 89, 63, 0.12);
   background: #f8efe2;
@@ -31,6 +37,6 @@
 
 @media (min-width: 900px) {
   .grid {
-    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
   }
 }

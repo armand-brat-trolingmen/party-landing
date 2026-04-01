@@ -1,7 +1,9 @@
 .frame {
   display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
   gap: clamp(1.25rem, 2.8vw, 2rem);
   padding: clamp(1.5rem, 3.2vw, 2.3rem);
+  min-height: 100%;
   border-radius: calc(var(--radius-card) + 0.25rem);
   background:
     radial-gradient(circle at 12% 10%, rgba(247, 166, 195, 0.22), transparent 36%),
@@ -13,6 +15,7 @@
 .points {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  align-content: center;
   gap: 0.9rem;
   margin: 0;
   padding: 0;

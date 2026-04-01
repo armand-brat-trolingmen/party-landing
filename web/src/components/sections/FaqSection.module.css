@@ -1,7 +1,9 @@
 .frame {
   display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
   gap: clamp(1.3rem, 3vw, 2rem);
   padding: clamp(1.25rem, 3vw, 2.1rem);
+  min-height: 100%;
   border-radius: calc(var(--radius-card) + 0.4rem);
   background:
     radial-gradient(circle at 14% 12%, rgba(246, 220, 107, 0.2), transparent 38%),
@@ -11,6 +13,8 @@
 }
 
 .note {
+  align-self: center;
+  max-width: 44rem;
   padding: 1rem 1.15rem;
   border-radius: 1rem;
   border: 1px dashed rgba(122, 89, 63, 0.24);

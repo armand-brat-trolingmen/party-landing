@@ -83,7 +83,9 @@ svg {
 }
 
 .site-section > .site-container {
+  display: grid;
   width: min(calc(100% - (var(--space-6) * 2)), var(--shell-max-width));
+  min-height: clamp(28rem, 86svh, 52rem);
 }
 
 .site-section__content {
@@ -118,5 +120,9 @@ svg {
   .site-section {
     min-height: clamp(30rem, 100svh, 48rem);
     padding-block: clamp(var(--space-8), 10vh, var(--space-12));
+  }
+
+  .site-section > .site-container {
+    min-height: clamp(24rem, 82svh, 42rem);
   }
 }

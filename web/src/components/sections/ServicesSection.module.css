@@ -1,7 +1,9 @@
 .frame {
   display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
   gap: clamp(1.5rem, 3vw, 2.25rem);
   padding: clamp(1.25rem, 3vw, 2rem);
+  min-height: 100%;
   border-radius: calc(var(--radius-card) + 0.5rem);
   background:
     radial-gradient(circle at top left, rgba(246, 220, 107, 0.2), transparent 32%),
@@ -15,6 +17,8 @@
   grid-auto-flow: column;
   grid-auto-columns: minmax(18rem, 82vw);
   gap: 1rem;
+  min-height: 0;
+  align-items: stretch;
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory;
@@ -24,8 +28,9 @@
 
 .card {
   display: grid;
+  grid-template-rows: minmax(0, 1fr) auto auto;
   gap: 1rem;
-  min-height: 100%;
+  min-height: clamp(20rem, 62vh, 32rem);
   padding: 1rem;
   border: 1px solid rgba(122, 89, 63, 0.08);
   border-radius: 1.75rem;
@@ -37,7 +42,7 @@
 .imageWrap {
   display: grid;
   place-items: center;
-  min-height: clamp(14rem, 48vw, 18rem);
+  min-height: clamp(13rem, 46vw, 19rem);
   padding: 1rem;
   border-radius: 1.25rem;
   background: linear-gradient(180deg, rgba(255, 251, 245, 0.98), rgba(255, 243, 231, 0.94));
@@ -66,11 +71,13 @@
     grid-auto-flow: row;
     grid-auto-columns: unset;
     grid-template-columns: 1.35fr 1fr 1fr 1.1fr;
+    min-height: 100%;
     overflow: visible;
     padding-bottom: 0;
   }
 
   .card {
-    align-content: start;
+    min-height: 100%;
+    align-content: stretch;
   }
 }
