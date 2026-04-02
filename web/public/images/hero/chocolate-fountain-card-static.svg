@@ -1,0 +1,66 @@
+<svg width="220" height="260" viewBox="0 0 220 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="static-chocolate-cascade-gradient" x1="110" y1="56" x2="110" y2="202" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4A2B1C"/>
+      <stop offset="18%" stop-color="#6F412C"/>
+      <stop offset="40%" stop-color="#A16B48"/>
+      <stop offset="62%" stop-color="#603827"/>
+      <stop offset="100%" stop-color="#351C12"/>
+    </linearGradient>
+    <linearGradient id="static-chocolate-rim-gradient" x1="110" y1="64" x2="110" y2="132" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#5A3323"/>
+      <stop offset="20%" stop-color="#805038"/>
+      <stop offset="44%" stop-color="#B47A54"/>
+      <stop offset="66%" stop-color="#6C402C"/>
+      <stop offset="100%" stop-color="#432418"/>
+    </linearGradient>
+    <linearGradient id="static-chocolate-pool-gradient" x1="110" y1="173" x2="110" y2="202" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#5C3525"/>
+      <stop offset="28%" stop-color="#8D5A3E"/>
+      <stop offset="58%" stop-color="#B17850"/>
+      <stop offset="100%" stop-color="#452419"/>
+    </linearGradient>
+    <linearGradient id="static-chocolate-veil-gradient" x1="110" y1="70" x2="110" y2="200" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#432519"/>
+      <stop offset="16%" stop-color="#6A3E2A"/>
+      <stop offset="36%" stop-color="#9B6947"/>
+      <stop offset="58%" stop-color="#5A3423"/>
+      <stop offset="100%" stop-color="#2F180F"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="220" height="260" rx="32" fill="#FFF7EF"/>
+  <ellipse cx="110" cy="220" rx="64" ry="16" fill="#E8D8CC"/>
+  <ellipse cx="110" cy="193" rx="54" ry="18" fill="#7A5238"/>
+  <ellipse cx="110" cy="189" rx="44" ry="12" fill="url(#static-chocolate-pool-gradient)"/>
+
+  <rect x="95" y="121" width="30" height="72" rx="15" fill="#936441"/>
+  <ellipse cx="110" cy="121" rx="43" ry="15" fill="#8A5C3E"/>
+  <ellipse cx="110" cy="96" rx="35" ry="12" fill="#7A5238"/>
+  <rect x="102" y="72" width="16" height="49" rx="8" fill="#A9744D"/>
+  <ellipse cx="110" cy="69" rx="28" ry="10" fill="#6F4B35"/>
+
+  <path d="M110 56L110 101" stroke="url(#static-chocolate-cascade-gradient)" stroke-width="6.5" stroke-linecap="round"/>
+  <path d="M102 79L102 97" stroke="url(#static-chocolate-cascade-gradient)" stroke-width="5" stroke-linecap="round"/>
+
+  <path d="M82 69L82 105L103 109L100 69Z" fill="url(#static-chocolate-cascade-gradient)"/>
+  <path d="M138 69L138 105L117 109L120 69Z" fill="url(#static-chocolate-cascade-gradient)"/>
+  <path d="M75 96L75 146L95 147L94 96Z" fill="url(#static-chocolate-cascade-gradient)"/>
+  <path d="M145 96L145 146L125 147L126 96Z" fill="url(#static-chocolate-cascade-gradient)"/>
+  <path d="M69 121L69 190L87 194L88 121Z" fill="url(#static-chocolate-cascade-gradient)"/>
+  <path d="M151 121L151 190L133 194L132 121Z" fill="url(#static-chocolate-cascade-gradient)"/>
+  <path
+    d="M85 74L70 139L84 194L136 194L150 139L135 74L124 74L124 194L96 194L96 74Z"
+    fill="url(#static-chocolate-veil-gradient)"
+  />
+  <path d="M96 74L96 109L124 109L124 74Z" fill="url(#static-chocolate-veil-gradient)"/>
+  <path d="M87 100L87 147L133 147L133 100Z" fill="url(#static-chocolate-veil-gradient)"/>
+  <path d="M78 125L78 194L142 194L142 125Z" fill="url(#static-chocolate-veil-gradient)"/>
+
+  <path d="M82 69C89 74 131 74 138 69C132 80 88 80 82 69Z" fill="url(#static-chocolate-rim-gradient)"/>
+  <path d="M75 96C84 102 136 102 145 96C138 109 82 109 75 96Z" fill="url(#static-chocolate-rim-gradient)"/>
+  <path d="M67 121C77 128 143 128 153 121C145 137 75 137 67 121Z" fill="url(#static-chocolate-rim-gradient)"/>
+
+  <circle cx="66" cy="64" r="5" fill="#FFF0A6"/>
+  <circle cx="156" cy="54" r="4" fill="#F7A6C3"/>
+</svg>

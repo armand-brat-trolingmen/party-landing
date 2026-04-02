@@ -47,7 +47,7 @@ test('renders the one-page anchor shell', () => {
   ]);
 });
 
-test('renders filled about section, real-photo reviews, and blank-page faq/contact placeholders', () => {
+test('renders filled about section, story-based reviews, animated faq, and a final contact note', () => {
   render(<App />);
 
   const aboutSection = screen.getByTestId('section-about');
@@ -66,21 +66,35 @@ test('renders filled about section, real-photo reviews, and blank-page faq/conta
     within(aboutSection).getByRole('img', { name: 'Иллюстрация постановки света и сервировки для события Party' }),
   ).toBeInTheDocument();
   expect(
-    within(aboutSection).getByRole('img', { name: 'Иллюстрация точного тайминга и бережной работы на площадке Party' }),
+    within(aboutSection).getByRole('img', {
+      name: 'Иллюстрация точного тайминга и бережной работы на площадке Party',
+    }),
   ).toBeInTheDocument();
 
   const reviews = within(reviewsSection);
 
   expect(reviews.getByRole('heading', { level: 2, name: 'Отзывы' })).toBeInTheDocument();
+  expect(reviews.getByText('Четыре живых сюжета о том, как Party выглядит в кадре и ощущается на площадке.')).toBeInTheDocument();
   expect(reviews.getAllByRole('img')).toHaveLength(4);
   expect(reviews.getByText('Аниматоры')).toBeInTheDocument();
+  expect(reviews.getByText('Когда праздник сразу оживает')).toBeInTheDocument();
   expect(reviews.getByText('Фудтрак')).toBeInTheDocument();
+  expect(reviews.getByText('Очередь, которая только радует')).toBeInTheDocument();
   expect(reviews.getByText('Сладкая вата')).toBeInTheDocument();
+  expect(reviews.getByText('Немного магии в каждом кадре')).toBeInTheDocument();
   expect(reviews.getByText('Шоколадный фонтан')).toBeInTheDocument();
+  expect(reviews.getByText('Тот самый десертный вау-эффект')).toBeInTheDocument();
 
   const faq = within(faqSection);
   const contact = within(contactSection);
 
-  expect(faq.getByTestId('faq-pattern')).toBeInTheDocument();
-  expect(contact.getByTestId('contact-pattern')).toBeInTheDocument();
+  expect(faq.getByText('Собрали ответы на частые вопросы, чтобы вам было проще прикинуть формат ещё до звонка.')).toBeInTheDocument();
+  expect(faq.getByRole('button', { name: 'На какие мероприятия вы выезжаете?' })).toHaveAttribute('aria-expanded', 'true');
+  expect(faq.queryByTestId('faq-pattern')).not.toBeInTheDocument();
+  expect(contact.queryByTestId('contact-pattern')).not.toBeInTheDocument();
+  expect(
+    contact.getByText(
+      'Это лишь 10% от того, что я видел в своей голове, и сделать я готов как угодно: от смены дизайна и стилистики до смены концепции сайта — от визитной карточки до чего-то другого и автоматического приема заказов с сайта с последующей переадресацией заказа куда надо, спасибо за то что посмотрели))',
+    ),
+  ).toBeInTheDocument();
 });

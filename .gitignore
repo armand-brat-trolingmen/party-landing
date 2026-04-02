@@ -1,5 +1,7 @@
 .superpowers/
 .worktrees/
+.tools/
+.tmp/
 web/node_modules/
 web/dist/
 web/playwright-report/

@@ -1,7 +1,19 @@
+import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { navItems, siteContent } from '../../data/siteContent';
 import { DonutLogo } from '../branding/DonutLogo';
 import styles from './SiteHeader.module.css';
-import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+
+function getDocumentTop(element: HTMLElement) {
+  let top = 0;
+  let node: HTMLElement | null = element;
+
+  while (node) {
+    top += node.offsetTop;
+    node = node.offsetParent instanceof HTMLElement ? node.offsetParent : null;
+  }
+
+  return top;
+}
 
 export function SiteHeader() {
   const headerRef = useRef<HTMLElement | null>(null);
@@ -9,23 +21,16 @@ export function SiteHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(() => window.matchMedia?.('(min-width: 721px)').matches ?? true);
 
-  const getSectionScrollTop = (target: HTMLElement) => {
+  const getSectionScrollTop = useCallback((target: HTMLElement) => {
     const headerHeight = headerRef.current?.getBoundingClientRect().height ?? 0;
     const viewportHeight = window.innerHeight;
-    const visibleHeight = Math.max(0, viewportHeight - headerHeight);
     const anchorTarget = target.querySelector<HTMLElement>(':scope > .site-container') ?? target;
-    const rect = anchorTarget.getBoundingClientRect();
-
-    const desiredTop =
-      rect.height >= visibleHeight - 40
-        ? headerHeight + 20
-        : headerHeight + Math.max(20, (visibleHeight - rect.height) / 2);
-
-    const nextTop = window.scrollY + rect.top - desiredTop;
+    const visualGap = window.innerWidth <= 720 ? 20 : 24;
+    const nextTop = getDocumentTop(anchorTarget) - headerHeight - visualGap;
     const maxTop = Math.max(0, document.documentElement.scrollHeight - viewportHeight);
 
     return Math.min(Math.max(0, nextTop), maxTop);
-  };
+  }, []);
 
   const scrollToSection = (id: string) => {
     const target = document.getElementById(id);
@@ -126,19 +131,7 @@ export function SiteHeader() {
 
     const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
     const behavior: ScrollBehavior = prefersReducedMotion ? 'auto' : 'smooth';
-    const headerHeight = headerRef.current?.getBoundingClientRect().height ?? 0;
-    const viewportHeight = window.innerHeight;
-    const visibleHeight = Math.max(0, viewportHeight - headerHeight);
-    const anchorTarget = target.querySelector<HTMLElement>(':scope > .site-container') ?? target;
-    const rect = anchorTarget.getBoundingClientRect();
-    const desiredTop =
-      rect.height >= visibleHeight - 40
-        ? headerHeight + 20
-        : headerHeight + Math.max(20, (visibleHeight - rect.height) / 2);
-    const top = Math.min(
-      Math.max(0, window.scrollY + rect.top - desiredTop),
-      Math.max(0, document.documentElement.scrollHeight - viewportHeight),
-    );
+    const top = getSectionScrollTop(target);
 
     if (window.requestAnimationFrame) {
       window.requestAnimationFrame(() => window.scrollTo({ top, behavior }));
@@ -146,7 +139,7 @@ export function SiteHeader() {
     }
 
     window.setTimeout(() => window.scrollTo({ top, behavior }), 0);
-  }, []);
+  }, [getSectionScrollTop]);
 
   return (
     <header className={styles.header} ref={headerRef}>
@@ -174,12 +167,31 @@ export function SiteHeader() {
           <div className={styles.mobile}>
             <button
               type="button"
-              className={styles.menuButton}
+              className={`${styles.menuButton} ${isMenuOpen ? styles.menuButtonOpen : ''}`}
+              aria-label="Меню"
               aria-expanded={isMenuOpen}
               aria-controls={panelId}
+              data-menu-open={isMenuOpen ? 'true' : 'false'}
+              data-testid="menu-button"
               onClick={() => setIsMenuOpen((value) => !value)}
             >
-              Меню
+              <span className={styles.menuButtonGlyph} aria-hidden="true">
+                <span
+                  className={`${styles.menuButtonLine} ${styles.menuButtonLineTop}`}
+                  data-menu-line="true"
+                  data-testid="menu-button-line-top"
+                />
+                <span
+                  className={`${styles.menuButtonLine} ${styles.menuButtonLineMiddle}`}
+                  data-menu-line="true"
+                  data-testid="menu-button-line-middle"
+                />
+                <span
+                  className={`${styles.menuButtonLine} ${styles.menuButtonLineBottom}`}
+                  data-menu-line="true"
+                  data-testid="menu-button-line-bottom"
+                />
+              </span>
             </button>
             {isMenuOpen ? (
               <>

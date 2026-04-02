@@ -55,6 +55,12 @@
   box-shadow: 0 24px 60px rgba(122, 89, 63, 0.12);
 }
 
+@media (min-width: 901px) {
+  .tagline {
+    font-size: clamp(2.55rem, 6.8vw, 4.95rem);
+  }
+}
+
 @media (max-width: 900px) {
   .hero {
     min-height: clamp(30rem, 100svh, 48rem);

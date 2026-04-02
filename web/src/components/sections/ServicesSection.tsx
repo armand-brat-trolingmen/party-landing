@@ -1,11 +1,19 @@
 import { services } from '../../data/siteContent';
+import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { SectionHeading } from '../ui/SectionHeading';
 import styles from './ServicesSection.module.css';
 
 export function ServicesSection() {
+  const { ref, revealState } = useScrollReveal();
+
   return (
     <section id="services" className="site-section" data-testid="section-services" aria-labelledby="services-title">
-      <div className="site-container">
+      <div
+        ref={ref}
+        className="site-container site-reveal"
+        data-reveal-state={revealState}
+        data-reveal-stagger="true"
+      >
         <div className={styles.frame}>
           <SectionHeading
             eyebrow="Что мы делаем"
@@ -13,7 +21,7 @@ export function ServicesSection() {
             description="Четыре выразительных формата для сладкого, подвижного и фотогеничного праздника без перегруженной сцены."
           />
 
-          <div className={styles.strip} data-testid="services-strip" data-scroll-snap="x">
+          <div className={`${styles.strip} reveal-grid`} data-testid="services-strip" data-scroll-snap="x">
             {services.map((service) => (
               <article key={service.id} className={styles.card}>
                 <div className={styles.imageWrap}>

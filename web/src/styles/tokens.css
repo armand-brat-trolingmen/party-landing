@@ -1,6 +1,7 @@
 :root {
-  --font-display: 'Cormorant Garamond', serif;
-  --font-body: 'Poppins', sans-serif;
+  /* Typography stays centralized here so swapping the font pair is easy to roll back. */
+  --font-display: 'Lora', serif;
+  --font-body: 'Nunito Sans', sans-serif;
   --bg-page: #fffbe8;
   --bg-surface: #fffdf5;
   --accent-yellow: #f6dc6b;

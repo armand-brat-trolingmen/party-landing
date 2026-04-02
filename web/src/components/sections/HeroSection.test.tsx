@@ -5,7 +5,7 @@ import { siteContent } from '../../data/siteContent';
 test('renders hero copy without a CTA and keeps a single frame scene with fan order', () => {
   render(<HeroSection />);
 
-  expect(screen.getByText(siteContent.brand)).toBeInTheDocument();
+  expect(screen.queryByText(siteContent.brand)).not.toBeInTheDocument();
   expect(screen.getByRole('heading', { level: 1, name: siteContent.tagline })).toBeInTheDocument();
   expect(screen.getByText(siteContent.heroDescription)).toBeInTheDocument();
 

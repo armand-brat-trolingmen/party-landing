@@ -80,21 +80,87 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 44px;
-  padding: 0 14px;
-  border-radius: var(--radius-pill);
+  width: 3.25rem;
+  height: 3.25rem;
+  padding: 0;
+  border-radius: 999px;
   border: 1px solid rgba(122, 89, 63, 0.18);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.48));
-  color: var(--text-primary);
-  font-weight: 600;
-  letter-spacing: 0.02em;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0) 48%),
+    linear-gradient(180deg, rgba(255, 252, 246, 0.92), rgba(255, 244, 229, 0.82));
   box-shadow: 0 14px 30px rgba(93, 63, 45, 0.12);
+  transition:
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 220ms ease,
+    border-color 220ms ease,
+    background 220ms ease;
 }
 
 .menuButton:hover,
 .menuButton:focus-visible {
   border-color: rgba(228, 87, 69, 0.32);
   box-shadow: 0 16px 34px rgba(93, 63, 45, 0.16);
+}
+
+.menuButton:active {
+  transform: scale(0.96);
+}
+
+.menuButtonOpen {
+  border-color: rgba(228, 87, 69, 0.26);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0) 50%),
+    linear-gradient(180deg, rgba(255, 246, 236, 0.96), rgba(255, 236, 219, 0.88));
+  box-shadow: 0 18px 38px rgba(93, 63, 45, 0.18);
+}
+
+.menuButtonGlyph {
+  position: relative;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  width: 1.25rem;
+  height: 1rem;
+}
+
+.menuButtonLine {
+  position: absolute;
+  width: 1.25rem;
+  height: 2.5px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #5a3423, #7d4f37);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.28);
+  transition:
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 180ms ease,
+    width 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    background 220ms ease;
+  transform-origin: center;
+}
+
+.menuButtonLineTop {
+  transform: translateY(-0.36rem);
+}
+
+.menuButtonLineMiddle {
+  transform: translateY(0);
+}
+
+.menuButtonLineBottom {
+  transform: translateY(0.36rem);
+}
+
+.menuButtonOpen .menuButtonLineTop {
+  transform: translateY(0) rotate(45deg);
+}
+
+.menuButtonOpen .menuButtonLineMiddle {
+  opacity: 0;
+  transform: scaleX(0.55);
+}
+
+.menuButtonOpen .menuButtonLineBottom {
+  transform: translateY(0) rotate(-45deg);
 }
 
 .backdrop {
@@ -165,7 +231,10 @@
 
 @media (max-width: 720px) {
   .header {
-    padding: 16px 18px;
+    position: fixed;
+    inset: 0 0 auto;
+    width: 100%;
+    padding: calc(16px + env(safe-area-inset-top, 0px)) 18px 16px;
   }
 
   .inner {
