@@ -1,14 +1,13 @@
 import { render, screen, within } from '@testing-library/react';
-import { faqPlaceholderContent } from '../../data/siteContent';
 import { FaqSection } from './FaqSection';
 
-test('renders faq section as a blank-page placeholder block', () => {
+test('renders faq section with a clean pattern panel and no placeholder copy', () => {
   render(<FaqSection />);
 
   const section = screen.getByTestId('section-faq');
   const sectionQueries = within(section);
 
   expect(sectionQueries.getByRole('heading', { level: 2, name: 'Частые вопросы' })).toBeInTheDocument();
-
-  expect(sectionQueries.getByText(faqPlaceholderContent.note)).toBeInTheDocument();
+  expect(sectionQueries.getByTestId('faq-pattern')).toBeInTheDocument();
+  expect(sectionQueries.queryByText(/бланк|черновом режиме|скоро добавим/i)).not.toBeInTheDocument();
 });

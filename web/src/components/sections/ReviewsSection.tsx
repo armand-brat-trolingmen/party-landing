@@ -4,13 +4,13 @@ import styles from './ReviewsSection.module.css';
 
 export function ReviewsSection() {
   return (
-    <section id="reviews" className="site-section" data-testid="section-reviews" aria-labelledby="reviews-title">
+    <section className="site-section" data-testid="section-reviews" aria-labelledby="reviews-title">
       <div className="site-container">
-        <article className={styles.frame}>
+        <article id="reviews" className={`${styles.frame} site-anchor`}>
           <SectionHeading
             eyebrow="Живые кадры"
             title={<span id="reviews-title">Отзывы</span>}
-            description="Только реальные моменты гостей с праздников Party."
+            description="Кадры с наших событий Party: эмоции, детали и вкусные акценты."
           />
           <div className={styles.grid}>
             {reviewPhotos.map((photo) => (

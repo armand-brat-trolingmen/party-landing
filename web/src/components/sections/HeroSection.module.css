@@ -3,6 +3,7 @@
   overflow: hidden;
   display: grid;
   align-items: center;
+  scroll-margin-top: calc(var(--header-offset) + var(--space-3));
   padding-block: clamp(var(--space-8), 7vh, var(--space-16));
   min-height: clamp(34rem, 100svh, 56rem);
   background:

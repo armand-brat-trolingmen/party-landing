@@ -1,6 +1,5 @@
 import { render, screen, within } from '@testing-library/react';
 import App from './App';
-import { contactPlaceholderContent, faqPlaceholderContent } from './data/siteContent';
 
 test('renders the one-page anchor shell', () => {
   render(<App />);
@@ -52,7 +51,6 @@ test('renders filled about section, real-photo reviews, and blank-page faq/conta
   const faq = within(faqSection);
   const contact = within(contactSection);
 
-  expect(faq.getByText(faqPlaceholderContent.note)).toBeInTheDocument();
-
-  expect(contact.getByText(contactPlaceholderContent.note)).toBeInTheDocument();
+  expect(faq.getByTestId('faq-pattern')).toBeInTheDocument();
+  expect(contact.getByTestId('contact-pattern')).toBeInTheDocument();
 });

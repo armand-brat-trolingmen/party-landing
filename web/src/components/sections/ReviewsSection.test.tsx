@@ -13,6 +13,7 @@ test('renders a visual reviews section using all available real people photos', 
   const images = sectionQueries.getAllByRole('img');
 
   expect(images).toHaveLength(reviewPhotos.length);
+  expect(images).toHaveLength(4);
 
   reviewPhotos.forEach((photo) => {
     expect(sectionQueries.getByRole('img', { name: photo.alt })).toHaveAttribute(

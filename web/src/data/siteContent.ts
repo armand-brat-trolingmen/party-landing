@@ -83,6 +83,21 @@ export const reviewPhotos = [
     image: '/images/reviews/review-party-1.png',
     alt: 'Гости на празднике Party',
   },
+  {
+    id: 'review-truck-1',
+    image: '/images/reviews/review-truck-1.png',
+    alt: 'Фудтрак Party на площадке',
+  },
+  {
+    id: 'review-cotton-1',
+    image: '/images/reviews/review-cotton-1.png',
+    alt: 'Сладкая вата Party на празднике',
+  },
+  {
+    id: 'review-fountain-1',
+    image: '/images/reviews/review-fountain-1.png',
+    alt: 'Шоколадный фонтан Party на событии',
+  },
 ] as const;
 
 export const faqPlaceholderContent = {

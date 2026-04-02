@@ -12,13 +12,124 @@
   box-shadow: 0 22px 46px rgba(122, 89, 63, 0.14);
 }
 
-.note {
+.skeleton {
   align-self: center;
-  max-width: 44rem;
-  padding: 1rem 1.15rem;
-  border-radius: 1rem;
-  border: 1px dashed rgba(122, 89, 63, 0.24);
-  background: rgba(255, 255, 255, 0.78);
-  color: var(--text-primary);
-  font-size: 0.98rem;
+  display: grid;
+  gap: clamp(1rem, 3vw, 1.5rem);
+  padding: clamp(1.1rem, 2.4vw, 1.55rem);
+  border-radius: 1.35rem;
+  border: 1px solid rgba(122, 89, 63, 0.14);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.34)),
+    radial-gradient(circle at 16% 18%, rgba(246, 220, 107, 0.18), transparent 46%),
+    radial-gradient(circle at 88% 84%, rgba(247, 166, 195, 0.14), transparent 54%);
+}
+
+.form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.field,
+.fieldWide,
+.button,
+.hint,
+.map,
+.badge {
+  position: relative;
+  overflow: hidden;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(122, 89, 63, 0.16), rgba(122, 89, 63, 0.08));
+}
+
+.field::before,
+.fieldWide::before,
+.button::before,
+.hint::before,
+.map::before,
+.badge::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-40%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+.field {
+  height: 2.65rem;
+}
+
+.fieldWide {
+  height: 3.8rem;
+  border-radius: 1.1rem;
+}
+
+.ctaRow {
+  display: grid;
+  grid-template-columns: 10rem 1fr;
+  align-items: center;
+  gap: 0.9rem;
+  padding-top: 0.35rem;
+}
+
+.button {
+  height: 2.65rem;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, rgba(246, 220, 107, 0.7), rgba(247, 166, 195, 0.62));
+}
+
+.hint {
+  height: 1.2rem;
+}
+
+.side {
+  display: grid;
+  gap: 1rem;
+}
+
+.badgeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.badge {
+  width: 5.2rem;
+  height: 1.2rem;
+  background: linear-gradient(90deg, rgba(122, 89, 63, 0.14), rgba(122, 89, 63, 0.06));
+}
+
+.map {
+  height: clamp(10rem, 24vh, 14rem);
+  border-radius: 1.35rem;
+  background:
+    repeating-linear-gradient(0deg, rgba(122, 89, 63, 0.1) 0 1px, transparent 1px 12px),
+    repeating-linear-gradient(90deg, rgba(122, 89, 63, 0.06) 0 1px, transparent 1px 14px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0.16));
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-50%);
+  }
+  50% {
+    transform: translateX(40%);
+  }
+  100% {
+    transform: translateX(130%);
+  }
+}
+
+@media (min-width: 900px) {
+  .skeleton {
+    grid-template-columns: 1.2fr 0.9fr;
+    align-items: start;
+  }
+}
+
+@media (max-width: 520px) {
+  .ctaRow {
+    grid-template-columns: 1fr;
+  }
 }

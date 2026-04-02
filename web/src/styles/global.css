@@ -3,7 +3,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: calc(var(--header-offset) + var(--space-4));
+  scroll-padding-top: calc(var(--header-offset) + var(--space-3));
 }
 
 *,
@@ -70,11 +70,15 @@ svg {
 }
 
 .site-section {
-  scroll-margin-top: calc(var(--header-offset) + var(--space-4));
+  scroll-margin-top: calc(var(--header-offset) + var(--space-3));
   display: grid;
   align-items: center;
   padding-block: clamp(var(--space-8), 7vh, var(--space-16));
   min-height: clamp(34rem, 100svh, 56rem);
+}
+
+.site-anchor {
+  scroll-margin-top: calc(var(--header-offset) + var(--space-3));
 }
 
 .site-container {

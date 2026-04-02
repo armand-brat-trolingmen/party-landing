@@ -12,13 +12,35 @@
   box-shadow: 0 22px 46px rgba(122, 89, 63, 0.14);
 }
 
-.note {
+.skeleton {
   align-self: center;
-  max-width: 44rem;
-  padding: 1rem 1.15rem;
-  border-radius: 1rem;
-  border: 1px dashed rgba(122, 89, 63, 0.24);
-  background: rgba(255, 255, 255, 0.78);
-  color: var(--text-primary);
-  font-size: 0.98rem;
+  display: grid;
+  gap: 0.85rem;
+  padding: clamp(1.1rem, 2.4vw, 1.5rem);
+  border-radius: 1.25rem;
+  border: 1px solid rgba(122, 89, 63, 0.14);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.34)),
+    repeating-linear-gradient(90deg, rgba(122, 89, 63, 0.07) 0 12px, rgba(122, 89, 63, 0.02) 12px 24px);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.chip {
+  width: clamp(5.5rem, 16vw, 7.5rem);
+  height: 1.35rem;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, rgba(246, 220, 107, 0.75), rgba(247, 166, 195, 0.62));
+  box-shadow: 0 8px 18px rgba(122, 89, 63, 0.12);
+}
+
+.line {
+  height: 0.95rem;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, rgba(122, 89, 63, 0.18), rgba(122, 89, 63, 0.08));
 }
