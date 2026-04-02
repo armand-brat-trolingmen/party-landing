@@ -23,9 +23,16 @@ export function ServicesSection() {
 
           <div className={`${styles.strip} reveal-grid`} data-testid="services-strip" data-scroll-snap="x">
             {services.map((service) => (
-              <article key={service.id} className={styles.card}>
-                <div className={styles.imageWrap}>
-                  <img src={service.image} alt={service.name} className={styles.image} loading="lazy" />
+              <article
+                key={service.id}
+                className={styles.card}
+                data-service-id={service.id}
+                data-motion-service="micro-scene"
+              >
+                <div className={styles.imageWrap} data-service-scene={service.id}>
+                  <div className={styles.imageMotion} data-motion-image="true">
+                    <img src={service.image} alt={service.name} className={styles.image} loading="lazy" />
+                  </div>
                 </div>
                 <h3 className={styles.name}>{service.name}</h3>
                 <p className={styles.description}>{service.description}</p>

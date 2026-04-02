@@ -4,6 +4,8 @@ import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { SectionHeading } from '../ui/SectionHeading';
 import styles from './FaqSection.module.css';
 
+const FAQ_TITLE = '\u0427\u0430\u0441\u0442\u044B\u0435 \u0432\u043E\u043F\u0440\u043E\u0441\u044B';
+
 export function FaqSection() {
   const { ref, revealState } = useScrollReveal();
   const [openItemId, setOpenItemId] = useState<string | null>(faqItems[0]?.id ?? null);
@@ -20,18 +22,27 @@ export function FaqSection() {
         <article className={`${styles.frame} site-panel-glow`}>
           <SectionHeading
             eyebrow={faqCopy.eyebrow}
-            title={<span id="faq-title">Частые вопросы</span>}
+            title={<span id="faq-title">{FAQ_TITLE}</span>}
             description={faqCopy.description}
           />
           {activeFaqVariant === 'accordion' ? (
-            <div className={`${styles.accordion} reveal-grid`} data-testid="faq-accordion">
+            <div
+              className={`${styles.accordion} reveal-grid`}
+              data-testid="faq-accordion"
+              data-motion-faq="cinematic"
+            >
               {faqItems.map((item) => {
                 const isOpen = item.id === openItemId;
                 const panelId = `faq-panel-${item.id}`;
                 const triggerId = `faq-trigger-${item.id}`;
 
                 return (
-                  <article key={item.id} className={styles.item} data-open={isOpen ? 'true' : 'false'}>
+                  <article
+                    key={item.id}
+                    className={styles.item}
+                    data-open={isOpen ? 'true' : 'false'}
+                    data-motion-item="glow"
+                  >
                     <h3 className={styles.questionHeading}>
                       <button
                         type="button"

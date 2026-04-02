@@ -11,7 +11,7 @@ export default function App() {
   return (
     <>
       <SiteHeader />
-      <main className="site-shell">
+      <main className="site-shell" data-motion-path="glow-trail">
         <HeroSection />
         <AboutSection />
         <ServicesSection />

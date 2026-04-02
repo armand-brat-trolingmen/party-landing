@@ -15,11 +15,22 @@ function getDocumentTop(element: HTMLElement) {
   return top;
 }
 
+const NAV_ARIA_LABEL = '\u041E\u0441\u043D\u043E\u0432\u043D\u0430\u044F \u043D\u0430\u0432\u0438\u0433\u0430\u0446\u0438\u044F';
+const MENU_ARIA_LABEL = '\u041C\u0435\u043D\u044E';
+const CLOSE_MENU_ARIA_LABEL = '\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u043C\u0435\u043D\u044E';
+
 export function SiteHeader() {
   const headerRef = useRef<HTMLElement | null>(null);
+  const navRef = useRef<HTMLElement | null>(null);
+  const linkRefs = useRef<Record<string, HTMLAnchorElement | null>>({});
+  const navigationLockRef = useRef<{ id: string; unlockAt: number } | null>(null);
   const panelId = useId();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDesktop, setIsDesktop] = useState(() => window.matchMedia?.('(min-width: 721px)').matches ?? true);
+  const [isDesktop, setIsDesktop] = useState(
+    () => (typeof window === 'undefined' ? true : window.matchMedia?.('(min-width: 721px)').matches ?? true),
+  );
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
 
   const getSectionScrollTop = useCallback((target: HTMLElement) => {
     const headerHeight = headerRef.current?.getBoundingClientRect().height ?? 0;
@@ -53,6 +64,15 @@ export function SiteHeader() {
     event.preventDefault();
 
     if (!isDesktop) setIsMenuOpen(false);
+    if (id !== 'hero') {
+      setActiveSectionId(id);
+      navigationLockRef.current = {
+        id,
+        unlockAt: window.performance.now() + 1400,
+      };
+    } else {
+      navigationLockRef.current = null;
+    }
 
     if (window.history?.pushState) {
       window.history.pushState(null, '', `#${id}`);
@@ -81,7 +101,7 @@ export function SiteHeader() {
 
     query.addListener(sync);
     return () => query.removeListener(sync);
-  }, []);
+  }, [getSectionScrollTop]);
 
   useEffect(() => {
     if (!isMenuOpen) return;
@@ -120,7 +140,67 @@ export function SiteHeader() {
       window.removeEventListener('resize', sync);
       resizeObserver?.disconnect();
     };
-  }, []);
+  }, [getSectionScrollTop]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    let rafId = 0;
+
+    const sync = () => {
+      const headerHeight = headerRef.current?.getBoundingClientRect().height ?? 0;
+      const probe = window.scrollY + headerHeight + window.innerHeight * 0.18;
+      let nextActive: string | null = null;
+
+      for (const item of navItems) {
+        const section = document.getElementById(item.id);
+        if (section && getDocumentTop(section) <= probe) {
+          nextActive = item.id;
+        }
+      }
+
+      const navigationLock = navigationLockRef.current;
+
+      if (navigationLock) {
+        const target = document.getElementById(navigationLock.id);
+        if (!target) {
+          navigationLockRef.current = null;
+        } else {
+          const distanceToTarget = Math.abs(window.scrollY - getSectionScrollTop(target));
+          const isExpired = window.performance.now() >= navigationLock.unlockAt;
+
+          if (!isExpired && distanceToTarget > 22) {
+            nextActive = navigationLock.id;
+          } else {
+            navigationLockRef.current = null;
+            nextActive = navigationLock.id;
+          }
+        }
+      }
+
+      setActiveSectionId((current) => (current === nextActive ? current : nextActive));
+      setIsScrolled(window.scrollY > 18);
+      rafId = 0;
+    };
+
+    const onScroll = () => {
+      if (rafId) return;
+      rafId = window.requestAnimationFrame(sync);
+    };
+
+    sync();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+
+    return () => {
+      if (rafId) {
+        window.cancelAnimationFrame(rafId);
+      }
+
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, [getSectionScrollTop]);
 
   useEffect(() => {
     const hash = window.location.hash;
@@ -141,8 +221,61 @@ export function SiteHeader() {
     window.setTimeout(() => window.scrollTo({ top, behavior }), 0);
   }, [getSectionScrollTop]);
 
+  useLayoutEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+
+    const clearIndicator = () => {
+      nav.dataset.indicatorVisible = 'false';
+      nav.style.setProperty('--nav-indicator-width', '0px');
+      nav.style.setProperty('--nav-indicator-x', '0px');
+    };
+
+    if (!isDesktop) {
+      clearIndicator();
+      return;
+    }
+
+    const activeLink = activeSectionId ? linkRefs.current[activeSectionId] : null;
+
+    const syncIndicator = () => {
+      if (!activeLink) {
+        clearIndicator();
+        return;
+      }
+
+      const navBox = nav.getBoundingClientRect();
+      const linkBox = activeLink.getBoundingClientRect();
+
+      nav.style.setProperty('--nav-indicator-width', `${linkBox.width}px`);
+      nav.style.setProperty('--nav-indicator-x', `${linkBox.left - navBox.left}px`);
+      nav.dataset.indicatorVisible = 'true';
+    };
+
+    syncIndicator();
+
+    let resizeObserver: ResizeObserver | null = null;
+
+    if (typeof ResizeObserver !== 'undefined' && activeLink) {
+      resizeObserver = new ResizeObserver(syncIndicator);
+      resizeObserver.observe(nav);
+      resizeObserver.observe(activeLink);
+    }
+
+    window.addEventListener('resize', syncIndicator);
+    return () => {
+      window.removeEventListener('resize', syncIndicator);
+      resizeObserver?.disconnect();
+    };
+  }, [activeSectionId, isDesktop, isMenuOpen]);
+
   return (
-    <header className={styles.header} ref={headerRef}>
+    <header
+      className={styles.header}
+      ref={headerRef}
+      data-header-state={isScrolled ? 'compact' : 'rest'}
+      data-testid="site-header"
+    >
       <div className={styles.inner}>
         <a className={styles.brand} href="#hero" onClick={onAnchorClick('hero')}>
           <span className={styles.brandInner}>
@@ -152,11 +285,20 @@ export function SiteHeader() {
         </a>
         <p className={styles.tagline}>{siteContent.tagline}</p>
         {isDesktop ? (
-          <nav aria-label="Основная навигация" className={styles.nav}>
+          <nav aria-label={NAV_ARIA_LABEL} className={styles.nav} ref={navRef}>
+            <span className={styles.navIndicator} data-testid="nav-active-indicator" aria-hidden="true" />
             <ul className={styles.navList}>
               {navItems.map((item) => (
                 <li key={item.id}>
-                  <a className={styles.navLink} href={`#${item.id}`} onClick={onAnchorClick(item.id)}>
+                  <a
+                    ref={(node) => {
+                      linkRefs.current[item.id] = node;
+                    }}
+                    className={styles.navLink}
+                    href={`#${item.id}`}
+                    onClick={onAnchorClick(item.id)}
+                    data-active={activeSectionId === item.id ? 'true' : 'false'}
+                  >
                     {item.label}
                   </a>
                 </li>
@@ -168,7 +310,7 @@ export function SiteHeader() {
             <button
               type="button"
               className={`${styles.menuButton} ${isMenuOpen ? styles.menuButtonOpen : ''}`}
-              aria-label="Меню"
+              aria-label={MENU_ARIA_LABEL}
               aria-expanded={isMenuOpen}
               aria-controls={panelId}
               data-menu-open={isMenuOpen ? 'true' : 'false'}
@@ -198,11 +340,11 @@ export function SiteHeader() {
                 <button
                   type="button"
                   className={styles.backdrop}
-                  aria-label="Закрыть меню"
+                  aria-label={CLOSE_MENU_ARIA_LABEL}
                   onClick={() => setIsMenuOpen(false)}
                 />
                 <div id={panelId} className={styles.mobilePanel}>
-                  <nav aria-label="Основная навигация" className={styles.mobileNav}>
+                  <nav aria-label={NAV_ARIA_LABEL} className={styles.mobileNav}>
                     <ul className={styles.mobileNavList}>
                       {navItems.map((item) => (
                         <li key={item.id}>
@@ -210,6 +352,7 @@ export function SiteHeader() {
                             className={styles.mobileNavLink}
                             href={`#${item.id}`}
                             onClick={onAnchorClick(item.id)}
+                            data-active={activeSectionId === item.id ? 'true' : 'false'}
                           >
                             {item.label}
                           </a>

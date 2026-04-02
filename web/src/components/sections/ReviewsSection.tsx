@@ -6,6 +6,32 @@ import styles from './ReviewsSection.module.css';
 export function ReviewsSection() {
   const { ref, revealState } = useScrollReveal();
   const reviewCopy = reviewSectionCopy[activeReviewVariant];
+  const supportsPointerParallax =
+    typeof window !== 'undefined' &&
+    (window.matchMedia?.('(hover: hover)').matches ?? false) &&
+    !(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false);
+
+  const onStoryPointerMove = (event: React.PointerEvent<HTMLElement>) => {
+    if (!supportsPointerParallax) return;
+
+    const card = event.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width - 0.5;
+    const y = (event.clientY - rect.top) / rect.height - 0.5;
+
+    card.style.setProperty('--review-tilt-x', `${(-y * 5.5).toFixed(2)}deg`);
+    card.style.setProperty('--review-tilt-y', `${(x * 7).toFixed(2)}deg`);
+    card.style.setProperty('--review-photo-shift-x', `${(x * 12).toFixed(2)}px`);
+    card.style.setProperty('--review-photo-shift-y', `${(y * 10).toFixed(2)}px`);
+  };
+
+  const resetStoryMotion = (event: React.PointerEvent<HTMLElement>) => {
+    const card = event.currentTarget;
+    card.style.setProperty('--review-tilt-x', '0deg');
+    card.style.setProperty('--review-tilt-y', '0deg');
+    card.style.setProperty('--review-photo-shift-x', '0px');
+    card.style.setProperty('--review-photo-shift-y', '0px');
+  };
 
   return (
     <section id="reviews" className="site-section" data-testid="section-reviews" aria-labelledby="reviews-title">
@@ -29,6 +55,9 @@ export function ReviewsSection() {
                   className={styles.storyCard}
                   data-testid="review-story-card"
                   data-motion-card="cinematic"
+                  data-live-shot="true"
+                  onPointerMove={onStoryPointerMove}
+                  onPointerLeave={resetStoryMotion}
                 >
                   <div className={styles.storyMediaWrap}>
                     <img

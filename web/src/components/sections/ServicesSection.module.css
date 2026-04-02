@@ -37,15 +37,30 @@
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 249, 241, 0.96));
   box-shadow: 0 18px 34px rgba(122, 89, 63, 0.1);
   scroll-snap-align: start;
+  transition:
+    transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 380ms ease,
+    border-color 280ms ease;
 }
 
 .imageWrap {
+  position: relative;
   display: grid;
   place-items: center;
   min-height: clamp(13rem, 46vw, 19rem);
   padding: 1rem;
+  overflow: hidden;
+  isolation: isolate;
   border-radius: 1.25rem;
   background: linear-gradient(180deg, rgba(255, 251, 245, 0.98), rgba(255, 243, 231, 0.94));
+}
+
+.imageWrap::before,
+.imageWrap::after {
+  content: '';
+  position: absolute;
+  inset: auto;
+  pointer-events: none;
 }
 
 .image {
@@ -53,6 +68,18 @@
   max-width: 18rem;
   height: auto;
   object-fit: contain;
+}
+
+.imageMotion {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 18rem;
+  display: grid;
+  place-items: center;
+  transition:
+    transform 560ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 420ms ease;
 }
 
 .name {
@@ -64,6 +91,218 @@
   font-size: 0.98rem;
   line-height: 1.4;
   color: var(--text-muted);
+}
+
+.card[data-service-id='food-trucks'] .imageMotion {
+  animation: foodTruckLift 6.6s ease-in-out infinite;
+}
+
+.card[data-service-id='food-trucks'] .imageWrap::before {
+  inset: 18% -22% 12% auto;
+  width: 46%;
+  border-radius: 999px;
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0), rgba(255, 248, 214, 0.84), rgba(255, 255, 255, 0));
+  opacity: 0.6;
+  transform: skewX(-18deg) translateX(-220%);
+  animation: serviceShineSweep 7.5s linear infinite;
+}
+
+.card[data-service-id='cotton-candy'] .imageMotion {
+  animation: cottonCandyDrift 5.8s ease-in-out infinite;
+}
+
+.card[data-service-id='cotton-candy'] .imageWrap::before {
+  inset: 14% 20% 28%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(247, 166, 195, 0.24), rgba(247, 166, 195, 0) 72%);
+  filter: blur(6px);
+  animation: cottonGlowPulse 5.2s ease-in-out infinite;
+}
+
+.card[data-service-id='chocolate-fountain'] .imageMotion {
+  animation: serviceIdleLift 6.4s ease-in-out infinite;
+}
+
+.card[data-service-id='chocolate-fountain'] .imageWrap::before {
+  inset: 18% 16% 12%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 24%, rgba(159, 106, 68, 0.26), rgba(159, 106, 68, 0) 46%),
+    radial-gradient(circle at 50% 82%, rgba(246, 220, 107, 0.2), rgba(246, 220, 107, 0) 54%);
+  filter: blur(10px);
+  animation: fountainHaloPulse 6.8s ease-in-out infinite;
+}
+
+.card[data-service-id='chocolate-fountain'] .imageWrap::after {
+  left: 22%;
+  right: 22%;
+  bottom: 14%;
+  height: 12%;
+  border-radius: 999px;
+  background: rgba(107, 74, 53, 0.16);
+  filter: blur(10px);
+  opacity: 0.72;
+  animation: fountainShadowPulse 6.8s ease-in-out infinite;
+}
+
+.card[data-service-id='animators'] .imageMotion {
+  animation: serviceIdleLiftWide 7.1s ease-in-out infinite;
+}
+
+.card[data-service-id='animators'] .imageWrap::before {
+  inset: 10% 10% auto;
+  height: 38%;
+  background:
+    radial-gradient(circle at 10% 60%, rgba(246, 220, 107, 0.72) 0 4px, transparent 5px),
+    radial-gradient(circle at 34% 28%, rgba(247, 166, 195, 0.72) 0 4px, transparent 5px),
+    radial-gradient(circle at 62% 70%, rgba(228, 87, 69, 0.64) 0 4px, transparent 5px),
+    radial-gradient(circle at 84% 26%, rgba(246, 220, 107, 0.72) 0 4px, transparent 5px);
+  filter: drop-shadow(0 8px 14px rgba(122, 89, 63, 0.08));
+  animation: confettiDrift 7.4s ease-in-out infinite;
+}
+
+.card[data-service-id='animators'] .imageWrap::after {
+  inset: auto 18% 14% 18%;
+  height: 18%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(247, 166, 195, 0.18), rgba(247, 166, 195, 0) 68%);
+  filter: blur(8px);
+  animation: cottonGlowPulse 6.8s ease-in-out infinite;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .card:hover {
+    transform: translate3d(0, -8px, 0);
+    box-shadow: 0 28px 48px rgba(122, 89, 63, 0.16);
+    border-color: rgba(228, 87, 69, 0.16);
+  }
+
+  .card:hover .imageMotion {
+    transform: translate3d(0, -4px, 0) scale(1.03);
+  }
+}
+
+@media (hover: none) and (prefers-reduced-motion: no-preference) {
+  .card:active {
+    transform: translate3d(0, -4px, 0);
+    box-shadow: 0 22px 38px rgba(122, 89, 63, 0.16);
+  }
+}
+
+@keyframes foodTruckLift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -5px, 0);
+  }
+}
+
+@keyframes serviceShineSweep {
+  0% {
+    transform: skewX(-18deg) translateX(-220%);
+    opacity: 0;
+  }
+
+  18% {
+    opacity: 0.7;
+  }
+
+  52% {
+    opacity: 0.42;
+  }
+
+  100% {
+    transform: skewX(-18deg) translateX(220%);
+    opacity: 0;
+  }
+}
+
+@keyframes cottonCandyDrift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-1deg);
+  }
+
+  50% {
+    transform: translate3d(0, -7px, 0) rotate(1deg);
+  }
+}
+
+@keyframes cottonGlowPulse {
+  0%,
+  100% {
+    transform: scale(0.92);
+    opacity: 0.55;
+  }
+
+  50% {
+    transform: scale(1.08);
+    opacity: 0.88;
+  }
+}
+
+@keyframes fountainHaloPulse {
+  0%,
+  100% {
+    transform: scale(0.96);
+    opacity: 0.56;
+  }
+
+  50% {
+    transform: scale(1.05);
+    opacity: 0.82;
+  }
+}
+
+@keyframes fountainShadowPulse {
+  0%,
+  100% {
+    transform: scaleX(0.94);
+    opacity: 0.62;
+  }
+
+  50% {
+    transform: scaleX(1.06);
+    opacity: 0.82;
+  }
+}
+
+@keyframes confettiDrift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.7;
+  }
+
+  50% {
+    transform: translate3d(0, -6px, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes serviceIdleLift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -4px, 0);
+  }
+}
+
+@keyframes serviceIdleLiftWide {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-0.4deg);
+  }
+
+  50% {
+    transform: translate3d(0, -4px, 0) rotate(0.6deg);
+  }
 }
 
 @media (min-width: 900px) {
@@ -79,5 +318,14 @@
   .card {
     min-height: 100%;
     align-content: stretch;
+  }
+}
+
+@media (max-width: 900px) {
+  .card[data-service-id='food-trucks'] .imageMotion,
+  .card[data-service-id='cotton-candy'] .imageMotion,
+  .card[data-service-id='chocolate-fountain'] .imageMotion,
+  .card[data-service-id='animators'] .imageMotion {
+    animation-duration: 7.8s;
   }
 }

@@ -26,6 +26,10 @@
 }
 
 .storyCard {
+  --review-tilt-x: 0deg;
+  --review-tilt-y: 0deg;
+  --review-photo-shift-x: 0px;
+  --review-photo-shift-y: 0px;
   display: grid;
   position: relative;
   overflow: hidden;
@@ -43,10 +47,34 @@
   will-change: transform;
 }
 
+.storyCard::after {
+  content: '';
+  position: absolute;
+  inset: auto 12% 3% 12%;
+  height: 14%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 228, 184, 0.32), rgba(255, 228, 184, 0) 72%);
+  filter: blur(12px);
+  opacity: 0.72;
+  transition: opacity 380ms ease, transform 380ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 .storyMediaWrap {
   position: relative;
   min-height: clamp(12rem, 26vh, 15rem);
   overflow: hidden;
+}
+
+.storyMediaWrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 36%),
+    radial-gradient(circle at 78% 18%, rgba(255, 236, 169, 0.18), transparent 28%);
+  pointer-events: none;
+  opacity: 0.68;
+  transition: opacity 360ms ease;
 }
 
 .storyPhoto {
@@ -63,6 +91,7 @@
   position: absolute;
   left: 1rem;
   top: 1rem;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
   min-height: 2rem;
@@ -105,15 +134,28 @@
 }
 
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .storyCard {
+    transform: perspective(1200px) rotateX(var(--review-tilt-x)) rotateY(var(--review-tilt-y)) translate3d(0, 0, 0);
+  }
+
   .storyCard:hover {
-    transform: translate3d(0, -8px, 0);
+    transform: perspective(1200px) rotateX(var(--review-tilt-x)) rotateY(var(--review-tilt-y)) translate3d(0, -8px, 0);
     box-shadow: 0 28px 52px rgba(93, 63, 45, 0.18);
     border-color: rgba(228, 87, 69, 0.18);
   }
 
+  .storyCard:hover::after {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+
   .storyCard:hover .storyPhoto {
-    transform: scale(1.045);
-    filter: saturate(1.04) contrast(1.01);
+    transform: scale(1.06) translate3d(var(--review-photo-shift-x), var(--review-photo-shift-y), 0);
+    filter: saturate(1.05) contrast(1.01);
+  }
+
+  .storyCard:hover .storyMediaWrap::after {
+    opacity: 0.92;
   }
 
   .storyCard:hover .storyContent {

@@ -2,13 +2,13 @@ import { render, screen, within } from '@testing-library/react';
 import { ServicesSection } from './ServicesSection';
 import { services } from '../../data/siteContent';
 
-test('renders the services showcase with horizontal mobile scroll snap', () => {
+test('renders the services showcase with horizontal mobile scroll snap and micro-scene motion hooks', () => {
   render(<ServicesSection />);
 
-  expect(screen.getByRole('heading', { level: 2, name: 'Услуги' })).toBeInTheDocument();
+  const section = screen.getByTestId('section-services');
+  expect(within(section).getByRole('heading', { level: 2 })).toBeInTheDocument();
 
   const strip = screen.getByTestId('services-strip');
-
   expect(strip).toHaveAttribute('data-scroll-snap', 'x');
 
   const stripQueries = within(strip);
@@ -18,13 +18,16 @@ test('renders the services showcase with horizontal mobile scroll snap', () => {
     expect(stripQueries.getByText(service.description)).toBeInTheDocument();
   });
 
-  expect(stripQueries.getByRole('img', { name: 'Шоколадный фонтан' })).toHaveAttribute(
-    'src',
-    expect.stringContaining('/images/hero/chocolate-fountain-card-static.svg'),
-  );
+  const cards = strip.querySelectorAll('[data-motion-service="micro-scene"]');
+  expect(cards).toHaveLength(4);
 
-  expect(stripQueries.getByRole('img', { name: 'Аниматоры' })).toHaveAttribute(
-    'src',
-    expect.stringContaining('/images/illustrations/animators-brothers.svg'),
-  );
+  const motionLayers = strip.querySelectorAll('[data-motion-image="true"]');
+  expect(motionLayers).toHaveLength(4);
+
+  expect(strip.querySelector('[data-service-id="food-trucks"]')).toBeTruthy();
+  expect(strip.querySelector('[data-service-scene="cotton-candy"]')).toBeTruthy();
+  expect(strip.querySelector('[data-service-id="chocolate-fountain"]')).toBeTruthy();
+  expect(strip.querySelector('[data-service-id="animators"]')).toBeTruthy();
+
+  expect(stripQueries.getAllByRole('img')).toHaveLength(4);
 });

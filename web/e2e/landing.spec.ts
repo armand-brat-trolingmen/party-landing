@@ -28,41 +28,27 @@ test('anchor navigation lands section panels in a consistent visual band below t
   await expect(header).toBeVisible();
 
   const h = await headerHeight(page);
-  const nav = page.getByRole('navigation', { name: 'Основная навигация' }).first();
+  const nav = page.getByTestId('site-header').locator('nav').first();
   await expect(nav).toBeVisible();
 
-  const checks = [
-    { id: 'services', link: 'Услуги', heading: 'Услуги' },
-    { id: 'about', link: 'О нас', heading: 'О нас' },
-    { id: 'reviews', link: 'Отзывы', heading: 'Отзывы' },
-    { id: 'faq', link: 'Частые вопросы', heading: 'Частые вопросы' },
-    { id: 'contact', link: 'Контакты', heading: 'Контакты' },
-  ] as const;
+  const sectionIds = ['services', 'about', 'reviews', 'faq', 'contact'] as const;
 
-  for (const item of checks) {
-    await nav.getByRole('link', { name: item.link }).click();
+  for (const sectionId of sectionIds) {
+    await nav.locator(`a[href="#${sectionId}"]`).click();
 
-    const heading = page.getByRole('heading', { level: 2, name: item.heading }).first();
-    await expect(heading).toBeVisible();
+    const section = page.locator(`#${sectionId}`);
+    await expect(section).toBeVisible();
+
+    await expect.poll(async () => panelTopGap(page, sectionId)).toBeGreaterThan(8);
+    await expect.poll(async () => panelTopGap(page, sectionId)).toBeLessThan(56);
 
     await expect
       .poll(async () => {
-        const box = await heading.boundingBox();
-        if (!box) return -1;
-        return box.y;
-      })
-      .toBeGreaterThan(h - 2);
-
-    await expect
-      .poll(async () => {
-        const box = await heading.boundingBox();
+        const box = await section.boundingBox();
         if (!box) return Number.POSITIVE_INFINITY;
-        return box.y;
+        return box.y - h;
       })
-      .toBeLessThan(h + 280);
-
-    await expect.poll(async () => panelTopGap(page, item.id)).toBeGreaterThan(8);
-    await expect.poll(async () => panelTopGap(page, item.id)).toBeLessThan(56);
+      .toBeLessThan(280);
   }
 });
 
@@ -85,12 +71,12 @@ test('mobile menu is a proper disclosure, uses an animated icon trigger, closes 
   await expect(menuButton).toHaveAttribute('data-menu-open', 'true');
   await expect(page.getByTestId('menu-button-line-middle')).toHaveCSS('opacity', '0');
 
-  const mobileNav = page.getByRole('navigation', { name: 'Основная навигация' });
+  const mobileNav = page.locator('[class*="mobilePanel"] nav').first();
   await expect(mobileNav).toBeVisible();
 
   await mobileNav.locator('a[href="#reviews"]').click();
   await expect(menuButton).toHaveAttribute('aria-expanded', 'false');
-  await expect(page.getByRole('navigation', { name: 'Основная навигация' })).toHaveCount(0);
+  await expect(page.locator('[class*="mobilePanel"] nav')).toHaveCount(0);
   await expect.poll(async () => panelTopGap(page, 'reviews')).toBeGreaterThan(8);
   await expect.poll(async () => panelTopGap(page, 'reviews')).toBeLessThan(72);
 });
@@ -239,4 +225,57 @@ test('hero motion, panel glow, and review hover feel animated without breaking l
   const after = await reviewPhoto.evaluate((el) => window.getComputedStyle(el).transform);
 
   expect(before).not.toBe(after);
+});
+
+test('smart header, cinematic faq, and service micro scenes stay wired up on desktop', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/');
+
+  const header = page.getByTestId('site-header');
+  await page.evaluate(() => window.scrollTo(0, 180));
+  await expect(header).toHaveAttribute('data-header-state', 'compact');
+
+  const faqLink = page.getByTestId('site-header').locator('nav').first().locator('a[href="#faq"]');
+  await faqLink.click();
+
+  const indicator = page.getByTestId('nav-active-indicator');
+  await expect(faqLink).toHaveAttribute('data-active', 'true');
+  await expect
+    .poll(async () =>
+      indicator.evaluate((el) => Number.parseFloat(window.getComputedStyle(el).opacity)),
+    )
+    .toBeGreaterThan(0);
+
+  const faqAccordion = page.getByTestId('faq-accordion');
+  await expect(faqAccordion).toHaveAttribute('data-motion-faq', 'cinematic');
+  await expect(page.locator('#faq [data-motion-item="glow"][data-open="true"]').first()).toBeVisible();
+
+  await page.locator('#services').scrollIntoViewIfNeeded();
+  const foodTruckImage = page.locator('[data-service-id="food-trucks"] [data-motion-image="true"]').first();
+  const cottonImage = page.locator('[data-service-id="cotton-candy"] [data-motion-image="true"]').first();
+  const truckAnimation = await foodTruckImage.evaluate((el) => window.getComputedStyle(el).animationName);
+  const cottonAnimation = await cottonImage.evaluate((el) => window.getComputedStyle(el).animationName);
+
+  expect(truckAnimation).not.toBe('none');
+  expect(cottonAnimation).not.toBe('none');
+});
+
+test('clicked desktop nav item stays active during smooth anchor scroll', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/');
+
+  const nav = page.getByTestId('site-header').locator('nav').first();
+  const contactLink = nav.locator('a[href="#contact"]');
+
+  await contactLink.click();
+  await expect(contactLink).toHaveAttribute('data-active', 'true');
+  const samples: string[] = [];
+
+  for (const delay of [50, 300, 500, 800]) {
+    await page.waitForTimeout(delay === 50 ? 50 : delay - [50, 300, 500, 800][[50, 300, 500, 800].indexOf(delay) - 1]);
+    const activeHref = await nav.locator('a[data-active="true"]').first().getAttribute('href');
+    samples.push(activeHref ?? '');
+  }
+
+  expect(samples).toEqual(['#contact', '#contact', '#contact', '#contact']);
 });
