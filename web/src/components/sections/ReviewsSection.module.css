@@ -226,3 +226,15 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+@media (max-width: 720px) {
+  .storyCard {
+    will-change: auto;
+    box-shadow: 0 14px 24px rgba(93, 63, 45, 0.1);
+  }
+
+  .storyCard::after {
+    filter: blur(8px);
+    opacity: 0.58;
+  }
+}

@@ -30,6 +30,7 @@ export function AboutSection() {
                     className={styles.illustration}
                     loading="lazy"
                     decoding="async"
+                    fetchPriority="low"
                   />
                 </div>
                 <p className={styles.storyText}>{story.text}</p>

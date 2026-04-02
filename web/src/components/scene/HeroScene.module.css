@@ -244,3 +244,39 @@
     --hero-rotation: 3.5deg;
   }
 }
+
+@media (max-width: 720px) {
+  .frame {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 252, 242, 0.32),
+      0 18px 34px rgba(161, 120, 37, 0.18);
+  }
+
+  .frame::before {
+    filter: blur(6px);
+    opacity: 0.62;
+  }
+
+  .frame::after {
+    filter: blur(14px);
+    opacity: 0.52;
+  }
+
+  .item {
+    animation: none;
+  }
+
+  .itemMedia {
+    animation-duration: 10.8s;
+  }
+
+  .vector {
+    filter: drop-shadow(0 10px 14px rgba(89, 63, 22, 0.18));
+  }
+}
+
+@media (max-width: 720px) and (prefers-reduced-motion: no-preference) {
+  .frame::before {
+    animation: none;
+  }
+}

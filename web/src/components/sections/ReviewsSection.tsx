@@ -66,6 +66,7 @@ export function ReviewsSection() {
                       className={styles.storyPhoto}
                       loading="lazy"
                       decoding="async"
+                      fetchPriority="low"
                       style={{ objectPosition: story.objectPosition }}
                     />
                     <span className={styles.storyBadge}>{story.badge}</span>
@@ -89,6 +90,7 @@ export function ReviewsSection() {
                     className={styles.photo}
                     loading="lazy"
                     decoding="async"
+                    fetchPriority="low"
                     style={{ objectPosition: photo.objectPosition }}
                   />
                   <figcaption className={styles.caption}>

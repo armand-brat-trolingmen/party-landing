@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Nunito+Sans:wght@400;500;600;700&display=swap');
 @import './tokens.css';
 
 :root {
@@ -326,5 +325,47 @@ svg {
     inset: 7rem 1rem 2rem;
     filter: blur(26px);
     opacity: 0.66;
+  }
+}
+
+@media (max-width: 720px) {
+  .site-panel-glow {
+    --section-glow-duration: 24s;
+  }
+
+  .site-panel-glow::before {
+    inset: 8% 8% 10%;
+    filter: blur(18px);
+    opacity: 0.72;
+  }
+
+  .site-shell::before {
+    inset: 6.5rem 0.75rem 1.5rem;
+    filter: blur(18px);
+    opacity: 0.52;
+  }
+}
+
+@media (max-width: 720px) and (prefers-reduced-motion: no-preference) {
+  .site-shell::before {
+    animation: none;
+    transform: none;
+  }
+
+  .site-panel-glow::before {
+    animation: none;
+    transform: none;
+  }
+
+  .site-reveal[data-reveal-state='pending'] {
+    transform: translate3d(0, 0.9rem, 0);
+    filter: none;
+  }
+
+  .site-reveal[data-reveal-state='visible'] {
+    filter: none;
+    transition:
+      opacity var(--reveal-soft-duration) var(--reveal-soft-ease),
+      transform var(--reveal-soft-duration) var(--reveal-soft-ease);
   }
 }

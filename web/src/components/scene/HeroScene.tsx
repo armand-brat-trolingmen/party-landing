@@ -19,6 +19,8 @@ export function HeroScene() {
       ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
       : false;
     const supportsFinePointer = supportsMatchMedia ? window.matchMedia('(pointer: fine)').matches : false;
+    const compactViewport = supportsMatchMedia ? window.matchMedia('(max-width: 720px)').matches : window.innerWidth <= 720;
+    const enableScrollMotion = !prefersReducedMotion && !compactViewport;
     let rafId = 0;
 
     const writePointer = (x: number, y: number) => {
@@ -49,14 +51,18 @@ export function HeroScene() {
       writePointer(x, y);
     };
 
-    syncScroll();
+    if (enableScrollMotion) {
+      syncScroll();
+    } else {
+      frame.style.setProperty('--hero-scroll-shift', '0px');
+    }
 
     if (!prefersReducedMotion && supportsFinePointer) {
       frame.addEventListener('pointermove', handlePointerMove);
       frame.addEventListener('pointerleave', resetPointer);
     }
 
-    if (!prefersReducedMotion) {
+    if (enableScrollMotion) {
       window.addEventListener('scroll', syncScroll, { passive: true });
       window.addEventListener('resize', syncScroll);
     }

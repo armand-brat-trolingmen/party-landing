@@ -31,7 +31,14 @@ export function ServicesSection() {
               >
                 <div className={styles.imageWrap} data-service-scene={service.id}>
                   <div className={styles.imageMotion} data-motion-image="true">
-                    <img src={service.image} alt={service.name} className={styles.image} loading="lazy" />
+                    <img
+                      src={service.image}
+                      alt={service.name}
+                      className={styles.image}
+                      loading="lazy"
+                      decoding="async"
+                      fetchPriority="low"
+                    />
                   </div>
                 </div>
                 <h3 className={styles.name}>{service.name}</h3>

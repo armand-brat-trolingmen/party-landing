@@ -31,12 +31,21 @@ test('review stories define premium hover motion for photo and content', () => {
 test('mobile motion stays softer with slower glow and tactile review feedback', () => {
   const globalCss = readFileSync(resolve(process.cwd(), 'src/styles/global.css'), 'utf8');
   const heroCss = readFileSync(resolve(process.cwd(), 'src/components/scene/HeroScene.module.css'), 'utf8');
+  const servicesCss = readFileSync(resolve(process.cwd(), 'src/components/sections/ServicesSection.module.css'), 'utf8');
   const reviewsCss = readFileSync(resolve(process.cwd(), 'src/components/sections/ReviewsSection.module.css'), 'utf8');
 
   expect(globalCss).toContain('--section-glow-duration: 22s;');
   expect(globalCss).toContain('filter: blur(24px);');
+  expect(globalCss).toContain('@media (max-width: 720px) and (prefers-reduced-motion: no-preference)');
+  expect(globalCss).toContain('animation: none;');
+  expect(globalCss).toContain('transform: none;');
   expect(heroCss).toContain('--hero-float-shift-start: -3px;');
   expect(heroCss).toContain('--hero-float-shift-end: 4px;');
+  expect(heroCss).toContain('@media (max-width: 720px)');
+  expect(heroCss).toContain('.item {\n    animation: none;');
+  expect(heroCss).toContain('@media (max-width: 720px) and (prefers-reduced-motion: no-preference)');
+  expect(servicesCss).toContain(".card[data-service-id='food-trucks'] .imageWrap::before,");
+  expect(servicesCss).toContain('animation: none;');
   expect(reviewsCss).toContain('@media (hover: none) and (prefers-reduced-motion: no-preference)');
   expect(reviewsCss).toContain('.storyCard:active');
 });

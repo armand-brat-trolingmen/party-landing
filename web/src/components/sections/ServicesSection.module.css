@@ -322,10 +322,43 @@
 }
 
 @media (max-width: 900px) {
+  .card {
+    box-shadow: 0 14px 24px rgba(122, 89, 63, 0.08);
+  }
+
   .card[data-service-id='food-trucks'] .imageMotion,
   .card[data-service-id='cotton-candy'] .imageMotion,
   .card[data-service-id='chocolate-fountain'] .imageMotion,
   .card[data-service-id='animators'] .imageMotion {
-    animation-duration: 7.8s;
+    animation-duration: 9.6s;
+  }
+
+  .card[data-service-id='food-trucks'] .imageWrap::before,
+  .card[data-service-id='cotton-candy'] .imageWrap::before,
+  .card[data-service-id='chocolate-fountain'] .imageWrap::before,
+  .card[data-service-id='chocolate-fountain'] .imageWrap::after,
+  .card[data-service-id='animators'] .imageWrap::before,
+  .card[data-service-id='animators'] .imageWrap::after {
+    animation: none;
+    transform: none;
+    filter: none;
+  }
+
+  .card[data-service-id='food-trucks'] .imageWrap::before {
+    opacity: 0.32;
+  }
+
+  .card[data-service-id='cotton-candy'] .imageWrap::before,
+  .card[data-service-id='chocolate-fountain'] .imageWrap::before,
+  .card[data-service-id='animators'] .imageWrap::after {
+    opacity: 0.56;
+  }
+
+  .card[data-service-id='chocolate-fountain'] .imageWrap::after {
+    opacity: 0.52;
+  }
+
+  .card[data-service-id='animators'] .imageWrap::before {
+    opacity: 0.78;
   }
 }
