@@ -12,7 +12,9 @@ test('renders review stories as four editorial-style cards with badges, titles, 
 
   const images = sectionQueries.getAllByRole('img');
   expect(images).toHaveLength(4);
-  expect(sectionQueries.getAllByTestId('review-story-card')).toHaveLength(4);
+  const storyCards = sectionQueries.getAllByTestId('review-story-card');
+  expect(storyCards).toHaveLength(4);
+  storyCards.forEach((card) => expect(card).toHaveAttribute('data-motion-card', 'cinematic'));
 
   expect(sectionQueries.getByText('Аниматоры')).toBeInTheDocument();
   expect(sectionQueries.getByText('Когда праздник сразу оживает')).toBeInTheDocument();

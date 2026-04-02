@@ -27,6 +27,7 @@
 
 .storyCard {
   display: grid;
+  position: relative;
   overflow: hidden;
   min-height: clamp(18rem, 44vh, 26rem);
   border-radius: calc(var(--radius-card) - 2px);
@@ -35,17 +36,27 @@
     linear-gradient(180deg, rgba(255, 253, 249, 0.98), rgba(255, 244, 233, 0.98)),
     radial-gradient(circle at 14% 18%, rgba(246, 220, 107, 0.12), transparent 36%);
   box-shadow: 0 18px 36px rgba(93, 63, 45, 0.14);
+  transition:
+    transform 480ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 480ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 420ms ease;
+  will-change: transform;
 }
 
 .storyMediaWrap {
   position: relative;
   min-height: clamp(12rem, 26vh, 15rem);
+  overflow: hidden;
 }
 
 .storyPhoto {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transform-origin: center center;
+  transition:
+    transform 760ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 640ms ease;
 }
 
 .storyBadge {
@@ -65,6 +76,7 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .storyContent {
@@ -72,6 +84,7 @@
   align-content: start;
   gap: 0.7rem;
   padding: 1.1rem 1.1rem 1.2rem;
+  transition: transform 480ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .storyTitle {
@@ -89,6 +102,44 @@
   color: var(--text-muted);
   font-size: 0.92rem;
   font-weight: 600;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .storyCard:hover {
+    transform: translate3d(0, -8px, 0);
+    box-shadow: 0 28px 52px rgba(93, 63, 45, 0.18);
+    border-color: rgba(228, 87, 69, 0.18);
+  }
+
+  .storyCard:hover .storyPhoto {
+    transform: scale(1.045);
+    filter: saturate(1.04) contrast(1.01);
+  }
+
+  .storyCard:hover .storyContent {
+    transform: translate3d(0, -4px, 0);
+  }
+
+  .storyCard:hover .storyBadge {
+    transform: translate3d(0, -2px, 0);
+  }
+}
+
+@media (hover: none) and (prefers-reduced-motion: no-preference) {
+  .storyCard:active {
+    transform: translate3d(0, -4px, 0);
+    box-shadow: 0 24px 42px rgba(93, 63, 45, 0.18);
+    border-color: rgba(228, 87, 69, 0.16);
+  }
+
+  .storyCard:active .storyPhoto {
+    transform: scale(1.02);
+    filter: saturate(1.03);
+  }
+
+  .storyCard:active .storyContent {
+    transform: translate3d(0, -2px, 0);
+  }
 }
 
 .photoCard {

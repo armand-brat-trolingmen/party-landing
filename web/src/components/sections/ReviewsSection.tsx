@@ -15,7 +15,7 @@ export function ReviewsSection() {
         data-reveal-state={revealState}
         data-reveal-stagger="true"
       >
-        <article className={styles.frame}>
+        <article className={`${styles.frame} site-panel-glow`}>
           <SectionHeading
             eyebrow={reviewCopy.eyebrow}
             title={<span id="reviews-title">Отзывы</span>}
@@ -24,7 +24,12 @@ export function ReviewsSection() {
           {activeReviewVariant === 'stories' ? (
             <div className={`${styles.storyGrid} reveal-grid`} data-testid="reviews-stories">
               {reviewStories.map((story) => (
-                <article key={story.id} className={styles.storyCard} data-testid="review-story-card">
+                <article
+                  key={story.id}
+                  className={styles.storyCard}
+                  data-testid="review-story-card"
+                  data-motion-card="cinematic"
+                >
                   <div className={styles.storyMediaWrap}>
                     <img
                       src={story.image}

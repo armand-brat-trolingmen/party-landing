@@ -144,7 +144,37 @@ svg {
   max-width: 38rem;
 }
 
+.site-panel-glow {
+  --section-glow-duration: 18s;
+  position: relative;
+  isolation: isolate;
+}
+
+.site-panel-glow::before {
+  content: '';
+  position: absolute;
+  inset: 4% 5% 7%;
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 16% 20%, rgba(247, 166, 195, 0.16), transparent 30%),
+    radial-gradient(circle at 84% 26%, rgba(246, 220, 107, 0.2), transparent 32%),
+    radial-gradient(circle at 52% 82%, rgba(255, 243, 201, 0.18), transparent 36%);
+  filter: blur(34px);
+  opacity: 0.92;
+}
+
+.site-panel-glow > * {
+  position: relative;
+  z-index: 1;
+}
+
 @media (prefers-reduced-motion: no-preference) {
+  .site-panel-glow::before {
+    animation: sectionGlowDrift var(--section-glow-duration) ease-in-out infinite alternate;
+  }
+
   .site-reveal[data-reveal-state='pending'] {
     opacity: 0;
     transform: translate3d(0, var(--reveal-distance), 0);
@@ -214,6 +244,18 @@ svg {
   }
 }
 
+@keyframes sectionGlowDrift {
+  from {
+    transform: translate3d(-16px, -10px, 0) scale(0.98);
+    opacity: 0.72;
+  }
+
+  to {
+    transform: translate3d(14px, 12px, 0) scale(1.04);
+    opacity: 0.98;
+  }
+}
+
 @media (max-width: 900px) {
   .site-section {
     min-height: clamp(30rem, 100svh, 48rem);
@@ -222,5 +264,15 @@ svg {
 
   .site-section > .site-container {
     min-height: clamp(24rem, 82svh, 42rem);
+  }
+
+  .site-panel-glow {
+    --section-glow-duration: 22s;
+  }
+
+  .site-panel-glow::before {
+    inset: 6% 7% 10%;
+    filter: blur(24px);
+    opacity: 0.84;
   }
 }

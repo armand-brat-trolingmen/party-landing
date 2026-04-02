@@ -13,7 +13,7 @@ export function ContactPlaceholderSection() {
         data-reveal-state={revealState}
         data-reveal-stagger="true"
       >
-        <article className={styles.frame}>
+        <article className={`${styles.frame} site-panel-glow`}>
           <SectionHeading title={<span id="contact-title">Контакты</span>} />
           <div className={`${styles.noteCard} reveal-grid`} data-testid="contact-note">
             <p className={styles.noteText}>

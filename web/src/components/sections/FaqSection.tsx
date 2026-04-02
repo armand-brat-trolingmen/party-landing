@@ -17,7 +17,7 @@ export function FaqSection() {
         data-reveal-state={revealState}
         data-reveal-stagger="true"
       >
-        <article className={styles.frame}>
+        <article className={`${styles.frame} site-panel-glow`}>
           <SectionHeading
             eyebrow={faqCopy.eyebrow}
             title={<span id="faq-title">Частые вопросы</span>}

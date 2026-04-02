@@ -14,7 +14,7 @@ export function ServicesSection() {
         data-reveal-state={revealState}
         data-reveal-stagger="true"
       >
-        <div className={styles.frame}>
+        <div className={`${styles.frame} site-panel-glow`}>
           <SectionHeading
             eyebrow="Что мы делаем"
             title={<span id="services-title">Услуги</span>}

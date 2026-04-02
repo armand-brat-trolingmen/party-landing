@@ -14,7 +14,7 @@ export function AboutSection() {
         data-reveal-state={revealState}
         data-reveal-stagger="true"
       >
-        <article className={styles.frame}>
+        <article className={`${styles.frame} site-panel-glow`}>
           <SectionHeading
             eyebrow="Кто мы"
             title={<span id="about-title">О нас</span>}

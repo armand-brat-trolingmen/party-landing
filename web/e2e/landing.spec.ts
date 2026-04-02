@@ -208,3 +208,35 @@ test('section panels use a soft reveal state as they enter the viewport', async 
 
   await expect(contactPanel).toHaveAttribute('data-reveal-state', 'visible');
 });
+
+test('hero motion, panel glow, and review hover feel animated without breaking layout', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/');
+
+  const heroFrame = page.getByTestId('hero-scene-frame');
+  const foodTruckCard = page.getByTestId('hero-scene-card-food-truck');
+  const reviewsPanel = page.locator('#reviews .site-panel-glow').first();
+  const reviewCard = page.getByTestId('review-story-card').first();
+  const reviewPhoto = reviewCard.locator('img').first();
+
+  await expect(heroFrame).toHaveAttribute('data-motion-frame', 'parallax');
+  await expect(foodTruckCard).toHaveAttribute('data-motion-depth', 'front');
+  await expect(reviewsPanel).toBeVisible();
+
+  const heroAnimation = await foodTruckCard.evaluate((el) => window.getComputedStyle(el).animationName);
+  expect(heroAnimation).not.toBe('none');
+
+  const panelGlowAnimation = await reviewsPanel.evaluate((el) =>
+    window.getComputedStyle(el, '::before').animationName,
+  );
+  expect(panelGlowAnimation).not.toBe('none');
+
+  await page.locator('#reviews').scrollIntoViewIfNeeded();
+  await expect(reviewCard).toBeVisible();
+
+  const before = await reviewPhoto.evaluate((el) => window.getComputedStyle(el).transform);
+  await reviewCard.hover();
+  const after = await reviewPhoto.evaluate((el) => window.getComputedStyle(el).transform);
+
+  expect(before).not.toBe(after);
+});

@@ -47,6 +47,27 @@ test('renders the one-page anchor shell', () => {
   ]);
 });
 
+test('wires layered hero motion, ambient section glow, and richer review-card motion hooks', () => {
+  render(<App />);
+
+  const heroScene = screen.getByTestId('hero-scene');
+  const heroFrame = screen.getByTestId('hero-scene-frame');
+  const reviewsSection = screen.getByTestId('section-reviews');
+
+  expect(heroScene).toHaveAttribute('data-motion-scene', 'layered');
+  expect(heroFrame).toHaveAttribute('data-motion-frame', 'parallax');
+  expect(screen.getByTestId('hero-scene-card-cotton-candy')).toHaveAttribute('data-motion-depth', 'back');
+  expect(screen.getByTestId('hero-scene-card-food-truck')).toHaveAttribute('data-motion-depth', 'front');
+  expect(screen.getByTestId('hero-scene-card-chocolate-fountain')).toHaveAttribute('data-motion-depth', 'mid');
+
+  expect(document.querySelectorAll('.site-panel-glow')).toHaveLength(5);
+
+  const reviewCards = within(reviewsSection).getAllByTestId('review-story-card');
+  for (const card of reviewCards) {
+    expect(card).toHaveAttribute('data-motion-card', 'cinematic');
+  }
+});
+
 test('renders filled about section, story-based reviews, animated faq, and a final contact note', () => {
   render(<App />);
 
