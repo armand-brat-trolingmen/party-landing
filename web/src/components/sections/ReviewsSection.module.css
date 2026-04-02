@@ -35,18 +35,6 @@
   object-fit: cover;
 }
 
-.photoCard:nth-child(2) .photo {
-  object-position: 56% 40%;
-}
-
-.photoCard:nth-child(3) .photo {
-  object-position: 45% 52%;
-}
-
-.photoCard:nth-child(4) .photo {
-  object-position: 62% 44%;
-}
-
 @media (min-width: 900px) {
   .grid {
     grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));

@@ -111,11 +111,14 @@
   right: 18px;
   top: calc(100% + 10px);
   width: min(92vw, 320px);
+  max-height: calc(100dvh - var(--header-offset) - 24px);
   padding: 12px;
   border-radius: 18px;
   border: 1px solid rgba(122, 89, 63, 0.14);
   background: color-mix(in srgb, var(--bg-surface) 90%, white 10%);
   box-shadow: 0 22px 48px rgba(93, 63, 45, 0.18);
+  overflow: auto;
+  overscroll-behavior: contain;
   animation: panelIn 160ms ease-out;
   z-index: 11;
 }

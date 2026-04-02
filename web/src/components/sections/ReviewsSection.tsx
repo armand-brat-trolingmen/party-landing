@@ -15,7 +15,14 @@ export function ReviewsSection() {
           <div className={styles.grid}>
             {reviewPhotos.map((photo) => (
               <figure key={photo.id} className={styles.photoCard}>
-                <img src={photo.image} alt={photo.alt} className={styles.photo} loading="lazy" />
+                <img
+                  src={photo.image}
+                  alt={photo.alt}
+                  className={styles.photo}
+                  loading="lazy"
+                  decoding="async"
+                  style={{ objectPosition: photo.objectPosition }}
+                />
               </figure>
             ))}
           </div>

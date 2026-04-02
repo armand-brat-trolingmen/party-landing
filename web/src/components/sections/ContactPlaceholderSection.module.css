@@ -20,7 +20,7 @@
   border-radius: 1.35rem;
   border: 1px solid rgba(122, 89, 63, 0.14);
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.34)),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.56), rgba(255, 249, 242, 0.28)),
     radial-gradient(circle at 16% 18%, rgba(246, 220, 107, 0.18), transparent 46%),
     radial-gradient(circle at 88% 84%, rgba(247, 166, 195, 0.14), transparent 54%);
 }
@@ -51,9 +51,8 @@
   content: '';
   position: absolute;
   inset: 0;
-  transform: translateX(-40%);
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
-  animation: shimmer 1.6s ease-in-out infinite;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+  opacity: 0.55;
 }
 
 .field {
@@ -107,18 +106,6 @@
     repeating-linear-gradient(0deg, rgba(122, 89, 63, 0.1) 0 1px, transparent 1px 12px),
     repeating-linear-gradient(90deg, rgba(122, 89, 63, 0.06) 0 1px, transparent 1px 14px),
     linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0.16));
-}
-
-@keyframes shimmer {
-  0% {
-    transform: translateX(-50%);
-  }
-  50% {
-    transform: translateX(40%);
-  }
-  100% {
-    transform: translateX(130%);
-  }
 }
 
 @media (min-width: 900px) {
