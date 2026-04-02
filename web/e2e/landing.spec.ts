@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
 async function headerHeight(page: Page) {
   const header = page.getByRole('banner').first();
@@ -6,25 +6,37 @@ async function headerHeight(page: Page) {
   return box?.height ?? 0;
 }
 
-test('anchor navigation lands with headings visible below the sticky header', async ({ page }) => {
+async function panelTopGap(page: Page, sectionId: string) {
+  const header = page.getByRole('banner').first();
+  const headerBox = await header.boundingBox();
+  const panel = page.locator(`#${sectionId} > .site-container`).first();
+  const panelBox = await panel.boundingBox();
+
+  if (!headerBox || !panelBox) {
+    return Number.POSITIVE_INFINITY;
+  }
+
+  return panelBox.y - headerBox.height;
+}
+
+test('anchor navigation lands section panels in a consistent visual band below the sticky header', async ({
+  page,
+}) => {
   await page.goto('/');
 
   const header = page.getByRole('banner').first();
   await expect(header).toBeVisible();
 
   const h = await headerHeight(page);
-  const viewportHeight = page.viewportSize()?.height ?? 800;
-  const upperY = Math.min(h + 420, viewportHeight * 0.75);
-
   const nav = page.getByRole('navigation', { name: 'Основная навигация' }).first();
   await expect(nav).toBeVisible();
 
   const checks = [
-    { link: 'Услуги', heading: 'Услуги' },
-    { link: 'О нас', heading: 'О нас' },
-    { link: 'Отзывы', heading: 'Отзывы' },
-    { link: 'Частые вопросы', heading: 'Частые вопросы' },
-    { link: 'Контакты', heading: 'Контакты' },
+    { id: 'services', link: 'Услуги', heading: 'Услуги' },
+    { id: 'about', link: 'О нас', heading: 'О нас' },
+    { id: 'reviews', link: 'Отзывы', heading: 'Отзывы' },
+    { id: 'faq', link: 'Частые вопросы', heading: 'Частые вопросы' },
+    { id: 'contact', link: 'Контакты', heading: 'Контакты' },
   ] as const;
 
   for (const item of checks) {
@@ -47,11 +59,16 @@ test('anchor navigation lands with headings visible below the sticky header', as
         if (!box) return Number.POSITIVE_INFINITY;
         return box.y;
       })
-      .toBeLessThan(upperY);
+      .toBeLessThan(h + 280);
+
+    await expect.poll(async () => panelTopGap(page, item.id)).toBeGreaterThan(8);
+    await expect.poll(async () => panelTopGap(page, item.id)).toBeLessThan(56);
   }
 });
 
-test('mobile menu is a proper disclosure and closes after clicking a link', async ({ page }) => {
+test('mobile menu is a proper disclosure, closes after clicking a link, and lands the section cleanly', async ({
+  page,
+}) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
 
@@ -68,6 +85,8 @@ test('mobile menu is a proper disclosure and closes after clicking a link', asyn
   await mobileNav.getByRole('link', { name: 'Отзывы' }).click();
   await expect(menuButton).toHaveAttribute('aria-expanded', 'false');
   await expect(page.getByRole('navigation', { name: 'Основная навигация' })).toHaveCount(0);
+  await expect.poll(async () => panelTopGap(page, 'reviews')).toBeGreaterThan(8);
+  await expect.poll(async () => panelTopGap(page, 'reviews')).toBeLessThan(72);
 });
 
 test('mobile services strip is horizontally scrollable', async ({ page }) => {

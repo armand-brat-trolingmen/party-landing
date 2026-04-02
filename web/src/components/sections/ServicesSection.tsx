@@ -4,12 +4,12 @@ import styles from './ServicesSection.module.css';
 
 export function ServicesSection() {
   return (
-    <section className="site-section" data-testid="section-services" aria-labelledby="services">
+    <section id="services" className="site-section" data-testid="section-services" aria-labelledby="services-title">
       <div className="site-container">
         <div className={styles.frame}>
           <SectionHeading
             eyebrow="Что мы делаем"
-            title={<span id="services" className="site-anchor">Услуги</span>}
+            title={<span id="services-title">Услуги</span>}
             description="Четыре выразительных формата для сладкого, подвижного и фотогеничного праздника без перегруженной сцены."
           />
 

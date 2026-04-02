@@ -9,19 +9,38 @@ export function SiteHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(() => window.matchMedia?.('(min-width: 721px)').matches ?? true);
 
+  const getSectionScrollTop = (target: HTMLElement) => {
+    const headerHeight = headerRef.current?.getBoundingClientRect().height ?? 0;
+    const viewportHeight = window.innerHeight;
+    const visibleHeight = Math.max(0, viewportHeight - headerHeight);
+    const anchorTarget = target.querySelector<HTMLElement>(':scope > .site-container') ?? target;
+    const rect = anchorTarget.getBoundingClientRect();
+
+    const desiredTop =
+      rect.height >= visibleHeight - 40
+        ? headerHeight + 20
+        : headerHeight + Math.max(20, (visibleHeight - rect.height) / 2);
+
+    const nextTop = window.scrollY + rect.top - desiredTop;
+    const maxTop = Math.max(0, document.documentElement.scrollHeight - viewportHeight);
+
+    return Math.min(Math.max(0, nextTop), maxTop);
+  };
+
   const scrollToSection = (id: string) => {
     const target = document.getElementById(id);
     if (!target) return;
 
     const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
     const behavior: ScrollBehavior = prefersReducedMotion ? 'auto' : 'smooth';
+    const top = getSectionScrollTop(target);
 
     if (window.requestAnimationFrame) {
-      window.requestAnimationFrame(() => target.scrollIntoView({ behavior, block: 'start' }));
+      window.requestAnimationFrame(() => window.scrollTo({ top, behavior }));
       return;
     }
 
-    window.setTimeout(() => target.scrollIntoView({ behavior, block: 'start' }), 0);
+    window.setTimeout(() => window.scrollTo({ top, behavior }), 0);
   };
 
   const onAnchorClick = (id: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
@@ -102,7 +121,31 @@ export function SiteHeader() {
     const hash = window.location.hash;
     if (!hash) return;
     const id = hash.replace('#', '');
-    scrollToSection(id);
+    const target = document.getElementById(id);
+    if (!target) return;
+
+    const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+    const behavior: ScrollBehavior = prefersReducedMotion ? 'auto' : 'smooth';
+    const headerHeight = headerRef.current?.getBoundingClientRect().height ?? 0;
+    const viewportHeight = window.innerHeight;
+    const visibleHeight = Math.max(0, viewportHeight - headerHeight);
+    const anchorTarget = target.querySelector<HTMLElement>(':scope > .site-container') ?? target;
+    const rect = anchorTarget.getBoundingClientRect();
+    const desiredTop =
+      rect.height >= visibleHeight - 40
+        ? headerHeight + 20
+        : headerHeight + Math.max(20, (visibleHeight - rect.height) / 2);
+    const top = Math.min(
+      Math.max(0, window.scrollY + rect.top - desiredTop),
+      Math.max(0, document.documentElement.scrollHeight - viewportHeight),
+    );
+
+    if (window.requestAnimationFrame) {
+      window.requestAnimationFrame(() => window.scrollTo({ top, behavior }));
+      return;
+    }
+
+    window.setTimeout(() => window.scrollTo({ top, behavior }), 0);
   }, []);
 
   return (

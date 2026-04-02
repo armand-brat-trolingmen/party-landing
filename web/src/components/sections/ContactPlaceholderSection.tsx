@@ -3,9 +3,9 @@ import styles from './ContactPlaceholderSection.module.css';
 
 export function ContactPlaceholderSection() {
   return (
-    <section className="site-section" data-testid="section-contact" aria-labelledby="contact-title">
+    <section id="contact" className="site-section" data-testid="section-contact" aria-labelledby="contact-title">
       <div className="site-container">
-        <article id="contact" className={`${styles.frame} site-anchor`}>
+        <article className={styles.frame}>
           <SectionHeading title={<span id="contact-title">Контакты</span>} />
           <div className={styles.skeleton} data-testid="contact-pattern" aria-hidden="true">
             <div className={styles.form}>

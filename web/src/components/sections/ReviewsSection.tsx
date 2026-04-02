@@ -4,9 +4,9 @@ import styles from './ReviewsSection.module.css';
 
 export function ReviewsSection() {
   return (
-    <section className="site-section" data-testid="section-reviews" aria-labelledby="reviews-title">
+    <section id="reviews" className="site-section" data-testid="section-reviews" aria-labelledby="reviews-title">
       <div className="site-container">
-        <article id="reviews" className={`${styles.frame} site-anchor`}>
+        <article className={styles.frame}>
           <SectionHeading
             eyebrow="Живые кадры"
             title={<span id="reviews-title">Отзывы</span>}

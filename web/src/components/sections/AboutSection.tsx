@@ -4,9 +4,9 @@ import styles from './AboutSection.module.css';
 
 export function AboutSection() {
   return (
-    <section className="site-section" data-testid="section-about" aria-labelledby="about-title">
+    <section id="about" className="site-section" data-testid="section-about" aria-labelledby="about-title">
       <div className="site-container">
-        <article id="about" className={`${styles.frame} site-anchor`}>
+        <article className={styles.frame}>
           <SectionHeading
             eyebrow="Кто мы"
             title={<span id="about-title">О нас</span>}
