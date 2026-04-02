@@ -38,15 +38,24 @@ test('renders filled about section, real-photo reviews, and blank-page faq/conta
   expect(within(aboutSection).getByText('Собираем праздник как редакционную историю бренда.')).toBeInTheDocument();
   expect(within(aboutSection).getByText('Продумываем свет, фактуры и сервировку до мелочей.')).toBeInTheDocument();
   expect(within(aboutSection).getByText('Работаем бережно к площадке и вашему таймингу.')).toBeInTheDocument();
+  expect(
+    within(aboutSection).getByRole('img', { name: 'Иллюстрация редакционной истории бренда Party' }),
+  ).toBeInTheDocument();
+  expect(
+    within(aboutSection).getByRole('img', { name: 'Иллюстрация постановки света и сервировки для события Party' }),
+  ).toBeInTheDocument();
+  expect(
+    within(aboutSection).getByRole('img', { name: 'Иллюстрация точного тайминга и бережной работы на площадке Party' }),
+  ).toBeInTheDocument();
 
   const reviews = within(reviewsSection);
 
   expect(reviews.getByRole('heading', { level: 2, name: 'Отзывы' })).toBeInTheDocument();
-  expect(reviews.getAllByRole('img')).not.toHaveLength(0);
-  expect(reviews.getByRole('img', { name: /гости на празднике party/i })).toHaveAttribute(
-    'src',
-    expect.stringContaining('/images/reviews/review-party-1.png'),
-  );
+  expect(reviews.getAllByRole('img')).toHaveLength(4);
+  expect(reviews.getByText('Аниматоры')).toBeInTheDocument();
+  expect(reviews.getByText('Фудтрак')).toBeInTheDocument();
+  expect(reviews.getByText('Сладкая вата')).toBeInTheDocument();
+  expect(reviews.getByText('Шоколадный фонтан')).toBeInTheDocument();
 
   const faq = within(faqSection);
   const contact = within(contactSection);

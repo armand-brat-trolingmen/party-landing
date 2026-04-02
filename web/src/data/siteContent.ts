@@ -13,10 +13,25 @@ export const siteContent = {
     'Яркие фудтраки, сладкая вата, шоколадный фонтан и аниматоры для событий, которые хочется запомнить.',
 };
 
-export const aboutPoints = [
-  'Собираем праздник как редакционную историю бренда.',
-  'Продумываем свет, фактуры и сервировку до мелочей.',
-  'Работаем бережно к площадке и вашему таймингу.',
+export const aboutStories = [
+  {
+    id: 'brand-story',
+    text: 'Собираем праздник как редакционную историю бренда.',
+    image: '/images/illustrations/about-brand-story.svg',
+    alt: 'Иллюстрация редакционной истории бренда Party',
+  },
+  {
+    id: 'stagecraft',
+    text: 'Продумываем свет, фактуры и сервировку до мелочей.',
+    image: '/images/illustrations/about-stagecraft.svg',
+    alt: 'Иллюстрация постановки света и сервировки для события Party',
+  },
+  {
+    id: 'timing',
+    text: 'Работаем бережно к площадке и вашему таймингу.',
+    image: '/images/illustrations/about-timing.svg',
+    alt: 'Иллюстрация точного тайминга и бережной работы на площадке Party',
+  },
 ] as const;
 
 export const heroSceneItems = [
@@ -54,7 +69,7 @@ export const services = [
   {
     id: 'animators',
     name: 'Аниматоры',
-    image: '/images/reference/animators-placeholder.svg',
+    image: '/images/illustrations/animators-brothers.svg',
     description:
       'Аниматоры держат ритм праздника, вовлекают гостей и снимают неловкость с первых минут.',
   },
@@ -62,21 +77,31 @@ export const services = [
 
 export const reviewPhotos = [
   {
-    id: 'review-party-left',
+    id: 'review-party',
+    title: 'Аниматоры',
     image: '/images/reviews/review-party-1.png',
     alt: 'Гости и Дед Мороз на празднике Party',
     objectPosition: '42% 28%',
   },
   {
-    id: 'review-party-center',
-    image: '/images/reviews/review-party-1.png',
-    alt: 'Гости на праздничном фото Party',
-    objectPosition: '50% 46%',
+    id: 'review-truck',
+    title: 'Фудтрак',
+    image: '/images/reviews/review-truck-1.png',
+    alt: 'Фудтрак Party на выездном событии',
+    objectPosition: '50% 50%',
   },
   {
-    id: 'review-party-right',
-    image: '/images/reviews/review-party-1.png',
-    alt: 'Снегурочка и гости на празднике Party',
-    objectPosition: '70% 34%',
+    id: 'review-cotton',
+    title: 'Сладкая вата',
+    image: '/images/reviews/review-cotton-1.png',
+    alt: 'Стойка сладкой ваты Party на празднике',
+    objectPosition: '50% 42%',
+  },
+  {
+    id: 'review-fountain',
+    title: 'Шоколадный фонтан',
+    image: '/images/reviews/review-fountain-1.png',
+    alt: 'Шоколадный фонтан Party в десертной зоне',
+    objectPosition: '50% 48%',
   },
 ] as const;

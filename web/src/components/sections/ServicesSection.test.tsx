@@ -17,4 +17,9 @@ test('renders the services showcase with horizontal mobile scroll snap', () => {
     expect(stripQueries.getByText(service.name)).toBeInTheDocument();
     expect(stripQueries.getByText(service.description)).toBeInTheDocument();
   });
+
+  expect(stripQueries.getByRole('img', { name: 'Аниматоры' })).toHaveAttribute(
+    'src',
+    expect.stringContaining('/images/illustrations/animators-brothers.svg'),
+  );
 });

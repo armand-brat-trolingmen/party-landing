@@ -23,6 +23,9 @@ export function ReviewsSection() {
                   decoding="async"
                   style={{ objectPosition: photo.objectPosition }}
                 />
+                <figcaption className={styles.caption}>
+                  <span className={styles.label}>{photo.title}</span>
+                </figcaption>
               </figure>
             ))}
           </div>

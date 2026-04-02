@@ -1,4 +1,4 @@
-import { aboutPoints } from '../../data/siteContent';
+import { aboutStories } from '../../data/siteContent';
 import { SectionHeading } from '../ui/SectionHeading';
 import styles from './AboutSection.module.css';
 
@@ -12,13 +12,22 @@ export function AboutSection() {
             title={<span id="about-title">О нас</span>}
             description="Создаём атмосферу sweet-editorial праздника: вкусно, аккуратно и визуально цельно."
           />
-          <ul className={styles.points}>
-            {aboutPoints.map((point) => (
-              <li key={point} className={styles.point}>
-                {point}
-              </li>
+          <div className={styles.grid}>
+            {aboutStories.map((story) => (
+              <article key={story.id} className={styles.storyCard}>
+                <div className={styles.illustrationWrap}>
+                  <img
+                    src={story.image}
+                    alt={story.alt}
+                    className={styles.illustration}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+                <p className={styles.storyText}>{story.text}</p>
+              </article>
             ))}
-          </ul>
+          </div>
         </article>
       </div>
     </section>
