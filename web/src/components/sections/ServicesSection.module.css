@@ -339,13 +339,12 @@
   .card[data-service-id='chocolate-fountain'] .imageWrap::after,
   .card[data-service-id='animators'] .imageWrap::before,
   .card[data-service-id='animators'] .imageWrap::after {
-    animation: none;
     transform: none;
-    filter: none;
   }
 
   .card[data-service-id='food-trucks'] .imageWrap::before {
-    opacity: 0.32;
+    opacity: 0.42;
+    animation: serviceShineSweep 10.5s linear infinite;
   }
 
   .card[data-service-id='cotton-candy'] .imageWrap::before,
@@ -354,11 +353,29 @@
     opacity: 0.56;
   }
 
+  .card[data-service-id='cotton-candy'] .imageWrap::before {
+    filter: blur(4px);
+    animation: cottonGlowPulse 8.4s ease-in-out infinite;
+  }
+
   .card[data-service-id='chocolate-fountain'] .imageWrap::after {
     opacity: 0.52;
+    filter: blur(8px);
+    animation: fountainShadowPulse 10.4s ease-in-out infinite;
+  }
+
+  .card[data-service-id='chocolate-fountain'] .imageWrap::before {
+    filter: blur(7px);
+    animation: fountainHaloPulse 10.4s ease-in-out infinite;
   }
 
   .card[data-service-id='animators'] .imageWrap::before {
     opacity: 0.78;
+    animation: confettiDrift 10.8s ease-in-out infinite;
+  }
+
+  .card[data-service-id='animators'] .imageWrap::after {
+    filter: blur(6px);
+    animation: cottonGlowPulse 10.2s ease-in-out infinite;
   }
 }

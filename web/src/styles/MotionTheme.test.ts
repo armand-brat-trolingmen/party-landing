@@ -28,24 +28,25 @@ test('review stories define premium hover motion for photo and content', () => {
   expect(css).toContain('--review-photo-shift-x: 0px;');
 });
 
-test('mobile motion stays softer with slower glow and tactile review feedback', () => {
+test('mobile motion stays rich with slower ambient movement and tactile review feedback', () => {
   const globalCss = readFileSync(resolve(process.cwd(), 'src/styles/global.css'), 'utf8');
   const heroCss = readFileSync(resolve(process.cwd(), 'src/components/scene/HeroScene.module.css'), 'utf8');
   const servicesCss = readFileSync(resolve(process.cwd(), 'src/components/sections/ServicesSection.module.css'), 'utf8');
   const reviewsCss = readFileSync(resolve(process.cwd(), 'src/components/sections/ReviewsSection.module.css'), 'utf8');
 
-  expect(globalCss).toContain('--section-glow-duration: 22s;');
-  expect(globalCss).toContain('filter: blur(24px);');
+  expect(globalCss).toContain('--section-glow-duration: 24s;');
+  expect(globalCss).toContain('filter: blur(18px);');
   expect(globalCss).toContain('@media (max-width: 720px) and (prefers-reduced-motion: no-preference)');
-  expect(globalCss).toContain('animation: none;');
-  expect(globalCss).toContain('transform: none;');
+  expect(globalCss).toContain('animation: sectionLightTrailDrift 34s ease-in-out infinite alternate;');
+  expect(globalCss).toContain('animation: sectionGlowDrift var(--section-glow-duration) ease-in-out infinite alternate;');
   expect(heroCss).toContain('--hero-float-shift-start: -3px;');
   expect(heroCss).toContain('--hero-float-shift-end: 4px;');
   expect(heroCss).toContain('@media (max-width: 720px)');
-  expect(heroCss).toContain('.item {\n    animation: none;');
-  expect(heroCss).toContain('@media (max-width: 720px) and (prefers-reduced-motion: no-preference)');
+  expect(heroCss).toContain('.item {\n    animation-duration: 13.4s;');
+  expect(heroCss).toContain('.frame::before {\n    filter: blur(8px);');
   expect(servicesCss).toContain(".card[data-service-id='food-trucks'] .imageWrap::before,");
-  expect(servicesCss).toContain('animation: none;');
+  expect(servicesCss).toContain('animation: serviceShineSweep 10.5s linear infinite;');
+  expect(servicesCss).toContain('animation: fountainHaloPulse 10.4s ease-in-out infinite;');
   expect(reviewsCss).toContain('@media (hover: none) and (prefers-reduced-motion: no-preference)');
   expect(reviewsCss).toContain('.storyCard:active');
 });

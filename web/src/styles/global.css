@@ -342,30 +342,29 @@ svg {
   .site-shell::before {
     inset: 6.5rem 0.75rem 1.5rem;
     filter: blur(18px);
-    opacity: 0.52;
+    opacity: 0.58;
   }
 }
 
 @media (max-width: 720px) and (prefers-reduced-motion: no-preference) {
   .site-shell::before {
-    animation: none;
-    transform: none;
+    animation: sectionLightTrailDrift 34s ease-in-out infinite alternate;
   }
 
   .site-panel-glow::before {
-    animation: none;
-    transform: none;
+    animation: sectionGlowDrift var(--section-glow-duration) ease-in-out infinite alternate;
   }
 
   .site-reveal[data-reveal-state='pending'] {
     transform: translate3d(0, 0.9rem, 0);
-    filter: none;
+    filter: blur(4px);
   }
 
   .site-reveal[data-reveal-state='visible'] {
-    filter: none;
+    filter: blur(0);
     transition:
       opacity var(--reveal-soft-duration) var(--reveal-soft-ease),
-      transform var(--reveal-soft-duration) var(--reveal-soft-ease);
+      transform var(--reveal-soft-duration) var(--reveal-soft-ease),
+      filter 820ms ease;
   }
 }

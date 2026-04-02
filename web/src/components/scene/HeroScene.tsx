@@ -19,18 +19,19 @@ export function HeroScene() {
       ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
       : false;
     const supportsFinePointer = supportsMatchMedia ? window.matchMedia('(pointer: fine)').matches : false;
-    const compactViewport = supportsMatchMedia ? window.matchMedia('(max-width: 720px)').matches : window.innerWidth <= 720;
-    const enableScrollMotion = !prefersReducedMotion && !compactViewport;
-    let rafId = 0;
+    const enableScrollMotion = !prefersReducedMotion;
+    let pointerRafId = 0;
+    let scrollRafId = 0;
 
     const writePointer = (x: number, y: number) => {
-      if (rafId) {
-        window.cancelAnimationFrame(rafId);
+      if (pointerRafId) {
+        window.cancelAnimationFrame(pointerRafId);
       }
 
-      rafId = window.requestAnimationFrame(() => {
+      pointerRafId = window.requestAnimationFrame(() => {
         frame.style.setProperty('--hero-pointer-x', x.toFixed(3));
         frame.style.setProperty('--hero-pointer-y', y.toFixed(3));
+        pointerRafId = 0;
       });
     };
 
@@ -51,6 +52,17 @@ export function HeroScene() {
       writePointer(x, y);
     };
 
+    const scheduleScrollSync = () => {
+      if (scrollRafId) {
+        return;
+      }
+
+      scrollRafId = window.requestAnimationFrame(() => {
+        scrollRafId = 0;
+        syncScroll();
+      });
+    };
+
     if (enableScrollMotion) {
       syncScroll();
     } else {
@@ -63,19 +75,23 @@ export function HeroScene() {
     }
 
     if (enableScrollMotion) {
-      window.addEventListener('scroll', syncScroll, { passive: true });
-      window.addEventListener('resize', syncScroll);
+      window.addEventListener('scroll', scheduleScrollSync, { passive: true });
+      window.addEventListener('resize', scheduleScrollSync);
     }
 
     return () => {
-      if (rafId) {
-        window.cancelAnimationFrame(rafId);
+      if (pointerRafId) {
+        window.cancelAnimationFrame(pointerRafId);
+      }
+
+      if (scrollRafId) {
+        window.cancelAnimationFrame(scrollRafId);
       }
 
       frame.removeEventListener('pointermove', handlePointerMove);
       frame.removeEventListener('pointerleave', resetPointer);
-      window.removeEventListener('scroll', syncScroll);
-      window.removeEventListener('resize', syncScroll);
+      window.removeEventListener('scroll', scheduleScrollSync);
+      window.removeEventListener('resize', scheduleScrollSync);
     };
   }, []);
 
