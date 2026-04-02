@@ -24,6 +24,27 @@ test('renders the one-page anchor shell', () => {
   expect(screen.getByRole('heading', { name: 'Частые вопросы', level: 2 })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Контакты', level: 2 })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Отзывы', level: 2 })).toBeInTheDocument();
+
+  const nav = within(pageBanner).getByRole('navigation', { name: 'Основная навигация' });
+  const navLabels = within(nav)
+    .getAllByRole('link')
+    .map((link) => link.textContent?.trim());
+
+  expect(navLabels).toEqual(['О нас', 'Услуги', 'Отзывы', 'Частые вопросы', 'Контакты']);
+
+  const main = screen.getByRole('main');
+  const sectionOrder = Array.from(main.querySelectorAll<HTMLElement>('[data-testid^="section-"]')).map((section) =>
+    section.dataset.testid,
+  );
+
+  expect(sectionOrder).toEqual([
+    'section-hero',
+    'section-about',
+    'section-services',
+    'section-reviews',
+    'section-faq',
+    'section-contact',
+  ]);
 });
 
 test('renders filled about section, real-photo reviews, and blank-page faq/contact placeholders', () => {

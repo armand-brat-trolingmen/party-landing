@@ -1,6 +1,6 @@
 export const navItems = [
-  { id: 'services', label: 'Услуги' },
   { id: 'about', label: 'О нас' },
+  { id: 'services', label: 'Услуги' },
   { id: 'reviews', label: 'Отзывы' },
   { id: 'faq', label: 'Частые вопросы' },
   { id: 'contact', label: 'Контакты' },

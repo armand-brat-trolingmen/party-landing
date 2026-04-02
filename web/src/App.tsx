@@ -13,8 +13,8 @@ export default function App() {
       <SiteHeader />
       <main className="site-shell">
         <HeroSection />
-        <ServicesSection />
         <AboutSection />
+        <ServicesSection />
         <ReviewsSection />
         <FaqSection />
         <ContactPlaceholderSection />
