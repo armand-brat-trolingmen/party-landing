@@ -19,15 +19,14 @@ test('renders the services showcase with horizontal mobile scroll snap and micro
   });
 
   const cards = strip.querySelectorAll('[data-motion-service="micro-scene"]');
-  expect(cards).toHaveLength(4);
+  expect(cards).toHaveLength(3);
 
   const motionLayers = strip.querySelectorAll('[data-motion-image="true"]');
-  expect(motionLayers).toHaveLength(4);
+  expect(motionLayers).toHaveLength(3);
 
   expect(strip.querySelector('[data-service-id="food-trucks"]')).toBeTruthy();
   expect(strip.querySelector('[data-service-scene="cotton-candy"]')).toBeTruthy();
   expect(strip.querySelector('[data-service-id="chocolate-fountain"]')).toBeTruthy();
-  expect(strip.querySelector('[data-service-id="animators"]')).toBeTruthy();
 
-  expect(stripQueries.getAllByRole('img')).toHaveLength(4);
+  expect(stripQueries.getAllByRole('img')).toHaveLength(3);
 });

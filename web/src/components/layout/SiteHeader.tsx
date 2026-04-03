@@ -274,16 +274,15 @@ export function SiteHeader() {
       className={styles.header}
       ref={headerRef}
       data-header-state={isScrolled ? 'compact' : 'rest'}
+      data-header-material="glass"
       data-testid="site-header"
     >
       <div className={styles.inner}>
-        <a className={styles.brand} href="#hero" onClick={onAnchorClick('hero')}>
-          <span className={styles.brandInner}>
-            <DonutLogo className={styles.logoMark} size={44} />
-            <span>{siteContent.brand}</span>
+        <a className={styles.brand} href="#hero" onClick={onAnchorClick('hero')} aria-label={siteContent.brand}>
+          <span className={styles.brandPlate} data-testid="brand-plate">
+            <DonutLogo className={styles.logoMark} size={46} />
           </span>
         </a>
-        <p className={styles.tagline}>{siteContent.tagline}</p>
         {isDesktop ? (
           <nav aria-label={NAV_ARIA_LABEL} className={styles.nav} ref={navRef}>
             <span className={styles.navIndicator} data-testid="nav-active-indicator" aria-hidden="true" />

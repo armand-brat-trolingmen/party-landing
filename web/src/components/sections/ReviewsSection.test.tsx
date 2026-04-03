@@ -1,35 +1,35 @@
-import { render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { ReviewsSection } from './ReviewsSection';
 
-test('renders review stories as four editorial-style cards with badges, titles, summaries, and meta lines', () => {
+test('renders moment feed as one large manual scene with arrows and an Avito proof link', () => {
   render(<ReviewsSection />);
 
   const section = screen.getByTestId('section-reviews');
   const sectionQueries = within(section);
 
-  expect(sectionQueries.getByRole('heading', { level: 2, name: 'Отзывы' })).toBeInTheDocument();
-  expect(sectionQueries.getByText('Четыре живых сюжета о том, как Party выглядит в кадре и ощущается на площадке.')).toBeInTheDocument();
+  expect(sectionQueries.getByRole('heading', { level: 2, name: 'Лента моментов' })).toBeInTheDocument();
+  expect(sectionQueries.getByTestId('moment-feed-slider')).toHaveAttribute('data-slider-mode', 'manual');
+  expect(sectionQueries.getByTestId('moment-feed-slider')).toHaveAttribute('data-slider-layout', 'single-scene');
+  expect(sectionQueries.getByTestId('moment-feed-slider')).toHaveAttribute('data-slider-transition', 'soft-swap');
+  expect(sectionQueries.getAllByTestId('moment-feed-slide')).toHaveLength(1);
+  expect(sectionQueries.getByTestId('moment-feed-slide')).toHaveAttribute('data-slide-transition', 'soft-swap');
+  expect(
+    sectionQueries.queryByText('Листайте руками или кнопками — как на телефоне, так и на десктопе.'),
+  ).not.toBeInTheDocument();
+  expect(sectionQueries.queryByText('01 / 03')).not.toBeInTheDocument();
+  expect(sectionQueries.getByRole('button', { name: 'Предыдущий момент' })).toBeDisabled();
+  expect(sectionQueries.getByRole('button', { name: 'Следующий момент' })).toBeEnabled();
+  expect(sectionQueries.getByText('Фудтрак, возле которого гости собираются сами собой.')).toBeInTheDocument();
+  expect(sectionQueries.getByRole('link', { name: 'Отзывы можно прочитать тут!' })).toHaveAttribute(
+    'href',
+    'https://www.avito.ru/brands/i82014135/all',
+  );
 
-  const images = sectionQueries.getAllByRole('img');
-  expect(images).toHaveLength(4);
-  const storyCards = sectionQueries.getAllByTestId('review-story-card');
-  expect(storyCards).toHaveLength(4);
-  storyCards.forEach((card) => {
-    expect(card).toHaveAttribute('data-motion-card', 'cinematic');
-    expect(card).toHaveAttribute('data-live-shot', 'true');
-  });
-
-  expect(sectionQueries.getByText('Аниматоры')).toBeInTheDocument();
-  expect(sectionQueries.getByText('Когда праздник сразу оживает')).toBeInTheDocument();
-  expect(sectionQueries.getByText('Дед Мороз и Снегурочка появляются вовремя, ловят настроение зала и быстро делают праздник общим.')).toBeInTheDocument();
-  expect(sectionQueries.getByText('Зимний праздник для гостей и детей')).toBeInTheDocument();
-
-  expect(sectionQueries.getByText('Фудтрак')).toBeInTheDocument();
-  expect(sectionQueries.getByText('Очередь, которая только радует')).toBeInTheDocument();
-
-  expect(sectionQueries.getByText('Сладкая вата')).toBeInTheDocument();
-  expect(sectionQueries.getByText('Немного магии в каждом кадре')).toBeInTheDocument();
-
-  expect(sectionQueries.getByText('Шоколадный фонтан')).toBeInTheDocument();
-  expect(sectionQueries.getByText('Тот самый десертный вау-эффект')).toBeInTheDocument();
+  fireEvent.click(sectionQueries.getByRole('button', { name: 'Следующий момент' }));
+  expect(sectionQueries.getByTestId('moment-feed-slider')).toHaveAttribute('data-active-slide', '1');
+  expect(sectionQueries.getByTestId('moment-feed-slide')).toHaveAttribute('data-slide-direction', 'next');
+  expect(
+    sectionQueries.getByText('Сладкая вата, которую сначала фотографируют, а потом просят повторить.'),
+  ).toBeInTheDocument();
+  expect(sectionQueries.getByRole('button', { name: 'Предыдущий момент' })).toBeEnabled();
 });

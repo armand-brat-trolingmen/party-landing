@@ -97,9 +97,76 @@ svg {
   opacity: 0.82;
 }
 
+.site-shell[data-motion-path='story-trail']::after {
+  content: '';
+  position: absolute;
+  inset: 8rem 0 2rem;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 16% 22%, rgba(246, 220, 107, 0.28), rgba(246, 220, 107, 0) 10%),
+    radial-gradient(circle at 82% 36%, rgba(247, 166, 195, 0.24), rgba(247, 166, 195, 0) 10%),
+    radial-gradient(circle at 18% 58%, rgba(255, 239, 163, 0.22), rgba(255, 239, 163, 0) 10%),
+    radial-gradient(circle at 84% 78%, rgba(247, 166, 195, 0.18), rgba(247, 166, 195, 0) 12%);
+  opacity: 0.76;
+  filter: blur(28px);
+}
+
 .site-shell > * {
   position: relative;
   z-index: 1;
+}
+
+.site-shell[data-motion-path='story-trail'] > #about::before,
+.site-shell[data-motion-path='story-trail'] > #services::before,
+.site-shell[data-motion-path='story-trail'] > #reviews::before,
+.site-shell[data-motion-path='story-trail'] > #faq::before,
+.site-shell[data-motion-path='story-trail'] > #contact::before {
+  content: '';
+  position: absolute;
+  top: clamp(-4.8rem, -8vh, -3rem);
+  width: 2px;
+  height: clamp(4rem, 8vh, 5.8rem);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255, 239, 163, 0), rgba(255, 239, 163, 0.86), rgba(247, 166, 195, 0));
+  box-shadow: 0 0 18px rgba(255, 239, 163, 0.24);
+  opacity: 0.74;
+  pointer-events: none;
+}
+
+.site-shell[data-motion-path='story-trail'] > #about::after,
+.site-shell[data-motion-path='story-trail'] > #services::after,
+.site-shell[data-motion-path='story-trail'] > #reviews::after,
+.site-shell[data-motion-path='story-trail'] > #faq::after,
+.site-shell[data-motion-path='story-trail'] > #contact::after {
+  content: '';
+  position: absolute;
+  top: clamp(-1.3rem, -2vh, -0.65rem);
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0) 42%),
+    linear-gradient(180deg, rgba(255, 239, 163, 0.96), rgba(247, 166, 195, 0.8));
+  box-shadow: 0 12px 28px rgba(228, 87, 69, 0.14);
+  opacity: 0.88;
+  pointer-events: none;
+}
+
+.site-shell[data-motion-path='story-trail'] > #about::before,
+.site-shell[data-motion-path='story-trail'] > #about::after,
+.site-shell[data-motion-path='story-trail'] > #reviews::before,
+.site-shell[data-motion-path='story-trail'] > #reviews::after,
+.site-shell[data-motion-path='story-trail'] > #contact::before,
+.site-shell[data-motion-path='story-trail'] > #contact::after {
+  left: clamp(1rem, 8vw, 5.25rem);
+}
+
+.site-shell[data-motion-path='story-trail'] > #services::before,
+.site-shell[data-motion-path='story-trail'] > #services::after,
+.site-shell[data-motion-path='story-trail'] > #faq::before,
+.site-shell[data-motion-path='story-trail'] > #faq::after {
+  right: clamp(1rem, 8vw, 5.25rem);
 }
 
 @media (max-width: 720px) {
@@ -204,6 +271,10 @@ svg {
     animation: sectionLightTrailDrift 26s ease-in-out infinite alternate;
   }
 
+  .site-shell[data-motion-path='story-trail']::after {
+    animation: sectionStoryTrailDrift 32s ease-in-out infinite alternate;
+  }
+
   .site-panel-glow::before {
     animation: sectionGlowDrift var(--section-glow-duration) ease-in-out infinite alternate;
   }
@@ -301,6 +372,18 @@ svg {
   }
 }
 
+@keyframes sectionStoryTrailDrift {
+  from {
+    transform: translate3d(-8px, 0, 0) scale(0.985);
+    opacity: 0.62;
+  }
+
+  to {
+    transform: translate3d(10px, 0, 0) scale(1.02);
+    opacity: 0.84;
+  }
+}
+
 @media (max-width: 900px) {
   .site-section {
     min-height: clamp(30rem, 100svh, 48rem);
@@ -326,6 +409,12 @@ svg {
     filter: blur(26px);
     opacity: 0.66;
   }
+
+  .site-shell[data-motion-path='story-trail']::after {
+    inset: 7rem 0 1.5rem;
+    filter: blur(22px);
+    opacity: 0.62;
+  }
 }
 
 @media (max-width: 720px) {
@@ -344,11 +433,39 @@ svg {
     filter: blur(18px);
     opacity: 0.58;
   }
+
+  .site-shell[data-motion-path='story-trail']::after {
+    inset: 6.5rem 0 1rem;
+    filter: blur(14px);
+    opacity: 0.54;
+  }
+
+  .site-shell[data-motion-path='story-trail'] > #about::before,
+  .site-shell[data-motion-path='story-trail'] > #services::before,
+  .site-shell[data-motion-path='story-trail'] > #reviews::before,
+  .site-shell[data-motion-path='story-trail'] > #faq::before,
+  .site-shell[data-motion-path='story-trail'] > #contact::before {
+    top: -3.2rem;
+    height: 3.4rem;
+  }
+
+  .site-shell[data-motion-path='story-trail'] > #about::after,
+  .site-shell[data-motion-path='story-trail'] > #services::after,
+  .site-shell[data-motion-path='story-trail'] > #reviews::after,
+  .site-shell[data-motion-path='story-trail'] > #faq::after,
+  .site-shell[data-motion-path='story-trail'] > #contact::after {
+    width: 0.72rem;
+    height: 0.72rem;
+  }
 }
 
 @media (max-width: 720px) and (prefers-reduced-motion: no-preference) {
   .site-shell::before {
     animation: sectionLightTrailDrift 34s ease-in-out infinite alternate;
+  }
+
+  .site-shell[data-motion-path='story-trail']::after {
+    animation: sectionStoryTrailDrift 38s ease-in-out infinite alternate;
   }
 
   .site-panel-glow::before {

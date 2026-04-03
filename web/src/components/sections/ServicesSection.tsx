@@ -18,7 +18,7 @@ export function ServicesSection() {
           <SectionHeading
             eyebrow="Что мы делаем"
             title={<span id="services-title">Услуги</span>}
-            description="Четыре выразительных формата для сладкого, подвижного и фотогеничного праздника без перегруженной сцены."
+            description="Три выразительных формата, которые держат на себе вкус, настроение и красивую картинку в кадре."
           />
 
           <div className={`${styles.strip} reveal-grid`} data-testid="services-strip" data-scroll-snap="x">

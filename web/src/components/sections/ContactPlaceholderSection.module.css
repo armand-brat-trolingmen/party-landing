@@ -1,6 +1,5 @@
 .frame {
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
   gap: clamp(1.25rem, 2.8vw, 1.9rem);
   padding: clamp(1.25rem, 3vw, 2.15rem);
   min-height: 100%;
@@ -9,42 +8,235 @@
     radial-gradient(circle at 92% 14%, rgba(247, 166, 195, 0.18), transparent 34%),
     radial-gradient(circle at 10% 88%, rgba(246, 220, 107, 0.22), transparent 42%),
     linear-gradient(165deg, rgba(255, 253, 247, 0.99), rgba(255, 246, 236, 0.97));
-  box-shadow: 0 22px 46px rgba(122, 89, 63, 0.14);
+  box-shadow: 0 22px 46px rgba(158, 121, 89, 0.14);
 }
 
-.noteCard {
-  align-self: center;
+.layout {
   display: grid;
-  align-items: center;
-  min-height: clamp(18rem, 40vh, 24rem);
-  padding: clamp(1.4rem, 3.2vw, 2.4rem);
-  border-radius: 1.35rem;
-  border: 1px solid rgba(122, 89, 63, 0.14);
+  gap: 1rem;
+}
+
+.guide {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem;
+  border-radius: 1.5rem;
+  border: 1px solid rgba(181, 143, 109, 0.14);
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.66), rgba(255, 248, 239, 0.42)),
-    radial-gradient(circle at 16% 18%, rgba(246, 220, 107, 0.22), transparent 42%),
-    radial-gradient(circle at 88% 84%, rgba(247, 166, 195, 0.18), transparent 48%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    linear-gradient(145deg, rgba(255, 255, 255, 0.84), rgba(255, 248, 239, 0.72)),
+    radial-gradient(circle at 20% 18%, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0) 42%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.76),
+    0 18px 34px rgba(158, 121, 89, 0.1);
 }
 
-.noteText {
-  max-width: 54rem;
-  margin: 0 auto;
-  color: var(--text-primary);
+.guideGlow {
+  position: absolute;
+  inset: auto auto -18% -10%;
+  width: 14rem;
+  height: 14rem;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(246, 220, 107, 0.24), rgba(246, 220, 107, 0) 64%),
+    radial-gradient(circle at 65% 35%, rgba(247, 166, 195, 0.18), rgba(247, 166, 195, 0) 54%);
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+.guideHeader {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.guideTitle {
   font-family: var(--font-display);
-  font-size: clamp(1.3rem, 2.4vw, 2rem);
-  line-height: 1.35;
-  text-align: center;
+  font-size: clamp(1.45rem, 2.2vw, 1.95rem);
+  line-height: 1.02;
 }
 
-@media (max-width: 520px) {
-  .noteCard {
-    min-height: clamp(16rem, 38vh, 20rem);
-    padding: 1.25rem;
+.guideDescription {
+  max-width: 34rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.promptList {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 0.7rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.promptItem {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.75rem;
+  align-items: start;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.promptDot {
+  width: 0.65rem;
+  height: 0.65rem;
+  margin-top: 0.35rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ff8a6b, #ffd467);
+  box-shadow: 0 4px 10px rgba(228, 87, 69, 0.18);
+}
+
+.exampleCard {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 0.45rem;
+  padding: 1rem 1.05rem;
+  border-radius: 1.2rem;
+  border: 1px solid rgba(181, 143, 109, 0.12);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(255, 249, 242, 0.78)),
+    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0) 42%);
+  box-shadow: 0 14px 24px rgba(158, 121, 89, 0.08);
+}
+
+.exampleLabel {
+  color: var(--accent-red);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.exampleText {
+  color: var(--text-primary);
+  line-height: 1.55;
+}
+
+.quickFacts {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.quickFact {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(255, 252, 247, 0.82);
+  border: 1px solid rgba(181, 143, 109, 0.12);
+  box-shadow: 0 8px 16px rgba(158, 121, 89, 0.08);
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+.actions {
+  display: grid;
+  gap: 0.9rem;
+  align-self: center;
+}
+
+.action {
+  display: grid;
+  gap: 0.5rem;
+  padding: 1rem 1.05rem 1.1rem;
+  border-radius: 1.35rem;
+  border: 1px solid rgba(181, 143, 109, 0.14);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.84), rgba(255, 248, 239, 0.74)),
+    radial-gradient(circle at 14% 18%, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0) 42%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    0 16px 28px rgba(158, 121, 89, 0.1);
+  transition:
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 260ms ease,
+    border-color 260ms ease,
+    color 260ms ease;
+}
+
+.action:hover,
+.action:focus-visible {
+  transform: translate3d(0, -4px, 0);
+  border-color: rgba(228, 87, 69, 0.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.78),
+    0 22px 34px rgba(158, 121, 89, 0.14);
+  color: var(--accent-red);
+}
+
+.action:active {
+  transform: scale(0.98);
+}
+
+.actionHead {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.iconBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0) 46%),
+    linear-gradient(180deg, rgba(255, 251, 244, 0.94), rgba(255, 242, 231, 0.84));
+  border: 1px solid rgba(181, 143, 109, 0.14);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.78),
+    0 10px 18px rgba(158, 121, 89, 0.08);
+  color: #7b4e38;
+}
+
+.iconBadge svg {
+  width: 1.08rem;
+  height: 1.08rem;
+  display: block;
+}
+
+.actionLabel {
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 2vw, 1.6rem);
+  line-height: 1;
+}
+
+.actionCaption {
+  color: var(--text-muted);
+  font-size: 0.96rem;
+  line-height: 1.5;
+}
+
+@media (min-width: 900px) {
+  .layout {
+    grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.06fr);
+    align-items: stretch;
   }
 
-  .noteText {
-    font-size: 1.1rem;
-    line-height: 1.45;
+  .actions {
+    align-content: center;
+  }
+}
+
+@media (max-width: 899px) {
+  .layout {
+    display: block;
+  }
+
+  .guide {
+    display: none;
   }
 }

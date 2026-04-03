@@ -1,37 +1,36 @@
-import { activeReviewVariant, reviewPhotos, reviewSectionCopy, reviewStories } from '../../data/siteContent';
+import { useState } from 'react';
+import { avitoProfileUrl, momentFeedItems, momentFeedSectionCopy } from '../../data/siteContent';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { SectionHeading } from '../ui/SectionHeading';
 import styles from './ReviewsSection.module.css';
 
+function clampSlide(index: number) {
+  return Math.max(0, Math.min(momentFeedItems.length - 1, index));
+}
+
 export function ReviewsSection() {
   const { ref, revealState } = useScrollReveal();
-  const reviewCopy = reviewSectionCopy[activeReviewVariant];
-  const supportsPointerParallax =
-    typeof window !== 'undefined' &&
-    (window.matchMedia?.('(hover: hover)').matches ?? false) &&
-    !(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false);
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [slideDirection, setSlideDirection] = useState<'next' | 'prev'>('next');
+  const activeItem = momentFeedItems[activeSlide];
 
-  const onStoryPointerMove = (event: React.PointerEvent<HTMLElement>) => {
-    if (!supportsPointerParallax) return;
+  function showPreviousSlide() {
+    if (activeSlide === 0) {
+      return;
+    }
 
-    const card = event.currentTarget;
-    const rect = card.getBoundingClientRect();
-    const x = (event.clientX - rect.left) / rect.width - 0.5;
-    const y = (event.clientY - rect.top) / rect.height - 0.5;
+    setSlideDirection('prev');
+    setActiveSlide((current) => clampSlide(current - 1));
+  }
 
-    card.style.setProperty('--review-tilt-x', `${(-y * 5.5).toFixed(2)}deg`);
-    card.style.setProperty('--review-tilt-y', `${(x * 7).toFixed(2)}deg`);
-    card.style.setProperty('--review-photo-shift-x', `${(x * 12).toFixed(2)}px`);
-    card.style.setProperty('--review-photo-shift-y', `${(y * 10).toFixed(2)}px`);
-  };
+  function showNextSlide() {
+    if (activeSlide === momentFeedItems.length - 1) {
+      return;
+    }
 
-  const resetStoryMotion = (event: React.PointerEvent<HTMLElement>) => {
-    const card = event.currentTarget;
-    card.style.setProperty('--review-tilt-x', '0deg');
-    card.style.setProperty('--review-tilt-y', '0deg');
-    card.style.setProperty('--review-photo-shift-x', '0px');
-    card.style.setProperty('--review-photo-shift-y', '0px');
-  };
+    setSlideDirection('next');
+    setActiveSlide((current) => clampSlide(current + 1));
+  }
 
   return (
     <section id="reviews" className="site-section" data-testid="section-reviews" aria-labelledby="reviews-title">
@@ -43,63 +42,84 @@ export function ReviewsSection() {
       >
         <article className={`${styles.frame} site-panel-glow`}>
           <SectionHeading
-            eyebrow={reviewCopy.eyebrow}
-            title={<span id="reviews-title">Отзывы</span>}
-            description={reviewCopy.description}
+            eyebrow={momentFeedSectionCopy.eyebrow}
+            title={<span id="reviews-title">Лента моментов</span>}
+            description={momentFeedSectionCopy.description}
           />
-          {activeReviewVariant === 'stories' ? (
-            <div className={`${styles.storyGrid} reveal-grid`} data-testid="reviews-stories">
-              {reviewStories.map((story) => (
-                <article
-                  key={story.id}
-                  className={styles.storyCard}
-                  data-testid="review-story-card"
-                  data-motion-card="cinematic"
-                  data-live-shot="true"
-                  onPointerMove={onStoryPointerMove}
-                  onPointerLeave={resetStoryMotion}
-                >
-                  <div className={styles.storyMediaWrap}>
-                    <img
-                      src={story.image}
-                      alt={story.alt}
-                      className={styles.storyPhoto}
-                      loading="lazy"
-                      decoding="async"
-                      fetchPriority="low"
-                      style={{ objectPosition: story.objectPosition }}
-                    />
-                    <span className={styles.storyBadge}>{story.badge}</span>
-                  </div>
 
-                  <div className={styles.storyContent}>
-                    <h3 className={styles.storyTitle}>{story.title}</h3>
-                    <p className={styles.storySummary}>{story.summary}</p>
-                    <p className={styles.storyMeta}>{story.meta}</p>
-                  </div>
-                </article>
-              ))}
-            </div>
-          ) : (
-            <div className={`${styles.grid} reveal-grid`} data-testid="reviews-gallery">
-              {reviewPhotos.map((photo) => (
-                <figure key={photo.id} className={styles.photoCard}>
+          <div className={`${styles.sliderShell} reveal-grid`}>
+            <div
+              className={styles.slider}
+              data-testid="moment-feed-slider"
+              data-slider-mode="manual"
+              data-slider-layout="single-scene"
+              data-slider-transition="soft-swap"
+              data-active-slide={activeSlide}
+            >
+              <button
+                type="button"
+                className={`${styles.controlButton} ${styles.controlButtonPrev}`}
+                aria-label="Предыдущий момент"
+                disabled={activeSlide === 0}
+                onClick={showPreviousSlide}
+              >
+                <span aria-hidden="true">←</span>
+              </button>
+
+              <article
+                key={activeItem.id}
+                className={styles.slide}
+                data-testid="moment-feed-slide"
+                data-slide-transition="soft-swap"
+                data-slide-direction={slideDirection}
+                data-tone={activeItem.tone}
+              >
+                <div className={styles.slideMedia}>
                   <img
-                    src={photo.image}
-                    alt={photo.alt}
-                    className={styles.photo}
-                    loading="lazy"
+                    src={activeItem.image}
+                    alt={activeItem.alt}
+                    className={styles.slideImage}
+                    loading={activeSlide === 0 ? 'eager' : 'lazy'}
                     decoding="async"
-                    fetchPriority="low"
-                    style={{ objectPosition: photo.objectPosition }}
+                    fetchPriority={activeSlide === 0 ? 'high' : 'low'}
+                    style={{ objectPosition: activeItem.objectPosition }}
                   />
-                  <figcaption className={styles.caption}>
-                    <span className={styles.label}>{photo.title}</span>
-                  </figcaption>
-                </figure>
-              ))}
+                </div>
+
+                <div className={styles.slideContent}>
+                  <span className={styles.slideBadge}>{activeItem.label}</span>
+                  <p className={styles.slideTitle}>{activeItem.title}</p>
+                </div>
+              </article>
+
+              <button
+                type="button"
+                className={`${styles.controlButton} ${styles.controlButtonNext}`}
+                aria-label="Следующий момент"
+                disabled={activeSlide === momentFeedItems.length - 1}
+                onClick={showNextSlide}
+              >
+                <span aria-hidden="true">→</span>
+              </button>
             </div>
-          )}
+
+            <div className={styles.avitoProof}>
+              <div className={styles.avitoMark} aria-hidden="true">
+                <span className={styles.avitoDotBlue} />
+                <span className={styles.avitoDotGreen} />
+                <span className={styles.avitoDotRed} />
+                <span className={styles.avitoDotBlack} />
+                <span className={styles.avitoText}>avito</span>
+              </div>
+              <div className={styles.avitoCopy}>
+                <p className={styles.avitoTitle}>Нужен внешний proof?</p>
+                <p className={styles.avitoDescription}>Часть живых отзывов и профиль можно посмотреть на Avito.</p>
+              </div>
+              <a className={styles.avitoLink} href={avitoProfileUrl} target="_blank" rel="noreferrer">
+                Отзывы можно прочитать тут!
+              </a>
+            </div>
+          </div>
         </article>
       </div>
     </section>

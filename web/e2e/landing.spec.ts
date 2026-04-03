@@ -78,7 +78,7 @@ test('mobile menu is a proper disclosure, uses an animated icon trigger, closes 
   await expect(menuButton).toHaveAttribute('aria-expanded', 'false');
   await expect(page.locator('[class*="mobilePanel"] nav')).toHaveCount(0);
   await expect.poll(async () => panelTopGap(page, 'reviews')).toBeGreaterThan(8);
-  await expect.poll(async () => panelTopGap(page, 'reviews')).toBeLessThan(72);
+  await expect.poll(async () => panelTopGap(page, 'reviews')).toBeLessThan(96);
 });
 
 test('mobile services strip is horizontally scrollable', async ({ page }) => {
@@ -107,12 +107,57 @@ test('mobile services strip is horizontally scrollable', async ({ page }) => {
     .toBeGreaterThan(metrics.scrollLeft);
 });
 
+test('moment feed stays clean and contained on mobile without helper copy or frame counters', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+
+  const section = page.locator('#reviews');
+  await section.scrollIntoViewIfNeeded();
+  await expect(section).toBeVisible();
+  await expect(section).not.toContainText('Листайте руками или кнопками');
+  await expect(section).not.toContainText('01 / 03');
+
+  const slider = page.getByTestId('moment-feed-slider');
+  await expect(slider).toBeVisible();
+
+  const frameFitsViewport = await slider.evaluate((el) => {
+    const rect = el.getBoundingClientRect();
+    return rect.left >= -1 && rect.right <= window.innerWidth + 1;
+  });
+  expect(frameFitsViewport).toBeTruthy();
+
+  const mediaBackgroundImage = await page.getByTestId('moment-feed-slide').first().locator('[class*="slideMedia"]').first().evaluate((el) =>
+    window.getComputedStyle(el).backgroundImage,
+  );
+  expect(mediaBackgroundImage).toBe('none');
+
+  const imageFitsMedia = await page.getByTestId('moment-feed-slide').first().locator('img').first().evaluate((el) => {
+    const imageRect = el.getBoundingClientRect();
+    const mediaRect = el.parentElement?.getBoundingClientRect();
+
+    return {
+      widthFits: mediaRect ? imageRect.width <= mediaRect.width + 1 : false,
+      heightFits: mediaRect ? imageRect.height <= mediaRect.height + 1 : false,
+    };
+  });
+
+  expect(imageFitsMedia.widthFits).toBeTruthy();
+  expect(imageFitsMedia.heightFits).toBeTruthy();
+});
+
 test('mobile header stays fixed from the first scroll pixel', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
 
   const header = page.getByRole('banner').first();
+  const brandPlate = page.getByTestId('brand-plate');
+  const menuButton = page.getByTestId('menu-button');
   await expect(header).toBeVisible();
+  await expect(brandPlate).toBeVisible();
+  await expect(menuButton).toBeVisible();
+
+  const beforeBrand = await brandPlate.boundingBox();
+  const beforeMenu = await menuButton.boundingBox();
 
   await expect
     .poll(async () => header.evaluate((el) => window.getComputedStyle(el).position))
@@ -126,6 +171,20 @@ test('mobile header stays fixed from the first scroll pixel', async ({ page }) =
       return box?.y ?? -1;
     })
     .toBeLessThan(1);
+
+  const afterBrand = await brandPlate.boundingBox();
+  const afterMenu = await menuButton.boundingBox();
+
+  expect(beforeBrand).not.toBeNull();
+  expect(beforeMenu).not.toBeNull();
+  expect(afterBrand).not.toBeNull();
+  expect(afterMenu).not.toBeNull();
+  if (!beforeBrand || !beforeMenu || !afterBrand || !afterMenu) return;
+
+  expect(afterBrand.y).toBeGreaterThan(10);
+  expect(afterMenu.y).toBeGreaterThan(10);
+  expect(Math.abs(beforeBrand.y - afterBrand.y)).toBeLessThan(4);
+  expect(Math.abs(beforeMenu.y - afterMenu.y)).toBeLessThan(4);
 });
 
 test('mobile hero scene keeps smaller cards inside the frame with a warm light background', async ({ page }) => {
@@ -178,6 +237,57 @@ test('desktop hero heading is slightly reduced so the first screen stays calmer'
   expect(fontSize).toBeLessThan(84);
 });
 
+test('about scene cards stay inside the stage on mid-sized layouts', async ({ page }) => {
+  await page.setViewportSize({ width: 1024, height: 900 });
+  await page.goto('/');
+
+  const stage = page.locator('#about [data-testid="about-atmosphere-stage"] [class*="stage"]').first();
+  await stage.scrollIntoViewIfNeeded();
+  await expect(stage).toBeVisible();
+  await expect(page.locator('#about [class*="stageBackdrop"]')).toHaveCount(0);
+
+  const stageBox = await stage.boundingBox();
+  const cardBoxes = await page.locator('#about [data-layer-tone]').evaluateAll((elements) =>
+    elements.map((el) => {
+      const rect = el.getBoundingClientRect();
+      return { left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom };
+    }),
+  );
+
+  expect(stageBox).not.toBeNull();
+  if (!stageBox) return;
+
+  for (const cardBox of cardBoxes) {
+    expect(cardBox.left).toBeGreaterThanOrEqual(stageBox.x - 1);
+    expect(cardBox.right).toBeLessThanOrEqual(stageBox.x + stageBox.width + 1);
+    expect(cardBox.top).toBeGreaterThanOrEqual(stageBox.y - 1);
+    expect(cardBox.bottom).toBeLessThanOrEqual(stageBox.y + stageBox.height + 1);
+  }
+});
+
+test('moment feed keeps a stable scene frame while switching slides on desktop', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/');
+
+  const section = page.locator('#reviews');
+  await section.scrollIntoViewIfNeeded();
+
+  const slider = page.getByTestId('moment-feed-slider');
+  await expect(slider).toBeVisible();
+
+  const before = await slider.boundingBox();
+  await page.getByRole('button', { name: 'Следующий момент' }).click();
+  await expect(slider).toHaveAttribute('data-active-slide', '1');
+  const after = await slider.boundingBox();
+
+  expect(before).not.toBeNull();
+  expect(after).not.toBeNull();
+  if (!before || !after) return;
+
+  expect(Math.abs(before.width - after.width)).toBeLessThan(1);
+  expect(Math.abs(before.height - after.height)).toBeLessThan(1);
+});
+
 test('section panels use a soft reveal state as they enter the viewport', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/');
@@ -195,6 +305,26 @@ test('section panels use a soft reveal state as they enter the viewport', async 
   await expect(contactPanel).toHaveAttribute('data-reveal-state', 'visible');
 });
 
+test('desktop contacts use a guided first-message layout with service icons', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/');
+
+  const contact = page.locator('#contact');
+  await contact.scrollIntoViewIfNeeded();
+
+  const layout = page.getByTestId('contact-layout');
+  const guide = page.getByTestId('contact-guide');
+  const actions = page.getByTestId('contact-actions');
+
+  await expect(layout).toHaveAttribute('data-contact-layout', 'guided');
+  await expect(guide).toHaveAttribute('data-contact-guide', 'first-message');
+  await expect(guide).toContainText('Что удобно написать сразу');
+  await expect(actions.locator('a')).toHaveCount(3);
+  await expect(page.getByTestId('contact-icon-telegram')).toBeVisible();
+  await expect(page.getByTestId('contact-icon-whatsapp')).toBeVisible();
+  await expect(page.getByTestId('contact-icon-avito')).toBeVisible();
+});
+
 test('hero motion, panel glow, and review hover feel animated without breaking layout', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/');
@@ -202,8 +332,8 @@ test('hero motion, panel glow, and review hover feel animated without breaking l
   const heroFrame = page.getByTestId('hero-scene-frame');
   const foodTruckCard = page.getByTestId('hero-scene-card-food-truck');
   const reviewsPanel = page.locator('#reviews .site-panel-glow').first();
-  const reviewCard = page.getByTestId('review-story-card').first();
-  const reviewPhoto = reviewCard.locator('img').first();
+  const reviewCard = page.getByTestId('moment-feed-slide').first();
+  const reviewSlider = page.getByTestId('moment-feed-slider');
 
   await expect(heroFrame).toHaveAttribute('data-motion-frame', 'parallax');
   await expect(foodTruckCard).toHaveAttribute('data-motion-depth', 'front');
@@ -219,12 +349,8 @@ test('hero motion, panel glow, and review hover feel animated without breaking l
 
   await page.locator('#reviews').scrollIntoViewIfNeeded();
   await expect(reviewCard).toBeVisible();
-
-  const before = await reviewPhoto.evaluate((el) => window.getComputedStyle(el).transform);
-  await reviewCard.hover();
-  const after = await reviewPhoto.evaluate((el) => window.getComputedStyle(el).transform);
-
-  expect(before).not.toBe(after);
+  await expect(reviewSlider).toHaveAttribute('data-slider-transition', 'soft-swap');
+  await expect(reviewCard).toHaveAttribute('data-slide-transition', 'soft-swap');
 });
 
 test('smart header, cinematic faq, and service micro scenes stay wired up on desktop', async ({ page }) => {

@@ -12,7 +12,7 @@ export default function App() {
   return (
     <>
       <SiteHeader />
-      <main className="site-shell" data-motion-path="glow-trail">
+      <main className="site-shell" data-motion-path="story-trail">
         <HeroSection />
         <AboutSection />
         <ServicesSection />

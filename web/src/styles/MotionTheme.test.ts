@@ -19,13 +19,14 @@ test('hero scene styles define layered float and parallax hooks', () => {
   expect(css).toContain('animation: heroSceneFloat 7.4s ease-in-out infinite alternate;');
 });
 
-test('review stories define premium hover motion for photo and content', () => {
+test('moment feed defines premium hover motion for photos and slide content', () => {
   const css = readFileSync(resolve(process.cwd(), 'src/components/sections/ReviewsSection.module.css'), 'utf8');
 
-  expect(css).toContain('.storyCard:hover');
-  expect(css).toContain('translate3d(0, -8px, 0)');
-  expect(css).toContain('perspective(1200px)');
-  expect(css).toContain('--review-photo-shift-x: 0px;');
+  expect(css).toContain('.slide:hover');
+  expect(css).toContain('translate3d(0, -4px, 0)');
+  expect(css).toContain('.slide:hover .slideImage');
+  expect(css).toContain("data-slide-transition='soft-swap'");
+  expect(css).toContain('@keyframes slideSwapInNext');
 });
 
 test('mobile motion stays rich with slower ambient movement and tactile review feedback', () => {
@@ -47,8 +48,8 @@ test('mobile motion stays rich with slower ambient movement and tactile review f
   expect(servicesCss).toContain(".card[data-service-id='food-trucks'] .imageWrap::before,");
   expect(servicesCss).toContain('animation: serviceShineSweep 10.5s linear infinite;');
   expect(servicesCss).toContain('animation: fountainHaloPulse 10.4s ease-in-out infinite;');
-  expect(reviewsCss).toContain('@media (hover: none) and (prefers-reduced-motion: no-preference)');
-  expect(reviewsCss).toContain('.storyCard:active');
+  expect(reviewsCss).toContain('@media (max-width: 720px)');
+  expect(reviewsCss).toContain('.controlButton:active');
 });
 
 test('header styles define a compact scroll state, floating nav indicator, and logo motion', () => {
@@ -69,5 +70,5 @@ test('faq and services define cinematic accordion glow and micro scene animation
   expect(faqCss).toContain('.answerText::before');
   expect(servicesCss).toContain('@keyframes serviceShineSweep');
   expect(servicesCss).toContain('@keyframes cottonCandyDrift');
-  expect(servicesCss).toContain('@keyframes confettiDrift');
+  expect(servicesCss).toContain('@keyframes fountainHaloPulse');
 });

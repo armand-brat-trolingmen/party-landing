@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
-import { navItems } from '../../data/siteContent';
+import { navItems, siteContent } from '../../data/siteContent';
 import { SiteHeader } from './SiteHeader';
 
 function mockViewport(isDesktop: boolean) {
@@ -21,7 +21,7 @@ function mockViewport(isDesktop: boolean) {
   });
 }
 
-test('shows desktop navigation links with a floating active indicator and no menu button', () => {
+test('shows desktop navigation inside a glass header with only a logo brand trigger', () => {
   mockViewport(true);
   render(<SiteHeader />);
 
@@ -30,7 +30,11 @@ test('shows desktop navigation links with a floating active indicator and no men
 
   expect(screen.queryByTestId('menu-button')).not.toBeInTheDocument();
   expect(header).toHaveAttribute('data-header-state', 'rest');
+  expect(header).toHaveAttribute('data-header-material', 'glass');
   expect(screen.getByTestId('nav-active-indicator')).toBeInTheDocument();
+  expect(within(header).getByRole('link', { name: siteContent.brand })).toBeInTheDocument();
+  expect(within(header).queryByText(siteContent.brand)).not.toBeInTheDocument();
+  expect(within(header).queryByText(siteContent.tagline)).not.toBeInTheDocument();
 
   navItems.forEach((item) => {
     expect(within(navigation).getByRole('link', { name: item.label })).toHaveAttribute('href', `#${item.id}`);
@@ -44,6 +48,7 @@ test('keeps mobile navigation collapsed by default', () => {
   const menuButton = screen.getByTestId('menu-button');
 
   expect(menuButton).toHaveAttribute('aria-expanded', 'false');
+  expect(screen.getByTestId('brand-plate')).toBeInTheDocument();
   expect(screen.queryByRole('navigation')).not.toBeInTheDocument();
 });
 

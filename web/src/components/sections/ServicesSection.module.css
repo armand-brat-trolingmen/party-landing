@@ -9,7 +9,7 @@
     radial-gradient(circle at top left, rgba(246, 220, 107, 0.2), transparent 32%),
     radial-gradient(circle at bottom right, rgba(247, 166, 195, 0.18), transparent 36%),
     linear-gradient(180deg, rgba(255, 253, 246, 0.98), rgba(255, 246, 236, 0.96));
-  box-shadow: 0 24px 52px rgba(122, 89, 63, 0.12);
+  box-shadow: 0 24px 52px rgba(158, 121, 89, 0.12);
 }
 
 .strip {
@@ -32,10 +32,10 @@
   gap: 1rem;
   min-height: clamp(20rem, 62vh, 32rem);
   padding: 1rem;
-  border: 1px solid rgba(122, 89, 63, 0.08);
+  border: 1px solid rgba(181, 143, 109, 0.12);
   border-radius: 1.75rem;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 249, 241, 0.96));
-  box-shadow: 0 18px 34px rgba(122, 89, 63, 0.1);
+  box-shadow: 0 18px 34px rgba(158, 121, 89, 0.1);
   scroll-snap-align: start;
   transition:
     transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -145,35 +145,10 @@
   animation: fountainShadowPulse 6.8s ease-in-out infinite;
 }
 
-.card[data-service-id='animators'] .imageMotion {
-  animation: serviceIdleLiftWide 7.1s ease-in-out infinite;
-}
-
-.card[data-service-id='animators'] .imageWrap::before {
-  inset: 10% 10% auto;
-  height: 38%;
-  background:
-    radial-gradient(circle at 10% 60%, rgba(246, 220, 107, 0.72) 0 4px, transparent 5px),
-    radial-gradient(circle at 34% 28%, rgba(247, 166, 195, 0.72) 0 4px, transparent 5px),
-    radial-gradient(circle at 62% 70%, rgba(228, 87, 69, 0.64) 0 4px, transparent 5px),
-    radial-gradient(circle at 84% 26%, rgba(246, 220, 107, 0.72) 0 4px, transparent 5px);
-  filter: drop-shadow(0 8px 14px rgba(122, 89, 63, 0.08));
-  animation: confettiDrift 7.4s ease-in-out infinite;
-}
-
-.card[data-service-id='animators'] .imageWrap::after {
-  inset: auto 18% 14% 18%;
-  height: 18%;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(247, 166, 195, 0.18), rgba(247, 166, 195, 0) 68%);
-  filter: blur(8px);
-  animation: cottonGlowPulse 6.8s ease-in-out infinite;
-}
-
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .card:hover {
     transform: translate3d(0, -8px, 0);
-    box-shadow: 0 28px 48px rgba(122, 89, 63, 0.16);
+    box-shadow: 0 28px 48px rgba(158, 121, 89, 0.16);
     border-color: rgba(228, 87, 69, 0.16);
   }
 
@@ -185,7 +160,7 @@
 @media (hover: none) and (prefers-reduced-motion: no-preference) {
   .card:active {
     transform: translate3d(0, -4px, 0);
-    box-shadow: 0 22px 38px rgba(122, 89, 63, 0.16);
+    box-shadow: 0 22px 38px rgba(158, 121, 89, 0.16);
   }
 }
 
@@ -270,19 +245,6 @@
   }
 }
 
-@keyframes confettiDrift {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0);
-    opacity: 0.7;
-  }
-
-  50% {
-    transform: translate3d(0, -6px, 0);
-    opacity: 1;
-  }
-}
-
 @keyframes serviceIdleLift {
   0%,
   100% {
@@ -294,22 +256,11 @@
   }
 }
 
-@keyframes serviceIdleLiftWide {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0) rotate(-0.4deg);
-  }
-
-  50% {
-    transform: translate3d(0, -4px, 0) rotate(0.6deg);
-  }
-}
-
 @media (min-width: 900px) {
   .strip {
     grid-auto-flow: row;
     grid-auto-columns: unset;
-    grid-template-columns: 1.35fr 1fr 1fr 1.1fr;
+    grid-template-columns: 1.2fr 1fr 1fr;
     min-height: 100%;
     overflow: visible;
     padding-bottom: 0;
@@ -323,22 +274,19 @@
 
 @media (max-width: 900px) {
   .card {
-    box-shadow: 0 14px 24px rgba(122, 89, 63, 0.08);
+    box-shadow: 0 14px 24px rgba(158, 121, 89, 0.08);
   }
 
   .card[data-service-id='food-trucks'] .imageMotion,
   .card[data-service-id='cotton-candy'] .imageMotion,
-  .card[data-service-id='chocolate-fountain'] .imageMotion,
-  .card[data-service-id='animators'] .imageMotion {
+  .card[data-service-id='chocolate-fountain'] .imageMotion {
     animation-duration: 9.6s;
   }
 
   .card[data-service-id='food-trucks'] .imageWrap::before,
   .card[data-service-id='cotton-candy'] .imageWrap::before,
   .card[data-service-id='chocolate-fountain'] .imageWrap::before,
-  .card[data-service-id='chocolate-fountain'] .imageWrap::after,
-  .card[data-service-id='animators'] .imageWrap::before,
-  .card[data-service-id='animators'] .imageWrap::after {
+  .card[data-service-id='chocolate-fountain'] .imageWrap::after {
     transform: none;
   }
 
@@ -348,8 +296,7 @@
   }
 
   .card[data-service-id='cotton-candy'] .imageWrap::before,
-  .card[data-service-id='chocolate-fountain'] .imageWrap::before,
-  .card[data-service-id='animators'] .imageWrap::after {
+  .card[data-service-id='chocolate-fountain'] .imageWrap::before {
     opacity: 0.56;
   }
 
@@ -367,15 +314,5 @@
   .card[data-service-id='chocolate-fountain'] .imageWrap::before {
     filter: blur(7px);
     animation: fountainHaloPulse 10.4s ease-in-out infinite;
-  }
-
-  .card[data-service-id='animators'] .imageWrap::before {
-    opacity: 0.78;
-    animation: confettiDrift 10.8s ease-in-out infinite;
-  }
-
-  .card[data-service-id='animators'] .imageWrap::after {
-    filter: blur(6px);
-    animation: cottonGlowPulse 10.2s ease-in-out infinite;
   }
 }
