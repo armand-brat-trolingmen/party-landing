@@ -279,7 +279,7 @@ svg {
     animation: sectionGlowDrift var(--section-glow-duration) ease-in-out infinite alternate;
   }
 
-  .site-reveal[data-reveal-state='pending'] {
+  html[data-js='true'] .site-reveal[data-reveal-state='pending'] {
     opacity: 0;
     transform: translate3d(0, var(--reveal-distance), 0);
     filter: blur(8px);
@@ -295,7 +295,7 @@ svg {
       filter 980ms ease;
   }
 
-  .site-reveal[data-reveal-state='pending'][data-reveal-stagger='true'] > * {
+  html[data-js='true'] .site-reveal[data-reveal-state='pending'][data-reveal-stagger='true'] > * {
     opacity: 0;
     transform: translate3d(0, 1rem, 0);
   }
@@ -317,7 +317,7 @@ svg {
     transition-delay: 230ms;
   }
 
-  .site-reveal[data-reveal-state='pending'] .reveal-grid > * {
+  html[data-js='true'] .site-reveal[data-reveal-state='pending'] .reveal-grid > * {
     opacity: 0;
     transform: translate3d(0, 1.15rem, 0);
   }
@@ -472,7 +472,7 @@ svg {
     animation: sectionGlowDrift var(--section-glow-duration) ease-in-out infinite alternate;
   }
 
-  .site-reveal[data-reveal-state='pending'] {
+  html[data-js='true'] .site-reveal[data-reveal-state='pending'] {
     transform: translate3d(0, 0.9rem, 0);
     filter: blur(4px);
   }

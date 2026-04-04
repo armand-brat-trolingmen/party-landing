@@ -9,7 +9,7 @@ type RevealState = 'pending' | 'visible';
 
 function shouldRevealImmediately() {
   if (typeof window === 'undefined') {
-    return true;
+    return false;
   }
 
   const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
@@ -25,7 +25,13 @@ export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(options:
 
   useEffect(() => {
     const node = ref.current;
-    if (!node || revealState === 'visible' || shouldRevealImmediately()) {
+    if (!node) {
+      return;
+    }
+
+    node.style.setProperty('--reveal-soft-duration', '880ms');
+
+    if (revealState === 'visible' || shouldRevealImmediately()) {
       return;
     }
 

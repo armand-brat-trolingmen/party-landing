@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { faqItems, faqSectionCopy } from '../../data/siteContent';
+import { getFaqStructuredData } from '../../config/seo';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
+import { StructuredData } from '../StructuredData';
 import { SectionHeading } from '../ui/SectionHeading';
 import styles from './FaqSection.module.css';
 
@@ -12,6 +14,7 @@ export function FaqSection() {
 
   return (
     <section id="faq" className="site-section" data-testid="section-faq" aria-labelledby="faq-title">
+      <StructuredData data={getFaqStructuredData(faqItems)} />
       <div
         ref={ref}
         className="site-container site-reveal"
@@ -24,10 +27,11 @@ export function FaqSection() {
             title={<span id="faq-title">{FAQ_TITLE}</span>}
             description={faqSectionCopy.description}
           />
-          <div
+          <ul
             className={`${styles.accordion} reveal-grid`}
             data-testid="faq-accordion"
             data-motion-faq="cinematic"
+            aria-label={FAQ_TITLE}
           >
             {faqItems.map((item) => {
               const isOpen = item.id === openItemId;
@@ -35,7 +39,7 @@ export function FaqSection() {
               const triggerId = `faq-trigger-${item.id}`;
 
               return (
-                <article
+                <li
                   key={item.id}
                   className={styles.item}
                   data-open={isOpen ? 'true' : 'false'}
@@ -69,10 +73,10 @@ export function FaqSection() {
                       <p className={styles.answerText}>{item.answer}</p>
                     </div>
                   </div>
-                </article>
+                </li>
               );
             })}
-          </div>
+          </ul>
         </article>
       </div>
     </section>

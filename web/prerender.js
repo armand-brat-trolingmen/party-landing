@@ -52,6 +52,29 @@ function injectAppHtml(template, appHtml) {
   return template.replace('<div id="root"></div>', `<div id="root">${appHtml}</div>`);
 }
 
+function injectHeadTag(template, placeholder, content) {
+  if (template.includes(placeholder)) {
+    return template.replace(placeholder, content);
+  }
+
+  if (!content) {
+    return template;
+  }
+
+  return template.replace('</head>', `${content}\n  </head>`);
+}
+
+function injectHelmetHead(template, helmet) {
+  let html = template;
+
+  html = injectHeadTag(html, '<!--helmet-title-->', helmet.title);
+  html = injectHeadTag(html, '<!--helmet-meta-->', helmet.meta);
+  html = injectHeadTag(html, '<!--helmet-link-->', helmet.link);
+  html = injectHeadTag(html, '<!--helmet-script-->', helmet.script);
+
+  return html;
+}
+
 function validateRenderedHtml(url, baseTemplate, html) {
   if (!html.trim()) {
     throw new Error(`SSG produced an empty HTML document for "${url}".`);
@@ -117,8 +140,13 @@ async function prerender() {
 
     for (const url of urls) {
       try {
-        const appHtml = serverEntry.render(url);
-        const html = injectAppHtml(template, appHtml);
+        const renderResult = serverEntry.render(url);
+        const appHtml = typeof renderResult === 'string' ? renderResult : renderResult.appHtml;
+        const helmet =
+          typeof renderResult === 'string'
+            ? { title: '', meta: '', link: '', script: '' }
+            : renderResult.helmet;
+        const html = injectHelmetHead(injectAppHtml(template, appHtml), helmet);
 
         validateRenderedHtml(url, template, html);
         await writeRouteHtml(url, html);

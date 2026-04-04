@@ -1,8 +1,11 @@
 import { StrictMode } from 'react'
 import { createRoot, hydrateRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router'
+import { HelmetProvider } from 'react-helmet-async'
 import './index.css'
 import { AppRoutes } from './AppRoutes.tsx'
+
+document.documentElement.setAttribute('data-js', 'true')
 
 const rootElement = document.getElementById('root')
 
@@ -12,9 +15,11 @@ if (!rootElement) {
 
 const app = (
   <StrictMode>
-    <BrowserRouter>
-      <AppRoutes />
-    </BrowserRouter>
+    <HelmetProvider>
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
+    </HelmetProvider>
   </StrictMode>
 )
 
