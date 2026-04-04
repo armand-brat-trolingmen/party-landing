@@ -7,7 +7,7 @@ test('index html defines production-friendly SEO tags for the landing page', () 
   expect(html).toContain('<html lang="ru">');
   expect(html).toContain('name="viewport"');
   expect(html).toContain('name="yandex-verification"');
-  expect(html).toContain('content="7a61fd6fb1af1316"');
+  expect(html).toContain('content="07b2ceb2a2824f8f"');
   expect(html).toContain('<!--helmet-title-->');
   expect(html).toContain('<!--helmet-meta-->');
   expect(html).toContain('<!--helmet-link-->');
