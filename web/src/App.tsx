@@ -1,4 +1,5 @@
 import { SpeedInsights } from '@vercel/speed-insights/react';
+import { SiteFooter } from './components/layout/SiteFooter';
 import { SiteHeader } from './components/layout/SiteHeader';
 import { AboutSection } from './components/sections/AboutSection';
 import { ContactPlaceholderSection } from './components/sections/ContactPlaceholderSection';
@@ -20,6 +21,7 @@ export default function App() {
         <FaqSection />
         <ContactPlaceholderSection />
       </main>
+      <SiteFooter />
       <SpeedInsights />
     </>
   );

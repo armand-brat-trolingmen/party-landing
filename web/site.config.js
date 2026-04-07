@@ -1,5 +1,5 @@
-const DEFAULT_SITE_URL = 'https://partylanding.vercel.app';
-const DEFAULT_SITE_NAME = 'Party Landing';
+﻿const DEFAULT_SITE_URL = 'https://partylanding.vercel.app';
+const DEFAULT_SITE_NAME = 'Party Everyday';
 const DEFAULT_LOCALE_VALUE = 'ru_RU';
 const DEFAULT_OG_IMAGE_PATH_VALUE = '/og-image.png';
 

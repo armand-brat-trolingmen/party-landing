@@ -1,4 +1,4 @@
-import { aboutAccents, aboutAtelierLayers, aboutAtelierScene } from '../../data/siteContent';
+﻿import { aboutAccents, aboutAtelierLayers, aboutAtelierScene } from '../../data/siteContent';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { SectionHeading } from '../ui/SectionHeading';
 import styles from './AboutSection.module.css';
@@ -23,7 +23,7 @@ export function AboutSection() {
 
           <div className={`${styles.atelier} reveal-grid`} data-testid="about-atmosphere-stage" data-about-layout="atelier">
             <div className={styles.manifest} data-testid="about-brand-manifest">
-              <span className={styles.manifestBadge}>Party Time</span>
+              <span className={styles.manifestBadge}>Party Everyday</span>
               <p className={styles.manifestText}>{aboutAtelierScene.manifest}</p>
             </div>
 

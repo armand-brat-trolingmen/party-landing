@@ -1,4 +1,4 @@
-import {
+﻿import {
   DEFAULT_LOCALE as ROOT_DEFAULT_LOCALE,
   OG_IMAGE_URL,
   SITE_NAME as ROOT_SITE_NAME,
@@ -11,7 +11,7 @@ export const SITE_NAME = ROOT_SITE_NAME;
 export const DEFAULT_LOCALE = ROOT_DEFAULT_LOCALE;
 export const DEFAULT_OG_IMAGE = OG_IMAGE_URL;
 export const BUSINESS_DESCRIPTION =
-  'Party Time — кейтеринг и сладкие зоны для частных, детских и корпоративных событий в Москве и Московской области. Фудтраки, сладкая вата и шоколадный фонтан для мероприятий, где важны вкус, подача и атмосфера.';
+  'Party Everyday — кейтеринг и сладкие зоны для частных, детских и корпоративных событий в Москве и Московской области. Фудтраки, сладкая вата и шоколадный фонтан для мероприятий, где важны вкус, подача и атмосфера.';
 export const LOGO_URL = toAbsoluteUrl('/favicon.svg');
 
 export function normalizeSeoPath(pathname = '/') {
@@ -68,7 +68,7 @@ export function getHomeStructuredData() {
     {
       '@type': 'Service',
       '@id': serviceId,
-      name: 'Кейтеринг и праздничные зоны Party Time',
+      name: 'Кейтеринг и праздничные зоны Party Everyday',
       serviceType: 'Кейтеринг для праздников и событий',
       description: `${siteContent.heroDescription} На сайте представлены форматы: ${visibleFormats}.`,
       provider: {

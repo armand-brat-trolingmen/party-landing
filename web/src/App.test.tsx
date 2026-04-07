@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+﻿import { render, screen, within } from '@testing-library/react';
 import App from './App';
 
 test('renders the one-page anchor shell with the revised section order and story motion path', () => {
@@ -7,11 +7,18 @@ test('renders the one-page anchor shell with the revised section order and story
   const [pageBanner] = screen.getAllByRole('banner');
   const main = screen.getByRole('main');
   const nav = within(pageBanner).getByRole('navigation');
+  const footer = screen.getByRole('contentinfo');
 
   expect(pageBanner).toBeInTheDocument();
-  expect(within(pageBanner).getByRole('link', { name: 'Party Time' })).toBeInTheDocument();
-  expect(within(pageBanner).queryByText('Party Time')).not.toBeInTheDocument();
+  expect(within(pageBanner).getByRole('link', { name: 'Party Everyday' })).toBeInTheDocument();
+  expect(within(pageBanner).queryByText('Party Everyday')).not.toBeInTheDocument();
   expect(main).toBeInTheDocument();
+  expect(footer).toBeInTheDocument();
+  expect(within(footer).getByText('Party Everyday')).toBeInTheDocument();
+  expect(within(footer).getByRole('link', { name: 'Политика конфиденциальности' })).toHaveAttribute(
+    'href',
+    '/privacy',
+  );
   expect(main).toHaveAttribute('data-motion-path', 'story-trail');
   expect(within(nav).getAllByRole('link')).toHaveLength(5);
 
@@ -40,7 +47,7 @@ test('wires layered hero motion, glass header behavior, and manual moment feed h
   expect(heroScene).toHaveAttribute('data-motion-scene', 'layered');
   expect(heroFrame).toHaveAttribute('data-motion-frame', 'parallax');
   expect(screen.getByTestId('section-hero')).toHaveAttribute('data-hero-style', 'poster');
-  expect(screen.getByTestId('section-hero')).toHaveTextContent('Party Time');
+  expect(screen.getByTestId('section-hero')).toHaveTextContent('Party Everyday');
   expect(screen.getByTestId('hero-scene-card-cotton-candy')).toHaveAttribute('data-motion-depth', 'back');
   expect(screen.getByTestId('hero-scene-card-food-truck')).toHaveAttribute('data-motion-depth', 'front');
   expect(screen.getByTestId('hero-scene-card-chocolate-fountain')).toHaveAttribute('data-motion-depth', 'mid');

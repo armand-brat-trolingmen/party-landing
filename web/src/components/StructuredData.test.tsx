@@ -1,4 +1,4 @@
-import { render, waitFor } from '@testing-library/react';
+﻿import { render, waitFor } from '@testing-library/react';
 import { HelmetProvider } from 'react-helmet-async';
 import { StructuredData } from './StructuredData';
 
@@ -9,12 +9,12 @@ test('StructuredData writes valid JSON-LD into the document head', async () => {
         data={[
           {
             '@type': 'Organization',
-            name: 'Party Landing',
+            name: 'Party Everyday',
             url: 'https://partylanding.vercel.app/',
           },
           {
             '@type': 'WebSite',
-            name: 'Party Landing',
+            name: 'Party Everyday',
             url: 'https://partylanding.vercel.app/',
           },
         ]}

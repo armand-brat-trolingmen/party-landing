@@ -1,0 +1,216 @@
+.footer {
+  position: relative;
+  margin-top: clamp(1rem, 4vw, 2rem);
+  padding-block: clamp(1.4rem, 3.8vw, 2.1rem);
+  background:
+    radial-gradient(circle at 18% 18%, rgba(250, 209, 160, 0.12), rgba(250, 209, 160, 0) 26%),
+    radial-gradient(circle at 82% 26%, rgba(255, 207, 154, 0.1), rgba(255, 207, 154, 0) 24%),
+    linear-gradient(180deg, #31201b 0%, #271915 56%, #221512 100%);
+  border-top: 1px solid rgba(255, 237, 219, 0.12);
+  color: #f5ece2;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 -14px 42px rgba(49, 28, 20, 0.12);
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 246, 235, 0.04), rgba(255, 246, 235, 0));
+}
+
+.inner {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.topRow {
+  display: grid;
+  gap: 1rem;
+}
+
+.brandCluster {
+  display: grid;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: fit-content;
+}
+
+.brandBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.9rem;
+  height: 2.9rem;
+  border-radius: 1rem;
+  background:
+    radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0) 46%),
+    linear-gradient(180deg, rgba(255, 247, 237, 0.08), rgba(255, 233, 210, 0.03));
+  border: 1px solid rgba(255, 238, 220, 0.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 10px 22px rgba(16, 8, 6, 0.22);
+}
+
+.brandName {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 1.9vw, 1.55rem);
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+
+.brandDescriptor {
+  max-width: 30rem;
+  color: rgba(245, 236, 226, 0.72);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.actionsCluster {
+  display: grid;
+  gap: 0.9rem;
+  align-items: center;
+}
+
+.socials {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.socialLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 238, 220, 0.14);
+  background:
+    radial-gradient(circle at 28% 24%, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0) 44%),
+    linear-gradient(180deg, rgba(255, 248, 237, 0.08), rgba(255, 244, 234, 0.03));
+  color: #fff1e5;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 10px 20px rgba(16, 8, 6, 0.16);
+  transition:
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 220ms ease,
+    color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.socialLink:hover,
+.socialLink:focus-visible {
+  transform: translate3d(0, -2px, 0);
+  border-color: rgba(255, 212, 151, 0.32);
+  color: #ffd7a0;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 14px 22px rgba(16, 8, 6, 0.22);
+}
+
+.socialLink svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.contactLinks {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.65rem 1.1rem;
+}
+
+.contactLink {
+  color: rgba(245, 236, 226, 0.9);
+  font-size: 0.95rem;
+  line-height: 1.4;
+  transition: color 220ms ease;
+}
+
+.contactLink:hover,
+.contactLink:focus-visible {
+  color: #ffd7a0;
+}
+
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255, 244, 231, 0), rgba(255, 244, 231, 0.18), rgba(255, 244, 231, 0));
+}
+
+.bottomRow {
+  display: grid;
+  gap: 0.95rem;
+}
+
+.legalDetails {
+  display: grid;
+  gap: 0.28rem;
+  color: rgba(245, 236, 226, 0.74);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.legalLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 1.1rem;
+}
+
+.legalLink {
+  color: rgba(245, 236, 226, 0.82);
+  font-size: 0.92rem;
+  line-height: 1.45;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: rgba(255, 212, 151, 0.2);
+  text-underline-offset: 0.16em;
+  transition:
+    color 220ms ease,
+    text-decoration-color 220ms ease;
+}
+
+.legalLink:hover,
+.legalLink:focus-visible {
+  color: #ffd7a0;
+  text-decoration-color: rgba(255, 212, 151, 0.55);
+}
+
+@media (min-width: 860px) {
+  .topRow {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .actionsCluster {
+    justify-items: end;
+  }
+
+  .bottomRow {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 1rem 2rem;
+  }
+
+  .legalLinks {
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 859px) {
+  .footer {
+    padding-block: 1.3rem 1.55rem;
+  }
+
+  .brandDescriptor {
+    max-width: 22rem;
+  }
+}

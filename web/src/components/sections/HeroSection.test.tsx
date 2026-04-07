@@ -1,8 +1,8 @@
-import { render, screen, within } from '@testing-library/react';
+﻿import { render, screen, within } from '@testing-library/react';
 import { HeroSection } from './HeroSection';
 import { siteContent } from '../../data/siteContent';
 
-test('renders hero as a poster screen with Party Time above the accent line and no CTA', () => {
+test('renders hero as a poster screen with Party Everyday above the accent line and no CTA', () => {
   render(<HeroSection />);
 
   const hero = screen.getByTestId('section-hero');

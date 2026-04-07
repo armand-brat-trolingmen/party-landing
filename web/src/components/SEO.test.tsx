@@ -1,4 +1,4 @@
-import { render, waitFor } from '@testing-library/react';
+﻿import { render, waitFor } from '@testing-library/react';
 import { HelmetProvider } from 'react-helmet-async';
 import { MemoryRouter } from 'react-router';
 import { SEO } from './SEO';
@@ -9,7 +9,7 @@ test('SEO writes title and key meta tags in client mode', async () => {
     <HelmetProvider>
       <MemoryRouter initialEntries={['/']}>
         <SEO
-          title="Party Time — фудтраки и сладкая вата для праздников"
+          title="Party Everyday — фудтраки и сладкая вата для праздников"
           description="Кейтеринг для праздников в Москве и области."
         />
       </MemoryRouter>
@@ -17,7 +17,7 @@ test('SEO writes title and key meta tags in client mode', async () => {
   );
 
   await waitFor(() => {
-    expect(document.title).toBe('Party Time — фудтраки и сладкая вата для праздников');
+    expect(document.title).toBe('Party Everyday — фудтраки и сладкая вата для праздников');
   });
 
   expect(document.head.querySelector('meta[name="description"]')?.getAttribute('content')).toBe(

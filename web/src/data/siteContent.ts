@@ -1,4 +1,4 @@
-export const avitoProfileUrl = 'https://www.avito.ru/brands/i82014135/all';
+﻿export const avitoProfileUrl = 'https://www.avito.ru/brands/i82014135/all';
 
 export const navItems = [
   { id: 'about', label: 'О нас' },
@@ -9,7 +9,7 @@ export const navItems = [
 ] as const;
 
 export const siteContent = {
-  brand: 'Party Time',
+  brand: 'Party Everyday',
   tagline: 'Почувствуй атмосферу праздника с нашей помощью!',
   heroDescription:
     'Фудтраки, сладкая вата и шоколадный фонтан для событий, которые хочется не просто провести, а красиво прожить.',
@@ -28,7 +28,7 @@ export const heroSceneItems = [
 export const aboutAtelierScene = {
   eyebrow: 'Как мы собираем атмосферу',
   description:
-    'Party Time не просто привозит красивые точки, а собирает вкус, подачу и настроение в один цельный кадр праздника.',
+    'Party Everyday не просто привозит красивые точки, а собирает вкус, подачу и настроение в один цельный кадр праздника.',
   manifest:
     'Мы собираем красивую атмосферу вручную: подбираем вкус, ритм и подачу так, чтобы праздник ощущался тёплым, цельным и по-настоящему вашим.',
 } as const;
@@ -101,7 +101,7 @@ export const momentFeedItems = [
     label: 'Фудтрак',
     title: 'Фудтрак, возле которого гости собираются сами собой.',
     image: '/images/reviews/review-truck-1.png',
-    alt: 'Фудтрак Party Time на выездном событии',
+    alt: 'Фудтрак Party Everyday на выездном событии',
     objectPosition: '50% 50%',
     tone: 'gold',
   },
@@ -110,7 +110,7 @@ export const momentFeedItems = [
     label: 'Сладкая вата',
     title: 'Сладкая вата, которую сначала фотографируют, а потом просят повторить.',
     image: '/images/reviews/review-cotton-1.png',
-    alt: 'Стойка сладкой ваты Party Time на празднике',
+    alt: 'Стойка сладкой ваты Party Everyday на празднике',
     objectPosition: '50% 42%',
     tone: 'rose',
   },
@@ -119,7 +119,7 @@ export const momentFeedItems = [
     label: 'Шоколадный фонтан',
     title: 'Шоколадный фонтан, к которому гости возвращаются за добавкой весь вечер.',
     image: '/images/reviews/review-fountain-2.jpg',
-    alt: 'Шоколадный фонтан Party Time в десертной зоне',
+    alt: 'Шоколадный фонтан Party Everyday в десертной зоне',
     objectPosition: '50% 56%',
     tone: 'chocolate',
   },
@@ -141,7 +141,7 @@ export const faqItems = [
     id: 'services',
     question: 'Какие форматы и услуги можно заказать на праздник?',
     answer:
-      'На сайте уже показаны основные форматы Party Time: фудтраки, сладкая вата и шоколадный фонтан. Мы подбираем их под характер события, площадку и желаемую атмосферу.',
+      'На сайте уже показаны основные форматы Party Everyday: фудтраки, сладкая вата и шоколадный фонтан. Мы подбираем их под характер события, площадку и желаемую атмосферу.',
   },
   {
     id: 'adapt',

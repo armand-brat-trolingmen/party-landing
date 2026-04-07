@@ -5,8 +5,10 @@
 }
 
 html {
+  width: 100%;
   scroll-behavior: smooth;
   scroll-padding-top: var(--anchor-offset);
+  overflow-x: clip;
 }
 
 *,
@@ -17,6 +19,7 @@ html {
 
 body {
   margin: 0;
+  width: 100%;
   min-height: 100vh;
   font-family: var(--font-body);
   line-height: 1.5;
@@ -25,6 +28,7 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
 }
 
 a {
@@ -66,12 +70,14 @@ svg {
 
 #root {
   min-height: 100vh;
+  overflow-x: clip;
 }
 
 .site-shell {
   position: relative;
   isolation: isolate;
   padding-bottom: 0;
+  overflow-x: clip;
 }
 
 .site-shell::before {
@@ -483,5 +489,14 @@ svg {
       opacity var(--reveal-soft-duration) var(--reveal-soft-ease),
       transform var(--reveal-soft-duration) var(--reveal-soft-ease),
       filter 820ms ease;
+  }
+}
+
+@supports not (overflow: clip) {
+  html,
+  body,
+  #root,
+  .site-shell {
+    overflow-x: hidden;
   }
 }
