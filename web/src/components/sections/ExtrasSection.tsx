@@ -9,7 +9,6 @@ type ExtrasSectionProps = {
   sectionId?: string;
   title?: string;
   description?: string;
-  eyebrow?: string;
 };
 
 export function ExtrasSection({
@@ -17,7 +16,6 @@ export function ExtrasSection({
   sectionId = 'extras',
   title = homePageContent.extras.title,
   description = homePageContent.extras.description,
-  eyebrow = homePageContent.extras.eyebrow,
 }: ExtrasSectionProps) {
   const { ref, revealState } = useScrollReveal();
 
@@ -25,7 +23,7 @@ export function ExtrasSection({
     <section id={sectionId} className="site-section" data-testid="section-extras" aria-labelledby={`${sectionId}-title`}>
       <div ref={ref} className="site-container site-reveal" data-reveal-state={revealState} data-reveal-stagger="true">
         <article className={`${styles.frame} site-panel-glow`}>
-          <SectionHeading eyebrow={eyebrow} title={<span id={`${sectionId}-title`}>{title}</span>} description={description} />
+          <SectionHeading title={<span id={`${sectionId}-title`}>{title}</span>} description={description} />
 
           <div className={`${styles.track} reveal-grid`} data-testid="extras-track">
             {items.map((item) => (

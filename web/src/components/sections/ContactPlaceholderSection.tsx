@@ -45,11 +45,7 @@ export function ContactPlaceholderSection() {
     <section id="contact" className="site-section" data-testid="section-contact" aria-labelledby="contact-title">
       <div ref={ref} className="site-container site-reveal" data-reveal-state={revealState} data-reveal-stagger="true">
         <article className={`${styles.frame} site-panel-glow`}>
-          <SectionHeading
-            eyebrow={contactGuidedCopy.eyebrow}
-            title={<span id="contact-title">Контакты</span>}
-            description={contactGuidedCopy.description}
-          />
+          <SectionHeading title={<span id="contact-title">Контакты</span>} description={contactGuidedCopy.description} />
 
           <div className={`${styles.layout} reveal-grid`} data-testid="contact-layout" data-contact-layout="guided">
             <aside className={styles.guide} data-testid="contact-guide" data-contact-guide="first-message">

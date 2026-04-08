@@ -22,11 +22,7 @@ export function FaqSection() {
         data-reveal-stagger="true"
       >
         <article className={`${styles.frame} site-panel-glow`}>
-          <SectionHeading
-            eyebrow={faqSectionCopy.eyebrow}
-            title={<span id="faq-title">{FAQ_TITLE}</span>}
-            description={faqSectionCopy.description}
-          />
+          <SectionHeading title={<span id="faq-title">{FAQ_TITLE}</span>} description={faqSectionCopy.description} />
           <ul
             className={`${styles.accordion} reveal-grid`}
             data-testid="faq-accordion"

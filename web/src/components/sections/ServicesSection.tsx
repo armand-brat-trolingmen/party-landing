@@ -10,7 +10,6 @@ type ServicesSectionProps = {
   sectionId?: string;
   title?: string;
   description?: string;
-  eyebrow?: string;
   initialVisibleCount?: number;
   allowReveal?: boolean;
 };
@@ -20,7 +19,6 @@ export function ServicesSection({
   sectionId = 'services',
   title = homePageContent.services.title,
   description = homePageContent.services.description,
-  eyebrow = homePageContent.services.eyebrow,
   initialVisibleCount = homePageContent.services.initialVisibleCount,
   allowReveal = true,
 }: ServicesSectionProps) {
@@ -37,7 +35,7 @@ export function ServicesSection({
     <section id={sectionId} className="site-section" data-testid="section-services" aria-labelledby={`${sectionId}-title`}>
       <div ref={ref} className="site-container site-reveal" data-reveal-state={revealState} data-reveal-stagger="true">
         <article className={`${styles.frame} site-panel-glow`}>
-          <SectionHeading eyebrow={eyebrow} title={<span id={`${sectionId}-title`}>{title}</span>} description={description} />
+          <SectionHeading align="center" title={<span id={`${sectionId}-title`}>{title}</span>} description={description} />
 
           <div
             className={`${styles.grid} reveal-grid`}

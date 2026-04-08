@@ -37,7 +37,6 @@ export function ReviewsSection() {
       <div ref={ref} className="site-container site-reveal" data-reveal-state={revealState} data-reveal-stagger="true">
         <article className={`${styles.frame} site-panel-glow`}>
           <SectionHeading
-            eyebrow={homePageContent.moments.eyebrow}
             title={<span id="moments-title">{homePageContent.moments.title}</span>}
             description={homePageContent.moments.description}
           />

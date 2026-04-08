@@ -18,7 +18,6 @@ export function CtaSection({ id, title, description, sectionTestId = 'section-ct
           <div className={styles.content}>
             <div className={styles.copy}>
               <SectionHeading
-                eyebrow={homePageContent.cta.eyebrow}
                 title={<span id={`${sectionTestId}-title`}>{title ?? homePageContent.cta.title}</span>}
                 description={description ?? homePageContent.cta.description}
               />

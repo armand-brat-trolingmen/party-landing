@@ -11,7 +11,6 @@ export function AboutSection() {
         <article className={`${styles.frame} site-panel-glow`}>
           <div className={styles.layout} data-testid="about-layout" data-about-layout="manifest-strip">
             <div className={styles.copy}>
-              <p className={styles.eyebrow}>{homePageContent.about.eyebrow}</p>
               <h2 id="about-title" className={styles.title}>
                 О нас
               </h2>
