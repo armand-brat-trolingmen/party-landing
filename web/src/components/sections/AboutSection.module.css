@@ -1,50 +1,36 @@
-.frame {
-  padding: clamp(1.35rem, 3vw, 2.1rem);
-  border-radius: calc(var(--radius-card) + 0.2rem);
-  background:
-    linear-gradient(150deg, rgba(255, 255, 255, 0.72), rgba(255, 249, 244, 0.56)),
-    radial-gradient(circle at 18% 24%, rgba(247, 166, 195, 0.14), rgba(247, 166, 195, 0) 34%),
-    radial-gradient(circle at 84% 18%, rgba(158, 203, 245, 0.12), rgba(158, 203, 245, 0) 32%);
-  border: 1px solid rgba(126, 100, 87, 0.08);
-  box-shadow: 0 14px 30px rgba(158, 121, 89, 0.06);
+.sectionBody {
+  display: grid;
+  gap: clamp(1.8rem, 4vw, 2.8rem);
 }
 
 .layout {
   display: grid;
-  gap: 1.25rem;
+  gap: clamp(1.25rem, 3vw, 2.1rem);
   align-items: start;
 }
 
 .copy {
   display: grid;
-  gap: 0.9rem;
-  max-width: 36rem;
-}
-
-.eyebrow {
-  color: var(--accent-red);
-  font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  gap: 0.95rem;
+  max-width: 38rem;
 }
 
 .title {
-  font-size: clamp(2rem, 3.6vw, 3rem);
+  font-size: clamp(2.05rem, 3.7vw, 3rem);
   line-height: 0.96;
 }
 
 .description {
-  max-width: 32rem;
+  max-width: 33rem;
   color: var(--text-muted);
   line-height: 1.58;
 }
 
 .manifest {
-  max-width: 38rem;
+  max-width: 40rem;
   font-family: var(--font-display);
-  font-size: clamp(1.3rem, 2.5vw, 1.9rem);
-  line-height: 1.16;
+  font-size: clamp(1.25rem, 2.5vw, 1.9rem);
+  line-height: 1.14;
   text-wrap: balance;
 }
 
@@ -56,13 +42,13 @@
 .factCard {
   display: grid;
   gap: 0.35rem;
-  padding: 1rem 1rem 1.05rem;
-  border-radius: 1.3rem;
+  padding: 1.05rem 1rem 1.1rem;
+  border-radius: 1.35rem;
+  border: 1px solid var(--line-soft);
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(255, 250, 245, 0.64)),
-    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.64), rgba(255, 255, 255, 0) 42%);
-  border: 1px solid rgba(126, 100, 87, 0.08);
-  box-shadow: 0 10px 22px rgba(158, 121, 89, 0.05);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(255, 249, 243, 0.58)),
+    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.74), rgba(255, 255, 255, 0) 44%);
+  box-shadow: var(--shadow-shell);
 }
 
 .factValue {
@@ -79,8 +65,8 @@
 
 @media (min-width: 900px) {
   .layout {
-    grid-template-columns: minmax(0, 1.05fr) minmax(16rem, 0.95fr);
-    gap: clamp(1.4rem, 4vw, 3rem);
+    grid-template-columns: minmax(0, 1.06fr) minmax(16rem, 0.94fr);
+    gap: clamp(1.5rem, 4vw, 3rem);
   }
 }
 
@@ -90,6 +76,6 @@
   }
 
   .manifest {
-    font-size: 1.22rem;
+    font-size: 1.2rem;
   }
 }

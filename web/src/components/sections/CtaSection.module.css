@@ -34,7 +34,7 @@
   width: min(calc(100% - (var(--space-6) * 2)), var(--shell-max-width));
 }
 
-.frame {
+.sectionBody {
   width: 100%;
   padding: 0;
   border: 0;

@@ -1,15 +1,6 @@
-.frame {
+.sectionBody {
   display: grid;
-  gap: clamp(1.25rem, 3vw, 2rem);
-  padding: clamp(1.25rem, 3vw, 2.15rem);
-  min-height: 100%;
-  border-radius: calc(var(--radius-card) + 0.4rem);
-  background:
-    radial-gradient(circle at 88% 12%, rgba(247, 166, 195, 0.12), transparent 36%),
-    radial-gradient(circle at 12% 90%, rgba(158, 203, 245, 0.12), transparent 44%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(255, 248, 242, 0.6));
-  border: 1px solid rgba(126, 100, 87, 0.08);
-  box-shadow: 0 14px 30px rgba(158, 121, 89, 0.06);
+  gap: clamp(1.35rem, 3vw, 2.2rem);
 }
 
 .sliderShell {

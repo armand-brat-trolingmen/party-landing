@@ -21,7 +21,7 @@ export function FaqSection() {
         data-reveal-state={revealState}
         data-reveal-stagger="true"
       >
-        <div className={`${styles.frame} site-panel-glow`} data-section-surface="canvas" data-section-tone="lemon">
+        <div className={styles.sectionBody} data-section-surface="canvas" data-section-tone="lemon">
           <SectionHeading title={<span id="faq-title">{FAQ_TITLE}</span>} description={faqSectionCopy.description} />
           <ul
             className={`${styles.accordion} reveal-grid`}

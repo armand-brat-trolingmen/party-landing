@@ -10,7 +10,7 @@ export function TestimonialsSection() {
   return (
     <section id="testimonials" className="site-section" data-testid="section-testimonials" aria-labelledby="testimonials-title">
       <div ref={ref} className="site-container site-reveal" data-reveal-state={revealState} data-reveal-stagger="true">
-        <div className={`${styles.frame} site-panel-glow`} data-section-surface="canvas" data-section-tone="blush">
+        <div className={styles.sectionBody} data-section-surface="canvas" data-section-tone="blush">
           <SectionHeading
             title={<span id="testimonials-title">{homePageContent.reviews.title}</span>}
             description={homePageContent.reviews.description}

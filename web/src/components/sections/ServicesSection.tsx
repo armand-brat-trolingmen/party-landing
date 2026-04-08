@@ -34,7 +34,7 @@ export function ServicesSection({
   return (
     <section id={sectionId} className="site-section" data-testid="section-services" aria-labelledby={`${sectionId}-title`}>
       <div ref={ref} className="site-container site-reveal" data-reveal-state={revealState} data-reveal-stagger="true">
-        <div className={`${styles.frame} site-panel-glow`} data-section-surface="cards" data-section-tone="lemon">
+        <div className={styles.sectionBody} data-section-surface="cards" data-section-tone="lemon">
           <SectionHeading align="center" title={<span id={`${sectionId}-title`}>{title}</span>} description={description} />
 
           <div

@@ -14,7 +14,7 @@ export function CtaSection({ id, title, description, sectionTestId = 'section-ct
   return (
     <section id={id} className={`site-section ${styles.section}`} data-testid={sectionTestId} aria-labelledby={`${sectionTestId}-title`}>
       <div className="site-container">
-        <div className={styles.frame} data-section-surface="band" data-section-tone="apricot">
+        <div className={styles.sectionBody} data-section-surface="band" data-section-tone="apricot">
           <div className={styles.content}>
             <div className={styles.copy}>
               <SectionHeading
