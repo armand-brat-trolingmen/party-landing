@@ -22,7 +22,9 @@ body {
   width: 100%;
   min-height: 100vh;
   font-family: var(--font-body);
-  line-height: 1.5;
+  font-optical-sizing: auto;
+  line-height: 1.58;
+  letter-spacing: 0.005em;
   background: var(--bg-page);
   color: var(--text-primary);
   text-rendering: optimizeLegibility;
@@ -51,6 +53,9 @@ h5,
 h6 {
   margin: 0;
   font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 p {
@@ -237,13 +242,14 @@ svg {
   color: var(--accent-red);
   font-size: 0.875rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
 .site-section__description {
   color: var(--text-muted);
   max-width: 38rem;
+  line-height: 1.68;
 }
 
 .site-panel-glow {

@@ -47,8 +47,8 @@
 .brandMark {
   color: var(--accent-red);
   font-size: 0.98rem;
-  font-weight: 700;
-  letter-spacing: 0.22em;
+  font-weight: 600;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 
@@ -63,10 +63,12 @@
 .tagline {
   max-width: 10ch;
   font-size: clamp(3rem, 8vw, 5.8rem);
-  line-height: 0.92;
+  font-weight: 600;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
   color: var(--text-primary);
   text-wrap: balance;
-  text-shadow: 0 10px 26px rgba(122, 89, 63, 0.08);
+  text-shadow: 0 8px 22px rgba(122, 89, 63, 0.06);
 }
 
 .description {
@@ -81,8 +83,8 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.62),
     0 18px 34px rgba(122, 89, 63, 0.08);
   color: var(--text-muted);
-  font-size: 1rem;
-  line-height: 1.6;
+  font-size: 1.02rem;
+  line-height: 1.68;
 }
 
 .sceneColumn {
