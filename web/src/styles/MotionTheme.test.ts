@@ -1,26 +1,39 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-test('global motion theme defines drifting glow lights for section frames', () => {
-  const css = readFileSync(resolve(process.cwd(), 'src/styles/global.css'), 'utf8');
+function readCss(path: string) {
+  return readFileSync(resolve(process.cwd(), path), 'utf8').replace(/\r\n/g, '\n');
+}
 
-  expect(css).toContain('@keyframes sectionGlowDrift');
-  expect(css).toContain('@keyframes sectionLightTrailDrift');
-  expect(css).toContain('--section-glow-duration: 18s;');
-  expect(css).toContain('animation: sectionGlowDrift var(--section-glow-duration) ease-in-out infinite alternate;');
+test('global canvas styles remove hanging decorative separators and keep one shared page background', () => {
+  const css = readCss('src/styles/global.css');
+
   expect(css).toContain('.site-shell::before');
+  expect(css).toContain('rgba(255, 236, 146');
+  expect(css).toContain('rgba(255, 174, 206');
+  expect(css).toContain('rgba(167, 220, 255');
+  expect(css).toContain('.site-section__content');
+  expect(css).not.toContain(".site-shell[data-motion-path='story-trail'] > #about::before");
+  expect(css).not.toContain('@keyframes sectionLightTrailDrift');
+  expect(css).not.toContain('@keyframes sectionStoryTrailDrift');
 });
 
-test('hero scene styles define layered float and parallax hooks', () => {
-  const css = readFileSync(resolve(process.cwd(), 'src/components/scene/HeroScene.module.css'), 'utf8');
+test('hero styles define a clean visual field without the hanging bubble accent', () => {
+  const css = readCss('src/components/sections/HeroSection.module.css');
 
-  expect(css).toContain('@keyframes heroSceneFloat');
-  expect(css).toContain('transform: translate3d(var(--hero-parallax-x, 0px), var(--hero-parallax-y, 0px), 0)');
-  expect(css).toContain('animation: heroSceneFloat 7.4s ease-in-out infinite alternate;');
+  expect(css).toContain('.visualField');
+  expect(css).toContain('.visualGlow');
+  expect(css).toContain('background: transparent;');
+  expect(css).toContain('border: 0;');
+  expect(css).toContain('min-width: 17rem;');
+  expect(css).toContain('min-height: 4.8rem;');
+  expect(css).toContain('rgba(255, 236, 186');
+  expect(css).not.toContain('rgba(110, 191, 255');
+  expect(css).not.toContain('.hero::after');
 });
 
 test('moment feed defines premium hover motion for photos and slide content', () => {
-  const css = readFileSync(resolve(process.cwd(), 'src/components/sections/ReviewsSection.module.css'), 'utf8');
+  const css = readCss('src/components/sections/ReviewsSection.module.css');
 
   expect(css).toContain('.slide:hover');
   expect(css).toContain('translate3d(0, -4px, 0)');
@@ -29,46 +42,64 @@ test('moment feed defines premium hover motion for photos and slide content', ()
   expect(css).toContain('@keyframes slideSwapInNext');
 });
 
-test('mobile motion stays rich with slower ambient movement and tactile review feedback', () => {
-  const globalCss = readFileSync(resolve(process.cwd(), 'src/styles/global.css'), 'utf8');
-  const heroCss = readFileSync(resolve(process.cwd(), 'src/components/scene/HeroScene.module.css'), 'utf8');
-  const servicesCss = readFileSync(resolve(process.cwd(), 'src/components/sections/ServicesSection.module.css'), 'utf8');
-  const reviewsCss = readFileSync(resolve(process.cwd(), 'src/components/sections/ReviewsSection.module.css'), 'utf8');
+test('mobile motion keeps review feedback but drops the old section trail lights', () => {
+  const globalCss = readCss('src/styles/global.css');
+  const heroCss = readCss('src/components/sections/HeroSection.module.css');
+  const servicesCss = readCss('src/components/sections/ServicesSection.module.css');
+  const reviewsCss = readCss('src/components/sections/ReviewsSection.module.css');
 
-  expect(globalCss).toContain('--section-glow-duration: 24s;');
-  expect(globalCss).toContain('filter: blur(18px);');
-  expect(globalCss).toContain('@media (max-width: 720px) and (prefers-reduced-motion: no-preference)');
-  expect(globalCss).toContain('animation: sectionLightTrailDrift 34s ease-in-out infinite alternate;');
-  expect(globalCss).toContain('animation: sectionGlowDrift var(--section-glow-duration) ease-in-out infinite alternate;');
-  expect(heroCss).toContain('--hero-float-shift-start: -3px;');
-  expect(heroCss).toContain('--hero-float-shift-end: 4px;');
+  expect(globalCss).toContain('@media (max-width: 720px)');
+  expect(globalCss).not.toContain('sectionLightTrailDrift 34s');
+  expect(heroCss).toContain('.actions');
   expect(heroCss).toContain('@media (max-width: 720px)');
-  expect(heroCss).toContain('.item {\n    animation-duration: 13.4s;');
-  expect(heroCss).toContain('.frame::before {\n    filter: blur(8px);');
-  expect(servicesCss).toContain(".card[data-service-id='food-trucks'] .imageWrap::before,");
-  expect(servicesCss).toContain('animation: serviceShineSweep 10.5s linear infinite;');
-  expect(servicesCss).toContain('animation: fountainHaloPulse 10.4s ease-in-out infinite;');
+  expect(servicesCss).toContain('.card:hover');
+  expect(servicesCss).toContain('transform: translate3d(0, -8px, 0);');
+  expect(servicesCss).toContain('.link:hover,');
+  expect(servicesCss).toContain('.revealButton:hover,');
   expect(reviewsCss).toContain('@media (max-width: 720px)');
   expect(reviewsCss).toContain('.controlButton:active');
 });
 
-test('header styles define a compact scroll state, floating nav indicator, and logo motion', () => {
-  const css = readFileSync(resolve(process.cwd(), 'src/components/layout/SiteHeader.module.css'), 'utf8');
+test('header styles define a transparent home rest state and a framed compact state', () => {
+  const css = readCss('src/components/layout/SiteHeader.module.css');
+  const footerCss = readCss('src/components/layout/SiteFooter.module.css');
 
   expect(css).toContain(".header[data-header-state='compact']");
+  expect(css).toContain(".header[data-header-route='home'][data-header-state='rest']");
   expect(css).toContain('.navIndicator');
-  expect(css).toContain('@keyframes logoGentleFloat');
-  expect(css).toContain('.mobileNavLink[data-active=\'true\']');
+  expect(css).toContain('.brandText');
+  expect(css).toContain('.headerCtaInner');
+  expect(css).toContain('.headerCtaArrow');
+  expect(css).toContain('max-width: 1260px;');
+  expect(css).toContain('flex-wrap: nowrap;');
+  expect(css).toContain('justify-content: space-between;');
+  expect(css).toContain('justify-content: center;');
+  expect(css).toContain('min-width: 10.5rem;');
+  expect(css).not.toContain('@keyframes logoGentleFloat');
+  expect(css).toContain(".mobileNavLink[data-active='true']");
+  expect(css).toContain('width: 3.1rem;');
+  expect(footerCss).toContain('width: 3.1rem;');
 });
 
-test('faq and services define cinematic accordion glow and micro scene animations', () => {
-  const faqCss = readFileSync(resolve(process.cwd(), 'src/components/sections/FaqSection.module.css'), 'utf8');
-  const servicesCss = readFileSync(resolve(process.cwd(), 'src/components/sections/ServicesSection.module.css'), 'utf8');
+test('faq and services define cinematic accordion glow and premium micro interactions', () => {
+  const faqCss = readCss('src/components/sections/FaqSection.module.css');
+  const servicesCss = readCss('src/components/sections/ServicesSection.module.css');
 
   expect(faqCss).toContain('.item::before');
   expect(faqCss).toContain(".item[data-open='true']");
   expect(faqCss).toContain('.answerText::before');
-  expect(servicesCss).toContain('@keyframes serviceShineSweep');
-  expect(servicesCss).toContain('@keyframes cottonCandyDrift');
-  expect(servicesCss).toContain('@keyframes fountainHaloPulse');
+  expect(servicesCss).toContain('.card {');
+  expect(servicesCss).toContain('transition:\n    transform 380ms cubic-bezier(0.22, 1, 0.36, 1),');
+  expect(servicesCss).toContain('@media (prefers-reduced-motion: reduce)');
+});
+
+test('cta styles render a full-width band without a framed card shell', () => {
+  const css = readCss('src/components/sections/CtaSection.module.css');
+
+  expect(css).toContain('.section {');
+  expect(css).toContain('width: 100%;');
+  expect(css).toContain('border: 0;');
+  expect(css).toContain('border-radius: 0;');
+  expect(css).toContain('#f2a14b');
+  expect(css).toContain('font-weight: 800;');
 });

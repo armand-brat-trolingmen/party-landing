@@ -1,331 +1,277 @@
-# Canvas Redesign Implementation Plan
+# Canvas Shell Redesign Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Rework the landing page so it reads as one artistic canvas, replace the interface logo with the real project logo, rebuild the hero, shrink the about/CTA sections, and stabilize the test environment without breaking Russian text encoding.
+**Goal:** Remove outer section frames from the homepage shell and rebuild the main page as one continuous canvas with one large title per section.
 
-**Architecture:** Keep the existing Vite/React section structure and routing, but shift the design system toward one continuous page canvas. Reuse the current data-driven architecture, update content and tests first, then refactor the global surface styling and the most visible sections in place. Stabilization work happens first so later visual verification uses the correct local app and not a stale preview server.
+**Architecture:** Keep the current React/Vite section structure and existing section order, but move visual separation out of framed wrappers and into a shared heading system, larger vertical rhythm, and soft section tint zones. Implement the redesign in three layers: first normalize the shared `SectionHeading` primitive, then refactor section markup to a frameless shell with explicit surface/tone semantics, then rebuild the CSS and tests so the page reads as one long composition while preserving service-card framing.
 
-**Tech Stack:** React 19, TypeScript, Vite, CSS Modules, React Router, react-helmet-async, Vitest, Playwright
+**Tech Stack:** React 19, TypeScript, Vite, CSS Modules, React Router, Vitest
 
 ---
 
 ## File Map
 
 **Create**
-- `C:/Users/606ru/OneDrive/Desktop/але/site/web/public/brand-logo.png` — copy of the approved root logo for browser-safe app usage
+- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ExtrasSection.test.tsx` — coverage for the extras section after the shell refactor
 
 **Modify**
-- `C:/Users/606ru/OneDrive/Desktop/але/site/web/playwright.config.ts` — isolate Playwright from stale local servers
-- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/styles/MotionTheme.test.ts` — remove brittle line-ending assertions
-- `C:/Users/606ru/OneDrive/Desktop/але/site/web/site.config.js` — update default site name if branding changes here
-- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/data/siteContent.ts` — approved brand text, hero copy, about manifesto/facts, CTA text
-- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/data/footerContent.ts` — footer brand text, legal text, contact links, optional footer logo behavior
-- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/config/seo.ts` — absolute logo URL and brand naming consistency
-- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/branding/DonutLogo.tsx` — replace the drawn donut mark with the real logo image wrapper
-- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/layout/SiteHeader.tsx` — add text brand, calmer CTA trigger, keep anchor logic
-- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/layout/SiteHeader.module.css` — remove bubble badge effect and soften header composition
-- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/layout/SiteFooter.tsx` — use the real logo without text lockup duplication
-- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/layout/SiteFooter.module.css` — subtle milk support for the logo on dark footer
-- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/HeroSection.tsx` — poster-style hero copy and button behavior
-- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/HeroSection.module.css` — cleaner left/right hero composition with soft light field
-- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/scene/HeroScene.tsx` — reduce to an empty light field instead of object cards
-- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/scene/HeroScene.module.css` — remove decorative object motion and keep only the soft light canvas
-- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/AboutSection.tsx` — compact manifesto plus mini-facts
-- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/AboutSection.module.css` — lighter, smaller about section presentation
-- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ContactPlaceholderSection.tsx` — preserve inline CTA logic while shrinking visual mass
-- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ContactPlaceholderSection.module.css` — compact inline CTA mini-block integrated into the page canvas
-- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/styles/tokens.css` — add softer pink/blue page tokens
-- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/styles/global.css` — canvas-like section blending and full decorative cleanup
-- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/App.test.tsx` — reflect the new brand and composition
-- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/layout/SiteHeader.test.tsx` — reflect text brand beside the logo
-- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/layout/SiteFooter.test.tsx` — reflect footer branding and contact expectations
-- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/HeroSection.test.tsx` — assert the clean hero copy/buttons
-- `C:/Users/606ru/OneDrive/Desktop/але/site/web/e2e/landing.spec.ts` — remove assumptions tied to the old hero/cards/decor and validate the new flow
+- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/App.tsx` — switch the shell away from the legacy `story-trail` motion preset if the new canvas naming is clearer
+- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/App.test.tsx` — keep section order assertions, but align shell expectations with the frameless canvas
+- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/ui/SectionHeading.tsx` — simplify to a single-title primitive with optional alignment only
+- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/ui/SectionHeading.test.tsx` — assert the new one-title heading contract
+- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/AboutSection.tsx` — remove outer frame wrapper and use the shared section heading
+- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/AboutSection.module.css` — replace framed shell styles with tint/spacing styles
+- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/AboutSection.test.tsx` — assert the compact frameless section semantics
+- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ServicesSection.tsx` — remove the outer frame while keeping the service cards framed and center the heading
+- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ServicesSection.module.css` — keep card borders, drop the section shell, tune centered heading spacing
+- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ServicesSection.test.tsx` — assert centered heading and preserved card behavior
+- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ExtrasSection.tsx` — switch to a frameless section body and shared title rhythm
+- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ExtrasSection.module.css` — keep the offerings readable without a heavy outer wrapper
+- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ReviewsSection.tsx` — remove the outer frame and keep the photo slider embedded in the canvas
+- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ReviewsSection.module.css` — move the section from card-shell styling to tinted canvas styling
+- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ReviewsSection.test.tsx` — assert the section still behaves as a manual gallery in the frameless shell
+- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/TestimonialsSection.tsx` — remove the outer frame and keep internal review cards/proof readable
+- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/TestimonialsSection.module.css` — soften internal grouping while keeping text proof readable
+- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/TestimonialsSection.test.tsx` — assert the section remains the proof block for reviews
+- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/FaqSection.tsx` — remove the outer frame while keeping the accordion items structured
+- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/FaqSection.module.css` — keep accordion item borders and reduce the sense of a boxed section wrapper
+- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/FaqSection.test.tsx` — assert FAQ keeps its accordion behavior in the new shell
+- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ContactPlaceholderSection.tsx` — remove the outer frame and keep only softer internal grouping
+- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ContactPlaceholderSection.module.css` — replace section-shell styling with tint, spacing, and light dividers
+- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ContactPlaceholderSection.test.tsx` — assert contact actions still render correctly in the frameless shell
+- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/CtaSection.tsx` — update heading usage to the one-title pattern and keep the CTA embedded in the flow
+- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/CtaSection.module.css` — tune CTA adjacency so it blends into nearby sections
+- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/CtaSection.test.tsx` — assert the CTA still exposes the inline form and legal links
+- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/styles/tokens.css` — strengthen the section-tone palette (blush, lemon, blue, milk) without making it loud
+- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/styles/global.css` — define the page-wide canvas, section spacing, heading rhythm, and frame-free shell behavior
+- `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/styles/MotionTheme.test.ts` — update style assertions for the new frameless shell and section-tone system
 
 ---
 
-### Task 1: Stabilize local test and asset foundations
+### Task 1: Normalize the shared section heading to a one-title system
 
 **Files:**
-- Create: `C:/Users/606ru/OneDrive/Desktop/але/site/web/public/brand-logo.png`
-- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/playwright.config.ts`
-- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/styles/MotionTheme.test.ts`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/ui/SectionHeading.tsx`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/ui/SectionHeading.test.tsx`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/AboutSection.tsx`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ServicesSection.tsx`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ExtrasSection.tsx`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ReviewsSection.tsx`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/TestimonialsSection.tsx`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/FaqSection.tsx`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ContactPlaceholderSection.tsx`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/CtaSection.tsx`
 
-- [ ] **Step 1: Copy the approved logo into the app public directory**
+- [ ] **Step 1: Rewrite the shared heading test to the new contract**
 
-Run:
-```powershell
-Copy-Item -LiteralPath 'C:\Users\606ru\OneDrive\Desktop\але\site\логотип.png' 'C:\Users\606ru\OneDrive\Desktop\але\site\web\public\brand-logo.png' -Force
-```
-
-Expected:
-- `web/public/brand-logo.png` exists and can be referenced by the app without relying on a parent directory path
-
-- [ ] **Step 2: Write a failing test assertion that normalizes CSS line endings**
-
-Update `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/styles/MotionTheme.test.ts` so the brittle checks no longer depend on hard-coded `\n`.
+Update `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/ui/SectionHeading.test.tsx` so it no longer expects an eyebrow paragraph and instead checks alignment support.
 
 Example:
-```ts
-const heroCss = readFileSync(resolve(process.cwd(), 'src/components/scene/HeroScene.module.css'), 'utf8').replace(/\r\n/g, '\n');
+```tsx
+render(<SectionHeading title="Заголовок" description="Описание" align="center" />);
 
-expect(heroCss).toContain('.item {\n    animation-duration: 13.4s;');
+expect(screen.queryByText('Раздел')).not.toBeInTheDocument();
+expect(screen.getByRole('heading', { level: 2, name: 'Заголовок' })).toBeInTheDocument();
+expect(screen.getByRole('heading', { level: 2, name: 'Заголовок' }).closest('header')).toHaveAttribute(
+  'data-heading-align',
+  'center',
+);
 ```
 
-- [ ] **Step 3: Run the targeted motion test to verify it fails before the normalization edit**
+- [ ] **Step 2: Run the targeted shared-heading test and verify it fails**
 
 Run:
 ```powershell
-npm run test -- --run src/styles/MotionTheme.test.ts
+npm run test -- --run src/components/ui/SectionHeading.test.tsx
 ```
 
 Expected:
-- FAIL on Windows line-ending sensitivity in the current assertion
+- FAIL because `SectionHeading` still renders `eyebrow`
 
-- [ ] **Step 4: Implement the line-ending normalization**
+- [ ] **Step 3: Implement the simplified heading primitive**
 
-Update `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/styles/MotionTheme.test.ts` so every raw CSS string that is asserted with multiline expectations is normalized via `.replace(/\r\n/g, '\n')`.
+Refactor `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/ui/SectionHeading.tsx` to use title, description, and alignment only.
 
-- [ ] **Step 5: Fix Playwright so it cannot quietly reuse a stale server from another worktree**
+Target shape:
+```tsx
+type SectionHeadingProps = {
+  title: ReactNode;
+  description?: ReactNode;
+  align?: 'start' | 'center';
+};
 
-Update `C:/Users/606ru/OneDrive/Desktop/але/site/web/playwright.config.ts`:
-
-```ts
-const port = 4179;
-
-export default defineConfig({
-  use: {
-    baseURL: `http://127.0.0.1:${port}`,
-    trace: 'retain-on-failure',
-  },
-  webServer: {
-    command: `npm run dev -- --host 127.0.0.1 --port ${port} --strictPort`,
-    url: `http://127.0.0.1:${port}`,
-    reuseExistingServer: false,
-  },
-});
+export function SectionHeading({ title, description, align = 'start' }: SectionHeadingProps) {
+  return (
+    <header className="site-section__header" data-heading-align={align}>
+      <h2>{title}</h2>
+      {description ? <p className="site-section__description">{description}</p> : null}
+    </header>
+  );
+}
 ```
 
-The exact port may differ, but it must be dedicated to this app and must use `--strictPort`.
+- [ ] **Step 4: Update all homepage section callsites**
 
-- [ ] **Step 6: Re-run the targeted motion test**
+In each section component listed above:
+- remove the `eyebrow` prop from `SectionHeading`
+- keep one large heading per section
+- pass `align="center"` only for `ServicesSection`
+- let all other sections use the default left alignment
+
+- [ ] **Step 5: Re-run the shared-heading test**
 
 Run:
 ```powershell
-npm run test -- --run src/styles/MotionTheme.test.ts
+npm run test -- --run src/components/ui/SectionHeading.test.tsx
 ```
 
 Expected:
 - PASS
 
-- [ ] **Step 7: Commit the stabilization groundwork**
+- [ ] **Step 6: Commit the heading-system refactor**
 
 Run:
 ```powershell
-git add web/public/brand-logo.png web/playwright.config.ts web/src/styles/MotionTheme.test.ts
-git commit -m "chore: stabilize local test and logo foundations"
+git add web/src/components/ui/SectionHeading.tsx web/src/components/ui/SectionHeading.test.tsx web/src/components/sections/AboutSection.tsx web/src/components/sections/ServicesSection.tsx web/src/components/sections/ExtrasSection.tsx web/src/components/sections/ReviewsSection.tsx web/src/components/sections/TestimonialsSection.tsx web/src/components/sections/FaqSection.tsx web/src/components/sections/ContactPlaceholderSection.tsx web/src/components/sections/CtaSection.tsx
+git commit -m "refactor: simplify homepage section headings"
 ```
 
 Expected:
-- a commit exists with the stable asset path and test-environment fixes
+- a commit exists with the one-title heading primitive
 
 ---
 
-### Task 2: Update the brand model and test expectations
+### Task 2: Remove homepage section frames in markup while preserving service cards
 
 **Files:**
-- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/site.config.js`
-- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/data/siteContent.ts`
-- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/data/footerContent.ts`
-- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/config/seo.ts`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/App.tsx`
 - Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/App.test.tsx`
-- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/layout/SiteHeader.test.tsx`
-- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/layout/SiteFooter.test.tsx`
-- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/HeroSection.test.tsx`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/AboutSection.tsx`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/AboutSection.test.tsx`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ServicesSection.tsx`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ServicesSection.test.tsx`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ExtrasSection.tsx`
+- Create: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ExtrasSection.test.tsx`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ReviewsSection.tsx`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ReviewsSection.test.tsx`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/TestimonialsSection.tsx`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/TestimonialsSection.test.tsx`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/FaqSection.tsx`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/FaqSection.test.tsx`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ContactPlaceholderSection.tsx`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ContactPlaceholderSection.test.tsx`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/CtaSection.tsx`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/CtaSection.test.tsx`
 
-- [ ] **Step 1: Write the failing tests for the new brand and hero copy**
+- [ ] **Step 1: Write failing tests for frame-free section surfaces**
 
-Adjust tests to expect:
-- visible text brand `Праздник каждый день` in the header
-- footer without the old `Party Everyday` text lockup assumption
-- hero heading `Фуд-станции на ваше мероприятие`
-- exactly two hero buttons: `Заказать` and `В каталог`
+Use small surface markers instead of brittle DOM-shape assertions. For each main section, add `data-section-surface` and `data-section-tone` expectations.
 
-Example for hero:
+Examples:
 ```tsx
-expect(screen.getByRole('heading', { name: 'Фуд-станции на ваше мероприятие' })).toBeInTheDocument();
-expect(screen.getByRole('button', { name: 'Заказать' })).toBeInTheDocument();
-expect(screen.getByRole('link', { name: 'В каталог' })).toHaveAttribute('href', '#services');
+expect(screen.getByTestId('section-about').querySelector('[data-section-surface="canvas"]')).toBeTruthy();
+expect(screen.getByTestId('section-services').querySelector('[data-section-surface="cards"]')).toBeTruthy();
+expect(screen.getByTestId('section-services').querySelector('[data-heading-align="center"]')).toBeTruthy();
 ```
 
-- [ ] **Step 2: Run the targeted tests to verify they fail under the old content**
+Create `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ExtrasSection.test.tsx` with a basic assertion for:
+- heading `Доп. услуги`
+- `data-section-surface="canvas"`
+- `data-testid="extras-track"` remains present
+
+- [ ] **Step 2: Run the targeted section test batch and verify it fails**
 
 Run:
 ```powershell
-npm run test -- --run src/App.test.tsx src/components/layout/SiteHeader.test.tsx src/components/layout/SiteFooter.test.tsx src/components/sections/HeroSection.test.tsx
+npm run test -- --run src/App.test.tsx src/components/sections/AboutSection.test.tsx src/components/sections/ServicesSection.test.tsx src/components/sections/ExtrasSection.test.tsx src/components/sections/ReviewsSection.test.tsx src/components/sections/TestimonialsSection.test.tsx src/components/sections/FaqSection.test.tsx src/components/sections/ContactPlaceholderSection.test.tsx src/components/sections/CtaSection.test.tsx
 ```
 
 Expected:
-- FAIL because the current project still expects `Party Everyday` branding and the old hero composition
+- FAIL because the sections still render outer `.frame` wrappers and no explicit surface semantics
 
-- [ ] **Step 3: Update the centralized content model**
+- [ ] **Step 3: Refactor section markup to use lightweight canvas surfaces**
 
-In `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/data/siteContent.ts`:
-- change `brand` to `Праздник каждый день`
-- replace the current hero copy with the approved heading-only structure
-- add a short manifesto string for `О нас`
-- replace the current heavy about content with the confirmed fact set
-- keep CTA content semantics intact, only rephrase if the component shape requires it
+In each homepage section component:
+- remove the outer `article` shell with `styles.frame`
+- introduce a lightweight section body container with a semantic marker
+- keep inner content structure intact where it matters
 
-In `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/data/footerContent.ts`:
-- change visible footer brand naming
-- keep legal contact data unless intentionally updated
-- preserve legal route content unless the brand name should be synchronized inside those documents too
-
-In `C:/Users/606ru/OneDrive/Desktop/але/site/web/site.config.js` and `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/config/seo.ts`:
-- update the default site name
-- point the SEO logo URL at `/brand-logo.png`
-
-- [ ] **Step 4: Re-run the brand/content test suite**
-
-Run:
-```powershell
-npm run test -- --run src/App.test.tsx src/components/layout/SiteHeader.test.tsx src/components/layout/SiteFooter.test.tsx src/components/sections/HeroSection.test.tsx
-```
-
-Expected:
-- PASS or only fail on visual structure that will be fixed in the next tasks
-
-- [ ] **Step 5: Commit the brand model changes**
-
-Run:
-```powershell
-git add web/site.config.js web/src/data/siteContent.ts web/src/data/footerContent.ts web/src/config/seo.ts web/src/App.test.tsx web/src/components/layout/SiteHeader.test.tsx web/src/components/layout/SiteFooter.test.tsx web/src/components/sections/HeroSection.test.tsx
-git commit -m "feat: align brand model with canvas redesign"
-```
-
-Expected:
-- a commit exists with the approved naming and test expectations
-
----
-
-### Task 3: Replace the interface logo and soften header/footer branding
-
-**Files:**
-- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/branding/DonutLogo.tsx`
-- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/layout/SiteHeader.tsx`
-- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/layout/SiteHeader.module.css`
-- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/layout/SiteFooter.tsx`
-- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/layout/SiteFooter.module.css`
-
-- [ ] **Step 1: Write or tighten tests for the new header/footer logo presentation**
-
-Add assertions for:
-- header shows the real logo image and visible text brand
-- header no longer relies on a decorative bubble badge
-- footer uses the logo without a text lockup next to it
-- footer logo support surface is subtle and milk-toned rather than a capsule badge
-
-- [ ] **Step 2: Run the targeted header/footer tests**
-
-Run:
-```powershell
-npm run test -- --run src/components/layout/SiteHeader.test.tsx src/components/layout/SiteFooter.test.tsx
-```
-
-Expected:
-- FAIL until the component markup and styles are updated
-
-- [ ] **Step 3: Replace the SVG donut implementation with a thin real-logo wrapper**
-
-Refactor `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/branding/DonutLogo.tsx` into a lightweight reusable image component that renders:
-
+Recommended pattern:
 ```tsx
-<img
-  aria-hidden="true"
-  data-testid="donut-logo"
-  src="/brand-logo.png"
-  alt=""
-  width={size}
-  height={size}
-  decoding="async"
-/>
+<section ...>
+  <div className="site-container site-reveal" ...>
+    <div className={styles.sectionBody} data-section-surface="canvas" data-section-tone="rose">
+      <SectionHeading ... />
+      <div className={styles.layout}>...</div>
+    </div>
+  </div>
+</section>
 ```
 
-Keep the exported component name if that reduces churn, even if the internal implementation changes.
+For `ServicesSection`, keep the service cards framed and mark the section body differently:
+```tsx
+<div className={styles.sectionBody} data-section-surface="cards" data-section-tone="lemon">
+```
 
-- [ ] **Step 4: Update header markup**
+- [ ] **Step 4: Clean up the shell naming in `App.tsx` and `App.test.tsx`**
 
-In `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/layout/SiteHeader.tsx`:
-- keep the anchor navigation logic and active-state handling
-- add visible text `Праздник каждый день` next to the logo
-- keep the `Связаться` trigger, but make it calmer in structure and semantics
-- preserve the mobile menu behavior
+If `motionPath="story-trail"` now reads as legacy decoration, rename it to a neutral canvas value such as `canvas-flow`, or remove it entirely if it is no longer needed.
 
-- [ ] **Step 5: Update footer markup**
+Update `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/App.test.tsx` so the main shell assertion matches the new value.
 
-In `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/layout/SiteFooter.tsx`:
-- render only the clean logo symbol visually
-- avoid duplicating a full logo lockup beside it
-- preserve all legal and contact links
-
-- [ ] **Step 6: Soften header and footer styling**
-
-In the CSS modules:
-- remove the bubble/capsule treatment from the header logo holder
-- reduce shadow drama around the logo
-- soften the header CTA trigger into a lighter accent
-- add only a minimal milk-toned support behind the footer logo for dark-background contrast
-
-- [ ] **Step 7: Re-run the header/footer tests**
+- [ ] **Step 5: Re-run the targeted section test batch**
 
 Run:
 ```powershell
-npm run test -- --run src/components/layout/SiteHeader.test.tsx src/components/layout/SiteFooter.test.tsx
+npm run test -- --run src/App.test.tsx src/components/sections/AboutSection.test.tsx src/components/sections/ServicesSection.test.tsx src/components/sections/ExtrasSection.test.tsx src/components/sections/ReviewsSection.test.tsx src/components/sections/TestimonialsSection.test.tsx src/components/sections/FaqSection.test.tsx src/components/sections/ContactPlaceholderSection.test.tsx src/components/sections/CtaSection.test.tsx
 ```
 
 Expected:
 - PASS
 
-- [ ] **Step 8: Commit the branding refactor**
+- [ ] **Step 6: Commit the frame-free section markup**
 
 Run:
 ```powershell
-git add web/src/components/branding/DonutLogo.tsx web/src/components/layout/SiteHeader.tsx web/src/components/layout/SiteHeader.module.css web/src/components/layout/SiteFooter.tsx web/src/components/layout/SiteFooter.module.css
-git commit -m "feat: replace interface branding with project logo"
+git add web/src/App.tsx web/src/App.test.tsx web/src/components/sections/AboutSection.tsx web/src/components/sections/AboutSection.test.tsx web/src/components/sections/ServicesSection.tsx web/src/components/sections/ServicesSection.test.tsx web/src/components/sections/ExtrasSection.tsx web/src/components/sections/ExtrasSection.test.tsx web/src/components/sections/ReviewsSection.tsx web/src/components/sections/ReviewsSection.test.tsx web/src/components/sections/TestimonialsSection.tsx web/src/components/sections/TestimonialsSection.test.tsx web/src/components/sections/FaqSection.tsx web/src/components/sections/FaqSection.test.tsx web/src/components/sections/ContactPlaceholderSection.tsx web/src/components/sections/ContactPlaceholderSection.test.tsx web/src/components/sections/CtaSection.tsx web/src/components/sections/CtaSection.test.tsx
+git commit -m "refactor: remove homepage section frame wrappers"
 ```
 
 Expected:
-- a commit exists with the new logo usage and calmer header/footer presentation
+- a commit exists with frameless section markup and preserved service-card structure
 
 ---
 
-### Task 4: Turn the page into one soft canvas and remove decorative clutter
+### Task 3: Rebuild the shell styling as color chapters instead of framed panels
 
 **Files:**
 - Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/styles/tokens.css`
 - Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/styles/global.css`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/styles/MotionTheme.test.ts`
 - Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/AboutSection.module.css`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ServicesSection.module.css`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ExtrasSection.module.css`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ReviewsSection.module.css`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/TestimonialsSection.module.css`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/FaqSection.module.css`
 - Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ContactPlaceholderSection.module.css`
-- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/HeroSection.module.css`
+- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/CtaSection.module.css`
 
-- [ ] **Step 1: Write the failing style assertions for the new canvas rules**
+- [ ] **Step 1: Rewrite the style assertions for the new canvas rules**
 
-Update style tests so they assert:
-- no story-trail hanging lamps remain in `global.css`
-- softer page-wide gradients exist
-- pink and muted blue tokens exist in `tokens.css`
-- panel shadows and borders are lighter than before
+Update `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/styles/MotionTheme.test.ts` to check the new shell system rather than old `.frame` assumptions.
 
 Examples:
 ```ts
-expect(globalCss).not.toContain('.site-shell[data-motion-path=\'story-trail\'] > #about::before');
-expect(globalCss).toContain('radial-gradient(circle at 18% 12%, rgba(');
-expect(tokensCss).toContain('--accent-blue-soft:');
+expect(globalCss).toContain('[data-heading-align=\'center\']');
+expect(globalCss).toContain('[data-section-tone=\'lemon\']');
+expect(globalCss).not.toContain(".site-shell[data-motion-path='story-trail'] > #about::before");
+expect(servicesCss).toContain('.card {');
+expect(servicesCss).not.toContain('.frame {');
 ```
 
-- [ ] **Step 2: Run the style-focused tests**
+- [ ] **Step 2: Run the style-focused test file and verify it fails**
 
 Run:
 ```powershell
@@ -333,158 +279,65 @@ npm run test -- --run src/styles/MotionTheme.test.ts
 ```
 
 Expected:
-- FAIL because the old decorative trails and glow lamps still exist
+- FAIL because the CSS modules and global shell still use old frame rules
 
-- [ ] **Step 3: Expand the token palette**
+- [ ] **Step 3: Strengthen the shared palette for section chapters**
 
 In `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/styles/tokens.css`, add or adjust tokens for:
-- gentle pink
-- muted soft blue
-- milk/cream transitions
-- lighter panel shadows and borders
+- blush pink chapter tones
+- pale lemon chapter tones
+- soft blue chapter tones
+- milk/cream neutrals
+- lighter dividers and softer shell shadows
 
-- [ ] **Step 4: Rewrite the global canvas styling**
+- [ ] **Step 4: Rewrite the global shell rhythm**
 
 In `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/styles/global.css`:
-- remove all hanging lamp and bead-style decorative pseudo-elements
-- replace them with broad page-wide color drifts
-- keep section structure intact but visually softer
-- reduce the feeling of isolated panels
+- increase vertical spacing between section titles and content
+- define heading alignment styles through `[data-heading-align]`
+- define shared section-tone behavior through `[data-section-tone]`
+- keep the page as one canvas, not a set of inset cards
+- remove any remaining legacy story-trail assumptions if they still exist
 
-- [ ] **Step 5: Lighten local section surfaces**
+- [ ] **Step 5: Replace section `.frame` styling with local canvas styling**
 
-In the section CSS modules, reduce:
-- border strength
-- shadow depth
-- local surface isolation
+In the section CSS modules:
+- rename `.frame` to `.sectionBody` or an equivalent neutral surface class
+- remove borders, rounded outer wrappers, and outer shadows from main sections
+- keep card framing only where it is part of content structure:
+  - service cards stay framed
+  - FAQ items may keep light separators/borders
+  - testimonials/review proof may keep softer inner grouping
+  - contact actions may keep lighter internal tiles
+- tune neighboring section tones so the page transitions naturally into and out of the orange CTA
 
-Keep enough structure for readability, but remove the “mini-page” feeling.
-
-- [ ] **Step 6: Re-run the style tests**
-
-Run:
-```powershell
-npm run test -- --run src/styles/MotionTheme.test.ts
-```
-
-Expected:
-- PASS after the assertions are updated to the new visual system
-
-- [ ] **Step 7: Commit the page-canvas styling**
+- [ ] **Step 6: Re-run the style-focused test and the targeted section batch**
 
 Run:
 ```powershell
-git add web/src/styles/tokens.css web/src/styles/global.css web/src/components/sections/AboutSection.module.css web/src/components/sections/ContactPlaceholderSection.module.css web/src/components/sections/HeroSection.module.css web/src/styles/MotionTheme.test.ts
-git commit -m "feat: unify page sections into a single canvas"
-```
-
-Expected:
-- a commit exists with the new background flow and decorative cleanup
-
----
-
-### Task 5: Rebuild the hero, shrink the about section, and compact the inline CTA
-
-**Files:**
-- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/HeroSection.tsx`
-- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/scene/HeroScene.tsx`
-- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/scene/HeroScene.module.css`
-- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/AboutSection.tsx`
-- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ContactPlaceholderSection.tsx`
-- Modify: `C:/Users/606ru/OneDrive/Desktop/але/site/web/e2e/landing.spec.ts`
-
-- [ ] **Step 1: Write the failing structural tests for the new hero and about section**
-
-Assert:
-- hero contains only the approved heading and two actions
-- hero no longer contains the old descriptive paragraph
-- `О нас` contains a short manifesto and the 3 mini-facts
-- CTA remains in the current page position but uses a smaller form shell
-
-- [ ] **Step 2: Run the targeted section tests**
-
-Run:
-```powershell
-npm run test -- --run src/App.test.tsx src/components/sections/HeroSection.test.tsx src/components/sections/AboutSection.test.tsx src/components/sections/ContactPlaceholderSection.test.tsx
-```
-
-Expected:
-- FAIL because the current hero/about/CTA still use the old structure
-
-- [ ] **Step 3: Rebuild the hero structure**
-
-In `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/HeroSection.tsx`:
-- remove the support paragraph
-- keep only the approved heading
-- render a primary `Заказать` action that opens the existing popup flow
-- render a secondary `В каталог` anchor to `#services`
-
-- [ ] **Step 4: Strip HeroScene down to a soft-light field**
-
-In `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/scene/HeroScene.tsx` and its CSS:
-- remove object cards and decorative image composition
-- keep a clean right-side light field
-- preserve enough structure for future art-directed content
-
-- [ ] **Step 5: Compact the about section**
-
-In `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/AboutSection.tsx`:
-- replace the heavy atelier composition with a short manifesto
-- add the 3 confirmed fact items
-- keep the section readable, but substantially smaller
-
-- [ ] **Step 6: Compact the inline CTA**
-
-In `C:/Users/606ru/OneDrive/Desktop/але/site/web/src/components/sections/ContactPlaceholderSection.tsx`:
-- preserve the short inline form
-- preserve current CTA messaging semantics
-- remove the oversized section feeling
-- keep it integrated with the page canvas instead of a hard block
-
-- [ ] **Step 7: Update e2e coverage to the new composition**
-
-In `C:/Users/606ru/OneDrive/Desktop/але/site/web/e2e/landing.spec.ts`:
-- drop assertions that depend on hero object cards or the decorative hanging lights
-- keep navigation, services access, mobile menu, CTA visibility, and section flow checks
-- add assertions for the clean hero and compact about/CTA structure where useful
-
-- [ ] **Step 8: Re-run the targeted unit suite**
-
-Run:
-```powershell
-npm run test -- --run src/App.test.tsx src/components/sections/HeroSection.test.tsx src/components/sections/AboutSection.test.tsx src/components/sections/ContactPlaceholderSection.test.tsx
+npm run test -- --run src/styles/MotionTheme.test.ts src/components/sections/AboutSection.test.tsx src/components/sections/ServicesSection.test.tsx src/components/sections/ExtrasSection.test.tsx src/components/sections/ReviewsSection.test.tsx src/components/sections/TestimonialsSection.test.tsx src/components/sections/FaqSection.test.tsx src/components/sections/ContactPlaceholderSection.test.tsx src/components/sections/CtaSection.test.tsx
 ```
 
 Expected:
 - PASS
 
-- [ ] **Step 9: Run the Playwright suite**
+- [ ] **Step 7: Commit the canvas styling**
 
 Run:
 ```powershell
-npm run test:e2e
+git add web/src/styles/tokens.css web/src/styles/global.css web/src/styles/MotionTheme.test.ts web/src/components/sections/AboutSection.module.css web/src/components/sections/ServicesSection.module.css web/src/components/sections/ExtrasSection.module.css web/src/components/sections/ReviewsSection.module.css web/src/components/sections/TestimonialsSection.module.css web/src/components/sections/FaqSection.module.css web/src/components/sections/ContactPlaceholderSection.module.css web/src/components/sections/CtaSection.module.css
+git commit -m "feat: restyle homepage as a continuous canvas"
 ```
 
 Expected:
-- PASS against the dedicated local dev server, not a reused preview process
-
-- [ ] **Step 10: Commit the section redesign**
-
-Run:
-```powershell
-git add web/src/components/sections/HeroSection.tsx web/src/components/scene/HeroScene.tsx web/src/components/scene/HeroScene.module.css web/src/components/sections/AboutSection.tsx web/src/components/sections/ContactPlaceholderSection.tsx web/e2e/landing.spec.ts
-git commit -m "feat: redesign hero about and inline cta"
-```
-
-Expected:
-- a commit exists with the section-level redesign
+- a commit exists with the new frameless shell styling
 
 ---
 
-### Task 6: Run full verification and guard against encoding regressions
+### Task 4: Run full verification and prepare a local preview
 
 **Files:**
-- Verify only, unless a fix is required
+- Verify only unless a regression fix is required
 
 - [ ] **Step 1: Run the linter**
 
@@ -500,7 +353,7 @@ Expected:
 
 Run:
 ```powershell
-npm run test
+npm run test -- --run
 ```
 
 Expected:
@@ -514,25 +367,25 @@ npm run build
 ```
 
 Expected:
-- PASS, with prerendered `/`, `/privacy`, `/terms`, and `/consent`
+- PASS
 
-- [ ] **Step 4: Spot-check rendered Russian text in the generated HTML**
+- [ ] **Step 4: Start a local preview for visual review**
 
 Run:
 ```powershell
-Get-Content -Raw 'C:\Users\606ru\OneDrive\Desktop\але\site\web\dist\index.html'
+npm run preview -- --host 127.0.0.1 --port 4180 --strictPort
 ```
 
 Expected:
-- the approved Russian strings are readable and not mojibake in the built output
+- local preview is available at `http://127.0.0.1:4180`
 
-- [ ] **Step 5: Commit final verification and cleanup**
+- [ ] **Step 5: Commit any final regression fixes only if verification required code changes**
 
 Run:
 ```powershell
 git add web
-git commit -m "test: verify canvas redesign"
+git commit -m "test: verify canvas shell redesign"
 ```
 
 Expected:
-- a final verification commit exists with green checks and no encoding regressions
+- only needed if verification exposed and fixed real regressions

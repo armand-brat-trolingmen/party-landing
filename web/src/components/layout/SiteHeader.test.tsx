@@ -1,5 +1,7 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
+import { MemoryRouter } from 'react-router';
 import { navItems, siteContent } from '../../data/siteContent';
+import { OrderModalProvider } from '../cta/OrderModalContext';
 import { SiteHeader } from './SiteHeader';
 
 function mockViewport(isDesktop: boolean) {
@@ -21,64 +23,68 @@ function mockViewport(isDesktop: boolean) {
   });
 }
 
-test('shows desktop navigation inside a glass header with only a logo brand trigger', () => {
+function renderHeader(initialEntries: string[] = ['/'], legalMode = false) {
+  return render(
+    <MemoryRouter initialEntries={initialEntries}>
+      <OrderModalProvider>
+        <SiteHeader legalMode={legalMode} />
+      </OrderModalProvider>
+    </MemoryRouter>,
+  );
+}
+
+test('shows desktop navigation with a dedicated order button on the homepage', () => {
   mockViewport(true);
-  render(<SiteHeader />);
+  renderHeader();
 
-  const navigation = screen.getByRole('navigation');
   const header = screen.getByTestId('site-header');
+  const navigation = within(header).getByRole('navigation');
+  const orderButton = within(header).getByRole('button', { name: 'Заказать' });
 
-  expect(screen.queryByTestId('menu-button')).not.toBeInTheDocument();
-  expect(header).toHaveAttribute('data-header-state', 'rest');
-  expect(header).toHaveAttribute('data-header-material', 'glass');
+  expect(header).toHaveAttribute('data-header-route', 'home');
+  expect(within(header).getByRole('link', { name: siteContent.brand })).toHaveAttribute('href', '#hero');
+  expect(within(header).getByText(siteContent.brand)).toBeInTheDocument();
+  expect(orderButton).toBeInTheDocument();
+  expect(within(orderButton).getByTestId('header-order-button-arrow')).toHaveAttribute('aria-hidden', 'true');
   expect(screen.getByTestId('nav-active-indicator')).toBeInTheDocument();
-  expect(within(header).getByRole('link', { name: siteContent.brand })).toBeInTheDocument();
-  expect(within(header).queryByText(siteContent.brand)).not.toBeInTheDocument();
-  expect(within(header).queryByText(siteContent.tagline)).not.toBeInTheDocument();
 
   navItems.forEach((item) => {
     expect(within(navigation).getByRole('link', { name: item.label })).toHaveAttribute('href', `#${item.id}`);
   });
 });
 
-test('keeps mobile navigation collapsed by default', () => {
-  mockViewport(false);
-  render(<SiteHeader />);
+test('keeps route-aware links on internal pages', () => {
+  mockViewport(true);
+  renderHeader(['/services/food-trucks']);
 
-  const menuButton = screen.getByTestId('menu-button');
+  expect(screen.getByTestId('site-header')).toHaveAttribute('data-header-route', 'inner');
+  const navigation = screen.getByRole('navigation');
 
-  expect(menuButton).toHaveAttribute('aria-expanded', 'false');
-  expect(screen.getByTestId('brand-plate')).toBeInTheDocument();
-  expect(screen.queryByRole('navigation')).not.toBeInTheDocument();
+  expect(within(navigation).getByRole('link', { name: 'О нас' })).toHaveAttribute('href', '/#about');
+  expect(within(navigation).getByRole('link', { name: 'Услуги' })).toHaveAttribute('href', '#services');
+  expect(within(navigation).getByRole('link', { name: 'Доп. услуги' })).toHaveAttribute('href', '#extras');
+  expect(within(navigation).getByRole('link', { name: 'Отзывы' })).toHaveAttribute('href', '#testimonials');
 });
 
-test('reveals and collapses mobile navigation via menu button and links', () => {
+test('keeps mobile navigation collapsed by default and exposes CTA', () => {
   mockViewport(false);
-  render(<SiteHeader />);
+  renderHeader();
 
   const menuButton = screen.getByTestId('menu-button');
+  expect(menuButton).toHaveAttribute('aria-expanded', 'false');
+  expect(screen.getByRole('button', { name: 'Заказать' })).toBeInTheDocument();
+  expect(screen.queryByRole('navigation')).not.toBeInTheDocument();
 
   fireEvent.click(menuButton);
   expect(menuButton).toHaveAttribute('aria-expanded', 'true');
-
-  const navigation = screen.getByRole('navigation');
-  navItems.forEach((item) => {
-    expect(within(navigation).getByRole('link', { name: item.label })).toHaveAttribute('href', `#${item.id}`);
-  });
-
-  fireEvent.click(within(navigation).getByRole('link', { name: navItems[0].label }));
-  expect(menuButton).toHaveAttribute('aria-expanded', 'false');
-  expect(screen.queryByRole('navigation')).not.toBeInTheDocument();
+  expect(screen.getByRole('navigation')).toBeInTheDocument();
 });
 
-test('marks a desktop nav item active after clicking its anchor', () => {
+test('hides order CTA in legal mode and routes links back to the homepage', () => {
   mockViewport(true);
-  render(<SiteHeader />);
+  renderHeader(['/privacy'], true);
 
-  const navLinks = within(screen.getByRole('navigation')).getAllByRole('link');
-  const aboutLink = navLinks[0];
-
-  fireEvent.click(aboutLink);
-
-  expect(aboutLink).toHaveAttribute('data-active', 'true');
+  const navigation = screen.getByRole('navigation');
+  expect(screen.queryByRole('button', { name: 'Заказать' })).not.toBeInTheDocument();
+  expect(within(navigation).getByRole('link', { name: 'Контакты' })).toHaveAttribute('href', '/#contact');
 });

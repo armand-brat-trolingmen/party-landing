@@ -5,22 +5,20 @@ test('renders compact footer with contact data, legal details, and legal links',
   render(<SiteFooter />);
 
   const footer = screen.getByRole('contentinfo');
+  expect(within(footer).getByTestId('footer-brand-link')).toBeInTheDocument();
+  expect(within(footer).queryByText('Праздник каждый день')).not.toBeInTheDocument();
 
-  expect(within(footer).getByText('Party Everyday')).toBeInTheDocument();
-  expect(within(footer).getByRole('link', { name: 'Telegram' })).toHaveAttribute('href', '#telegram');
-  expect(within(footer).getByRole('link', { name: 'WhatsApp' })).toHaveAttribute('href', '#whatsapp');
+  expect(within(footer).getByRole('link', { name: 'Telegram' })).toHaveAttribute('href', 'https://t.me/+79263919225');
+  expect(within(footer).getByRole('link', { name: 'WhatsApp' })).toHaveAttribute('href', 'https://wa.me/79263919225');
   expect(within(footer).getByRole('link', { name: 'Avito' })).toHaveAttribute(
     'href',
     'https://www.avito.ru/brands/i82014135/all',
   );
 
-  expect(within(footer).getByRole('link', { name: '+7 (999) 999-99-99' })).toHaveAttribute(
+  expect(within(footer).getByRole('link', { name: '+79263919225' })).toHaveAttribute('href', 'tel:+79263919225');
+  expect(within(footer).getByRole('link', { name: 'Glad_2015@bk.ru' })).toHaveAttribute(
     'href',
-    'tel:+79999999999',
-  );
-  expect(within(footer).getByRole('link', { name: 'contact@party-everyday.ru' })).toHaveAttribute(
-    'href',
-    'mailto:contact@party-everyday.ru',
+    'mailto:Glad_2015@bk.ru',
   );
 
   expect(within(footer).getByText('ИП Гладышев Александр Андреевич')).toBeInTheDocument();
@@ -37,3 +35,4 @@ test('renders compact footer with contact data, legal details, and legal links',
     '/consent',
   );
 });
+

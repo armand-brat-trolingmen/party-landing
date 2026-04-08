@@ -2,11 +2,12 @@
   /* Typography stays centralized here so swapping the font pair is easy to roll back. */
   --font-display: 'Lora', serif;
   --font-body: 'Nunito Sans', sans-serif;
-  --bg-page: #fffbe8;
-  --bg-surface: #fffdf5;
-  --accent-yellow: #f6dc6b;
-  --accent-red: #e45745;
-  --accent-pink: #f7a6c3;
+  --bg-page: #fff9f4;
+  --bg-surface: #fffdf9;
+  --accent-yellow: #ffd65b;
+  --accent-red: #ef4f43;
+  --accent-pink: #ff8ab7;
+  --accent-sky: #6fbfff;
   --accent-chocolate: #6b4a35;
   --text-primary: #3d2d25;
   --text-muted: #756257;

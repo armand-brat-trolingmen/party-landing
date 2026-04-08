@@ -7,8 +7,8 @@ export default function IndexPage() {
   return (
     <>
       <SEO
-        title="Party Everyday — фудтраки, сладкая вата и шоколадный фонтан в Москве"
-        description="Party Everyday — кейтеринг и сладкие зоны для частных, детских и корпоративных событий в Москве и Московской области. Фудтраки, сладкая вата, шоколадный фонтан и быстрый контакт в Telegram, WhatsApp и Avito."
+        title="Праздник каждый день — кейтеринг для праздников в Москве"
+        description="Фудтраки, сладкая вата и шоколадный фонтан для частных, детских и корпоративных событий в Москве и области. Связь в Telegram, WhatsApp и отзывы на Avito."
         canonical="/"
       />
       <StructuredData data={getHomeStructuredData()} />
@@ -16,3 +16,4 @@ export default function IndexPage() {
     </>
   );
 }
+

@@ -9,6 +9,7 @@ const distDir = resolve(projectRoot, 'dist');
 const distTemplatePath = resolve(distDir, 'index.html');
 const PAGE_PATTERN = /\.(jsx?|tsx?)$/;
 const TEST_FILE_PATTERN = /\.(test|spec)\.(jsx?|tsx?)$/;
+const DYNAMIC_ENTRY_BASENAMES = new Set(['service', 'extra']);
 
 async function walkPages(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -35,6 +36,11 @@ async function walkPages(directory) {
 function filePathToUrl(filePath) {
   const relativePath = relative(pagesDir, filePath).replace(/\\/g, '/');
   const normalized = relativePath.slice(0, -extname(relativePath).length);
+
+  if (DYNAMIC_ENTRY_BASENAMES.has(normalized.split('/').pop() ?? '')) {
+    return null;
+  }
+
   const trimmedIndex = normalized.replace(/\/index$/i, '').replace(/^index$/i, '');
 
   if (!trimmedIndex) {
@@ -91,10 +97,13 @@ function validateRenderedHtml(url, baseTemplate, html) {
   }
 }
 
-async function resolvePageUrls() {
+async function resolvePageUrls(vite) {
   try {
     const pageFiles = await walkPages(pagesDir);
-    const urls = [...new Set(pageFiles.map(filePathToUrl))].sort();
+    const staticUrls = pageFiles.map(filePathToUrl).filter(Boolean);
+    const { getAllOfferingUrls } = await vite.ssrLoadModule('/src/data/catalogContent.ts');
+    const dynamicUrls = typeof getAllOfferingUrls === 'function' ? getAllOfferingUrls() : [];
+    const urls = [...new Set([...staticUrls, ...dynamicUrls])].sort();
 
     return urls.length > 0 ? urls : ['/'];
   } catch (error) {
@@ -121,13 +130,13 @@ async function writeRouteHtml(url, html) {
 
 async function prerender() {
   const template = await readFile(distTemplatePath, 'utf8').catch(() => readFile(sourceTemplatePath, 'utf8'));
-  const urls = await resolvePageUrls();
   const vite = await createServer({
     appType: 'custom',
     configFile: resolve(projectRoot, 'vite.config.ts'),
     logLevel: 'error',
     server: { middlewareMode: true },
   });
+  const urls = await resolvePageUrls(vite);
 
   let failed = false;
 

@@ -2,181 +2,224 @@
 
 ## Context
 
-Update the current `Праздник каждый день` landing page so it stops feeling like a stack of separate mini-pages and instead reads as one large artistic canvas. Keep the existing section order and overall information architecture, but soften boundaries, simplify visual noise, and rebuild the first-screen composition around a cleaner hero.
+Refine the current `Праздник каждый день` landing page so the homepage reads like one continuous artistic canvas instead of a stack of separate framed blocks. Keep the existing section order and information architecture, but remove the outer shells that make each section feel like its own mini-page.
 
-This design pass covers:
+This design pass continues the already approved visual cleanup and adds a second stage of shell redesign:
 
-- replacing the interface logo usage with the real project logo from the workspace root
-- removing decorative floating elements
-- introducing a more unified page-wide color flow
-- rebuilding the hero into a cleaner poster-style composition
-- shrinking and softening the inline CTA section
-- reducing the size and visual weight of the `О нас` section
-- stabilizing tests and encoding-sensitive parts of the project
+- keep the current logo, hero, CTA, and section order direction
+- remove outer frames from the homepage shell
+- keep framed cards only where they are structurally useful in services
+- replace duplicate heading systems with one large section title
+- separate sections through spacing, title rhythm, and color-tinted canvas zones
+- keep the page ready for future animation work by introducing more open space
 
-## Core Visual Direction
+## Core Goal
 
-### Page As One Canvas
+The homepage should feel closer to the composition rhythm of [slip-shop.ru](https://slip-shop.ru/) without copying its palette or layout literally.
 
-The page must still be made of sections, but it should no longer feel like a set of isolated screen-sized blocks. The whole homepage should read as one continuous composition with gradual color drift and much softer local framing.
+The reference is used for:
 
-### Color Strategy
+- seamless section transitions
+- stronger section headings
+- a more editorial feeling of one long page
+- less dependence on boxes and cards for structure
 
-Use one bright, airy base canvas with soft section-to-section tint changes. Keep the existing warm dessert-like direction, but add more gentle color presence with:
+The reference must not be copied in:
 
-- delicate pink
-- muted soft blue
-- warm cream / milk tones
+- color palette
+- decorative assets
+- branding
+- overall art direction
 
-Every section may have its own subtle tint, but transitions between sections should feel blended rather than segmented.
+The site must remain recognizably its own design, using the existing sweet, airy, dessert-like visual language.
 
-### Decorative Cleanup
+## Visual Direction
 
-Remove all floating decorative elements for now, including:
+### One Canvas Instead Of Many Blocks
 
-- hanging lamp-like accents
-- floating dots
-- candy-like particles
-- bubble-like ornaments
-- similar ambient fillers
+The homepage remains section-based in markup and navigation, but should no longer look section-based in its chrome. The page should feel painted in chapters rather than assembled from panels.
 
-The background must stay intentionally open so it can be art-directed later.
+The new structure relies on:
 
-## Header And Logo
+- one large heading per section
+- more vertical breathing room before and after content
+- soft color shifts between sections
+- minimal internal separators instead of card shells
 
-### Logo Usage
+### Color Chapters
 
-Use the real logo file from the workspace root:
+Each major section should have its own soft tint zone so the user can still feel where they are on the page even after the outer borders disappear.
 
-- `C:/Users/606ru/OneDrive/Desktop/але/site/логотип.png`
+Preferred section tint language:
 
-The user confirmed the file is already suitable for insertion and should be used as-is.
+- blush pink
+- pale lemon
+- soft sky blue
+- warm milk / cream
 
-### Header
+These should remain gentle and airy rather than saturated. The goal is not “more gradients,” but clearer contrast between neighboring sections so the page does not collapse into a mostly white surface.
 
-The header should show:
+### CTA Relationship
 
-- the cleaned logo presentation without any bubble/capsule effect
-- the text brand name `Праздник каждый день` next to the logo
+The inline CTA remains orange and acts as the warmest point on the page. The surrounding sections should transition toward it naturally:
 
-The header CTA should become calmer and lighter. It should feel closer to an accented text action than to a large standalone button.
+- the section before CTA can lean warmer
+- the section after CTA can cool slightly back toward milk-blue or milk-pink
 
-### Footer
+This avoids a harsh visual break while still letting CTA stay prominent.
 
-The footer should also use the real logo, but without the old bubble effect. Because the footer is dark, the logo may sit on a very light milk-toned support surface purely for legibility. This support should feel subtle and functional, not like a decorative badge.
+## Heading System
+
+### Single Title Per Section
+
+Every homepage section should have exactly one main heading. Remove eyebrow labels and any duplicated title-like text that repeats the section name.
+
+This applies to sections such as:
+
+- `О нас`
+- `Услуги`
+- `Доп. услуги`
+- `Отзывы`
+- `FAQ`
+- `Контакты`
+
+### Placement
+
+Section titles should be placed as a separate line above the section content, not embedded inside the content layout.
+
+This creates a cleaner reading rhythm:
+
+1. user sees the section title
+2. user gets a bit of air
+3. user reads the section content
+
+### Alignment
+
+Use a consistent heading system with one intentional exception:
+
+- most section titles are left-aligned
+- `Услуги` is centered to make it feel like the main showcase section
+
+## Section Treatment
+
+### Global Rule
+
+Remove outer framed containers from all main homepage sections.
+
+That means the shell should no longer rely on:
+
+- thick borders
+- rounded panel wrappers
+- card-like section backgrounds
+- shadowed outer containers
+
+Instead, sections are separated by:
+
+- title rhythm
+- vertical spacing
+- local tint changes
+- occasional very light line separators where necessary
+
+### About
+
+`О нас` stays compact and meaning-focused:
+
+- one large title
+- short manifesto
+- mini-facts below
+
+It should read like a compact editorial insert inside the canvas, not like a boxed brand card.
+
+### Services
+
+`Услуги` keeps framed service cards, but only the cards themselves.
+
+Changes:
+
+- remove the outer services frame
+- keep the service cards framed and readable
+- keep this section centered in tone and composition
+
+This is the only major homepage section where card framing remains a key structural tool.
+
+### Extras, Reviews, FAQ, Contacts
+
+These sections should lose the “separate card block” treatment and move toward lighter internal structure.
+
+Allowed structure:
+
+- spacing
+- tint shifts
+- thin dividers
+- softer internal grouping
+
+Avoid:
+
+- boxed outer wrappers
+- card-heavy repeated shells
+- anything that reads like a second mini-landing page inside the main page
 
 ## Hero
 
-### Goal
+The hero direction already approved remains in place and should be preserved during this redesign:
 
-Rebuild the first screen into a stronger, cleaner poster-style hero inspired by the composition approach of [slip-shop.ru](https://slip-shop.ru/), but without borrowing that site's palette or decorative language.
+- clean left-side title layout
+- large CTA buttons
+- right-side clean visual field
+- no unnecessary decorative elements
 
-### Copy
+The shell redesign must not reintroduce noisy color residue or panel framing into the hero.
 
-Hero copy should contain only:
+## CTA
 
-- heading: `Фуд-станции на ваше мероприятие`
-- primary button: `Заказать`
-- secondary button: `В каталог`
+The CTA direction already approved remains in place and should be preserved:
 
-No supporting paragraph should remain in this iteration.
+- warm orange accent
+- full-width presence inside the page flow
+- no hard card shell around it
+- short inline form on the homepage
 
-### Layout
+During the shell redesign, neighboring sections should be tuned so the CTA feels embedded in the page composition rather than pasted between unrelated blocks.
 
-The hero should become a cleaner left/right composition:
+## Decorative Restraint
 
-- left side: strong headline + two large buttons
-- right side: intentionally empty clean space with soft light only
+Keep floating decorative elements removed for now:
 
-The right side is a prepared visual field for future art direction, not a placeholder object block.
+- no lamp-like drops
+- no drifting candy shapes
+- no ambient bubbles
+- no residual mini-animation traces in the canvas
 
-### Hero Actions
+The page should feel intentionally open and ready for future animation layers.
 
-- `Заказать` opens the existing pop-up CTA flow
-- `В каталог` scrolls to the services section
+## Technical Constraints
 
-## About Section
+### Encoding Safety
 
-The `О нас` section should become smaller, calmer, and more compact.
+Do not break Russian text or asset references while editing. The project has had encoding issues already, so all changes must preserve correct text rendering and file integrity.
 
-Replace the current heavier composition with:
+### Stability
 
-- a short brand manifesto
-- a compact line or grid of mini-facts
+Keep the earlier stabilization work intact while doing this redesign:
 
-Confirmed fact set:
-
-- `7+ лет в праздничных форматах`
-- `300+ событий обслужено`
-- `1000+ довольных клиентов`
-
-This section should feel like a short meaning anchor inside the page-wide canvas, not like a self-contained presentation card.
-
-## CTA Section
-
-Keep the inline CTA in its current page position, but redesign it into a much smaller embedded accent.
-
-### Must Keep
-
-- the CTA remains on the homepage
-- the short inline form stays on the homepage
-- the current form logic/content structure stays in place for now
-- pop-up CTA flows remain unchanged outside this inline block
-
-### Must Change
-
-- it should no longer feel like a full-width independent block
-- it should no longer create a harsh visual break
-- it should sit inside the page canvas as a compact mini-section
-- it should use the project's own palette, not the reference palette
-
-## Section Framing
-
-Keep the current section order, but visually soften the sense of hard-separated cards:
-
-- reduce border strength
-- reduce panel heaviness
-- make section shells lighter
-- preserve enough structure for readability and future iteration
-
-The result should still be organized, but much less modular-looking.
-
-## Technical Stabilization
-
-This redesign must also improve project stability before deeper UI work continues.
-
-### Required Stabilization Work
-
-- fix the brittle CSS-related unit test that fails due to Windows line ending expectations
-- fix Playwright dev-server reuse issues so e2e tests do not accidentally bind to another local server
-- verify Russian text remains intact in source files and rendered output
-- avoid introducing new encoding problems while editing
-
-### Verification Goals
-
-After implementation, validate at minimum:
-
-- `npm run lint`
-- `npm run test`
-- `npm run build`
-
-E2E should also be re-checked after server configuration is stabilized.
+- lint must remain clean
+- unit tests must remain clean
+- build must remain clean
+- the Playwright server configuration fix must not regress
 
 ## Acceptance Criteria
 
-- The page keeps its current section order
-- The page feels like one unified artistic canvas instead of stacked mini-pages
-- Soft pink and muted blue are introduced into the global color flow
-- All floating decorative elements are removed
-- The real project logo replaces the current interface logo usage
-- Header logo has text brand `Праздник каждый день` beside it
-- Footer logo remains visible on the dark background with only a subtle milk-toned support if needed
-- Hero contains only the approved heading and two buttons
-- Hero right side is clean space with soft light, without temporary objects
-- `Заказать` opens the pop-up CTA
-- `В каталог` scrolls to services
-- `О нас` becomes smaller and consists of a manifesto plus the approved mini-facts
-- Inline CTA stays in its current page position but becomes a compact embedded mini-block
-- Borders and section shells become lighter and less block-like
-- Encoding remains intact
-- Lint, unit tests, and build succeed after stabilization
+- Homepage section order remains unchanged
+- Outer framed shells are removed from the main homepage sections
+- `Услуги` keeps framed service cards but loses the outer frame
+- Every major homepage section has one large section title only
+- Eyebrow labels and duplicate section-name headings are removed
+- Most section titles are left-aligned
+- `Услуги` title is centered
+- Sections are distinguished through spacing and soft tint zones instead of boxes
+- The page feels more like one continuous canvas and less like stacked mini-pages
+- Neighboring sections have more visible tint differences than before while staying soft
+- CTA remains warm orange and visually integrated with nearby sections
+- No floating decorative fillers return during this redesign
+- Russian text and branding assets remain intact
+- `npm run lint`, `npm run test -- --run`, and `npm run build` pass after implementation

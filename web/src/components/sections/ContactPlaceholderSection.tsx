@@ -43,12 +43,7 @@ export function ContactPlaceholderSection() {
 
   return (
     <section id="contact" className="site-section" data-testid="section-contact" aria-labelledby="contact-title">
-      <div
-        ref={ref}
-        className="site-container site-reveal"
-        data-reveal-state={revealState}
-        data-reveal-stagger="true"
-      >
+      <div ref={ref} className="site-container site-reveal" data-reveal-state={revealState} data-reveal-stagger="true">
         <article className={`${styles.frame} site-panel-glow`}>
           <SectionHeading
             eyebrow={contactGuidedCopy.eyebrow}

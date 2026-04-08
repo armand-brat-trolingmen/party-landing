@@ -1,32 +1,35 @@
-import { render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
+import { services } from '../../data/catalogContent';
 import { ServicesSection } from './ServicesSection';
-import { services } from '../../data/siteContent';
 
-test('renders the services showcase with horizontal mobile scroll snap and micro-scene motion hooks', () => {
+test('renders the services catalog as a revealable menu showcase', () => {
   render(<ServicesSection />);
 
   const section = screen.getByTestId('section-services');
-  expect(within(section).getByRole('heading', { level: 2 })).toBeInTheDocument();
+  expect(within(section).getByRole('heading', { level: 2, name: 'Услуги' })).toBeInTheDocument();
 
-  const strip = screen.getByTestId('services-strip');
-  expect(strip).toHaveAttribute('data-scroll-snap', 'x');
+  const catalog = screen.getByTestId('services-catalog');
+  const cards = within(catalog).getAllByTestId('service-card');
 
-  const stripQueries = within(strip);
+  expect(cards).toHaveLength(8);
+  expect(within(catalog).getByRole('heading', { level: 3, name: services[0].name })).toBeInTheDocument();
+  expect(within(catalog).getByText(services[0].shortDescription)).toBeInTheDocument();
+  expect(within(catalog).queryByRole('heading', { level: 3, name: services[10].name })).not.toBeInTheDocument();
 
-  services.forEach((service) => {
-    expect(stripQueries.getByText(service.name)).toBeInTheDocument();
-    expect(stripQueries.getByText(service.description)).toBeInTheDocument();
-  });
+  const revealButton = screen.getByTestId('services-reveal-button');
+  expect(revealButton).toHaveTextContent('Показать ещё');
 
-  const cards = strip.querySelectorAll('[data-motion-service="micro-scene"]');
-  expect(cards).toHaveLength(3);
+  fireEvent.click(revealButton);
+  expect(within(catalog).getAllByTestId('service-card')).toHaveLength(services.length);
+  expect(within(catalog).getByRole('heading', { level: 3, name: services[10].name })).toBeInTheDocument();
+  expect(revealButton).toHaveTextContent('Скрыть часть меню');
+});
 
-  const motionLayers = strip.querySelectorAll('[data-motion-image="true"]');
-  expect(motionLayers).toHaveLength(3);
+test('routes each card to its dedicated internal service page', () => {
+  render(<ServicesSection allowReveal={false} />);
 
-  expect(strip.querySelector('[data-service-id="food-trucks"]')).toBeTruthy();
-  expect(strip.querySelector('[data-service-scene="cotton-candy"]')).toBeTruthy();
-  expect(strip.querySelector('[data-service-id="chocolate-fountain"]')).toBeTruthy();
+  const catalog = screen.getByTestId('services-catalog');
+  const firstLink = within(catalog).getByRole('link', { name: `Открыть страницу услуги ${services[0].name}` });
 
-  expect(stripQueries.getAllByRole('img')).toHaveLength(3);
+  expect(firstLink).toHaveAttribute('href', `/services/${services[0].slug}`);
 });

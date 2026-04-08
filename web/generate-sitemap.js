@@ -1,40 +1,29 @@
-import { mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
-import { basename, dirname, extname, join, relative, resolve } from 'node:path';
+import { dirname, join, relative, resolve } from 'node:path';
 import { SITE_URL, withSiteUrl } from './site.config.js';
 
 const projectRoot = process.cwd();
-const srcRoot = resolve(projectRoot, 'src');
 const distRoot = resolve(projectRoot, 'dist');
 const sitemapPath = resolve(distRoot, 'sitemap.xml');
 const robotsSourcePath = resolve(projectRoot, 'public', 'robots.txt');
 const robotsDistPath = resolve(distRoot, 'robots.txt');
 const distIndexPath = resolve(distRoot, 'index.html');
-const appRoutesPath = resolve(srcRoot, 'AppRoutes.tsx');
-const indexableExtensions = new Set(['.js', '.jsx', '.ts', '.tsx']);
 const technicalPattern = /(404|500|notfound|error|fallback)/i;
-const policyPattern = /(privacy|policy|terms|legal)/i;
+const policyPattern = /(privacy|policy|terms|legal|consent)/i;
 
 function normalizeRoutePath(route) {
-  if (!route || route === '*' || route.includes(':')) {
-    return null;
-  }
-
   const trimmed = route.trim();
-  if (!trimmed) {
-    return null;
-  }
 
-  if (trimmed === '/' || trimmed === 'index') {
+  if (!trimmed || trimmed === '/') {
     return '/';
   }
 
-  const normalized = trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
-  return normalized.replace(/\/+$/, '') || '/';
+  return `/${trimmed.replace(/^\/+/, '').replace(/\/+$/, '')}`;
 }
 
 function isIndexableRoute(route) {
-  return Boolean(route) && !technicalPattern.test(route);
+  return Boolean(route) && !technicalPattern.test(route) && !route.includes('.test');
 }
 
 function getRouteMeta(route) {
@@ -49,7 +38,7 @@ function getRouteMeta(route) {
   return { changefreq: 'monthly', priority: '0.8' };
 }
 
-async function walkRouteFiles(directory, baseDirectory = directory) {
+async function walkDist(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
   const routes = [];
 
@@ -57,18 +46,16 @@ async function walkRouteFiles(directory, baseDirectory = directory) {
     const fullPath = join(directory, entry.name);
 
     if (entry.isDirectory()) {
-      routes.push(...(await walkRouteFiles(fullPath, baseDirectory)));
+      routes.push(...(await walkDist(fullPath)));
       continue;
     }
 
-    const extension = extname(entry.name);
-    if (!indexableExtensions.has(extension)) {
+    if (!entry.isFile() || entry.name !== 'index.html') {
       continue;
     }
 
-    const relativePath = relative(baseDirectory, fullPath).replace(/\\/g, '/');
-    const normalized = relativePath.slice(0, -extension.length).replace(/\/index$/i, '').replace(/^index$/i, '');
-    const route = normalizeRoutePath(normalized);
+    const relativeDir = relative(distRoot, dirname(fullPath)).replace(/\\/g, '/');
+    const route = normalizeRoutePath(relativeDir === '.' ? '/' : relativeDir);
 
     if (isIndexableRoute(route)) {
       routes.push(route);
@@ -76,58 +63,6 @@ async function walkRouteFiles(directory, baseDirectory = directory) {
   }
 
   return routes;
-}
-
-async function collectRoutesFromPageDirs() {
-  const candidates = ['pages', 'routes'];
-  const routes = [];
-
-  for (const candidate of candidates) {
-    const candidatePath = resolve(srcRoot, candidate);
-    if (!existsSync(candidatePath)) {
-      continue;
-    }
-
-    const candidateStat = await stat(candidatePath);
-    if (!candidateStat.isDirectory()) {
-      continue;
-    }
-
-    routes.push(...(await walkRouteFiles(candidatePath)));
-  }
-
-  return routes;
-}
-
-async function collectRoutesFromAppRoutes() {
-  if (!existsSync(appRoutesPath)) {
-    return [];
-  }
-
-  const source = await readFile(appRoutesPath, 'utf8');
-  const matches = [...source.matchAll(/path\s*=\s*["'`](.*?)["'`]/g)];
-
-  return matches
-    .map((match) => normalizeRoutePath(match[1]))
-    .filter(isIndexableRoute);
-}
-
-async function detectIndexableRoutes() {
-  const routes = new Set(['/']);
-
-  for (const route of await collectRoutesFromPageDirs()) {
-    routes.add(route);
-  }
-
-  for (const route of await collectRoutesFromAppRoutes()) {
-    routes.add(route);
-  }
-
-  return [...routes].filter(isIndexableRoute).sort((left, right) => {
-    if (left === '/') return -1;
-    if (right === '/') return 1;
-    return left.localeCompare(right);
-  });
 }
 
 function buildSitemapXml(routes) {
@@ -185,16 +120,20 @@ async function ensureRobotsFile() {
 async function main() {
   await mkdir(distRoot, { recursive: true });
 
-  const routes = await detectIndexableRoutes();
-  const sitemap = buildSitemapXml(routes);
+  const routes = [...new Set(await walkDist(distRoot))].sort((left, right) => {
+    if (left === '/') return -1;
+    if (right === '/') return 1;
+    return left.localeCompare(right);
+  });
+  const sitemap = buildSitemapXml(routes.length > 0 ? routes : ['/']);
 
   await writeFile(sitemapPath, sitemap, 'utf8');
   await ensureRobotsFile();
   await patchFileWithSiteUrl(distIndexPath);
 
   console.log(`[sitemap] site url: ${SITE_URL}`);
-  console.log(`[sitemap] found ${routes.length} URL(s)`);
-  for (const route of routes) {
+  console.log(`[sitemap] found ${routes.length > 0 ? routes.length : 1} URL(s)`);
+  for (const route of routes.length > 0 ? routes : ['/']) {
     console.log(`[sitemap] include ${route}`);
   }
   console.log(`[sitemap] written to ${sitemapPath}`);

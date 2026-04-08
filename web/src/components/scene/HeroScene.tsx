@@ -96,12 +96,7 @@ export function HeroScene() {
   }, []);
 
   return (
-    <div
-      className={styles.scene}
-      aria-label="РЎС†РµРЅР° РіРµСЂРѕСЏ"
-      data-testid="hero-scene"
-      data-motion-scene="layered"
-    >
+    <div className={styles.scene} aria-label="Сцена героя" data-testid="hero-scene" data-motion-scene="layered">
       <div ref={frameRef} className={styles.frame} data-testid="hero-scene-frame" data-motion-frame="parallax">
         {heroSceneItems.map((item, index) => (
           <div
@@ -111,7 +106,14 @@ export function HeroScene() {
             data-motion-depth={motionDepths[index]}
           >
             <div className={styles.itemMedia}>
-              <img className={styles.vector} src={item.image} alt={item.label} />
+              <img
+                className={styles.vector}
+                src={item.image}
+                alt={item.label}
+                width={item.width}
+                height={item.height}
+                decoding="async"
+              />
             </div>
           </div>
         ))}
