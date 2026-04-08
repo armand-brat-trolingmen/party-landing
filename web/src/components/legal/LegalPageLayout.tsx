@@ -29,35 +29,23 @@ export function LegalPageLayout({ document }: LegalPageLayoutProps) {
 
             <article className={`${styles.card} site-panel-glow`}>
               <div className={styles.heading}>
-                <p className="site-section__eyebrow">Правовая информация</p>
                 <h1 className={styles.title}>{document.title}</h1>
-                <p className={styles.lead}>{document.intro}</p>
               </div>
 
-              <div className={styles.metaRow}>
-                <span className={styles.metaLabel}>Актуально на {document.updatedAt}</span>
-                <span className={styles.metaDivider} aria-hidden="true" />
-                <span className={styles.metaText}>{footerContent.businessName}</span>
-              </div>
+              <div className={styles.sheet} data-testid="legal-document-sheet" aria-label={document.title}>
+                <div className={styles.sheetInner}>
+                  <div className={styles.sheetHeader} aria-hidden="true">
+                    <span className={styles.sheetDot} />
+                    <span className={styles.sheetDot} />
+                    <span className={styles.sheetDot} />
+                  </div>
 
-              <div className={styles.sections}>
-                {document.sections.map((section) => (
-                  <section key={section.title} className={styles.section}>
-                    <h2 className={styles.sectionTitle}>{section.title}</h2>
-                    <div className={styles.sectionBody}>
-                      {section.paragraphs.map((paragraph) => (
-                        <p key={paragraph}>{paragraph}</p>
-                      ))}
-                      {section.items ? (
-                        <ul className={styles.sectionList}>
-                          {section.items.map((item) => (
-                            <li key={item}>{item}</li>
-                          ))}
-                        </ul>
-                      ) : null}
-                    </div>
-                  </section>
-                ))}
+                  <div className={styles.sheetLines} data-testid="legal-document-lines" aria-hidden="true">
+                    {Array.from({ length: 11 }, (_, index) => (
+                      <span key={index} className={styles.sheetLine} />
+                    ))}
+                  </div>
+                </div>
               </div>
             </article>
           </div>
