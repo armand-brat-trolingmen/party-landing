@@ -22,7 +22,7 @@ export function ExtrasSection({
   return (
     <section id={sectionId} className="site-section" data-testid="section-extras" aria-labelledby={`${sectionId}-title`}>
       <div ref={ref} className="site-container site-reveal" data-reveal-state={revealState} data-reveal-stagger="true">
-        <article className={`${styles.frame} site-panel-glow`}>
+        <div className={`${styles.frame} site-panel-glow`} data-section-surface="canvas" data-section-tone="sky">
           <SectionHeading title={<span id={`${sectionId}-title`}>{title}</span>} description={description} />
 
           <div className={`${styles.track} reveal-grid`} data-testid="extras-track">
@@ -42,7 +42,7 @@ export function ExtrasSection({
               </article>
             ))}
           </div>
-        </article>
+        </div>
       </div>
     </section>
   );

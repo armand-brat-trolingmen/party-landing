@@ -12,11 +12,13 @@ test('renders faq as a cinematic accordion with the first item open by default',
 
   const section = screen.getByTestId('section-faq');
   const sectionQueries = within(section);
+  const surface = section.querySelector('[data-section-surface="canvas"][data-section-tone="lemon"]');
   const accordion = sectionQueries.getByTestId('faq-accordion');
   const list = sectionQueries.getByRole('list');
   const buttons = sectionQueries.getAllByRole('button');
 
   expect(sectionQueries.getByRole('heading', { level: 2, name: 'Частые вопросы' })).toBeInTheDocument();
+  expect(surface).not.toBeNull();
   expect(sectionQueries.queryByTestId('faq-pattern')).not.toBeInTheDocument();
   expect(accordion).toHaveAttribute('data-motion-faq', 'cinematic');
   expect(list).toBeInTheDocument();

@@ -6,8 +6,10 @@ test('renders a compact manifesto-driven about section with three compact facts'
 
   const section = screen.getByTestId('section-about');
   const sectionQueries = within(section);
+  const surface = section.querySelector('[data-section-surface="canvas"][data-section-tone="rose"]');
 
   expect(sectionQueries.getByRole('heading', { level: 2, name: 'О нас' })).toBeInTheDocument();
+  expect(surface).not.toBeNull();
   expect(sectionQueries.getByTestId('about-layout')).toHaveAttribute('data-about-layout', 'manifest-strip');
   expect(sectionQueries.getByTestId('about-manifest')).toBeInTheDocument();
   expect(sectionQueries.getByTestId('about-facts')).toBeInTheDocument();

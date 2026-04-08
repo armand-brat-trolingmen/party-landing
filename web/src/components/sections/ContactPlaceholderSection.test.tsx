@@ -7,8 +7,10 @@ test('renders contacts as a guided practical block with messenger icons and firs
 
   const section = screen.getByTestId('section-contact');
   const sectionQueries = within(section);
+  const surface = section.querySelector('[data-section-surface="canvas"][data-section-tone="sky"]');
 
   expect(sectionQueries.getByRole('heading', { level: 2, name: 'Контакты' })).toBeInTheDocument();
+  expect(surface).not.toBeNull();
   expect(sectionQueries.getByTestId('contact-layout')).toHaveAttribute('data-contact-layout', 'guided');
   expect(sectionQueries.getByTestId('contact-guide')).toHaveAttribute('data-contact-guide', 'first-message');
   expect(sectionQueries.getByText(contactGuidedCopy.guideTitle)).toBeInTheDocument();

@@ -16,7 +16,7 @@ test('renders the homepage as a catalog hub inside the shared site shell', () =>
   expect(header).toBeInTheDocument();
   expect(within(header).getByRole('link', { name: 'Праздник каждый день' })).toBeInTheDocument();
   expect(within(header).getByRole('button', { name: 'Заказать' })).toBeInTheDocument();
-  expect(main).toHaveAttribute('data-motion-path', 'story-trail');
+  expect(main).toHaveAttribute('data-motion-path', 'canvas-flow');
   expect(footer).toBeInTheDocument();
   expect(within(footer).queryByText('Праздник каждый день')).not.toBeInTheDocument();
   expect(within(footer).getByRole('link', { name: 'Политика конфиденциальности' })).toHaveAttribute('href', '/privacy');

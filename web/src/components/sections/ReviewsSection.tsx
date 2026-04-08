@@ -35,7 +35,7 @@ export function ReviewsSection() {
   return (
     <section id="moments" className="site-section" data-testid="section-moments" aria-labelledby="moments-title">
       <div ref={ref} className="site-container site-reveal" data-reveal-state={revealState} data-reveal-stagger="true">
-        <article className={`${styles.frame} site-panel-glow`}>
+        <div className={`${styles.frame} site-panel-glow`} data-section-surface="canvas" data-section-tone="milk">
           <SectionHeading
             title={<span id="moments-title">{homePageContent.moments.title}</span>}
             description={homePageContent.moments.description}
@@ -105,7 +105,7 @@ export function ReviewsSection() {
               </button>
             </div>
           </div>
-        </article>
+        </div>
       </div>
     </section>
   );

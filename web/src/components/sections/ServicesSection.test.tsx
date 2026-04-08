@@ -6,7 +6,12 @@ test('renders the services catalog as a revealable menu showcase', () => {
   render(<ServicesSection />);
 
   const section = screen.getByTestId('section-services');
-  expect(within(section).getByRole('heading', { level: 2, name: 'Услуги' })).toBeInTheDocument();
+  const surface = section.querySelector('[data-section-surface="cards"][data-section-tone="lemon"]');
+  const heading = within(section).getByRole('heading', { level: 2, name: 'Услуги' });
+
+  expect(heading).toBeInTheDocument();
+  expect(heading.closest('[data-heading-align]')).toHaveAttribute('data-heading-align', 'center');
+  expect(surface).not.toBeNull();
 
   const catalog = screen.getByTestId('services-catalog');
   const cards = within(catalog).getAllByTestId('service-card');

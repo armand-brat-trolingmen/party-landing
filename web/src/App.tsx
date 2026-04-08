@@ -12,7 +12,7 @@ import './styles/global.css';
 
 export default function App() {
   return (
-    <SiteShell motionPath="story-trail">
+    <SiteShell motionPath="canvas-flow">
       <HeroSection />
       <AboutSection />
       <ServicesSection />

@@ -14,7 +14,9 @@ test('renders the homepage CTA as a compact inline form with legal links', () =>
 
   const section = screen.getByTestId('section-cta');
   const sectionQueries = within(section);
+  const surface = section.querySelector('[data-section-surface="band"][data-section-tone="apricot"]');
 
+  expect(surface).not.toBeNull();
   expect(sectionQueries.getByTestId('cta-inline-form')).toBeInTheDocument();
   expect(sectionQueries.getByLabelText('Имя')).toBeInTheDocument();
   expect(sectionQueries.getByLabelText('Телефон')).toBeInTheDocument();

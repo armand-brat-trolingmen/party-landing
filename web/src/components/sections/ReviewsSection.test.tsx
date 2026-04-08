@@ -6,8 +6,10 @@ test('renders moments as a separate manual gallery before testimonials', () => {
 
   const section = screen.getByTestId('section-moments');
   const sectionQueries = within(section);
+  const surface = section.querySelector('[data-section-surface="canvas"][data-section-tone="milk"]');
 
   expect(sectionQueries.getByRole('heading', { level: 2, name: 'Красивые кадры с реальных событий' })).toBeInTheDocument();
+  expect(surface).not.toBeNull();
   expect(sectionQueries.getByTestId('moment-feed-slider')).toHaveAttribute('data-slider-mode', 'manual');
   expect(sectionQueries.getAllByTestId('moment-feed-slide')).toHaveLength(1);
   expect(sectionQueries.queryByRole('link', { name: /Avito/i })).not.toBeInTheDocument();
