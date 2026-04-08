@@ -39,7 +39,7 @@ test('shows desktop navigation with a dedicated order button on the homepage', (
 
   const header = screen.getByTestId('site-header');
   const navigation = within(header).getByRole('navigation');
-  const orderButton = within(header).getByRole('button', { name: 'Заказать' });
+  const orderButton = within(header).getByTestId('header-order-button');
 
   expect(header).toHaveAttribute('data-header-route', 'home');
   expect(within(header).getByRole('link', { name: siteContent.brand })).toHaveAttribute('href', '#hero');
@@ -66,18 +66,19 @@ test('keeps route-aware links on internal pages', () => {
   expect(within(navigation).getByRole('link', { name: 'Отзывы' })).toHaveAttribute('href', '#testimonials');
 });
 
-test('keeps mobile navigation collapsed by default and exposes CTA', () => {
+test('keeps mobile navigation collapsed by default and moves order CTA into the menu', () => {
   mockViewport(false);
   renderHeader();
 
   const menuButton = screen.getByTestId('menu-button');
   expect(menuButton).toHaveAttribute('aria-expanded', 'false');
-  expect(screen.getByRole('button', { name: 'Заказать' })).toBeInTheDocument();
+  expect(screen.queryByTestId('header-order-button')).not.toBeInTheDocument();
   expect(screen.queryByRole('navigation')).not.toBeInTheDocument();
 
   fireEvent.click(menuButton);
   expect(menuButton).toHaveAttribute('aria-expanded', 'true');
   expect(screen.getByRole('navigation')).toBeInTheDocument();
+  expect(screen.getByTestId('mobile-menu-order-button')).toBeInTheDocument();
 });
 
 test('hides order CTA in legal mode and routes links back to the homepage', () => {
@@ -85,6 +86,6 @@ test('hides order CTA in legal mode and routes links back to the homepage', () =
   renderHeader(['/privacy'], true);
 
   const navigation = screen.getByRole('navigation');
-  expect(screen.queryByRole('button', { name: 'Заказать' })).not.toBeInTheDocument();
+  expect(screen.queryByTestId('header-order-button')).not.toBeInTheDocument();
   expect(within(navigation).getByRole('link', { name: 'Контакты' })).toHaveAttribute('href', '/#contact');
 });

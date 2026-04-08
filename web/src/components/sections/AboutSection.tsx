@@ -1,20 +1,19 @@
 import { homePageContent } from '../../data/catalogContent';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
+import { SectionHeading } from '../ui/SectionHeading';
 import styles from './AboutSection.module.css';
 
 export function AboutSection() {
   const { ref, revealState } = useScrollReveal();
 
   return (
-    <section id="about" className="site-section" data-testid="section-about" aria-labelledby="about-title">
+    <section id="about" className="site-section" data-testid="section-about" data-section-tone="rose" aria-labelledby="about-title">
       <div ref={ref} className="site-container site-reveal" data-reveal-state={revealState} data-reveal-stagger="true">
-        <div className={styles.sectionBody} data-section-surface="canvas" data-section-tone="rose">
-          <div className={styles.layout} data-testid="about-layout" data-about-layout="manifest-strip">
+        <div className={styles.sectionBody}>
+          <SectionHeading title={<span id="about-title">О нас</span>} description={homePageContent.about.description} />
+
+          <div className={styles.layout} data-testid="about-layout" data-about-layout="editorial-ladder">
             <div className={styles.copy}>
-              <h2 id="about-title" className={styles.title}>
-                О нас
-              </h2>
-              <p className={styles.description}>{homePageContent.about.description}</p>
               <p className={styles.manifest} data-testid="about-manifest">
                 {homePageContent.about.manifest}
               </p>

@@ -2,16 +2,16 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import { services } from '../../data/catalogContent';
 import { ServicesSection } from './ServicesSection';
 
-test('renders the services catalog as a revealable menu showcase', () => {
+test('renders the services catalog as a revealable centered showcase without an outer frame', () => {
   render(<ServicesSection />);
 
   const section = screen.getByTestId('section-services');
-  const surface = section.querySelector('[data-section-surface="cards"][data-section-tone="lemon"]');
   const heading = within(section).getByRole('heading', { level: 2, name: 'Услуги' });
 
   expect(heading).toBeInTheDocument();
   expect(heading.closest('[data-heading-align]')).toHaveAttribute('data-heading-align', 'center');
-  expect(surface).not.toBeNull();
+  expect(section).toHaveAttribute('data-section-tone', 'lemon');
+  expect(section.querySelector('[data-section-surface]')).toBeNull();
 
   const catalog = screen.getByTestId('services-catalog');
   const cards = within(catalog).getAllByTestId('service-card');

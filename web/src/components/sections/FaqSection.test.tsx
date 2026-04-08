@@ -3,7 +3,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { faqItems } from '../../data/siteContent';
 import { FaqSection } from './FaqSection';
 
-test('renders faq as a cinematic accordion with the first item open by default', () => {
+test('renders faq as a cinematic accordion without a framed outer section shell', () => {
   render(
     <HelmetProvider>
       <FaqSection />
@@ -12,14 +12,13 @@ test('renders faq as a cinematic accordion with the first item open by default',
 
   const section = screen.getByTestId('section-faq');
   const sectionQueries = within(section);
-  const surface = section.querySelector('[data-section-surface="canvas"][data-section-tone="lemon"]');
   const accordion = sectionQueries.getByTestId('faq-accordion');
   const list = sectionQueries.getByRole('list');
   const buttons = sectionQueries.getAllByRole('button');
 
   expect(sectionQueries.getByRole('heading', { level: 2, name: 'Частые вопросы' })).toBeInTheDocument();
-  expect(surface).not.toBeNull();
-  expect(sectionQueries.queryByTestId('faq-pattern')).not.toBeInTheDocument();
+  expect(section).toHaveAttribute('data-section-tone', 'lemon');
+  expect(section.querySelector('[data-section-surface]')).toBeNull();
   expect(accordion).toHaveAttribute('data-motion-faq', 'cinematic');
   expect(list).toBeInTheDocument();
   expect(within(list).getAllByRole('listitem')).toHaveLength(faqItems.length);

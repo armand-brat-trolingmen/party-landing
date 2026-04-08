@@ -8,9 +8,15 @@ export function TestimonialsSection() {
   const { ref, revealState } = useScrollReveal();
 
   return (
-    <section id="testimonials" className="site-section" data-testid="section-testimonials" aria-labelledby="testimonials-title">
+    <section
+      id="testimonials"
+      className="site-section"
+      data-testid="section-testimonials"
+      data-section-tone="blush"
+      aria-labelledby="testimonials-title"
+    >
       <div ref={ref} className="site-container site-reveal" data-reveal-state={revealState} data-reveal-stagger="true">
-        <div className={styles.sectionBody} data-section-surface="canvas" data-section-tone="blush">
+        <div className={styles.sectionBody}>
           <SectionHeading
             title={<span id="testimonials-title">{homePageContent.reviews.title}</span>}
             description={homePageContent.reviews.description}

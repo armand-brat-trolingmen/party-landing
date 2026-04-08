@@ -1,26 +1,24 @@
 import { render, screen, within } from '@testing-library/react';
-import { contactActionsGuided, contactGuidedCopy, contactPromptItems } from '../../data/siteContent';
+import { footerContent } from '../../data/footerContent';
+import { contactActionsGuided } from '../../data/siteContent';
 import { ContactPlaceholderSection } from './ContactPlaceholderSection';
 
-test('renders contacts as a guided practical block with messenger icons and first-message prompts', () => {
+test('renders contacts as a split canvas with direct details and a future visual slot', () => {
   render(<ContactPlaceholderSection />);
 
   const section = screen.getByTestId('section-contact');
   const sectionQueries = within(section);
-  const surface = section.querySelector('[data-section-surface="canvas"][data-section-tone="sky"]');
 
   expect(sectionQueries.getByRole('heading', { level: 2, name: 'Контакты' })).toBeInTheDocument();
-  expect(surface).not.toBeNull();
-  expect(sectionQueries.getByTestId('contact-layout')).toHaveAttribute('data-contact-layout', 'guided');
-  expect(sectionQueries.getByTestId('contact-guide')).toHaveAttribute('data-contact-guide', 'first-message');
-  expect(sectionQueries.getByText(contactGuidedCopy.guideTitle)).toBeInTheDocument();
-
-  for (const prompt of contactPromptItems) {
-    expect(sectionQueries.getByText(prompt)).toBeInTheDocument();
-  }
-
-  expect(sectionQueries.getByText(contactGuidedCopy.exampleMessage)).toBeInTheDocument();
-  expect(sectionQueries.queryByText('Москва и МО')).not.toBeInTheDocument();
+  expect(section).toHaveAttribute('data-section-tone', 'sky');
+  expect(section.querySelector('[data-section-surface]')).toBeNull();
+  expect(sectionQueries.getByTestId('contact-layout')).toHaveAttribute('data-contact-layout', 'split-canvas');
+  expect(sectionQueries.queryByText(footerContent.legalAddress)).not.toBeInTheDocument();
+  expect(sectionQueries.getByRole('link', { name: footerContent.phoneLabel })).toHaveAttribute('href', footerContent.phoneHref);
+  expect(sectionQueries.getByRole('link', { name: footerContent.emailLabel })).toHaveAttribute('href', footerContent.emailHref);
+  expect(sectionQueries.getByTestId('contact-icon-phone')).toBeInTheDocument();
+  expect(sectionQueries.getByTestId('contact-icon-email')).toBeInTheDocument();
+  expect(sectionQueries.getByTestId('contact-visual-slot')).toHaveAttribute('data-contact-visual', 'placeholder');
 
   for (const action of contactActionsGuided) {
     const link = sectionQueries.getByRole('link', { name: action.label });

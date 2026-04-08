@@ -20,9 +20,15 @@ export function ExtrasSection({
   const { ref, revealState } = useScrollReveal();
 
   return (
-    <section id={sectionId} className="site-section" data-testid="section-extras" aria-labelledby={`${sectionId}-title`}>
+    <section
+      id={sectionId}
+      className="site-section"
+      data-testid="section-extras"
+      data-section-tone="sky"
+      aria-labelledby={`${sectionId}-title`}
+    >
       <div ref={ref} className="site-container site-reveal" data-reveal-state={revealState} data-reveal-stagger="true">
-        <div className={styles.sectionBody} data-section-surface="canvas" data-section-tone="sky">
+        <div className={styles.sectionBody}>
           <SectionHeading title={<span id={`${sectionId}-title`}>{title}</span>} description={description} />
 
           <div className={`${styles.track} reveal-grid`} data-testid="extras-track">
@@ -31,12 +37,14 @@ export function ExtrasSection({
                 <div className={styles.visualWrap}>
                   <OfferingVisual visual={item.visual} label={item.name} />
                 </div>
-                <h3 className={styles.name}>{item.name}</h3>
-                <p className={styles.description}>{item.shortDescription}</p>
+                <div className={styles.copy}>
+                  <h3 className={styles.name}>{item.name}</h3>
+                  <p className={styles.description}>{item.shortDescription}</p>
+                </div>
                 <div className={styles.footer}>
                   <span className={styles.price}>{item.priceFrom}</span>
                   <a className={styles.link} href={getOfferingPath(item)} aria-label={`Открыть страницу услуги ${item.name}`}>
-                    →
+                    {'\u2192'}
                   </a>
                 </div>
               </article>

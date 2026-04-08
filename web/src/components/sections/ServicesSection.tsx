@@ -32,9 +32,15 @@ export function ServicesSection({
   );
 
   return (
-    <section id={sectionId} className="site-section" data-testid="section-services" aria-labelledby={`${sectionId}-title`}>
+    <section
+      id={sectionId}
+      className="site-section"
+      data-testid="section-services"
+      data-section-tone="lemon"
+      aria-labelledby={`${sectionId}-title`}
+    >
       <div ref={ref} className="site-container site-reveal" data-reveal-state={revealState} data-reveal-stagger="true">
-        <div className={styles.sectionBody} data-section-surface="cards" data-section-tone="lemon">
+        <div className={styles.sectionBody}>
           <SectionHeading align="center" title={<span id={`${sectionId}-title`}>{title}</span>} description={description} />
 
           <div
@@ -55,8 +61,12 @@ export function ServicesSection({
 
                 <div className={styles.footer}>
                   <span className={styles.price}>{service.priceFrom}</span>
-                  <a className={styles.link} href={getOfferingPath(service)} aria-label={`Открыть страницу услуги ${service.name}`}>
-                    <span aria-hidden="true">→</span>
+                  <a
+                    className={styles.link}
+                    href={getOfferingPath(service)}
+                    aria-label={`Открыть страницу услуги ${service.name}`}
+                  >
+                    <span aria-hidden="true">{'\u2192'}</span>
                   </a>
                 </div>
               </article>

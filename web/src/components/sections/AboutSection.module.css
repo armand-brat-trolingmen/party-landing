@@ -5,77 +5,102 @@
 
 .layout {
   display: grid;
-  gap: clamp(1.25rem, 3vw, 2.1rem);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
   align-items: start;
 }
 
 .copy {
   display: grid;
-  gap: 0.95rem;
-  max-width: 38rem;
-}
-
-.title {
-  font-size: clamp(2.05rem, 3.7vw, 3rem);
-  line-height: 0.96;
-}
-
-.description {
-  max-width: 33rem;
-  color: var(--text-muted);
-  line-height: 1.58;
+  gap: 1rem;
+  max-width: 40rem;
 }
 
 .manifest {
-  max-width: 40rem;
+  max-width: 38rem;
   font-family: var(--font-display);
-  font-size: clamp(1.25rem, 2.5vw, 1.9rem);
+  font-size: clamp(1.35rem, 2.8vw, 2rem);
   line-height: 1.14;
   text-wrap: balance;
 }
 
 .factGrid {
+  position: relative;
   display: grid;
-  gap: 0.85rem;
+  gap: 1rem;
+  padding-left: 0.2rem;
+}
+
+.factGrid::before {
+  content: '';
+  position: absolute;
+  left: 0.25rem;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  width: 1px;
+  background: linear-gradient(180deg, rgba(239, 79, 67, 0.2), rgba(255, 214, 91, 0.28), rgba(111, 191, 255, 0.1));
 }
 
 .factCard {
+  position: relative;
   display: grid;
   gap: 0.35rem;
-  padding: 1.05rem 1rem 1.1rem;
-  border-radius: 1.35rem;
-  border: 1px solid var(--line-soft);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(255, 249, 243, 0.58)),
-    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.74), rgba(255, 255, 255, 0) 44%);
-  box-shadow: var(--shadow-shell);
+  padding-left: 1.45rem;
+}
+
+.factCard::before {
+  content: '';
+  position: absolute;
+  left: -0.05rem;
+  top: 0.72rem;
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ef4f43, #ffd65b);
+  box-shadow: 0 8px 18px rgba(239, 79, 67, 0.18);
+}
+
+.factCard:nth-child(2) {
+  margin-left: 1.8rem;
+}
+
+.factCard:nth-child(3) {
+  margin-left: 3.6rem;
 }
 
 .factValue {
   font-family: var(--font-display);
-  font-size: clamp(1.85rem, 4vw, 2.55rem);
+  font-size: clamp(2rem, 4.8vw, 2.9rem);
   line-height: 0.92;
 }
 
 .factLabel {
+  max-width: 14ch;
   color: var(--text-muted);
-  font-size: 0.94rem;
+  font-size: 0.96rem;
   line-height: 1.45;
 }
 
-@media (min-width: 900px) {
+@media (min-width: 980px) {
   .layout {
-    grid-template-columns: minmax(0, 1.06fr) minmax(16rem, 0.94fr);
-    gap: clamp(1.5rem, 4vw, 3rem);
+    grid-template-columns: minmax(0, 0.9fr) minmax(15rem, 0.9fr);
+    gap: clamp(2rem, 4vw, 4rem);
   }
 }
 
 @media (max-width: 720px) {
-  .title {
-    font-size: 1.8rem;
+  .manifest {
+    font-size: 1.28rem;
   }
 
-  .manifest {
-    font-size: 1.2rem;
+  .factCard:nth-child(2) {
+    margin-left: 1rem;
+  }
+
+  .factCard:nth-child(3) {
+    margin-left: 2rem;
+  }
+
+  .factLabel {
+    max-width: none;
   }
 }

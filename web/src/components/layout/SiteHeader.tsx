@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type MouseEvent } from 'react';
 import { useLocation } from 'react-router';
 import { navItems, siteContent } from '../../data/siteContent';
 import { DonutLogo } from '../branding/DonutLogo';
@@ -21,9 +21,10 @@ function getDocumentTop(element: HTMLElement) {
   return top;
 }
 
-const NAV_ARIA_LABEL = 'Основная навигация';
-const MENU_ARIA_LABEL = 'Меню';
-const CLOSE_MENU_ARIA_LABEL = 'Закрыть меню';
+const NAV_ARIA_LABEL = '\u041e\u0441\u043d\u043e\u0432\u043d\u0430\u044f \u043d\u0430\u0432\u0438\u0433\u0430\u0446\u0438\u044f';
+const MENU_ARIA_LABEL = '\u041c\u0435\u043d\u044e';
+const CLOSE_MENU_ARIA_LABEL = '\u0417\u0430\u043a\u0440\u044b\u0442\u044c \u043c\u0435\u043d\u044e';
+const ORDER_LABEL = '\u0417\u0430\u043a\u0430\u0437\u0430\u0442\u044c';
 
 export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
   const headerRef = useRef<HTMLElement | null>(null);
@@ -85,7 +86,9 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
   const scrollToSection = useCallback(
     (id: string) => {
       const target = document.getElementById(id);
-      if (!target) return;
+      if (!target) {
+        return;
+      }
 
       const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
       const behavior: ScrollBehavior = prefersReducedMotion ? 'auto' : 'smooth';
@@ -102,17 +105,24 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
   );
 
   const onAnchorClick = useCallback(
-    (id: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
-      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    (id: string) => (event: MouseEvent<HTMLAnchorElement>) => {
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+        return;
+      }
 
       if (!canScrollInCurrentPage(id)) {
-        if (!isDesktop) setIsMenuOpen(false);
+        if (!isDesktop) {
+          setIsMenuOpen(false);
+        }
         return;
       }
 
       event.preventDefault();
 
-      if (!isDesktop) setIsMenuOpen(false);
+      if (!isDesktop) {
+        setIsMenuOpen(false);
+      }
+
       if (id !== 'hero') {
         setActiveSectionId(id);
         navigationLockRef.current = {
@@ -136,12 +146,13 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => setIsMenuOpen(false), 0);
-
     return () => window.clearTimeout(timeoutId);
   }, [location.pathname, location.hash]);
 
   useEffect(() => {
-    if (!window.matchMedia) return;
+    if (!window.matchMedia) {
+      return;
+    }
 
     const query = window.matchMedia('(min-width: 721px)');
     const sync = () => {
@@ -163,10 +174,14 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
   }, []);
 
   useEffect(() => {
-    if (!isMenuOpen) return;
+    if (!isMenuOpen) {
+      return;
+    }
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setIsMenuOpen(false);
+      if (event.key === 'Escape') {
+        setIsMenuOpen(false);
+      }
     };
 
     window.addEventListener('keydown', onKeyDown);
@@ -175,13 +190,17 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
 
   useLayoutEffect(() => {
     const header = headerRef.current;
-    if (!header) return;
+    if (!header) {
+      return;
+    }
 
     const root = document.documentElement;
-
     const sync = () => {
       const height = header.getBoundingClientRect().height;
-      if (!Number.isFinite(height) || height <= 0) return;
+      if (!Number.isFinite(height) || height <= 0) {
+        return;
+      }
+
       root.style.setProperty('--header-offset', `${Math.ceil(height)}px`);
     };
 
@@ -202,7 +221,9 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
   }, []);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined') {
+      return;
+    }
 
     let rafId = 0;
 
@@ -254,7 +275,10 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
     };
 
     const onScroll = () => {
-      if (rafId) return;
+      if (rafId) {
+        return;
+      }
+
       rafId = window.requestAnimationFrame(sync);
     };
 
@@ -273,7 +297,9 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
   }, [canScrollInCurrentPage, getSectionScrollTop, legalMode]);
 
   useEffect(() => {
-    if (!location.hash || legalMode) return;
+    if (!location.hash || legalMode) {
+      return;
+    }
 
     const id = location.hash.replace('#', '');
     if (!canScrollInCurrentPage(id)) {
@@ -281,7 +307,9 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
     }
 
     const target = document.getElementById(id);
-    if (!target) return;
+    if (!target) {
+      return;
+    }
 
     const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
     const behavior: ScrollBehavior = prefersReducedMotion ? 'auto' : 'smooth';
@@ -297,7 +325,9 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
 
   useLayoutEffect(() => {
     const nav = navRef.current;
-    if (!nav) return;
+    if (!nav) {
+      return;
+    }
 
     const clearIndicator = () => {
       nav.dataset.indicatorVisible = 'false';
@@ -393,9 +423,9 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
             {!legalMode ? (
               <button type="button" className={styles.headerCta} onClick={openModal} data-testid="header-order-button">
                 <span className={styles.headerCtaInner}>
-                  <span className={styles.headerCtaLabel}>Заказать</span>
+                  <span className={styles.headerCtaLabel}>{ORDER_LABEL}</span>
                   <span className={styles.headerCtaArrow} data-testid="header-order-button-arrow" aria-hidden="true">
-                    →
+                    {'\u2192'}
                   </span>
                 </span>
               </button>
@@ -403,16 +433,6 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
           </div>
         ) : (
           <div className={styles.mobileActions}>
-            {!legalMode ? (
-              <button type="button" className={styles.mobileCta} onClick={openModal} data-testid="header-order-button">
-                <span className={styles.mobileCtaInner}>
-                  <span className={styles.mobileCtaLabel}>Заказать</span>
-                  <span className={styles.mobileCtaArrow} aria-hidden="true">
-                    →
-                  </span>
-                </span>
-              </button>
-            ) : null}
             <div className={styles.mobile}>
               <button
                 type="button"
@@ -442,6 +462,7 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
                   />
                 </span>
               </button>
+
               {isMenuOpen ? (
                 <>
                   <button
@@ -465,6 +486,24 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
                             </a>
                           </li>
                         ))}
+                        {!legalMode ? (
+                          <li>
+                            <button
+                              type="button"
+                              className={styles.mobileMenuOrderLink}
+                              data-testid="mobile-menu-order-button"
+                              onClick={() => {
+                                setIsMenuOpen(false);
+                                openModal();
+                              }}
+                            >
+                              <span>{ORDER_LABEL}</span>
+                              <span className={styles.mobileMenuOrderArrow} aria-hidden="true">
+                                {'\u2192'}
+                              </span>
+                            </button>
+                          </li>
+                        ) : null}
                       </ul>
                     </nav>
                   </div>

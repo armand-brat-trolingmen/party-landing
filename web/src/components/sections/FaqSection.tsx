@@ -6,41 +6,26 @@ import { StructuredData } from '../StructuredData';
 import { SectionHeading } from '../ui/SectionHeading';
 import styles from './FaqSection.module.css';
 
-const FAQ_TITLE = '\u0427\u0430\u0441\u0442\u044B\u0435 \u0432\u043E\u043F\u0440\u043E\u0441\u044B';
+const FAQ_TITLE = 'Частые вопросы';
 
 export function FaqSection() {
   const { ref, revealState } = useScrollReveal();
   const [openItemId, setOpenItemId] = useState<string | null>(faqItems[0]?.id ?? null);
 
   return (
-    <section id="faq" className="site-section" data-testid="section-faq" aria-labelledby="faq-title">
+    <section id="faq" className="site-section" data-testid="section-faq" data-section-tone="lemon" aria-labelledby="faq-title">
       <StructuredData data={getFaqStructuredData(faqItems)} />
-      <div
-        ref={ref}
-        className="site-container site-reveal"
-        data-reveal-state={revealState}
-        data-reveal-stagger="true"
-      >
-        <div className={styles.sectionBody} data-section-surface="canvas" data-section-tone="lemon">
+      <div ref={ref} className="site-container site-reveal" data-reveal-state={revealState} data-reveal-stagger="true">
+        <div className={styles.sectionBody}>
           <SectionHeading title={<span id="faq-title">{FAQ_TITLE}</span>} description={faqSectionCopy.description} />
-          <ul
-            className={`${styles.accordion} reveal-grid`}
-            data-testid="faq-accordion"
-            data-motion-faq="cinematic"
-            aria-label={FAQ_TITLE}
-          >
+          <ul className={`${styles.accordion} reveal-grid`} data-testid="faq-accordion" data-motion-faq="cinematic" aria-label={FAQ_TITLE}>
             {faqItems.map((item) => {
               const isOpen = item.id === openItemId;
               const panelId = `faq-panel-${item.id}`;
               const triggerId = `faq-trigger-${item.id}`;
 
               return (
-                <li
-                  key={item.id}
-                  className={styles.item}
-                  data-open={isOpen ? 'true' : 'false'}
-                  data-motion-item="glow"
-                >
+                <li key={item.id} className={styles.item} data-open={isOpen ? 'true' : 'false'} data-motion-item="glow">
                   <h3 className={styles.questionHeading}>
                     <button
                       type="button"

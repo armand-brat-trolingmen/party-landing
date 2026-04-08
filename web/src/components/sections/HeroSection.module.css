@@ -2,11 +2,23 @@
   position: relative;
   overflow: hidden;
   scroll-margin-top: calc(var(--header-offset) + var(--space-3));
-  padding-block: clamp(4.5rem, 11vh, 7.5rem);
+  padding-block: clamp(4.2rem, 11vh, 7.5rem);
   min-height: clamp(34rem, calc(100svh - var(--header-offset) + 3rem), 52rem);
 }
 
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 12% 16%, rgba(255, 242, 206, 0.78), rgba(255, 242, 206, 0) 24%),
+    radial-gradient(circle at 76% 22%, rgba(255, 226, 197, 0.34), rgba(255, 226, 197, 0) 24%),
+    linear-gradient(180deg, rgba(255, 251, 245, 0.3), rgba(255, 250, 244, 0));
+}
+
 .container {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 0.78fr) minmax(18rem, 1fr);
   gap: clamp(1.5rem, 5vw, 4rem);
@@ -15,7 +27,7 @@
 
 .copyColumn {
   display: grid;
-  gap: 2.35rem;
+  gap: 2.55rem;
   align-content: center;
   max-width: 34rem;
 }
@@ -39,7 +51,7 @@
 .actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.2rem;
+  gap: 1.35rem;
 }
 
 .primaryAction,
@@ -124,6 +136,7 @@
 
   .container {
     grid-template-columns: 1fr;
+    align-content: start;
   }
 
   .copyColumn {
@@ -141,11 +154,13 @@
 
 @media (max-width: 720px) {
   .hero {
-    padding-block: clamp(3.75rem, 10vh, 5.5rem);
+    padding-block: clamp(3.15rem, 8vh, 5rem) clamp(4.4rem, 12vh, 6.4rem);
   }
 
   .copyColumn {
-    gap: 1.15rem;
+    gap: 1.45rem;
+    align-content: start;
+    padding-top: clamp(1.2rem, 4vh, 2rem);
   }
 
   .tagline {
@@ -167,7 +182,6 @@
   }
 
   .visualField {
-    min-height: 12rem;
-    border-radius: 2rem;
+    min-height: 9rem;
   }
 }

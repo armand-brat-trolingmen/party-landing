@@ -33,9 +33,9 @@ export function ReviewsSection() {
   }
 
   return (
-    <section id="moments" className="site-section" data-testid="section-moments" aria-labelledby="moments-title">
+    <section id="moments" className="site-section" data-testid="section-moments" data-section-tone="milk" aria-labelledby="moments-title">
       <div ref={ref} className="site-container site-reveal" data-reveal-state={revealState} data-reveal-stagger="true">
-        <div className={styles.sectionBody} data-section-surface="canvas" data-section-tone="milk">
+        <div className={styles.sectionBody}>
           <SectionHeading
             title={<span id="moments-title">{homePageContent.moments.title}</span>}
             description={homePageContent.moments.description}
@@ -57,7 +57,7 @@ export function ReviewsSection() {
                 disabled={activeSlide === 0}
                 onClick={showPreviousSlide}
               >
-                <span aria-hidden="true">←</span>
+                <span aria-hidden="true">{'\u2190'}</span>
               </button>
 
               <article
@@ -101,7 +101,7 @@ export function ReviewsSection() {
                 disabled={activeSlide === moments.length - 1}
                 onClick={showNextSlide}
               >
-                <span aria-hidden="true">→</span>
+                <span aria-hidden="true">{'\u2192'}</span>
               </button>
             </div>
           </div>

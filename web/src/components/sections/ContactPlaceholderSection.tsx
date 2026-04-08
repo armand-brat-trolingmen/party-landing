@@ -1,4 +1,5 @@
-import { contactActionsGuided, contactGuidedCopy, contactPromptItems } from '../../data/siteContent';
+import { footerContent } from '../../data/footerContent';
+import { contactActionsGuided, contactGuidedCopy } from '../../data/siteContent';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { SectionHeading } from '../ui/SectionHeading';
 import styles from './ContactPlaceholderSection.module.css';
@@ -38,58 +39,92 @@ function ContactServiceIcon({ kind }: { kind: ContactIconKind }) {
   );
 }
 
+function PhoneIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" data-testid="contact-icon-phone">
+      <path
+        d="M7.1 4.6c.4-.4 1-.6 1.5-.4l2 .7c.6.2.9.8.8 1.3l-.4 2a1.4 1.4 0 0 1-1 .9l-1 .2a12 12 0 0 0 5.8 5.8l.2-1a1.4 1.4 0 0 1 .9-1l2-.4c.6-.1 1.1.2 1.3.8l.7 2c.2.5 0 1.1-.4 1.5l-1.3 1.3c-.8.8-2 1.1-3.1.7a18.8 18.8 0 0 1-9.7-9.7c-.4-1.1-.1-2.3.7-3.1l1.3-1.3Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+function EmailIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" data-testid="contact-icon-email">
+      <path
+        d="M5.3 6.5h13.4c.9 0 1.6.7 1.6 1.6v7.8c0 .9-.7 1.6-1.6 1.6H5.3c-.9 0-1.6-.7-1.6-1.6V8.1c0-.9.7-1.6 1.6-1.6Zm.8 1.8 5.9 4.4 5.9-4.4H6.1Zm12.1 7.4V9.5l-5.3 4a1.5 1.5 0 0 1-1.8 0l-5.3-4v6.2h12.4Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
 export function ContactPlaceholderSection() {
   const { ref, revealState } = useScrollReveal();
 
   return (
-    <section id="contact" className="site-section" data-testid="section-contact" aria-labelledby="contact-title">
+    <section
+      id="contact"
+      className="site-section"
+      data-testid="section-contact"
+      data-section-tone="sky"
+      aria-labelledby="contact-title"
+    >
       <div ref={ref} className="site-container site-reveal" data-reveal-state={revealState} data-reveal-stagger="true">
-        <div className={styles.sectionBody} data-section-surface="canvas" data-section-tone="sky">
+        <div className={styles.sectionBody}>
           <SectionHeading title={<span id="contact-title">Контакты</span>} description={contactGuidedCopy.description} />
 
-          <div className={`${styles.layout} reveal-grid`} data-testid="contact-layout" data-contact-layout="guided">
-            <aside className={styles.guide} data-testid="contact-guide" data-contact-guide="first-message">
-              <div className={styles.guideGlow} aria-hidden="true" />
-              <div className={styles.guideHeader}>
-                <h3 className={styles.guideTitle}>{contactGuidedCopy.guideTitle}</h3>
-                <p className={styles.guideDescription}>{contactGuidedCopy.guideDescription}</p>
-              </div>
-
-              <ul className={styles.promptList}>
-                {contactPromptItems.map((item) => (
-                  <li key={item} className={styles.promptItem}>
-                    <span className={styles.promptDot} aria-hidden="true" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <div className={styles.exampleCard}>
-                <span className={styles.exampleLabel}>Пример первого сообщения</span>
-                <p className={styles.exampleText}>{contactGuidedCopy.exampleMessage}</p>
-              </div>
-            </aside>
-
-            <div className={styles.actions} data-testid="contact-actions">
-              {contactActionsGuided.map((action) => (
-                <a
-                  key={action.id}
-                  className={styles.action}
-                  href={action.href}
-                  aria-label={action.label}
-                  target={action.id === 'avito' ? '_blank' : undefined}
-                  rel={action.id === 'avito' ? 'noreferrer' : undefined}
-                >
-                  <span className={styles.actionHead}>
-                    <span className={styles.iconBadge}>
-                      <ContactServiceIcon kind={action.icon} />
-                    </span>
-                    <span className={styles.actionLabel}>{action.label}</span>
+          <div className={`${styles.layout} reveal-grid`} data-testid="contact-layout" data-contact-layout="split-canvas">
+            <div className={styles.copy}>
+              <div className={styles.details}>
+                <a className={styles.contactItem} href={footerContent.phoneHref} aria-label={footerContent.phoneLabel}>
+                  <span className={styles.contactBadge}>
+                    <PhoneIcon />
                   </span>
-                  <span className={styles.actionCaption}>{action.caption}</span>
+                  <span className={styles.contactTextWrap}>
+                    <span className={styles.contactLabel}>Телефон</span>
+                    <span className={styles.contactLink}>{footerContent.phoneLabel}</span>
+                  </span>
                 </a>
-              ))}
+
+                <a className={styles.contactItem} href={footerContent.emailHref} aria-label={footerContent.emailLabel}>
+                  <span className={styles.contactBadge}>
+                    <EmailIcon />
+                  </span>
+                  <span className={styles.contactTextWrap}>
+                    <span className={styles.contactLabel}>Почта</span>
+                    <span className={styles.contactLink}>{footerContent.emailLabel}</span>
+                  </span>
+                </a>
+              </div>
+
+              <div className={styles.socialBlock}>
+                <h3 className={styles.socialTitle}>Социальные сети и мессенджеры</h3>
+                <div className={styles.socialList}>
+                  {contactActionsGuided.map((action) => (
+                    <a
+                      key={action.id}
+                      className={styles.socialLink}
+                      href={action.href}
+                      aria-label={action.label}
+                      target={action.id === 'avito' ? '_blank' : undefined}
+                      rel={action.id === 'avito' ? 'noreferrer' : undefined}
+                    >
+                      <ContactServiceIcon kind={action.icon} />
+                    </a>
+                  ))}
+                </div>
+              </div>
             </div>
+
+            <div
+              className={styles.visualSlot}
+              data-testid="contact-visual-slot"
+              data-contact-visual="placeholder"
+              aria-hidden="true"
+            />
           </div>
         </div>
       </div>
