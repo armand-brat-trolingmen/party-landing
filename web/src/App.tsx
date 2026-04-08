@@ -1,28 +1,27 @@
-import { SpeedInsights } from '@vercel/speed-insights/react';
-import { SiteFooter } from './components/layout/SiteFooter';
-import { SiteHeader } from './components/layout/SiteHeader';
+import { SiteShell } from './components/layout/SiteShell';
 import { AboutSection } from './components/sections/AboutSection';
 import { ContactPlaceholderSection } from './components/sections/ContactPlaceholderSection';
+import { CtaSection } from './components/sections/CtaSection';
+import { ExtrasSection } from './components/sections/ExtrasSection';
 import { FaqSection } from './components/sections/FaqSection';
 import { HeroSection } from './components/sections/HeroSection';
 import { ReviewsSection } from './components/sections/ReviewsSection';
 import { ServicesSection } from './components/sections/ServicesSection';
+import { TestimonialsSection } from './components/sections/TestimonialsSection';
 import './styles/global.css';
 
 export default function App() {
   return (
-    <>
-      <SiteHeader />
-      <main className="site-shell" data-motion-path="story-trail">
-        <HeroSection />
-        <AboutSection />
-        <ServicesSection />
-        <ReviewsSection />
-        <FaqSection />
-        <ContactPlaceholderSection />
-      </main>
-      <SiteFooter />
-      <SpeedInsights />
-    </>
+    <SiteShell motionPath="canvas-flow">
+      <HeroSection />
+      <AboutSection />
+      <ServicesSection />
+      <ExtrasSection />
+      <CtaSection />
+      <ReviewsSection />
+      <TestimonialsSection />
+      <FaqSection />
+      <ContactPlaceholderSection />
+    </SiteShell>
   );
 }

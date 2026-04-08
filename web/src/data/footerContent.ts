@@ -19,12 +19,12 @@ export type LegalDocument = {
 };
 
 export const footerContent = {
-  brand: 'Party Everyday',
+  brand: 'Праздник каждый день',
   descriptor: 'Кейтеринг и сладкие зоны для событий в Москве и области',
-  phoneLabel: '+7 (999) 999-99-99',
-  phoneHref: 'tel:+79999999999',
-  emailLabel: 'contact@party-everyday.ru',
-  emailHref: 'mailto:contact@party-everyday.ru',
+  phoneLabel: '+79263919225',
+  phoneHref: 'tel:+79263919225',
+  emailLabel: 'Glad_2015@bk.ru',
+  emailHref: 'mailto:Glad_2015@bk.ru',
   businessName: 'ИП Гладышев Александр Андреевич',
   inn: 'ИНН 501806886358',
   ogrnip: 'ОГРНИП 319508100076437',
@@ -33,12 +33,12 @@ export const footerContent = {
     {
       id: 'telegram',
       label: 'Telegram',
-      href: '#telegram',
+      href: 'https://t.me/+79263919225',
     },
     {
       id: 'whatsapp',
       label: 'WhatsApp',
-      href: '#whatsapp',
+      href: 'https://wa.me/79263919225',
     },
     {
       id: 'avito',
@@ -66,20 +66,20 @@ export const legalDocuments = {
   privacy: {
     path: '/privacy',
     title: 'Политика конфиденциальности',
-    seoTitle: 'Политика конфиденциальности для клиентов Party Everyday',
-    description: 'Страница политики конфиденциальности Party Everyday. Здесь будет размещён актуальный документ проекта.',
+    seoTitle: 'Политика конфиденциальности для клиентов Праздник каждый день',
+    description: 'Страница политики конфиденциальности Праздник каждый день. Здесь будет размещён актуальный документ проекта.',
   },
   terms: {
     path: '/terms',
     title: 'Пользовательское соглашение',
-    seoTitle: 'Пользовательское соглашение для сайта Party Everyday',
-    description: 'Страница пользовательского соглашения Party Everyday. Здесь будет размещён актуальный документ проекта.',
+    seoTitle: 'Пользовательское соглашение для сайта Праздник каждый день',
+    description: 'Страница пользовательского соглашения Праздник каждый день. Здесь будет размещён актуальный документ проекта.',
   },
   consent: {
     path: '/consent',
     title: 'Согласие на обработку персональных данных',
-    seoTitle: 'Согласие на обработку персональных данных | Party Everyday',
+    seoTitle: 'Согласие на обработку персональных данных | Праздник каждый день',
     description:
-      'Страница согласия на обработку персональных данных Party Everyday. Здесь будет размещён актуальный документ проекта.',
+      'Страница согласия на обработку персональных данных Праздник каждый день. Здесь будет размещён актуальный документ проекта.',
   },
 } as const satisfies Record<'privacy' | 'terms' | 'consent', LegalDocument>;

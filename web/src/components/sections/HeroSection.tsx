@@ -1,67 +1,29 @@
-import { useEffect, useRef } from 'react';
-import { siteContent } from '../../data/siteContent';
+import { homePageContent } from '../../data/catalogContent';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
-import { HeroScene } from '../scene/HeroScene';
+import { useOrderModal } from '../cta/useOrderModal';
 import styles from './HeroSection.module.css';
 
 export function HeroSection() {
   const { ref, revealState } = useScrollReveal({ rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
-  const sectionRef = useRef<HTMLElement | null>(null);
+  const { openModal } = useOrderModal();
+  const heroTitleLines = ['Фуд-станции', 'на ваше', 'мероприятие'] as const;
 
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section || typeof window === 'undefined') {
+  const scrollToServices = () => {
+    if (typeof window === 'undefined') {
       return;
     }
 
-    const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
-    let rafId = 0;
-
-    const sync = () => {
-      const rect = section.getBoundingClientRect();
-      const viewportHeight = window.innerHeight || 1;
-      const progress = ((viewportHeight * 0.58 - rect.top) / (viewportHeight + rect.height) - 0.18) * 2.1;
-      const clamped = Math.max(-1, Math.min(1, progress));
-      section.style.setProperty('--hero-story-progress', clamped.toFixed(3));
-      rafId = 0;
-    };
-
-    const scheduleSync = () => {
-      if (rafId) {
-        return;
-      }
-
-      rafId = window.requestAnimationFrame(sync);
-    };
-
-    if (prefersReducedMotion) {
-      section.style.setProperty('--hero-story-progress', '0');
+    const target = document.getElementById('services');
+    if (!target) {
       return;
     }
 
-    sync();
-    window.addEventListener('scroll', scheduleSync, { passive: true });
-    window.addEventListener('resize', scheduleSync);
-
-    return () => {
-      if (rafId) {
-        window.cancelAnimationFrame(rafId);
-      }
-
-      window.removeEventListener('scroll', scheduleSync);
-      window.removeEventListener('resize', scheduleSync);
-    };
-  }, []);
+    const behavior = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+    target.scrollIntoView({ behavior, block: 'start' });
+  };
 
   return (
-    <section
-      id="hero"
-      ref={sectionRef}
-      className={styles.hero}
-      data-testid="section-hero"
-      data-hero-style="poster"
-      aria-label="Главный экран"
-    >
+    <section id="hero" className={styles.hero} data-testid="section-hero" data-hero-style="clean-canvas" aria-label="Главный экран">
       <div
         ref={ref}
         className={`site-container ${styles.container} site-reveal`}
@@ -69,14 +31,27 @@ export function HeroSection() {
         data-reveal-stagger="true"
       >
         <div className={styles.copyColumn}>
-          <p className={styles.brandMark}>{siteContent.brand}</p>
-          <span className={styles.accentLine} aria-hidden="true" />
-          <h1 className={styles.tagline}>{siteContent.tagline}</h1>
-          <p className={styles.description}>{siteContent.heroDescription}</p>
+          <h1 className={styles.tagline} aria-label={homePageContent.hero.title}>
+            {heroTitleLines.map((line, index) => (
+              <span key={line} className={styles.taglineLine} data-testid={`hero-title-line-${index + 1}`}>
+                {line}
+              </span>
+            ))}
+          </h1>
+
+          <div className={styles.actions}>
+            <button type="button" className={styles.primaryAction} onClick={openModal}>
+              {homePageContent.hero.primaryActionLabel}
+            </button>
+            <button type="button" className={styles.secondaryAction} onClick={scrollToServices}>
+              {homePageContent.hero.secondaryActionLabel}
+            </button>
+          </div>
         </div>
 
-        <div className={styles.sceneColumn}>
-          <HeroScene />
+        <div className={styles.visualField} aria-hidden="true">
+          <div className={styles.visualGlow} />
+          <div className={styles.visualGlowSecondary} />
         </div>
       </div>
     </section>

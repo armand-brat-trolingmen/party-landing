@@ -1,18 +1,18 @@
 import { useState } from 'react';
-import { avitoProfileUrl, momentFeedItems, momentFeedSectionCopy } from '../../data/siteContent';
+import { homePageContent, moments } from '../../data/catalogContent';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { SectionHeading } from '../ui/SectionHeading';
 import styles from './ReviewsSection.module.css';
 
 function clampSlide(index: number) {
-  return Math.max(0, Math.min(momentFeedItems.length - 1, index));
+  return Math.max(0, Math.min(moments.length - 1, index));
 }
 
 export function ReviewsSection() {
   const { ref, revealState } = useScrollReveal();
   const [activeSlide, setActiveSlide] = useState(0);
   const [slideDirection, setSlideDirection] = useState<'next' | 'prev'>('next');
-  const activeItem = momentFeedItems[activeSlide];
+  const activeItem = moments[activeSlide];
 
   function showPreviousSlide() {
     if (activeSlide === 0) {
@@ -24,7 +24,7 @@ export function ReviewsSection() {
   }
 
   function showNextSlide() {
-    if (activeSlide === momentFeedItems.length - 1) {
+    if (activeSlide === moments.length - 1) {
       return;
     }
 
@@ -33,18 +33,12 @@ export function ReviewsSection() {
   }
 
   return (
-    <section id="reviews" className="site-section" data-testid="section-reviews" aria-labelledby="reviews-title">
-      <div
-        ref={ref}
-        className="site-container site-reveal"
-        data-reveal-state={revealState}
-        data-reveal-stagger="true"
-      >
-        <article className={`${styles.frame} site-panel-glow`}>
+    <section id="moments" className="site-section" data-testid="section-moments" aria-labelledby="moments-title">
+      <div ref={ref} className="site-container site-reveal" data-reveal-state={revealState} data-reveal-stagger="true">
+        <div className={styles.sectionBody} data-section-surface="canvas" data-section-tone="milk">
           <SectionHeading
-            eyebrow={momentFeedSectionCopy.eyebrow}
-            title={<span id="reviews-title">Лента моментов</span>}
-            description={momentFeedSectionCopy.description}
+            title={<span id="moments-title">{homePageContent.moments.title}</span>}
+            description={homePageContent.moments.description}
           />
 
           <div className={`${styles.sliderShell} reveal-grid`}>
@@ -76,7 +70,9 @@ export function ReviewsSection() {
               >
                 <div className={styles.slideMedia}>
                   <picture className={styles.slidePicture}>
-                    <source type="image/webp" srcSet={activeItem.imageWebpSrcSet} sizes={activeItem.sizes} />
+                    {activeItem.imageWebpSrcSet ? (
+                      <source type="image/webp" srcSet={activeItem.imageWebpSrcSet} sizes={activeItem.sizes} />
+                    ) : null}
                     <img
                       src={activeItem.image}
                       alt={activeItem.alt}
@@ -102,31 +98,14 @@ export function ReviewsSection() {
                 type="button"
                 className={`${styles.controlButton} ${styles.controlButtonNext}`}
                 aria-label="Следующий момент"
-                disabled={activeSlide === momentFeedItems.length - 1}
+                disabled={activeSlide === moments.length - 1}
                 onClick={showNextSlide}
               >
                 <span aria-hidden="true">→</span>
               </button>
             </div>
-
-            <div className={styles.avitoProof}>
-              <div className={styles.avitoMark} aria-hidden="true">
-                <span className={styles.avitoDotBlue} />
-                <span className={styles.avitoDotGreen} />
-                <span className={styles.avitoDotRed} />
-                <span className={styles.avitoDotBlack} />
-                <span className={styles.avitoText}>avito</span>
-              </div>
-              <div className={styles.avitoCopy}>
-                <p className={styles.avitoTitle}>Нужен внешний proof?</p>
-                <p className={styles.avitoDescription}>Часть живых отзывов и профиль можно посмотреть на Avito.</p>
-              </div>
-              <a className={styles.avitoLink} href={avitoProfileUrl} target="_blank" rel="noreferrer">
-                Отзывы можно прочитать тут!
-              </a>
-            </div>
           </div>
-        </article>
+        </div>
       </div>
     </section>
   );

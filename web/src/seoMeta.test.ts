@@ -8,6 +8,8 @@ test('index html defines production-friendly SEO tags for the landing page', () 
   expect(html).toContain('name="viewport"');
   expect(html).toContain('name="yandex-verification"');
   expect(html).toContain('content="07b2ceb2a2824f8f"');
+  expect(html).toContain('rel="icon" type="image/png" href="/favicon.png?v=4"');
+  expect(html).toContain('rel="shortcut icon" href="/favicon.png?v=4"');
   expect(html).toContain('<!--helmet-title-->');
   expect(html).toContain('<!--helmet-meta-->');
   expect(html).toContain('<!--helmet-link-->');

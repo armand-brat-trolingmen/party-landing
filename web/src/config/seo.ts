@@ -4,15 +4,20 @@
   SITE_NAME as ROOT_SITE_NAME,
   SITE_URL as ROOT_SITE_URL,
 } from '../../site.config.js';
-import { services, siteContent } from '../data/siteContent';
+import { homePageContent, services, type OfferingEntity } from '../data/catalogContent';
 
 export const SITE_URL = ROOT_SITE_URL;
 export const SITE_NAME = ROOT_SITE_NAME;
 export const DEFAULT_LOCALE = ROOT_DEFAULT_LOCALE;
 export const DEFAULT_OG_IMAGE = OG_IMAGE_URL;
 export const BUSINESS_DESCRIPTION =
-  'Party Everyday — кейтеринг и сладкие зоны для частных, детских и корпоративных событий в Москве и Московской области. Фудтраки, сладкая вата и шоколадный фонтан для мероприятий, где важны вкус, подача и атмосфера.';
-export const LOGO_URL = toAbsoluteUrl('/favicon.svg');
+  'Праздник каждый день — кейтеринг и сладкие станции для частных, детских и корпоративных событий в Москве и Московской области.';
+export const LOGO_URL = toAbsoluteUrl('/brand-logo.png');
+
+export type FaqStructuredItem = {
+  question: string;
+  answer: string;
+};
 
 export function normalizeSeoPath(pathname = '/') {
   const path = pathname.trim();
@@ -33,17 +38,12 @@ export function toAbsoluteUrl(pathOrUrl = '/') {
   return normalizedPath === '/' ? `${SITE_URL}/` : `${SITE_URL}${normalizedPath}`;
 }
 
-export type FaqStructuredItem = {
-  question: string;
-  answer: string;
-};
-
 export function getHomeStructuredData() {
   const homeUrl = toAbsoluteUrl('/');
   const organizationId = `${homeUrl}#organization`;
   const websiteId = `${homeUrl}#website`;
   const serviceId = `${homeUrl}#service`;
-  const visibleFormats = services.map((service) => service.name).join(', ');
+  const visibleFormats = services.slice(0, 6).map((service) => service.name).join(', ');
 
   return [
     {
@@ -68,9 +68,9 @@ export function getHomeStructuredData() {
     {
       '@type': 'Service',
       '@id': serviceId,
-      name: 'Кейтеринг и праздничные зоны Party Everyday',
-      serviceType: 'Кейтеринг для праздников и событий',
-      description: `${siteContent.heroDescription} На сайте представлены форматы: ${visibleFormats}.`,
+      name: 'Каталог сладких станций и кейтеринга Праздник каждый день',
+      serviceType: 'Кейтеринг для праздников и мероприятий',
+      description: `${homePageContent.hero.description} На сайте представлены форматы: ${visibleFormats}.`,
       provider: {
         '@id': organizationId,
       },
@@ -82,6 +82,34 @@ export function getHomeStructuredData() {
       url: `${homeUrl}#services`,
     },
   ];
+}
+
+export function getOfferingStructuredData(offering: OfferingEntity) {
+  const homeUrl = toAbsoluteUrl('/');
+  const organizationId = `${homeUrl}#organization`;
+  const pageUrl = toAbsoluteUrl(offering.kind === 'service' ? `/services/${offering.slug}` : `/extras/${offering.slug}`);
+
+  return {
+    '@type': 'Service',
+    '@id': `${pageUrl}#service`,
+    name: offering.name,
+    serviceType: offering.kind === 'service' ? 'Основная услуга Праздник каждый день' : 'Дополнительная услуга Праздник каждый день',
+    description: offering.fullDescription,
+    provider: {
+      '@id': organizationId,
+    },
+    areaServed: ['Москва', 'Московская область'],
+    offers: {
+      '@type': 'Offer',
+      url: pageUrl,
+      priceSpecification: {
+        '@type': 'PriceSpecification',
+        priceCurrency: 'RUB',
+        valueAddedTaxIncluded: false,
+        description: offering.priceFrom,
+      },
+    },
+  };
 }
 
 export function getFaqStructuredData(items: readonly FaqStructuredItem[]) {
@@ -101,3 +129,4 @@ export function getFaqStructuredData(items: readonly FaqStructuredItem[]) {
     })),
   };
 }
+

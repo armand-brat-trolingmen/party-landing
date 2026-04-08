@@ -3,10 +3,10 @@
 test('server entry renders landing HTML and exposes helmet head tags for SSG', () => {
   const result = render('/');
 
-  expect(result.appHtml).toContain('Party Everyday');
+  expect(result.appHtml).toContain('Праздник каждый день');
   expect(result.appHtml).toContain('data-testid="section-hero"');
   expect(result.helmet.title).toContain('<title');
-  expect(result.helmet.title).toContain('Party Everyday');
+  expect(result.helmet.title).toContain('Праздник каждый день');
   expect(result.helmet.meta).toContain('name="description"');
   expect(result.helmet.meta).toContain('property="og:title"');
   expect(result.helmet.meta).toContain('name="twitter:card"');
@@ -16,3 +16,4 @@ test('server entry renders landing HTML and exposes helmet head tags for SSG', (
   expect(result.helmet.script).toContain('"@type":"WebSite"');
   expect(result.helmet.script).toContain('"@type":"Service"');
 });
+

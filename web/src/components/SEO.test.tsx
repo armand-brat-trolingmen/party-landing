@@ -9,7 +9,7 @@ test('SEO writes title and key meta tags in client mode', async () => {
     <HelmetProvider>
       <MemoryRouter initialEntries={['/']}>
         <SEO
-          title="Party Everyday — фудтраки и сладкая вата для праздников"
+          title="Праздник каждый день — фудтраки и сладкая вата для праздников"
           description="Кейтеринг для праздников в Москве и области."
         />
       </MemoryRouter>
@@ -17,7 +17,7 @@ test('SEO writes title and key meta tags in client mode', async () => {
   );
 
   await waitFor(() => {
-    expect(document.title).toBe('Party Everyday — фудтраки и сладкая вата для праздников');
+    expect(document.title).toBe('Праздник каждый день — фудтраки и сладкая вата для праздников');
   });
 
   expect(document.head.querySelector('meta[name="description"]')?.getAttribute('content')).toBe(
@@ -31,3 +31,4 @@ test('SEO writes title and key meta tags in client mode', async () => {
     'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
   );
 });
+

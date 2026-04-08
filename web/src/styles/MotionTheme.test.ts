@@ -1,74 +1,74 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-test('global motion theme defines drifting glow lights for section frames', () => {
-  const css = readFileSync(resolve(process.cwd(), 'src/styles/global.css'), 'utf8');
+function readCss(path: string) {
+  return readFileSync(resolve(process.cwd(), path), 'utf8').replace(/\r\n/g, '\n');
+}
 
-  expect(css).toContain('@keyframes sectionGlowDrift');
-  expect(css).toContain('@keyframes sectionLightTrailDrift');
-  expect(css).toContain('--section-glow-duration: 18s;');
-  expect(css).toContain('animation: sectionGlowDrift var(--section-glow-duration) ease-in-out infinite alternate;');
-  expect(css).toContain('.site-shell::before');
+test('global shell defines frameless heading rhythm and section tone hooks', () => {
+  const globalCss = readCss('src/styles/global.css');
+  const tokensCss = readCss('src/styles/tokens.css');
+
+  expect(globalCss).toContain('.site-shell::before');
+  expect(globalCss).toContain("[data-section-surface='canvas']");
+  expect(globalCss).toContain("[data-heading-align='center']");
+  expect(globalCss).toContain("[data-section-tone='rose']");
+  expect(globalCss).not.toContain('.site-section__eyebrow');
+  expect(globalCss).not.toContain('.site-section__content');
+  expect(globalCss).not.toContain('story-trail');
+  expect(tokensCss).toContain('--tone-rose:');
+  expect(tokensCss).toContain('--tone-lemon:');
+  expect(tokensCss).toContain('--tone-sky:');
+  expect(tokensCss).toContain('--tone-apricot:');
 });
 
-test('hero scene styles define layered float and parallax hooks', () => {
-  const css = readFileSync(resolve(process.cwd(), 'src/components/scene/HeroScene.module.css'), 'utf8');
+test('hero styles keep the clean visual field and large CTA rhythm', () => {
+  const css = readCss('src/components/sections/HeroSection.module.css');
 
-  expect(css).toContain('@keyframes heroSceneFloat');
-  expect(css).toContain('transform: translate3d(var(--hero-parallax-x, 0px), var(--hero-parallax-y, 0px), 0)');
-  expect(css).toContain('animation: heroSceneFloat 7.4s ease-in-out infinite alternate;');
+  expect(css).toContain('.visualField');
+  expect(css).toContain('.visualGlow');
+  expect(css).toContain('min-width: 17rem;');
+  expect(css).toContain('min-height: 4.8rem;');
+  expect(css).toContain('rgba(255, 236, 186');
+  expect(css).not.toContain('rgba(110, 191, 255');
 });
 
-test('moment feed defines premium hover motion for photos and slide content', () => {
-  const css = readFileSync(resolve(process.cwd(), 'src/components/sections/ReviewsSection.module.css'), 'utf8');
+test('services styles preserve card interactions but drop the outer frame rule', () => {
+  const css = readCss('src/components/sections/ServicesSection.module.css');
 
-  expect(css).toContain('.slide:hover');
-  expect(css).toContain('translate3d(0, -4px, 0)');
-  expect(css).toContain('.slide:hover .slideImage');
-  expect(css).toContain("data-slide-transition='soft-swap'");
-  expect(css).toContain('@keyframes slideSwapInNext');
+  expect(css).toContain('.sectionBody {');
+  expect(css).toContain('.card {');
+  expect(css).toContain('.revealButton {');
+  expect(css).toContain('transform: translate3d(0, -8px, 0);');
+  expect(css).not.toContain('.frame {');
 });
 
-test('mobile motion stays rich with slower ambient movement and tactile review feedback', () => {
-  const globalCss = readFileSync(resolve(process.cwd(), 'src/styles/global.css'), 'utf8');
-  const heroCss = readFileSync(resolve(process.cwd(), 'src/components/scene/HeroScene.module.css'), 'utf8');
-  const servicesCss = readFileSync(resolve(process.cwd(), 'src/components/sections/ServicesSection.module.css'), 'utf8');
-  const reviewsCss = readFileSync(resolve(process.cwd(), 'src/components/sections/ReviewsSection.module.css'), 'utf8');
+test('reviews faq and contact styles rely on internal structure without outer frame classes', () => {
+  const reviewsCss = readCss('src/components/sections/ReviewsSection.module.css');
+  const faqCss = readCss('src/components/sections/FaqSection.module.css');
+  const contactCss = readCss('src/components/sections/ContactPlaceholderSection.module.css');
 
-  expect(globalCss).toContain('--section-glow-duration: 24s;');
-  expect(globalCss).toContain('filter: blur(18px);');
-  expect(globalCss).toContain('@media (max-width: 720px) and (prefers-reduced-motion: no-preference)');
-  expect(globalCss).toContain('animation: sectionLightTrailDrift 34s ease-in-out infinite alternate;');
-  expect(globalCss).toContain('animation: sectionGlowDrift var(--section-glow-duration) ease-in-out infinite alternate;');
-  expect(heroCss).toContain('--hero-float-shift-start: -3px;');
-  expect(heroCss).toContain('--hero-float-shift-end: 4px;');
-  expect(heroCss).toContain('@media (max-width: 720px)');
-  expect(heroCss).toContain('.item {\n    animation-duration: 13.4s;');
-  expect(heroCss).toContain('.frame::before {\n    filter: blur(8px);');
-  expect(servicesCss).toContain(".card[data-service-id='food-trucks'] .imageWrap::before,");
-  expect(servicesCss).toContain('animation: serviceShineSweep 10.5s linear infinite;');
-  expect(servicesCss).toContain('animation: fountainHaloPulse 10.4s ease-in-out infinite;');
-  expect(reviewsCss).toContain('@media (max-width: 720px)');
-  expect(reviewsCss).toContain('.controlButton:active');
-});
-
-test('header styles define a compact scroll state, floating nav indicator, and logo motion', () => {
-  const css = readFileSync(resolve(process.cwd(), 'src/components/layout/SiteHeader.module.css'), 'utf8');
-
-  expect(css).toContain(".header[data-header-state='compact']");
-  expect(css).toContain('.navIndicator');
-  expect(css).toContain('@keyframes logoGentleFloat');
-  expect(css).toContain('.mobileNavLink[data-active=\'true\']');
-});
-
-test('faq and services define cinematic accordion glow and micro scene animations', () => {
-  const faqCss = readFileSync(resolve(process.cwd(), 'src/components/sections/FaqSection.module.css'), 'utf8');
-  const servicesCss = readFileSync(resolve(process.cwd(), 'src/components/sections/ServicesSection.module.css'), 'utf8');
-
+  expect(reviewsCss).toContain('.sectionBody {');
+  expect(reviewsCss).toContain('@keyframes slideSwapInNext');
+  expect(reviewsCss).not.toContain('.frame {');
+  expect(faqCss).toContain('.sectionBody {');
   expect(faqCss).toContain('.item::before');
-  expect(faqCss).toContain(".item[data-open='true']");
-  expect(faqCss).toContain('.answerText::before');
-  expect(servicesCss).toContain('@keyframes serviceShineSweep');
-  expect(servicesCss).toContain('@keyframes cottonCandyDrift');
-  expect(servicesCss).toContain('@keyframes fountainHaloPulse');
+  expect(faqCss).not.toContain('.frame {');
+  expect(contactCss).toContain('.sectionBody {');
+  expect(contactCss).toContain('.action {');
+  expect(contactCss).not.toContain('.frame {');
+});
+
+test('cta stays a band while the header remains transparent at rest', () => {
+  const ctaCss = readCss('src/components/sections/CtaSection.module.css');
+  const headerCss = readCss('src/components/layout/SiteHeader.module.css');
+  const footerCss = readCss('src/components/layout/SiteFooter.module.css');
+
+  expect(ctaCss).toContain('.section {');
+  expect(ctaCss).toContain('width: 100%;');
+  expect(ctaCss).toContain('#f2a14b');
+  expect(ctaCss).toContain('font-weight: 800;');
+  expect(headerCss).toContain(".header[data-header-route='home'][data-header-state='rest']");
+  expect(headerCss).toContain('.headerCtaArrow');
+  expect(footerCss).toContain('width: 3.1rem;');
 });

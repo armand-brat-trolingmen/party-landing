@@ -9,12 +9,12 @@ test('StructuredData writes valid JSON-LD into the document head', async () => {
         data={[
           {
             '@type': 'Organization',
-            name: 'Party Everyday',
+            name: 'Праздник каждый день',
             url: 'https://partylanding.vercel.app/',
           },
           {
             '@type': 'WebSite',
-            name: 'Party Everyday',
+            name: 'Праздник каждый день',
             url: 'https://partylanding.vercel.app/',
           },
         ]}
@@ -40,3 +40,4 @@ test('StructuredData writes valid JSON-LD into the document head', async () => {
     ]),
   );
 });
+

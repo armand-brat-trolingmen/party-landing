@@ -31,3 +31,22 @@ test('renders dedicated consent page route', () => {
 
   expect(screen.getByRole('heading', { level: 1, name: 'Согласие на обработку персональных данных' })).toBeInTheDocument();
 });
+
+test('renders service and extra internal pages', () => {
+  const { unmount } = render(
+    <MemoryRouter initialEntries={['/services/food-trucks']}>
+      <AppRoutes />
+    </MemoryRouter>,
+  );
+
+  expect(screen.getByRole('heading', { level: 1, name: 'Фудтраки' })).toBeInTheDocument();
+  unmount();
+
+  render(
+    <MemoryRouter initialEntries={['/extras/branded-serving']}>
+      <AppRoutes />
+    </MemoryRouter>,
+  );
+
+  expect(screen.getByRole('heading', { level: 1, name: 'Брендированная подача' })).toBeInTheDocument();
+});

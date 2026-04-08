@@ -96,12 +96,7 @@ export function HeroScene() {
   }, []);
 
   return (
-    <div
-      className={styles.scene}
-      aria-label="РЎС†РµРЅР° РіРµСЂРѕСЏ"
-      data-testid="hero-scene"
-      data-motion-scene="layered"
-    >
+    <div className={styles.scene} aria-label="Сцена героя" data-testid="hero-scene" data-motion-scene="layered">
       <div ref={frameRef} className={styles.frame} data-testid="hero-scene-frame" data-motion-frame="parallax">
         {heroSceneItems.map((item, index) => (
           <div

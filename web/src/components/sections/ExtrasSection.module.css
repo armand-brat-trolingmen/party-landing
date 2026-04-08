@@ -1,0 +1,76 @@
+.sectionBody {
+  display: grid;
+  gap: clamp(1.35rem, 3vw, 2.15rem);
+}
+
+.track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(16rem, 20rem);
+  gap: 1rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  padding-bottom: 0.45rem;
+  scrollbar-width: thin;
+}
+
+.card {
+  position: relative;
+  display: grid;
+  grid-template-rows: minmax(12rem, 13rem) auto auto auto;
+  gap: 0.8rem;
+  min-height: 100%;
+  padding: 0.95rem;
+  border-radius: 1.55rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 248, 240, 0.56)),
+    radial-gradient(circle at 16% 18%, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0) 42%);
+  box-shadow: 0 12px 24px rgba(158, 121, 89, 0.06);
+}
+
+.visualWrap {
+  overflow: hidden;
+  border-radius: 1.2rem;
+}
+
+.name {
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.description {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.price {
+  color: rgba(91, 62, 44, 0.82);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 28% 24%, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0) 42%),
+    linear-gradient(180deg, rgba(255, 252, 246, 0.94), rgba(255, 241, 229, 0.82));
+  border: 1px solid var(--line-soft);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.76),
+    0 8px 16px rgba(158, 121, 89, 0.05);
+  color: var(--accent-red);
+  font-size: 1rem;
+}

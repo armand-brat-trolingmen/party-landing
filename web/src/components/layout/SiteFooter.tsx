@@ -49,11 +49,10 @@ export function SiteFooter() {
       >
         <div className={styles.topRow}>
           <div className={styles.brandCluster}>
-            <a className={styles.brand} href="/" aria-label={footerContent.brand}>
+            <a className={styles.brand} href="/" aria-label={footerContent.brand} data-testid="footer-brand-link">
               <span className={styles.brandBadge} aria-hidden="true">
-                <DonutLogo size={34} />
+                <DonutLogo className={styles.logoMark} size={46} />
               </span>
-              <span className={styles.brandName}>{footerContent.brand}</span>
             </a>
             <p className={styles.brandDescriptor}>{footerContent.descriptor}</p>
           </div>

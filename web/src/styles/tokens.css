@@ -2,12 +2,26 @@
   /* Typography stays centralized here so swapping the font pair is easy to roll back. */
   --font-display: 'Lora', serif;
   --font-body: 'Nunito Sans', sans-serif;
-  --bg-page: #fffbe8;
-  --bg-surface: #fffdf5;
-  --accent-yellow: #f6dc6b;
-  --accent-red: #e45745;
-  --accent-pink: #f7a6c3;
+  --bg-page: #fff9f4;
+  --bg-surface: #fffdf9;
+  --accent-yellow: #ffd65b;
+  --accent-red: #ef4f43;
+  --accent-pink: #ff8ab7;
+  --accent-sky: #6fbfff;
   --accent-chocolate: #6b4a35;
+  --tone-rose: rgba(255, 196, 215, 0.42);
+  --tone-rose-soft: rgba(255, 223, 233, 0.28);
+  --tone-lemon: rgba(255, 231, 153, 0.44);
+  --tone-lemon-soft: rgba(255, 242, 204, 0.3);
+  --tone-sky: rgba(176, 220, 255, 0.4);
+  --tone-sky-soft: rgba(216, 239, 255, 0.28);
+  --tone-milk: rgba(255, 249, 239, 0.86);
+  --tone-blush: rgba(255, 210, 225, 0.34);
+  --tone-apricot: rgba(255, 186, 122, 0.42);
+  --line-soft: rgba(126, 100, 87, 0.09);
+  --line-soft-strong: rgba(126, 100, 87, 0.14);
+  --shadow-soft: 0 18px 48px rgba(122, 89, 63, 0.12);
+  --shadow-shell: 0 18px 38px rgba(122, 89, 63, 0.07);
   --text-primary: #3d2d25;
   --text-muted: #756257;
   --space-2: 0.5rem;
@@ -20,7 +34,6 @@
   --space-16: 4rem;
   --radius-pill: 999px;
   --radius-card: 32px;
-  --shadow-soft: 0 18px 48px rgba(122, 89, 63, 0.12);
   --shell-max-width: 1120px;
   --header-offset: 7.5rem;
 }

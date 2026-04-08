@@ -1,6 +1,5 @@
 import { footerContent, type LegalDocument } from '../../data/footerContent';
-import { DonutLogo } from '../branding/DonutLogo';
-import { SiteFooter } from '../layout/SiteFooter';
+import { SiteShell } from '../layout/SiteShell';
 import { SEO } from '../SEO';
 import styles from './LegalPageLayout.module.css';
 
@@ -12,24 +11,15 @@ export function LegalPageLayout({ document }: LegalPageLayoutProps) {
   return (
     <>
       <SEO title={document.seoTitle} description={document.description} canonical={document.path} />
-      <div className={styles.page}>
-        <main className={styles.main}>
-          <div className={styles.container}>
-            <div className={styles.topBar}>
-              <a className={styles.homeLink} href="/">
-                <span className={styles.logoWrap} aria-hidden="true">
-                  <DonutLogo size={30} />
-                </span>
-                <span>{footerContent.brand}</span>
-              </a>
-              <a className={styles.backLink} href="/">
-                На главную
-              </a>
-            </div>
-
+      <SiteShell motionPath="story-trail" legalMode>
+        <section className={`site-section ${styles.page}`} aria-labelledby="legal-page-title">
+          <div className="site-container">
             <article className={`${styles.card} site-panel-glow`}>
               <div className={styles.heading}>
-                <h1 className={styles.title}>{document.title}</h1>
+                <span className={styles.eyebrow}>{footerContent.brand}</span>
+                <h1 id="legal-page-title" className={styles.title}>
+                  {document.title}
+                </h1>
               </div>
 
               <div className={styles.sheet} data-testid="legal-document-sheet" aria-label={document.title}>
@@ -49,9 +39,8 @@ export function LegalPageLayout({ document }: LegalPageLayoutProps) {
               </div>
             </article>
           </div>
-        </main>
-        <SiteFooter />
-      </div>
+        </section>
+      </SiteShell>
     </>
   );
 }

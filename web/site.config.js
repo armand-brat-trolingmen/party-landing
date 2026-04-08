@@ -1,5 +1,5 @@
 ﻿const DEFAULT_SITE_URL = 'https://partylanding.vercel.app';
-const DEFAULT_SITE_NAME = 'Party Everyday';
+const DEFAULT_SITE_NAME = 'Праздник каждый день';
 const DEFAULT_LOCALE_VALUE = 'ru_RU';
 const DEFAULT_OG_IMAGE_PATH_VALUE = '/og-image.png';
 
@@ -21,3 +21,4 @@ export const OG_IMAGE_URL = /^https?:\/\//i.test(OG_IMAGE_PATH)
 export function withSiteUrl(template, siteUrl = SITE_URL) {
   return template.replaceAll(SITE_URL_PLACEHOLDER, normalizeSiteUrl(siteUrl));
 }
+
