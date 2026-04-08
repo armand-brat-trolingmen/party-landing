@@ -111,7 +111,14 @@ export function HeroScene() {
             data-motion-depth={motionDepths[index]}
           >
             <div className={styles.itemMedia}>
-              <img className={styles.vector} src={item.image} alt={item.label} />
+              <img
+                className={styles.vector}
+                src={item.image}
+                alt={item.label}
+                width={item.width}
+                height={item.height}
+                decoding="async"
+              />
             </div>
           </div>
         ))}

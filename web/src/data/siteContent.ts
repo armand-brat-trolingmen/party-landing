@@ -16,12 +16,26 @@ export const siteContent = {
 } as const;
 
 export const heroSceneItems = [
-  { id: 'cotton-candy', label: 'Сладкая вата', image: '/images/hero/cotton-candy-card.svg' },
-  { id: 'food-trucks', label: 'Фудтраки', image: '/images/hero/food-truck-card.svg' },
+  {
+    id: 'cotton-candy',
+    label: 'Сладкая вата',
+    image: '/images/hero/cotton-candy-card.svg',
+    width: 220,
+    height: 260,
+  },
+  {
+    id: 'food-trucks',
+    label: 'Фудтраки',
+    image: '/images/hero/food-truck-card.svg',
+    width: 360,
+    height: 280,
+  },
   {
     id: 'chocolate-fountain',
     label: 'Шоколадный фонтан',
     image: '/images/hero/chocolate-fountain-card.svg',
+    width: 220,
+    height: 260,
   },
 ] as const;
 
@@ -74,18 +88,24 @@ export const services = [
     id: 'food-trucks',
     name: 'Фудтраки',
     image: '/images/hero/food-truck-card.svg',
+    width: 360,
+    height: 280,
     description: 'Горячая точка внимания, возле которой гости знакомятся, шутят и задерживаются дольше.',
   },
   {
     id: 'cotton-candy',
     name: 'Сладкая вата',
     image: '/images/hero/cotton-candy-card.svg',
+    width: 220,
+    height: 260,
     description: 'Нежный десертный акцент, который добавляет празднику лёгкости и фотографируется без уговоров.',
   },
   {
     id: 'chocolate-fountain',
     name: 'Шоколадный фонтан',
     image: '/images/hero/chocolate-fountain-card-static.svg',
+    width: 220,
+    height: 260,
     description: 'Тёплый десертный магнит, который собирает вокруг себя гостей и держит красивый ритм вечера.',
   },
 ] as const;
@@ -101,6 +121,10 @@ export const momentFeedItems = [
     label: 'Фудтрак',
     title: 'Фудтрак, возле которого гости собираются сами собой.',
     image: '/images/reviews/review-truck-1.png',
+    imageWebpSrcSet: '/images/reviews/review-truck-1-960.webp 960w, /images/reviews/review-truck-1-1166.webp 1166w',
+    sizes: '(max-width: 860px) calc(100vw - 3rem), 42rem',
+    width: 1166,
+    height: 737,
     alt: 'Фудтрак Party Everyday на выездном событии',
     objectPosition: '50% 50%',
     tone: 'gold',
@@ -110,6 +134,11 @@ export const momentFeedItems = [
     label: 'Сладкая вата',
     title: 'Сладкая вата, которую сначала фотографируют, а потом просят повторить.',
     image: '/images/reviews/review-cotton-1.png',
+    imageWebpSrcSet:
+      '/images/reviews/review-cotton-1-960.webp 960w, /images/reviews/review-cotton-1-1280.webp 1280w',
+    sizes: '(max-width: 860px) calc(100vw - 3rem), 42rem',
+    width: 1280,
+    height: 960,
     alt: 'Стойка сладкой ваты Party Everyday на празднике',
     objectPosition: '50% 42%',
     tone: 'rose',
@@ -119,6 +148,10 @@ export const momentFeedItems = [
     label: 'Шоколадный фонтан',
     title: 'Шоколадный фонтан, к которому гости возвращаются за добавкой весь вечер.',
     image: '/images/reviews/review-fountain-2.jpg',
+    imageWebpSrcSet: '/images/reviews/review-fountain-2-960.webp 960w, /images/reviews/review-fountain-2-1600.webp 1600w',
+    sizes: '(max-width: 860px) calc(100vw - 3rem), 46rem',
+    width: 1920,
+    height: 2560,
     alt: 'Шоколадный фонтан Party Everyday в десертной зоне',
     objectPosition: '50% 56%',
     tone: 'chocolate',

@@ -38,6 +38,8 @@ export function ServicesSection() {
                       loading="lazy"
                       decoding="async"
                       fetchPriority="low"
+                      width={service.width}
+                      height={service.height}
                     />
                   </div>
                 </div>

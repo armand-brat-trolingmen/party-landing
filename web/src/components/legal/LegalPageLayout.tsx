@@ -11,7 +11,7 @@ type LegalPageLayoutProps = {
 export function LegalPageLayout({ document }: LegalPageLayoutProps) {
   return (
     <>
-      <SEO title={`${document.title} | ${footerContent.brand}`} description={document.description} canonical={document.path} />
+      <SEO title={document.seoTitle} description={document.description} canonical={document.path} />
       <div className={styles.page}>
         <main className={styles.main}>
           <div className={styles.container}>

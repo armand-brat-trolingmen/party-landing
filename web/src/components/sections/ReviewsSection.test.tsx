@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { ReviewsSection } from './ReviewsSection';
 
-test('renders moment feed as one large manual scene with arrows and an Avito proof link', () => {
+test('renders moment feed as one large manual scene with optimized media and an Avito proof link', () => {
   render(<ReviewsSection />);
 
   const section = screen.getByTestId('section-reviews');
@@ -20,6 +20,17 @@ test('renders moment feed as one large manual scene with arrows and an Avito pro
   expect(sectionQueries.getByRole('button', { name: 'Предыдущий момент' })).toBeDisabled();
   expect(sectionQueries.getByRole('button', { name: 'Следующий момент' })).toBeEnabled();
   expect(sectionQueries.getByText('Фудтрак, возле которого гости собираются сами собой.')).toBeInTheDocument();
+
+  const image = sectionQueries.getByRole('img', { name: 'Фудтрак Party Everyday на выездном событии' });
+  expect(image).toHaveAttribute('loading', 'lazy');
+  expect(image).toHaveAttribute('width', '1166');
+  expect(image).toHaveAttribute('height', '737');
+  expect(image).toHaveAttribute('sizes', '(max-width: 860px) calc(100vw - 3rem), 42rem');
+  expect(section.querySelector('source[type="image/webp"]')).toHaveAttribute(
+    'srcset',
+    '/images/reviews/review-truck-1-960.webp 960w, /images/reviews/review-truck-1-1166.webp 1166w',
+  );
+
   expect(sectionQueries.getByRole('link', { name: 'Отзывы можно прочитать тут!' })).toHaveAttribute(
     'href',
     'https://www.avito.ru/brands/i82014135/all',

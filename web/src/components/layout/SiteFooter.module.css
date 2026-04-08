@@ -90,8 +90,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.35rem;
-  height: 2.35rem;
+  width: 2.85rem;
+  height: 2.85rem;
   border-radius: 999px;
   border: 1px solid rgba(255, 238, 220, 0.14);
   background:
@@ -130,6 +130,10 @@
 }
 
 .contactLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding-block: 0.2rem;
   color: rgba(245, 236, 226, 0.9);
   font-size: 0.95rem;
   line-height: 1.4;
@@ -166,6 +170,10 @@
 }
 
 .legalLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding-block: 0.2rem;
   color: rgba(245, 236, 226, 0.82);
   font-size: 0.92rem;
   line-height: 1.45;

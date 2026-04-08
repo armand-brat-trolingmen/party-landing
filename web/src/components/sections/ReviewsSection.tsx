@@ -75,15 +75,21 @@ export function ReviewsSection() {
                 data-tone={activeItem.tone}
               >
                 <div className={styles.slideMedia}>
-                  <img
-                    src={activeItem.image}
-                    alt={activeItem.alt}
-                    className={styles.slideImage}
-                    loading={activeSlide === 0 ? 'eager' : 'lazy'}
-                    decoding="async"
-                    fetchPriority={activeSlide === 0 ? 'high' : 'low'}
-                    style={{ objectPosition: activeItem.objectPosition }}
-                  />
+                  <picture className={styles.slidePicture}>
+                    <source type="image/webp" srcSet={activeItem.imageWebpSrcSet} sizes={activeItem.sizes} />
+                    <img
+                      src={activeItem.image}
+                      alt={activeItem.alt}
+                      className={styles.slideImage}
+                      loading="lazy"
+                      decoding="async"
+                      fetchPriority="low"
+                      width={activeItem.width}
+                      height={activeItem.height}
+                      sizes={activeItem.sizes}
+                      style={{ objectPosition: activeItem.objectPosition }}
+                    />
+                  </picture>
                 </div>
 
                 <div className={styles.slideContent}>
