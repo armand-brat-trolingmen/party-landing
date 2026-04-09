@@ -11,13 +11,20 @@ export function OrderModal() {
   }
 
   return (
-    <div className={styles.overlay} role="presentation" onClick={closeModal} data-testid="order-modal-overlay">
+    <div
+      className={styles.overlay}
+      role="presentation"
+      onClick={closeModal}
+      data-testid="order-modal-overlay"
+      data-modal-state="open"
+    >
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="order-modal-title"
         className={styles.dialog}
         data-testid="order-modal"
+        data-modal-state="open"
         onClick={(event) => event.stopPropagation()}
       >
         <div className={styles.header}>

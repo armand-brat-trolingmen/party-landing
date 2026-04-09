@@ -1,28 +1,26 @@
 import { homePageContent } from '../../data/catalogContent';
 import { heroPosterSlides, siteContent } from '../../data/siteContent';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
-import { useOrderModal } from '../cta/useOrderModal';
 import { HeroPosterCarousel } from './HeroPosterCarousel';
 import styles from './HeroSection.module.css';
 
+function scrollToSection(targetId: string) {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  const target = document.getElementById(targetId);
+  if (!target) {
+    return;
+  }
+
+  const behavior = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+  target.scrollIntoView({ behavior, block: 'start' });
+}
+
 export function HeroSection() {
   const { ref, revealState } = useScrollReveal({ rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
-  const { openModal } = useOrderModal();
   const heroTitleLines = ['Фуд-станции', 'на ваше', 'мероприятие'] as const;
-
-  const scrollToServices = () => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
-    const target = document.getElementById('services');
-    if (!target) {
-      return;
-    }
-
-    const behavior = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
-    target.scrollIntoView({ behavior, block: 'start' });
-  };
 
   return (
     <section
@@ -50,10 +48,10 @@ export function HeroSection() {
           <p className={styles.lead}>{siteContent.heroDescription}</p>
 
           <div className={styles.actions}>
-            <button type="button" className={styles.primaryAction} onClick={openModal}>
+            <button type="button" className={styles.primaryAction} onClick={() => scrollToSection('cta')}>
               {homePageContent.hero.primaryActionLabel}
             </button>
-            <button type="button" className={styles.secondaryAction} onClick={scrollToServices}>
+            <button type="button" className={styles.secondaryAction} onClick={() => scrollToSection('services')}>
               {homePageContent.hero.secondaryActionLabel}
             </button>
           </div>

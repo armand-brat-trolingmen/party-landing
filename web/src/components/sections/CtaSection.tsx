@@ -11,7 +11,8 @@ type CtaSectionProps = {
 };
 
 export function CtaSection({ id, title, description, sectionTestId = 'section-cta' }: CtaSectionProps) {
-  const variant = sectionTestId === 'section-cta' ? 'home' : 'inner';
+  const variant = 'home';
+  const resolvedId = id ?? (sectionTestId === 'section-cta' ? 'cta' : undefined);
 
   const body = (
     <>
@@ -59,23 +60,15 @@ export function CtaSection({ id, title, description, sectionTestId = 'section-ct
 
   return (
     <section
-      id={id}
+      id={resolvedId}
       className={`site-section ${styles.section}`}
       data-testid={sectionTestId}
       data-cta-variant={variant}
       aria-labelledby={`${sectionTestId}-title`}
     >
-      {variant === 'home' ? (
-        <article className={`${styles.band} ${styles.homeBand}`} data-testid="cta-surface" data-cta-surface="full-bleed">
-          <div className={`site-container ${styles.bandInner}`}>{body}</div>
-        </article>
-      ) : (
-        <div className="site-container">
-          <article className={`${styles.band} ${styles.innerBand}`} data-testid="cta-surface" data-cta-surface="contained">
-            {body}
-          </article>
-        </div>
-      )}
+      <article className={`${styles.band} ${styles.homeBand}`} data-testid="cta-surface" data-cta-surface="full-bleed">
+        <div className={`site-container ${styles.bandInner}`}>{body}</div>
+      </article>
     </section>
   );
 }

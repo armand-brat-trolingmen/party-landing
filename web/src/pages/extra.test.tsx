@@ -12,5 +12,5 @@ test('renders extra-service page content from route params', () => {
   );
 
   expect(screen.getByRole('heading', { level: 1, name: 'Брендированная подача' })).toBeInTheDocument();
-  expect(screen.getByTestId('section-offering-cta')).toHaveAttribute('data-cta-variant', 'inner');
+  expect(screen.getByTestId('section-offering-cta')).toHaveAttribute('data-cta-variant', 'home');
 });
