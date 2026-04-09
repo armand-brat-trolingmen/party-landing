@@ -41,11 +41,17 @@ test('renders the services catalog as a revealable centered showcase without hel
     const cards = within(catalog).getAllByTestId('service-card');
     const firstCard = cards[0] as HTMLElement;
     const firstImage = within(firstCard).getByTestId('service-card-media-image');
+    const firstWebpSource = within(firstCard).getByTestId('service-card-media-source-webp');
 
     expect(cards).toHaveLength(9);
     expect(within(catalog).getByRole('heading', { level: 3, name: 'Сахарная вата' })).toBeInTheDocument();
     expect(firstImage).toBeInTheDocument();
-    expect(firstImage).toHaveAttribute('src', expect.stringContaining('/images/services-home/cotton-candy.webp'));
+    expect(firstWebpSource).toHaveAttribute('srcset', expect.stringContaining('/images/services-home/cotton-candy.webp'));
+    expect(firstImage).toHaveAttribute('src', expect.stringContaining('/images/services-home-fallback/cotton-candy.png'));
+    expect(firstImage).toHaveAttribute('loading', 'lazy');
+    expect(firstImage).toHaveAttribute('width', '1024');
+    expect(firstImage).toHaveAttribute('height', '1024');
+    expect(firstImage).toHaveAttribute('sizes', '(max-width: 720px) 34vw, (max-width: 1120px) 44vw, 29vw');
     expect(within(firstCard).getByText('от 12.000 ₽')).toBeInTheDocument();
     expect(within(catalog).queryByText(services[0].shortDescription)).not.toBeInTheDocument();
     expect(within(catalog).queryByRole('heading', { level: 3, name: 'Пенная пушка' })).not.toBeInTheDocument();
@@ -103,7 +109,13 @@ test('switches to a mobile trio slider with a swipe progress indicator', () => {
   expect(within(catalog).getAllByTestId('service-card')).toHaveLength(services.length);
   expect(screen.queryByTestId('services-reveal-button')).not.toBeInTheDocument();
   expect(firstLink).toHaveAttribute('data-link-appearance', 'card');
-  expect(within(catalog).getAllByTestId('service-card-media-image').length).toBeGreaterThan(0);
+  const images = within(catalog).getAllByTestId('service-card-media-image');
+  expect(images.length).toBeGreaterThan(0);
+  expect(within(firstCard).getByTestId('service-card-media-source-webp')).toHaveAttribute(
+    'srcset',
+    expect.stringContaining('/images/services-home/cotton-candy.webp'),
+  );
+  expect(images[0]).toHaveAttribute('src', expect.stringContaining('/images/services-home-fallback/cotton-candy.png'));
   expect(within(firstCard).getByText('от 12.000 ₽')).toBeInTheDocument();
   expect(progress).toHaveAttribute('role', 'progressbar');
   expect(progress).toHaveAttribute('aria-valuenow', '0');

@@ -4,6 +4,11 @@ import styles from './HeroPosterCarousel.module.css';
 export type HeroPosterSlide = {
   id: string;
   image: string;
+  fallbackImage?: string;
+  imageWebpSrcSet?: string;
+  sizes?: string;
+  width?: number;
+  height?: number;
   alt: string;
   objectPosition?: string;
 };
@@ -41,15 +46,28 @@ export function HeroPosterCarousel({ slides, intervalMs = 5200 }: HeroPosterCaro
                 data-visible={index === activeIndex ? 'true' : 'false'}
                 aria-hidden={index === activeIndex ? undefined : true}
               >
-                <img
-                  className={styles.poster}
-                  src={slide.image}
-                  alt={slide.alt}
-                  loading={index === 0 ? 'eager' : 'lazy'}
-                  decoding="async"
-                  fetchPriority={index === 0 ? 'high' : 'auto'}
-                  style={{ objectPosition: slide.objectPosition }}
-                />
+                <picture className={styles.posterMedia}>
+                  {slide.imageWebpSrcSet ? (
+                    <source
+                      data-testid="hero-poster-source-webp"
+                      type="image/webp"
+                      srcSet={slide.imageWebpSrcSet}
+                      sizes={slide.sizes}
+                    />
+                  ) : null}
+                  <img
+                    className={styles.poster}
+                    src={slide.fallbackImage ?? slide.image}
+                    alt={slide.alt}
+                    loading={index === 0 ? 'eager' : 'lazy'}
+                    decoding="async"
+                    fetchPriority={index === 0 ? 'high' : 'auto'}
+                    width={slide.width}
+                    height={slide.height}
+                    sizes={slide.sizes}
+                    style={{ objectPosition: slide.objectPosition }}
+                  />
+                </picture>
               </figure>
             ))}
           </div>

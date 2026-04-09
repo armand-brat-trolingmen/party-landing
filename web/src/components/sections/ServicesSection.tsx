@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { startTransition, useEffect, useMemo, useRef, useState } from 'react';
 import { getOfferingPath, homePageContent, services as defaultServices, type OfferingEntity } from '../../data/catalogContent';
 import { useHorizontalScrollProgress } from '../../hooks/useHorizontalScrollProgress';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
@@ -66,15 +66,21 @@ export function ServicesSection({
     }
 
     if (!isExpanded) {
-      setIsExpanded(true);
-      setIsCollapsing(false);
+      startTransition(() => {
+        setIsExpanded(true);
+        setIsCollapsing(false);
+      });
       return;
     }
 
-    setIsCollapsing(true);
+    startTransition(() => {
+      setIsCollapsing(true);
+    });
     collapseTimerRef.current = window.setTimeout(() => {
-      setIsExpanded(false);
-      setIsCollapsing(false);
+      startTransition(() => {
+        setIsExpanded(false);
+        setIsCollapsing(false);
+      });
       collapseTimerRef.current = null;
     }, COLLAPSE_ANIMATION_MS);
   }
@@ -123,15 +129,26 @@ export function ServicesSection({
                   >
                     <div className={styles.visualWrap} aria-hidden="true">
                       {service.homeCardImage ? (
-                        <img
-                          className={styles.visualImage}
-                          data-testid="service-card-media-image"
-                          src={service.homeCardImage.src}
-                          alt=""
-                          loading="lazy"
-                          decoding="async"
-                          style={{ objectPosition: service.homeCardImage.objectPosition }}
-                        />
+                        <picture className={styles.visualPicture}>
+                          <source
+                            data-testid="service-card-media-source-webp"
+                            type="image/webp"
+                            srcSet={service.homeCardImage.src}
+                            sizes={service.homeCardImage.sizes}
+                          />
+                          <img
+                            className={styles.visualImage}
+                            data-testid="service-card-media-image"
+                            src={service.homeCardImage.fallbackSrc}
+                            alt=""
+                            loading="lazy"
+                            decoding="async"
+                            width={service.homeCardImage.width}
+                            height={service.homeCardImage.height}
+                            sizes={service.homeCardImage.sizes}
+                            style={{ objectPosition: service.homeCardImage.objectPosition }}
+                          />
+                        </picture>
                       ) : (
                         <div className={styles.visualFallback} data-testid="service-card-media-placeholder" />
                       )}

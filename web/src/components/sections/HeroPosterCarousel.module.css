@@ -36,6 +36,12 @@
   margin: 0;
 }
 
+.posterMedia {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .poster {
   width: 100%;
   height: 100%;

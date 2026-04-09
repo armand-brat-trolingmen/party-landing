@@ -40,18 +40,36 @@ export const heroPosterSlides = [
   {
     id: 'main-fountain',
     image: '/images/hero/hero-main.png',
+    fallbackImage: '/images/hero/hero-main.png',
+    imageWebpSrcSet:
+      '/images/hero/hero-main-480.webp 480w, /images/hero/hero-main-720.webp 720w, /images/hero/hero-main-960.webp 960w, /images/hero/hero-main-1258.webp 1258w',
+    sizes: '(max-width: 900px) min(100vw - 2rem, 28rem), 31rem',
+    width: 1258,
+    height: 2048,
     alt: 'Шоколадный фонтан на премиальной фуд-станции',
     objectPosition: '52% 44%',
   },
   {
     id: 'cotton-candy',
     image: '/images/hero/hero-cotton.jpg',
+    fallbackImage: '/images/hero/hero-cotton.jpg',
+    imageWebpSrcSet:
+      '/images/hero/hero-cotton-480.webp 480w, /images/hero/hero-cotton-720.webp 720w, /images/hero/hero-cotton-960.webp 960w, /images/hero/hero-cotton-1280.webp 1280w',
+    sizes: '(max-width: 900px) min(100vw - 2rem, 28rem), 31rem',
+    width: 2560,
+    height: 1920,
     alt: 'Сладкая вата в выездном премиальном формате',
     objectPosition: '54% 36%',
   },
   {
     id: 'food-truck',
     image: '/images/hero/hero-truck.jpg',
+    fallbackImage: '/images/hero/hero-truck.jpg',
+    imageWebpSrcSet:
+      '/images/hero/hero-truck-480.webp 480w, /images/hero/hero-truck-720.webp 720w, /images/hero/hero-truck-960.webp 960w',
+    sizes: '(max-width: 900px) min(100vw - 2rem, 28rem), 31rem',
+    width: 960,
+    height: 1280,
     alt: 'Фудтрак как часть кейтеринг-сцены мероприятия',
     objectPosition: '56% 40%',
   },

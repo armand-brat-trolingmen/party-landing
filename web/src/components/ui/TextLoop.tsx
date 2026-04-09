@@ -151,6 +151,7 @@ export function TextLoop({
       ref={containerRef}
       className={[styles.root, className].filter(Boolean).join(' ')}
       data-testid="text-loop"
+      data-ready={sequenceWidth > 0 ? 'true' : 'false'}
       data-hover-behavior="slowdown"
       data-direction={direction}
       data-edge-mask="none"

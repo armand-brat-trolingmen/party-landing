@@ -8,12 +8,12 @@ vi.mock('@vercel/speed-insights/react', () => ({
 
 import App from './App';
 
-test('mounts Vercel Speed Insights in the app shell', () => {
+test('does not mount Vercel Speed Insights on local hosts', () => {
   render(
     <MemoryRouter>
       <App />
     </MemoryRouter>,
   );
 
-  expect(screen.getByTestId('vercel-speed-insights')).toBeInTheDocument();
+  expect(screen.queryByTestId('vercel-speed-insights')).not.toBeInTheDocument();
 });

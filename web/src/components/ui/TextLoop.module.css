@@ -5,6 +5,14 @@
   --text-loop-separator-color: currentColor;
 }
 
+.root[data-ready='false'] .track {
+  visibility: hidden;
+}
+
+.root[data-ready='true'] .track {
+  visibility: visible;
+}
+
 .track {
   display: flex;
   width: max-content;
