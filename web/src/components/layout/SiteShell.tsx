@@ -16,7 +16,7 @@ export function SiteShell({ children, motionPath, mainClassName, legalMode = fal
   return (
     <OrderModalProvider>
       <SiteHeader legalMode={legalMode} />
-      <main className={mainClassName ?? 'site-shell'} data-motion-path={motionPath}>
+      <main className={mainClassName ?? 'site-shell'} data-motion-path={motionPath} data-shell-theme="premium-editorial">
         {children}
       </main>
       <SiteFooter />

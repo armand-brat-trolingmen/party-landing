@@ -15,7 +15,29 @@ export const siteContent = {
   brand: 'Праздник каждый день',
   tagline: homePageContent.hero.title,
   heroDescription: homePageContent.hero.description,
+  heroSupportingNote: 'Москва и область • частные и корпоративные события',
 } as const;
+
+export const heroPosterSlides = [
+  {
+    id: 'main-fountain',
+    image: '/images/hero/hero-main.png',
+    alt: 'Шоколадный фонтан на премиальной фуд-станции',
+    objectPosition: '52% 44%',
+  },
+  {
+    id: 'cotton-candy',
+    image: '/images/hero/hero-cotton.jpg',
+    alt: 'Сладкая вата в выездном премиальном формате',
+    objectPosition: '54% 36%',
+  },
+  {
+    id: 'food-truck',
+    image: '/images/hero/hero-truck.jpg',
+    alt: 'Фудтрак как часть кейтеринг-сцены мероприятия',
+    objectPosition: '56% 40%',
+  },
+] as const;
 
 export const heroSceneItems = catalogServices.slice(0, 3).map((service) => ({
   id: service.slug,

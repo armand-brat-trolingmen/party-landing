@@ -13,7 +13,7 @@ export function FaqSection() {
   const [openItemId, setOpenItemId] = useState<string | null>(faqItems[0]?.id ?? null);
 
   return (
-    <section id="faq" className="site-section" data-testid="section-faq" data-section-tone="lemon" aria-labelledby="faq-title">
+    <section id="faq" className="site-section" data-testid="section-faq" aria-labelledby="faq-title">
       <StructuredData data={getFaqStructuredData(faqItems)} />
       <div ref={ref} className="site-container site-reveal" data-reveal-state={revealState} data-reveal-stagger="true">
         <div className={styles.sectionBody}>

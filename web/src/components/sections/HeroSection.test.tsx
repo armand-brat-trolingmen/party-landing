@@ -4,7 +4,7 @@ import { OrderModal } from '../cta/OrderModal';
 import { OrderModalProvider } from '../cta/OrderModalContext';
 import { HeroSection } from './HeroSection';
 
-test('renders the clean hero with one headline, larger actions, and no decorative scene content', () => {
+test('renders the editorial hero with a poster carousel and no supporting tag pill', () => {
   render(
     <MemoryRouter>
       <OrderModalProvider>
@@ -14,13 +14,17 @@ test('renders the clean hero with one headline, larger actions, and no decorativ
   );
 
   const hero = screen.getByTestId('section-hero');
-  expect(hero).toHaveAttribute('data-hero-style', 'clean-canvas');
+  expect(hero).toHaveAttribute('data-hero-style', 'editorial-poster');
   expect(screen.getByTestId('hero-title-line-1')).toHaveTextContent('Фуд-станции');
   expect(screen.getByTestId('hero-title-line-2')).toHaveTextContent('на ваше');
   expect(screen.getByTestId('hero-title-line-3')).toHaveTextContent('мероприятие');
   expect(screen.getByRole('heading', { level: 1, name: 'Фуд-станции на ваше мероприятие' })).toBeInTheDocument();
+  expect(screen.queryByText(/москва и область/i)).not.toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Заказать' })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'В каталог' })).toBeInTheDocument();
+  expect(screen.getByTestId('hero-poster-carousel')).toBeInTheDocument();
+  expect(screen.getByTestId('hero-poster-frame')).toBeInTheDocument();
+  expect(screen.getByRole('img', { name: 'Шоколадный фонтан на премиальной фуд-станции' })).toBeInTheDocument();
   expect(within(hero).queryByText('Праздник каждый день')).not.toBeInTheDocument();
   expect(screen.queryByTestId('hero-scene')).not.toBeInTheDocument();
 });

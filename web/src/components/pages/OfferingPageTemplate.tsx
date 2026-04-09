@@ -4,7 +4,6 @@ import { ContactPlaceholderSection } from '../sections/ContactPlaceholderSection
 import { CtaSection } from '../sections/CtaSection';
 import { ExtrasSection } from '../sections/ExtrasSection';
 import { FaqSection } from '../sections/FaqSection';
-import { ReviewsSection } from '../sections/ReviewsSection';
 import { ServicesSection } from '../sections/ServicesSection';
 import { TestimonialsSection } from '../sections/TestimonialsSection';
 import { OfferingVisual } from '../ui/OfferingVisual';
@@ -59,17 +58,16 @@ export function OfferingPageTemplate({ offering, typeLabel }: OfferingPageTempla
         </div>
       </section>
 
+      <ServicesSection allowReveal={false} items={services} />
+      <ExtrasSection />
+      <TestimonialsSection />
+      <FaqSection />
+      <ContactPlaceholderSection />
       <CtaSection
         sectionTestId="section-offering-cta"
         title={`Нужна услуга «${offering.name}» на ваше событие?`}
         description="Оставьте имя и телефон — заказчик свяжется с вами, поможет уточнить детали и подскажет следующий шаг."
       />
-      <ServicesSection allowReveal={false} items={services} />
-      <ExtrasSection />
-      <ReviewsSection />
-      <TestimonialsSection />
-      <FaqSection />
-      <ContactPlaceholderSection />
     </>
   );
 }

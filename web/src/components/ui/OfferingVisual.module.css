@@ -1,55 +1,54 @@
 .visual {
   position: relative;
+  isolation: isolate;
   overflow: hidden;
   display: grid;
   place-items: center;
   min-height: 100%;
   padding: clamp(1rem, 2.8vw, 1.4rem);
   border-radius: inherit;
-  isolation: isolate;
   background:
-    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0) 42%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 247, 238, 0.82));
+    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0) 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 253, 248, 0.84));
 }
 
 .visual::before {
   content: '';
   position: absolute;
-  inset: auto;
   width: clamp(9rem, 28vw, 16rem);
   height: clamp(9rem, 28vw, 16rem);
   border-radius: 50%;
-  filter: blur(12px);
-  opacity: 0.92;
+  filter: blur(14px);
+  opacity: 0.96;
   z-index: 0;
 }
 
 .gold::before {
-  background: radial-gradient(circle, rgba(246, 220, 107, 0.34), rgba(246, 220, 107, 0) 66%);
+  background: radial-gradient(circle, rgba(255, 240, 217, 0.9), rgba(255, 240, 217, 0) 66%);
 }
 
 .rose::before {
-  background: radial-gradient(circle, rgba(247, 166, 195, 0.28), rgba(247, 166, 195, 0) 66%);
+  background: radial-gradient(circle, rgba(255, 238, 245, 0.92), rgba(255, 238, 245, 0) 66%);
 }
 
 .mint::before {
-  background: radial-gradient(circle, rgba(139, 225, 206, 0.3), rgba(139, 225, 206, 0) 66%);
+  background: radial-gradient(circle, rgba(231, 250, 248, 0.9), rgba(231, 250, 248, 0) 66%);
 }
 
 .sky::before {
-  background: radial-gradient(circle, rgba(129, 195, 255, 0.28), rgba(129, 195, 255, 0) 66%);
+  background: radial-gradient(circle, rgba(224, 247, 255, 0.92), rgba(224, 247, 255, 0) 66%);
 }
 
 .berry::before {
-  background: radial-gradient(circle, rgba(255, 123, 145, 0.28), rgba(255, 123, 145, 0) 66%);
+  background: radial-gradient(circle, rgba(255, 224, 234, 0.92), rgba(255, 224, 234, 0) 66%);
 }
 
 .caramel::before {
-  background: radial-gradient(circle, rgba(226, 165, 93, 0.3), rgba(226, 165, 93, 0) 66%);
+  background: radial-gradient(circle, rgba(255, 244, 225, 0.94), rgba(255, 244, 225, 0) 66%);
 }
 
 .chocolate::before {
-  background: radial-gradient(circle, rgba(154, 101, 69, 0.28), rgba(154, 101, 69, 0) 66%);
+  background: radial-gradient(circle, rgba(230, 235, 242, 0.9), rgba(230, 235, 242, 0) 66%);
 }
 
 .image {
@@ -58,7 +57,7 @@
   width: min(100%, var(--offering-image-width, 18rem));
   height: auto;
   object-fit: contain;
-  filter: drop-shadow(0 18px 28px rgba(136, 95, 67, 0.12));
+  filter: drop-shadow(0 20px 28px rgba(31, 52, 74, 0.12));
 }
 
 .placeholder {
@@ -71,12 +70,10 @@
   aspect-ratio: 1;
   border-radius: 1.65rem;
   background:
-    radial-gradient(circle at 28% 24%, rgba(255, 255, 255, 0.64), rgba(255, 255, 255, 0) 46%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(255, 247, 238, 0.72));
-  border: 1px solid rgba(181, 143, 109, 0.14);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.74),
-    0 18px 32px rgba(158, 121, 89, 0.1);
+    radial-gradient(circle at 28% 24%, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0) 46%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 253, 248, 0.8));
+  border: 1px solid rgba(31, 52, 74, 0.08);
+  box-shadow: 0 18px 32px rgba(31, 52, 74, 0.08);
 }
 
 .emoji {
@@ -87,10 +84,10 @@
 .name {
   max-width: 10ch;
   padding-inline: 0.8rem;
-  color: rgba(91, 62, 44, 0.72);
+  color: var(--text-muted);
   font-size: 0.86rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   text-align: center;
   text-transform: uppercase;
 }

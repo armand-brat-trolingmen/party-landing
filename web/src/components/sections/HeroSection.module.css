@@ -1,9 +1,9 @@
 .hero {
   position: relative;
-  overflow: hidden;
+  overflow: clip;
   scroll-margin-top: calc(var(--header-offset) + var(--space-3));
-  padding-block: clamp(4.2rem, 11vh, 7.5rem);
-  min-height: clamp(34rem, calc(100svh - var(--header-offset) + 3rem), 52rem);
+  padding-block: clamp(4.4rem, 11vh, 7.8rem);
+  min-height: clamp(38rem, calc(100svh - var(--header-offset) + 2rem), 54rem);
 }
 
 .hero::before {
@@ -12,55 +12,60 @@
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(circle at 12% 16%, rgba(255, 242, 206, 0.78), rgba(255, 242, 206, 0) 24%),
-    radial-gradient(circle at 76% 22%, rgba(255, 226, 197, 0.34), rgba(255, 226, 197, 0) 24%),
-    linear-gradient(180deg, rgba(255, 251, 245, 0.3), rgba(255, 250, 244, 0));
+    radial-gradient(circle at 10% 16%, rgba(224, 247, 255, 0.86), rgba(224, 247, 255, 0) 24%),
+    radial-gradient(circle at 78% 18%, rgba(255, 238, 245, 0.9), rgba(255, 238, 245, 0) 26%),
+    radial-gradient(circle at 52% 84%, rgba(191, 233, 255, 0.24), rgba(191, 233, 255, 0) 30%);
 }
 
 .container {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 0.78fr) minmax(18rem, 1fr);
-  gap: clamp(1.5rem, 5vw, 4rem);
+  grid-template-columns: minmax(0, 0.9fr) minmax(18rem, 0.82fr);
+  gap: clamp(2rem, 5vw, 5rem);
   align-items: center;
 }
 
 .copyColumn {
   display: grid;
-  gap: 2.55rem;
+  gap: 1.8rem;
   align-content: center;
-  max-width: 34rem;
+  max-width: 36rem;
 }
 
 .tagline {
   display: grid;
   gap: 0.08em;
-  max-width: none;
-  font-size: clamp(3.15rem, 8vw, 6rem);
-  font-weight: 600;
+  font-size: clamp(3.45rem, 8vw, 6.8rem);
   line-height: 0.9;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.07em;
   color: var(--text-primary);
-  text-wrap: nowrap;
 }
 
 .taglineLine {
   display: block;
 }
 
+.lead {
+  max-width: 30rem;
+  color: var(--text-muted);
+  font-size: clamp(1rem, 1.35vw, 1.15rem);
+  font-weight: 500;
+  line-height: 1.72;
+}
+
 .actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.35rem;
+  gap: 1rem;
 }
 
 .primaryAction,
 .secondaryAction {
-  min-width: 17rem;
-  min-height: 4.8rem;
-  padding: 1.15rem 3rem;
-  border-radius: 999px;
-  font-size: 1.08rem;
+  min-width: 12.5rem;
+  min-height: 3.75rem;
+  padding: 0.95rem 2rem;
+  border-radius: var(--radius-pill);
+  font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
   transition:
@@ -73,15 +78,15 @@
 
 .primaryAction {
   border: 0;
-  background: linear-gradient(135deg, #f26f9d 0%, #ed5e74 52%, #f3b15d 100%);
-  box-shadow: 0 18px 34px rgba(237, 94, 116, 0.22);
-  color: #fffdfb;
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-primary-hover) 100%);
+  box-shadow: 0 16px 34px rgba(244, 94, 161, 0.22);
+  color: var(--text-inverse);
 }
 
 .secondaryAction {
-  border: 1px solid rgba(108, 78, 57, 0.18);
-  background: rgba(255, 255, 255, 0.62);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.76);
+  border: 1px solid rgba(31, 52, 74, 0.12);
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82);
   color: var(--text-primary);
 }
 
@@ -92,79 +97,56 @@
   transform: translate3d(0, -2px, 0);
 }
 
-.visualField {
-  position: relative;
-  min-height: clamp(19rem, 45vw, 33rem);
-  background: transparent;
-  border: 0;
-  border-radius: 0;
-  overflow: visible;
+.posterColumn {
+  display: grid;
+  justify-self: end;
+  width: min(100%, 31rem);
 }
 
-.visualGlow,
-.visualGlowSecondary {
-  position: absolute;
-  pointer-events: none;
-  border-radius: 50%;
-  filter: blur(28px);
-}
+@media (max-width: 1080px) {
+  .container {
+    gap: clamp(1.8rem, 4vw, 3rem);
+  }
 
-.visualGlow {
-  inset: 10% 8% 12% 16%;
-  background:
-    radial-gradient(circle at 32% 42%, rgba(255, 236, 186, 0.58), rgba(255, 236, 186, 0) 40%),
-    radial-gradient(circle at 58% 50%, rgba(255, 220, 179, 0.38), rgba(255, 220, 179, 0) 44%),
-    radial-gradient(circle at 50% 56%, rgba(255, 248, 227, 0.7), rgba(255, 248, 227, 0) 52%);
-  filter: blur(38px);
-}
-
-.visualGlowSecondary {
-  width: clamp(9rem, 22vw, 14rem);
-  height: clamp(9rem, 22vw, 14rem);
-  right: clamp(6%, 8vw, 12%);
-  bottom: clamp(8%, 10vw, 14%);
-  background:
-    radial-gradient(circle at 50% 50%, rgba(255, 250, 236, 0.96), rgba(255, 250, 236, 0) 54%),
-    radial-gradient(circle at 56% 56%, rgba(255, 233, 188, 0.28), rgba(255, 233, 188, 0) 72%);
-  opacity: 0.88;
+  .tagline {
+    font-size: clamp(3rem, 7vw, 5.7rem);
+  }
 }
 
 @media (max-width: 900px) {
   .hero {
-    min-height: clamp(30rem, calc(100svh - var(--header-offset) + 2rem), 44rem);
+    min-height: auto;
   }
 
   .container {
     grid-template-columns: 1fr;
     align-content: start;
+    gap: 1.55rem;
   }
 
   .copyColumn {
     max-width: none;
   }
 
-  .tagline {
-    font-size: clamp(3rem, 10vw, 5rem);
-  }
-
-  .visualField {
-    min-height: clamp(14rem, 52vw, 20rem);
+  .posterColumn {
+    justify-self: center;
+    width: min(100%, 28rem);
   }
 }
 
 @media (max-width: 720px) {
   .hero {
-    padding-block: clamp(3.15rem, 8vh, 5rem) clamp(4.4rem, 12vh, 6.4rem);
+    padding-block: clamp(3.1rem, 8vh, 4.8rem) clamp(3.6rem, 10vh, 5rem);
   }
 
   .copyColumn {
-    gap: 1.45rem;
+    gap: 1.3rem;
     align-content: start;
-    padding-top: clamp(1.2rem, 4vh, 2rem);
+    padding-top: clamp(0.6rem, 3vh, 1.2rem);
   }
 
   .tagline {
-    font-size: clamp(2.7rem, 12vw, 4.1rem);
+    font-size: clamp(2.75rem, 12vw, 4.5rem);
   }
 
   .actions {
@@ -175,13 +157,83 @@
   .primaryAction,
   .secondaryAction {
     width: 100%;
-    justify-content: center;
     min-width: 0;
-    min-height: 4.2rem;
-    padding-inline: 1.5rem;
   }
 
-  .visualField {
-    min-height: 9rem;
+  .posterColumn {
+    width: min(100%, 22rem);
+    justify-self: center;
+  }
+}
+
+@media (max-width: 520px) {
+  .hero {
+    padding-block: 2.75rem 3.6rem;
+  }
+
+  .container {
+    gap: 1.2rem;
+  }
+
+  .copyColumn {
+    gap: 1.05rem;
+    padding-top: 0.35rem;
+  }
+
+  .tagline {
+    font-size: clamp(2.35rem, 11.8vw, 3.1rem);
+    letter-spacing: -0.05em;
+    line-height: 0.93;
+  }
+
+  .lead {
+    max-width: none;
+    font-size: 0.96rem;
+    line-height: 1.6;
+  }
+
+  .actions {
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .hero {
+    padding-block: 2.35rem 3.15rem;
+  }
+
+  .copyColumn {
+    gap: 0.92rem;
+  }
+
+  .tagline {
+    font-size: clamp(1.95rem, 10vw, 2.6rem);
+    letter-spacing: -0.04em;
+    line-height: 0.95;
+  }
+
+  .lead {
+    font-size: 0.92rem;
+    line-height: 1.54;
+  }
+
+  .actions {
+    gap: 0.68rem;
+  }
+
+  .primaryAction,
+  .secondaryAction {
+    min-height: 3.45rem;
+    padding-inline: 1.45rem;
+  }
+
+  .posterColumn {
+    width: min(100%, 19rem);
+  }
+}
+
+@media (max-width: 360px) {
+  .tagline {
+    font-size: clamp(1.78rem, 9.2vw, 2.28rem);
   }
 }

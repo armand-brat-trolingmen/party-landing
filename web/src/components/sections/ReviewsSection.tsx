@@ -1,39 +1,14 @@
-import { useState } from 'react';
 import { homePageContent, moments } from '../../data/catalogContent';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { SectionHeading } from '../ui/SectionHeading';
 import styles from './ReviewsSection.module.css';
 
-function clampSlide(index: number) {
-  return Math.max(0, Math.min(moments.length - 1, index));
-}
-
 export function ReviewsSection() {
   const { ref, revealState } = useScrollReveal();
-  const [activeSlide, setActiveSlide] = useState(0);
-  const [slideDirection, setSlideDirection] = useState<'next' | 'prev'>('next');
-  const activeItem = moments[activeSlide];
-
-  function showPreviousSlide() {
-    if (activeSlide === 0) {
-      return;
-    }
-
-    setSlideDirection('prev');
-    setActiveSlide((current) => clampSlide(current - 1));
-  }
-
-  function showNextSlide() {
-    if (activeSlide === moments.length - 1) {
-      return;
-    }
-
-    setSlideDirection('next');
-    setActiveSlide((current) => clampSlide(current + 1));
-  }
+  const featuredMoments = moments.slice(0, 3);
 
   return (
-    <section id="moments" className="site-section" data-testid="section-moments" data-section-tone="milk" aria-labelledby="moments-title">
+    <section id="moments" className="site-section" data-testid="section-moments" aria-labelledby="moments-title">
       <div ref={ref} className="site-container site-reveal" data-reveal-state={revealState} data-reveal-stagger="true">
         <div className={styles.sectionBody}>
           <SectionHeading
@@ -41,69 +16,30 @@ export function ReviewsSection() {
             description={homePageContent.moments.description}
           />
 
-          <div className={`${styles.sliderShell} reveal-grid`}>
-            <div
-              className={styles.slider}
-              data-testid="moment-feed-slider"
-              data-slider-mode="manual"
-              data-slider-layout="single-scene"
-              data-slider-transition="soft-swap"
-              data-active-slide={activeSlide}
-            >
-              <button
-                type="button"
-                className={`${styles.controlButton} ${styles.controlButtonPrev}`}
-                aria-label="Предыдущий момент"
-                disabled={activeSlide === 0}
-                onClick={showPreviousSlide}
-              >
-                <span aria-hidden="true">{'\u2190'}</span>
-              </button>
+          <div className={`${styles.gallery} reveal-grid`} data-testid="moment-feed-gallery" data-gallery-style="editorial-mosaic">
+            {featuredMoments.map((item) => (
+              <article key={item.id} className={styles.card} data-testid="moment-feed-card">
+                <picture className={styles.media}>
+                  {item.imageWebpSrcSet ? <source type="image/webp" srcSet={item.imageWebpSrcSet} sizes={item.sizes} /> : null}
+                  <img
+                    src={item.image}
+                    alt={item.alt}
+                    className={styles.image}
+                    loading="lazy"
+                    decoding="async"
+                    width={item.width}
+                    height={item.height}
+                    sizes={item.sizes}
+                    style={{ objectPosition: item.objectPosition }}
+                  />
+                </picture>
 
-              <article
-                key={activeItem.id}
-                className={styles.slide}
-                data-testid="moment-feed-slide"
-                data-slide-transition="soft-swap"
-                data-slide-direction={slideDirection}
-                data-tone={activeItem.tone}
-              >
-                <div className={styles.slideMedia}>
-                  <picture className={styles.slidePicture}>
-                    {activeItem.imageWebpSrcSet ? (
-                      <source type="image/webp" srcSet={activeItem.imageWebpSrcSet} sizes={activeItem.sizes} />
-                    ) : null}
-                    <img
-                      src={activeItem.image}
-                      alt={activeItem.alt}
-                      className={styles.slideImage}
-                      loading="lazy"
-                      decoding="async"
-                      fetchPriority="low"
-                      width={activeItem.width}
-                      height={activeItem.height}
-                      sizes={activeItem.sizes}
-                      style={{ objectPosition: activeItem.objectPosition }}
-                    />
-                  </picture>
-                </div>
-
-                <div className={styles.slideContent}>
-                  <span className={styles.slideBadge}>{activeItem.label}</span>
-                  <p className={styles.slideTitle}>{activeItem.title}</p>
+                <div className={styles.overlay}>
+                  <span className={styles.badge}>{item.label}</span>
+                  <p className={styles.title}>{item.title}</p>
                 </div>
               </article>
-
-              <button
-                type="button"
-                className={`${styles.controlButton} ${styles.controlButtonNext}`}
-                aria-label="Следующий момент"
-                disabled={activeSlide === moments.length - 1}
-                onClick={showNextSlide}
-              >
-                <span aria-hidden="true">{'\u2192'}</span>
-              </button>
-            </div>
+            ))}
           </div>
         </div>
       </div>

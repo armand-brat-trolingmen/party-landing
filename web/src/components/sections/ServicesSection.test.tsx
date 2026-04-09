@@ -2,7 +2,25 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import { services } from '../../data/catalogContent';
 import { ServicesSection } from './ServicesSection';
 
-test('renders the services catalog as a revealable centered showcase without an outer frame', () => {
+function mockViewport(isMobile: boolean) {
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    configurable: true,
+    value: vi.fn().mockImplementation((query: string) => ({
+      matches: query.includes('max-width: 720px') ? isMobile : false,
+      media: query,
+      onchange: null,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })),
+  });
+}
+
+test('renders the services catalog as a revealable centered showcase without helper chips', () => {
+  mockViewport(false);
   render(<ServicesSection />);
 
   const section = screen.getByTestId('section-services');
@@ -10,8 +28,11 @@ test('renders the services catalog as a revealable centered showcase without an 
 
   expect(heading).toBeInTheDocument();
   expect(heading.closest('[data-heading-align]')).toHaveAttribute('data-heading-align', 'center');
-  expect(section).toHaveAttribute('data-section-tone', 'lemon');
-  expect(section.querySelector('[data-section-surface]')).toBeNull();
+  expect(section).not.toHaveAttribute('data-section-tone');
+  expect(screen.queryByTestId('services-chip-row')).not.toBeInTheDocument();
+  expect(screen.getByTestId('services-catalog')).toHaveAttribute('data-showcase-style', 'premium-grid');
+  expect(screen.getByTestId('services-catalog')).toHaveAttribute('data-mobile-layout', 'grid');
+  expect(screen.queryByTestId('services-slider-progress')).not.toBeInTheDocument();
 
   const catalog = screen.getByTestId('services-catalog');
   const cards = within(catalog).getAllByTestId('service-card');
@@ -30,11 +51,43 @@ test('renders the services catalog as a revealable centered showcase without an 
   expect(revealButton).toHaveTextContent('Скрыть часть меню');
 });
 
-test('routes each card to its dedicated internal service page', () => {
+test('routes each desktop card to its dedicated internal service page through a button-like link', () => {
+  mockViewport(false);
   render(<ServicesSection allowReveal={false} />);
 
   const catalog = screen.getByTestId('services-catalog');
   const firstLink = within(catalog).getByRole('link', { name: `Открыть страницу услуги ${services[0].name}` });
 
   expect(firstLink).toHaveAttribute('href', `/services/${services[0].slug}`);
+  expect(firstLink).toHaveAttribute('data-link-appearance', 'button');
+});
+
+test('switches to a mobile trio slider with a swipe progress indicator', () => {
+  mockViewport(true);
+  render(<ServicesSection />);
+
+  const catalog = screen.getByTestId('services-catalog');
+  const firstLink = within(catalog).getByRole('link', { name: `Открыть страницу услуги ${services[0].name}` });
+  const progress = screen.getByTestId('services-slider-progress');
+
+  expect(catalog).toHaveAttribute('data-mobile-layout', 'slider-trio');
+  expect(within(catalog).getAllByTestId('service-card')).toHaveLength(services.length);
+  expect(screen.queryByTestId('services-reveal-button')).not.toBeInTheDocument();
+  expect(firstLink).toHaveAttribute('data-link-appearance', 'card');
+  expect(progress).toHaveAttribute('role', 'progressbar');
+  expect(progress).toHaveAttribute('aria-valuenow', '0');
+
+  Object.defineProperties(catalog, {
+    clientWidth: { configurable: true, value: 290 },
+    scrollWidth: { configurable: true, value: 580 },
+  });
+
+  Object.defineProperty(catalog, 'scrollLeft', {
+    configurable: true,
+    writable: true,
+    value: 145,
+  });
+
+  fireEvent.scroll(catalog);
+  expect(progress).toHaveAttribute('aria-valuenow', '50');
 });

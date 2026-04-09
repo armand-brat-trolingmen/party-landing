@@ -65,13 +65,7 @@ export function ContactPlaceholderSection() {
   const { ref, revealState } = useScrollReveal();
 
   return (
-    <section
-      id="contact"
-      className="site-section"
-      data-testid="section-contact"
-      data-section-tone="sky"
-      aria-labelledby="contact-title"
-    >
+    <section id="contact" className="site-section" data-testid="section-contact" aria-labelledby="contact-title">
       <div ref={ref} className="site-container site-reveal" data-reveal-state={revealState} data-reveal-stagger="true">
         <div className={styles.sectionBody}>
           <SectionHeading title={<span id="contact-title">Контакты</span>} description={contactGuidedCopy.description} />
@@ -119,12 +113,7 @@ export function ContactPlaceholderSection() {
               </div>
             </div>
 
-            <div
-              className={styles.visualSlot}
-              data-testid="contact-visual-slot"
-              data-contact-visual="placeholder"
-              aria-hidden="true"
-            />
+            <div className={styles.visualSlot} data-testid="contact-visual-slot" data-contact-visual="placeholder" aria-hidden="true" />
           </div>
         </div>
       </div>

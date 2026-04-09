@@ -13,5 +13,5 @@ test('renders service page content from route params', () => {
 
   expect(screen.getByRole('heading', { level: 1, name: 'Фудтраки' })).toBeInTheDocument();
   expect(within(screen.getByTestId('section-offering-intro')).getByRole('button', { name: 'Заказать' })).toBeInTheDocument();
-  expect(screen.getByTestId('section-offering-cta')).toBeInTheDocument();
+  expect(screen.getByTestId('section-offering-cta')).toHaveAttribute('data-cta-variant', 'inner');
 });

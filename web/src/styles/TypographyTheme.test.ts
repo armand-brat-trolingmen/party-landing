@@ -7,10 +7,10 @@ test('typography stays centralized in document font links and token variables fo
   const tokensCss = readFileSync(resolve(process.cwd(), 'src/styles/tokens.css'), 'utf8');
 
   expect(indexHtml).toContain('fonts.googleapis.com');
-  expect(indexHtml).toContain('family=Lora');
-  expect(indexHtml).toContain('family=Nunito+Sans');
+  expect(indexHtml).toContain('family=Manrope');
+  expect(indexHtml).toContain('family=Unbounded');
   expect(globalCss).toContain("font-family: var(--font-body)");
   expect(globalCss).toContain("font-family: var(--font-display)");
-  expect(tokensCss).toContain("--font-display: 'Lora', serif;");
-  expect(tokensCss).toContain("--font-body: 'Nunito Sans', sans-serif;");
+  expect(tokensCss).toContain("--font-display: 'Unbounded'");
+  expect(tokensCss).toContain("--font-body: 'Manrope'");
 });

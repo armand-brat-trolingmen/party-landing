@@ -11,57 +11,71 @@ type CtaSectionProps = {
 };
 
 export function CtaSection({ id, title, description, sectionTestId = 'section-cta' }: CtaSectionProps) {
-  return (
-    <section id={id} className={`site-section ${styles.section}`} data-testid={sectionTestId} aria-labelledby={`${sectionTestId}-title`}>
-      <div className="site-container">
-        <div className={styles.sectionBody} data-section-surface="band" data-section-tone="apricot">
-          <div className={styles.content}>
-            <div className={styles.copy}>
-              <SectionHeading
-                title={<span id={`${sectionTestId}-title`}>{title ?? homePageContent.cta.title}</span>}
-                description={description ?? homePageContent.cta.description}
-              />
-            </div>
+  const variant = sectionTestId === 'section-cta' ? 'home' : 'inner';
 
-            <form className={styles.form} data-testid="cta-inline-form" onSubmit={(event) => event.preventDefault()}>
-              <label className={styles.field}>
-                <span className={styles.fieldLabel}>Имя</span>
-                <input className={styles.input} name="name" autoComplete="name" placeholder="Как к вам обращаться" />
-              </label>
-
-              <label className={styles.field}>
-                <span className={styles.fieldLabel}>Телефон</span>
-                <input
-                  className={styles.input}
-                  name="phone"
-                  autoComplete="tel"
-                  placeholder="+79263919225"
-                  inputMode="tel"
-                />
-              </label>
-
-              <button type="submit" className={styles.button}>
-                {homePageContent.cta.actionLabel}
-              </button>
-            </form>
-
-            <p className={styles.note}>
-              {homePageContent.cta.consentPrefix}{' '}
-              {footerContent.legalLinks.map((legalLink, index) => (
-                <span key={legalLink.href}>
-                  {index === footerContent.legalLinks.length - 1 && index > 0 ? 'и ' : null}
-                  <a className={styles.noteLink} href={legalLink.href}>
-                    {legalLink.label}
-                  </a>
-                  {index < footerContent.legalLinks.length - 2 ? ', ' : null}
-                  {index === footerContent.legalLinks.length - 2 ? ' ' : null}
-                  {index === footerContent.legalLinks.length - 1 ? '.' : null}
-                </span>
-              ))}
-            </p>
-          </div>
+  const body = (
+    <>
+      <div className={styles.content}>
+        <div className={styles.copy}>
+          <SectionHeading
+            title={<span id={`${sectionTestId}-title`}>{title ?? homePageContent.cta.title}</span>}
+            description={description ?? homePageContent.cta.description}
+          />
         </div>
+
+        <form className={styles.form} data-testid="cta-inline-form" onSubmit={(event) => event.preventDefault()}>
+          <label className={styles.field}>
+            <span className={styles.fieldLabel}>Имя</span>
+            <input className={styles.input} name="name" autoComplete="name" placeholder="Как к вам обращаться" />
+          </label>
+
+          <label className={styles.field}>
+            <span className={styles.fieldLabel}>Телефон</span>
+            <input className={styles.input} name="phone" autoComplete="tel" placeholder="+79263919225" inputMode="tel" />
+          </label>
+
+          <button type="submit" className={styles.button}>
+            {homePageContent.cta.actionLabel}
+          </button>
+        </form>
       </div>
+
+      <p className={styles.note}>
+        {homePageContent.cta.consentPrefix}{' '}
+        {footerContent.legalLinks.map((legalLink, index) => (
+          <span key={legalLink.href}>
+            {index === footerContent.legalLinks.length - 1 && index > 0 ? 'и ' : null}
+            <a className={styles.noteLink} href={legalLink.href}>
+              {legalLink.label}
+            </a>
+            {index < footerContent.legalLinks.length - 2 ? ', ' : null}
+            {index === footerContent.legalLinks.length - 2 ? ' ' : null}
+            {index === footerContent.legalLinks.length - 1 ? '.' : null}
+          </span>
+        ))}
+      </p>
+    </>
+  );
+
+  return (
+    <section
+      id={id}
+      className={`site-section ${styles.section}`}
+      data-testid={sectionTestId}
+      data-cta-variant={variant}
+      aria-labelledby={`${sectionTestId}-title`}
+    >
+      {variant === 'home' ? (
+        <article className={`${styles.band} ${styles.homeBand}`} data-testid="cta-surface" data-cta-surface="full-bleed">
+          <div className={`site-container ${styles.bandInner}`}>{body}</div>
+        </article>
+      ) : (
+        <div className="site-container">
+          <article className={`${styles.band} ${styles.innerBand}`} data-testid="cta-surface" data-cta-surface="contained">
+            {body}
+          </article>
+        </div>
+      )}
     </section>
   );
 }

@@ -8,9 +8,9 @@ test('renders a separate testimonials proof section with an Avito link', () => {
   const sectionQueries = within(section);
 
   expect(sectionQueries.getByRole('heading', { level: 2, name: 'Отзывы клиентов' })).toBeInTheDocument();
-  expect(section).toHaveAttribute('data-section-tone', 'blush');
-  expect(section.querySelector('[data-section-surface]')).toBeNull();
+  expect(section).not.toHaveAttribute('data-section-tone');
   expect(sectionQueries.getByTestId('testimonials-grid')).toBeInTheDocument();
+  expect(sectionQueries.getByTestId('testimonials-proof')).toBeInTheDocument();
   expect(within(sectionQueries.getByTestId('testimonials-grid')).getAllByText('Отзыв с Avito').length).toBeGreaterThan(0);
   expect(sectionQueries.getByRole('link', { name: 'Перейти на Avito' })).toHaveAttribute(
     'href',

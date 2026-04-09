@@ -1,4 +1,4 @@
-﻿import { homePageContent } from '../../data/catalogContent';
+import { homePageContent } from '../../data/catalogContent';
 import { footerContent } from '../../data/footerContent';
 import { useOrderModal } from './useOrderModal';
 import styles from './OrderModal.module.css';
@@ -22,12 +22,11 @@ export function OrderModal() {
       >
         <div className={styles.header}>
           <div className={styles.titleGroup}>
-            <span className={styles.eyebrow}>Заказать</span>
             <h2 id="order-modal-title" className={styles.title}>
               Оставьте имя и телефон
             </h2>
             <p className={styles.description}>
-              Мы свяжемся с вами, поможем подобрать формат мероприятия и подскажем следующий шаг по подготовке.
+              Свяжемся с вами, поможем подобрать формат мероприятия и подскажем, как аккуратно встроить его в площадку.
             </p>
           </div>
 
@@ -44,13 +43,7 @@ export function OrderModal() {
 
           <label className={styles.field}>
             <span className={styles.fieldLabel}>Телефон</span>
-            <input
-              className={styles.input}
-              name="phone"
-              autoComplete="tel"
-              placeholder="+79263919225"
-              inputMode="tel"
-            />
+            <input className={styles.input} name="phone" autoComplete="tel" placeholder="+79263919225" inputMode="tel" />
           </label>
 
           <button type="submit" className={styles.submitButton}>

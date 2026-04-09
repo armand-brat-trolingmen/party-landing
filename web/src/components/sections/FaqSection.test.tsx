@@ -17,8 +17,7 @@ test('renders faq as a cinematic accordion without a framed outer section shell'
   const buttons = sectionQueries.getAllByRole('button');
 
   expect(sectionQueries.getByRole('heading', { level: 2, name: 'Частые вопросы' })).toBeInTheDocument();
-  expect(section).toHaveAttribute('data-section-tone', 'lemon');
-  expect(section.querySelector('[data-section-surface]')).toBeNull();
+  expect(section).not.toHaveAttribute('data-section-tone');
   expect(accordion).toHaveAttribute('data-motion-faq', 'cinematic');
   expect(list).toBeInTheDocument();
   expect(within(list).getAllByRole('listitem')).toHaveLength(faqItems.length);

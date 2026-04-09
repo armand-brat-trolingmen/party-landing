@@ -1,21 +1,17 @@
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { ReviewsSection } from './ReviewsSection';
 
-test('renders moments as a separate manual gallery before testimonials', () => {
+test('renders moments as an editorial photo strip without manual carousel controls', () => {
   render(<ReviewsSection />);
 
   const section = screen.getByTestId('section-moments');
   const sectionQueries = within(section);
 
   expect(sectionQueries.getByRole('heading', { level: 2, name: 'Красивые кадры с реальных событий' })).toBeInTheDocument();
-  expect(section).toHaveAttribute('data-section-tone', 'milk');
-  expect(section.querySelector('[data-section-surface]')).toBeNull();
-  expect(sectionQueries.getByTestId('moment-feed-slider')).toHaveAttribute('data-slider-mode', 'manual');
-  expect(sectionQueries.getAllByTestId('moment-feed-slide')).toHaveLength(1);
+  expect(section).not.toHaveAttribute('data-section-tone');
+  expect(sectionQueries.getByTestId('moment-feed-gallery')).toHaveAttribute('data-gallery-style', 'editorial-mosaic');
+  expect(sectionQueries.getAllByTestId('moment-feed-card')).toHaveLength(3);
   expect(sectionQueries.queryByRole('link', { name: /Avito/i })).not.toBeInTheDocument();
-  expect(sectionQueries.getByRole('button', { name: 'Предыдущий момент' })).toBeDisabled();
-  expect(sectionQueries.getByRole('button', { name: 'Следующий момент' })).toBeEnabled();
-
-  fireEvent.click(sectionQueries.getByRole('button', { name: 'Следующий момент' }));
-  expect(sectionQueries.getByTestId('moment-feed-slider')).toHaveAttribute('data-active-slide', '1');
+  expect(sectionQueries.queryByRole('button', { name: 'Предыдущий момент' })).not.toBeInTheDocument();
+  expect(sectionQueries.queryByRole('button', { name: 'Следующий момент' })).not.toBeInTheDocument();
 });

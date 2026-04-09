@@ -1,4 +1,4 @@
-﻿import { render, screen, within } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import App from './App';
 
@@ -30,15 +30,14 @@ test('renders the homepage as a catalog hub inside the shared site shell', () =>
     'section-about',
     'section-services',
     'section-extras',
-    'section-cta',
-    'section-moments',
     'section-testimonials',
     'section-faq',
     'section-contact',
+    'section-cta',
   ]);
 });
 
-test('renders hub-specific actions and split moments/reviews sections', () => {
+test('renders hub-specific actions and keeps the testimonial proof section', () => {
   render(
     <MemoryRouter>
       <App />
@@ -47,8 +46,7 @@ test('renders hub-specific actions and split moments/reviews sections', () => {
 
   expect(screen.getByRole('button', { name: 'В каталог' })).toBeInTheDocument();
   expect(screen.getAllByRole('button', { name: 'Заказать' }).length).toBeGreaterThanOrEqual(3);
-  expect(screen.getByTestId('section-moments')).toBeInTheDocument();
+  expect(screen.queryByTestId('section-moments')).not.toBeInTheDocument();
   expect(screen.getByTestId('section-testimonials')).toBeInTheDocument();
-  expect(screen.getByTestId('moment-feed-slider')).toHaveAttribute('data-slider-mode', 'manual');
   expect(screen.getByTestId('testimonials-grid')).toBeInTheDocument();
 });

@@ -10,8 +10,7 @@ test('renders contacts as a split canvas with direct details and a future visual
   const sectionQueries = within(section);
 
   expect(sectionQueries.getByRole('heading', { level: 2, name: 'Контакты' })).toBeInTheDocument();
-  expect(section).toHaveAttribute('data-section-tone', 'sky');
-  expect(section.querySelector('[data-section-surface]')).toBeNull();
+  expect(section).not.toHaveAttribute('data-section-tone');
   expect(sectionQueries.getByTestId('contact-layout')).toHaveAttribute('data-contact-layout', 'split-canvas');
   expect(sectionQueries.queryByText(footerContent.legalAddress)).not.toBeInTheDocument();
   expect(sectionQueries.getByRole('link', { name: footerContent.phoneLabel })).toHaveAttribute('href', footerContent.phoneHref);

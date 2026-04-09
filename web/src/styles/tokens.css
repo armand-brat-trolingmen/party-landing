@@ -1,39 +1,51 @@
 :root {
-  /* Typography stays centralized here so swapping the font pair is easy to roll back. */
-  --font-display: 'Lora', serif;
-  --font-body: 'Nunito Sans', sans-serif;
-  --bg-page: #fff9f4;
-  --bg-surface: #fffdf9;
-  --accent-yellow: #ffd65b;
-  --accent-red: #ef4f43;
-  --accent-pink: #ff8ab7;
-  --accent-sky: #6fbfff;
-  --accent-chocolate: #6b4a35;
-  --tone-rose: rgba(255, 196, 215, 0.42);
-  --tone-rose-soft: rgba(255, 223, 233, 0.28);
-  --tone-lemon: rgba(255, 231, 153, 0.44);
-  --tone-lemon-soft: rgba(255, 242, 204, 0.3);
-  --tone-sky: rgba(176, 220, 255, 0.4);
-  --tone-sky-soft: rgba(216, 239, 255, 0.28);
-  --tone-milk: rgba(255, 249, 239, 0.86);
-  --tone-blush: rgba(255, 210, 225, 0.34);
-  --tone-apricot: rgba(255, 186, 122, 0.42);
-  --line-soft: rgba(126, 100, 87, 0.09);
-  --line-soft-strong: rgba(126, 100, 87, 0.14);
-  --shadow-soft: 0 18px 48px rgba(122, 89, 63, 0.12);
-  --shadow-shell: 0 18px 38px rgba(122, 89, 63, 0.07);
-  --text-primary: #3d2d25;
-  --text-muted: #756257;
+  --font-display: 'Unbounded', 'Arial', sans-serif;
+  --font-body: 'Manrope', 'Segoe UI', sans-serif;
+
+  --bg-base: #FFFDF8;
+  --bg-soft-blue: #F1FBFF;
+  --bg-soft-cream: #FFF6EE;
+  --bg-soft-rose: #FFEEF5;
+  --surface-primary: rgba(255, 255, 255, 0.84);
+  --surface-secondary: rgba(255, 255, 255, 0.64);
+  --surface-raised: #FFFFFF;
+
+  --accent-primary: #FF7EB6;
+  --accent-primary-hover: #F45EA1;
+  --accent-primary-active: #DD4B8D;
+  --accent-purple: #7F4DDB;
+  --accent-purple-deep: #6B3FC4;
+  --accent-secondary: #8FD8F8;
+  --accent-secondary-strong: #68C8ED;
+  --accent-cream: #FFF0D9;
+
+  --text-primary: #1E2430;
+  --text-muted: #5D6776;
+  --text-soft: #7F8897;
+  --text-inverse: #FFFDF8;
+
+  --line-soft: #E8EEF5;
+  --line-strong: rgba(31, 52, 74, 0.12);
+  --shadow-soft: 0 20px 44px rgba(31, 52, 74, 0.08);
+  --shadow-card: 0 30px 60px rgba(31, 52, 74, 0.12);
+  --shadow-glow: 0 24px 54px rgba(143, 216, 248, 0.18);
+
   --space-2: 0.5rem;
   --space-3: 0.75rem;
   --space-4: 1rem;
+  --space-5: 1.25rem;
   --space-6: 1.5rem;
   --space-8: 2rem;
   --space-10: 2.5rem;
   --space-12: 3rem;
   --space-16: 4rem;
+
   --radius-pill: 999px;
   --radius-card: 32px;
-  --shell-max-width: 1400px;
-  --header-offset: 7.5rem;
+  --radius-panel: 28px;
+  --radius-frame: 36px;
+
+  --shell-max-width: 1440px;
+  --content-max-width: 1280px;
+  --header-offset: 7rem;
 }
