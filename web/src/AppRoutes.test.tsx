@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
+import { services } from './data/catalogContent';
 import { AppRoutes } from './AppRoutes';
 
 test('renders dedicated privacy page route', () => {
@@ -34,12 +35,12 @@ test('renders dedicated consent page route', () => {
 
 test('renders service and extra internal pages', () => {
   const { unmount } = render(
-    <MemoryRouter initialEntries={['/services/food-trucks']}>
+    <MemoryRouter initialEntries={['/services/cotton-candy']}>
       <AppRoutes />
     </MemoryRouter>,
   );
 
-  expect(screen.getByRole('heading', { level: 1, name: 'Фудтраки' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { level: 1, name: services[0].name })).toBeInTheDocument();
   unmount();
 
   render(

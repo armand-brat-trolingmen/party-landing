@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { services } from '../../data/catalogContent';
 import { ServicesSection } from './ServicesSection';
 
@@ -19,36 +19,64 @@ function mockViewport(isMobile: boolean) {
   });
 }
 
-test('renders the services catalog as a revealable centered showcase without helper chips', () => {
-  mockViewport(false);
-  render(<ServicesSection />);
+test('renders the services catalog as a revealable centered showcase without helper chips', async () => {
+  vi.useFakeTimers();
 
-  const section = screen.getByTestId('section-services');
-  const heading = within(section).getByRole('heading', { level: 2, name: 'Услуги' });
+  try {
+    mockViewport(false);
+    render(<ServicesSection />);
 
-  expect(heading).toBeInTheDocument();
-  expect(heading.closest('[data-heading-align]')).toHaveAttribute('data-heading-align', 'center');
-  expect(section).not.toHaveAttribute('data-section-tone');
-  expect(screen.queryByTestId('services-chip-row')).not.toBeInTheDocument();
-  expect(screen.getByTestId('services-catalog')).toHaveAttribute('data-showcase-style', 'premium-grid');
-  expect(screen.getByTestId('services-catalog')).toHaveAttribute('data-mobile-layout', 'grid');
-  expect(screen.queryByTestId('services-slider-progress')).not.toBeInTheDocument();
+    const section = screen.getByTestId('section-services');
+    const heading = within(section).getByRole('heading', { level: 2, name: 'Услуги' });
 
-  const catalog = screen.getByTestId('services-catalog');
-  const cards = within(catalog).getAllByTestId('service-card');
+    expect(heading).toBeInTheDocument();
+    expect(heading.closest('[data-heading-align]')).toHaveAttribute('data-heading-align', 'center');
+    expect(section).not.toHaveAttribute('data-section-tone');
+    expect(screen.queryByTestId('services-chip-row')).not.toBeInTheDocument();
+    expect(screen.getByTestId('services-catalog')).toHaveAttribute('data-showcase-style', 'premium-grid');
+    expect(screen.getByTestId('services-catalog')).toHaveAttribute('data-mobile-layout', 'grid');
+    expect(screen.queryByTestId('services-slider-progress')).not.toBeInTheDocument();
 
-  expect(cards).toHaveLength(8);
-  expect(within(catalog).getByRole('heading', { level: 3, name: services[0].name })).toBeInTheDocument();
-  expect(within(catalog).getByText(services[0].shortDescription)).toBeInTheDocument();
-  expect(within(catalog).queryByRole('heading', { level: 3, name: services[10].name })).not.toBeInTheDocument();
+    const catalog = screen.getByTestId('services-catalog');
+    const cards = within(catalog).getAllByTestId('service-card');
+    const firstCard = cards[0] as HTMLElement;
+    const firstImage = within(firstCard).getByTestId('service-card-media-image');
 
-  const revealButton = screen.getByTestId('services-reveal-button');
-  expect(revealButton).toHaveTextContent('Показать ещё');
+    expect(cards).toHaveLength(9);
+    expect(within(catalog).getByRole('heading', { level: 3, name: 'Сахарная вата' })).toBeInTheDocument();
+    expect(firstImage).toBeInTheDocument();
+    expect(firstImage).toHaveAttribute('src', expect.stringContaining('/images/services-home/cotton-candy.webp'));
+    expect(within(firstCard).getByText('от 12.000 ₽')).toBeInTheDocument();
+    expect(within(catalog).queryByText(services[0].shortDescription)).not.toBeInTheDocument();
+    expect(within(catalog).queryByRole('heading', { level: 3, name: 'Пенная пушка' })).not.toBeInTheDocument();
 
-  fireEvent.click(revealButton);
-  expect(within(catalog).getAllByTestId('service-card')).toHaveLength(services.length);
-  expect(within(catalog).getByRole('heading', { level: 3, name: services[10].name })).toBeInTheDocument();
-  expect(revealButton).toHaveTextContent('Скрыть часть меню');
+    const revealButton = screen.getByTestId('services-reveal-button');
+    expect(revealButton).toHaveTextContent('Показать ещё');
+
+    fireEvent.click(revealButton);
+
+    expect(within(catalog).getAllByTestId('service-card')).toHaveLength(services.length);
+    expect(within(catalog).getByRole('heading', { level: 3, name: 'Пенная пушка' })).toBeInTheDocument();
+    expect(within(catalog).getAllByTestId('service-card')[9]).toHaveAttribute('data-reveal-enter', 'true');
+    expect(revealButton).toHaveTextContent('Свернуть');
+
+    fireEvent.click(revealButton);
+
+    expect(within(catalog).getAllByTestId('service-card')).toHaveLength(services.length);
+    expect(within(catalog).getAllByTestId('service-card')[9]).toHaveAttribute('data-reveal-exit', 'true');
+    expect(catalog).toHaveAttribute('data-services-collapsing', 'true');
+
+    await act(async () => {
+      await vi.runAllTimersAsync();
+    });
+
+    expect(within(catalog).getAllByTestId('service-card')).toHaveLength(9);
+    expect(catalog).toHaveAttribute('data-services-expanded', 'false');
+    expect(catalog).toHaveAttribute('data-services-collapsing', 'false');
+    expect(revealButton).toHaveTextContent('Показать ещё');
+  } finally {
+    vi.useRealTimers();
+  }
 });
 
 test('routes each desktop card to its dedicated internal service page through a button-like link', () => {
@@ -56,9 +84,9 @@ test('routes each desktop card to its dedicated internal service page through a 
   render(<ServicesSection allowReveal={false} />);
 
   const catalog = screen.getByTestId('services-catalog');
-  const firstLink = within(catalog).getByRole('link', { name: `Открыть страницу услуги ${services[0].name}` });
+  const firstLink = within(catalog).getByRole('link', { name: 'Открыть страницу услуги Сахарная вата' });
 
-  expect(firstLink).toHaveAttribute('href', `/services/${services[0].slug}`);
+  expect(firstLink).toHaveAttribute('href', '/services/cotton-candy');
   expect(firstLink).toHaveAttribute('data-link-appearance', 'button');
 });
 
@@ -67,13 +95,16 @@ test('switches to a mobile trio slider with a swipe progress indicator', () => {
   render(<ServicesSection />);
 
   const catalog = screen.getByTestId('services-catalog');
-  const firstLink = within(catalog).getByRole('link', { name: `Открыть страницу услуги ${services[0].name}` });
+  const firstCard = within(catalog).getAllByTestId('service-card')[0] as HTMLElement;
+  const firstLink = within(catalog).getByRole('link', { name: 'Открыть страницу услуги Сахарная вата' });
   const progress = screen.getByTestId('services-slider-progress');
 
   expect(catalog).toHaveAttribute('data-mobile-layout', 'slider-trio');
   expect(within(catalog).getAllByTestId('service-card')).toHaveLength(services.length);
   expect(screen.queryByTestId('services-reveal-button')).not.toBeInTheDocument();
   expect(firstLink).toHaveAttribute('data-link-appearance', 'card');
+  expect(within(catalog).getAllByTestId('service-card-media-image').length).toBeGreaterThan(0);
+  expect(within(firstCard).getByText('от 12.000 ₽')).toBeInTheDocument();
   expect(progress).toHaveAttribute('role', 'progressbar');
   expect(progress).toHaveAttribute('aria-valuenow', '0');
 

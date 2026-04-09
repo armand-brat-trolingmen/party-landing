@@ -55,7 +55,7 @@ test('shows desktop navigation with a dedicated order button on the homepage', (
 
 test('keeps route-aware links on internal pages', () => {
   mockViewport(true);
-  renderHeader(['/services/food-trucks']);
+  renderHeader(['/services/cotton-candy']);
 
   expect(screen.getByTestId('site-header')).toHaveAttribute('data-header-route', 'inner');
   const navigation = screen.getByRole('navigation');

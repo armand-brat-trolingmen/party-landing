@@ -187,19 +187,20 @@ test('mobile header stays fixed from the first scroll pixel', async ({ page }) =
   expect(Math.abs(beforeMenu.y - afterMenu.y)).toBeLessThan(4);
 });
 
-test('mobile hero scene keeps smaller cards inside the frame with a warm light background', async ({ page }) => {
+test('mobile hero poster stays inside the frame and keeps the layout compact', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
 
-  const frame = page.getByTestId('hero-scene-frame');
+  const carousel = page.getByTestId('hero-poster-carousel');
+  const frame = page.getByTestId('hero-poster-frame');
   await expect(frame).toBeVisible();
+  await expect(carousel).toHaveAttribute('data-active-index', '0');
 
-  const backgroundImage = await frame.evaluate((el) => window.getComputedStyle(el).backgroundImage);
-  expect(backgroundImage).not.toContain('rgb(93, 61, 45)');
-  expect(backgroundImage).not.toContain('rgb(74, 48, 37)');
+  const overflow = await frame.evaluate((el) => window.getComputedStyle(el).overflow);
+  expect(overflow).toBe('hidden');
 
   const frameBox = await frame.boundingBox();
-  const cards = await page.locator('[data-testid="hero-scene-frame"] > div').evaluateAll((elements) =>
+  const posters = await page.locator('[data-testid="hero-poster-frame"] img').evaluateAll((elements) =>
     elements.map((el) => {
       const rect = el.getBoundingClientRect();
       return { x: rect.x, y: rect.y, width: rect.width, height: rect.height };
@@ -209,21 +210,12 @@ test('mobile hero scene keeps smaller cards inside the frame with a warm light b
   expect(frameBox).not.toBeNull();
   if (!frameBox) return;
 
-  for (const card of cards) {
-    expect(card.x).toBeGreaterThanOrEqual(frameBox.x);
-    expect(card.y).toBeGreaterThanOrEqual(frameBox.y);
-    expect(card.x + card.width).toBeLessThanOrEqual(frameBox.x + frameBox.width);
-    expect(card.y + card.height).toBeLessThanOrEqual(frameBox.y + frameBox.height);
+  for (const poster of posters) {
+    expect(poster.width).toBeGreaterThan(0);
+    expect(poster.height).toBeGreaterThan(0);
   }
-
-  const overlapWidth = (a: (typeof cards)[number], b: (typeof cards)[number]) => {
-    const left = Math.max(a.x, b.x);
-    const right = Math.min(a.x + a.width, b.x + b.width);
-    return Math.max(0, right - left);
-  };
-
-  expect(overlapWidth(cards[0], cards[1])).toBeLessThan(80);
-  expect(overlapWidth(cards[1], cards[2])).toBeLessThan(80);
+  expect(frameBox.width).toBeGreaterThan(240);
+  expect(frameBox.height).toBeGreaterThan(320);
 });
 
 test('desktop hero heading is slightly reduced so the first screen stays calmer', async ({ page }) => {
@@ -325,22 +317,25 @@ test('desktop contacts use a guided first-message layout with service icons', as
   await expect(page.getByTestId('contact-icon-avito')).toBeVisible();
 });
 
-test('hero motion, panel glow, and review hover feel animated without breaking layout', async ({ page }) => {
+test('hero poster, panel glow, and review hover feel animated without breaking layout', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/');
 
-  const heroFrame = page.getByTestId('hero-scene-frame');
-  const foodTruckCard = page.getByTestId('hero-scene-card-food-truck');
+  const heroCarousel = page.getByTestId('hero-poster-carousel');
+  const heroFrame = page.getByTestId('hero-poster-frame');
+  const heroPoster = heroFrame.locator('img').first();
   const reviewsPanel = page.locator('#reviews .site-panel-glow').first();
   const reviewCard = page.getByTestId('moment-feed-slide').first();
   const reviewSlider = page.getByTestId('moment-feed-slider');
 
-  await expect(heroFrame).toHaveAttribute('data-motion-frame', 'parallax');
-  await expect(foodTruckCard).toHaveAttribute('data-motion-depth', 'front');
+  await expect(heroCarousel).toHaveAttribute('data-active-index', '0');
+  await expect(heroFrame).toBeVisible();
+  await expect(heroPoster).toBeVisible();
   await expect(reviewsPanel).toBeVisible();
 
-  const heroAnimation = await foodTruckCard.evaluate((el) => window.getComputedStyle(el).animationName);
-  expect(heroAnimation).not.toBe('none');
+  const heroTrack = page.locator('[data-testid="hero-poster-frame"] [class*="track"]').first();
+  const heroTransition = await heroTrack.evaluate((el) => window.getComputedStyle(el).transitionDuration);
+  expect(heroTransition).not.toBe('0s');
 
   const panelGlowAnimation = await reviewsPanel.evaluate((el) =>
     window.getComputedStyle(el, '::before').animationName,
@@ -353,7 +348,7 @@ test('hero motion, panel glow, and review hover feel animated without breaking l
   await expect(reviewCard).toHaveAttribute('data-slide-transition', 'soft-swap');
 });
 
-test('smart header, cinematic faq, and service micro scenes stay wired up on desktop', async ({ page }) => {
+test('smart header, cinematic faq, and service catalog photos stay wired up on desktop', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/');
 
@@ -377,13 +372,13 @@ test('smart header, cinematic faq, and service micro scenes stay wired up on des
   await expect(page.locator('#faq [data-motion-item="glow"][data-open="true"]').first()).toBeVisible();
 
   await page.locator('#services').scrollIntoViewIfNeeded();
-  const foodTruckImage = page.locator('[data-service-id="food-trucks"] [data-motion-image="true"]').first();
-  const cottonImage = page.locator('[data-service-id="cotton-candy"] [data-motion-image="true"]').first();
-  const truckAnimation = await foodTruckImage.evaluate((el) => window.getComputedStyle(el).animationName);
-  const cottonAnimation = await cottonImage.evaluate((el) => window.getComputedStyle(el).animationName);
+  const servicesCatalog = page.getByTestId('services-catalog');
+  const serviceCards = page.getByTestId('service-card');
+  const firstCardImage = page.getByTestId('service-card-media-image').first();
 
-  expect(truckAnimation).not.toBe('none');
-  expect(cottonAnimation).not.toBe('none');
+  await expect(servicesCatalog).toHaveAttribute('data-services-expanded', 'false');
+  await expect(serviceCards).toHaveCount(9);
+  await expect(firstCardImage).toBeVisible();
 });
 
 test('clicked desktop nav item stays active during smooth anchor scroll', async ({ page }) => {

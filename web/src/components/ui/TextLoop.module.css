@@ -1,0 +1,53 @@
+.root {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  --text-loop-separator-color: currentColor;
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  user-select: none;
+}
+
+.sequence {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  min-width: max-content;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.label,
+.separator {
+  display: inline-flex;
+  align-items: center;
+}
+
+.separator {
+  color: var(--text-loop-separator-color, currentColor);
+  margin-inline: clamp(0.8rem, 1.8vw, 1.2rem);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .root {
+    cursor: default;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    transform: translate3d(0, 0, 0);
+  }
+}

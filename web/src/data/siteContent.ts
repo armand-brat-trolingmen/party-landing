@@ -11,6 +11,24 @@ export const navItems = [
   { id: 'contact', label: 'Контакты' },
 ] as const;
 
+export const conceptLoopSeparator = '•' as const;
+
+export const conceptLoopItems = [
+  'Блины',
+  'Фудтраки',
+  'Бабл ти',
+  'Хотдоги',
+  'Сладкая вата',
+  'Кейтеринг',
+  'Шариковое мороженое',
+  'Лимонад',
+  'Вафли',
+  'Пенная вечеринка',
+  'Бургеры',
+  'Шоколадный фонтан',
+  'Попкорн',
+] as const;
+
 export const siteContent = {
   brand: 'Праздник каждый день',
   tagline: homePageContent.hero.title,
@@ -38,20 +56,6 @@ export const heroPosterSlides = [
     objectPosition: '56% 40%',
   },
 ] as const;
-
-export const heroSceneItems = catalogServices.slice(0, 3).map((service) => ({
-  id: service.slug,
-  label: service.name,
-  image: service.visual.image ?? '/brand-logo.png',
-  width: service.visual.width ?? 220,
-  height: service.visual.height ?? 260,
-})) as readonly {
-  id: string;
-  label: string;
-  image: string;
-  width: number;
-  height: number;
-}[];
 
 export const aboutAtelierScene = {
   eyebrow: homePageContent.about.eyebrow,

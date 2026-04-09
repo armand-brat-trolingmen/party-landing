@@ -32,7 +32,7 @@
 
 .cardLink {
   display: grid;
-  gap: 1rem;
+  gap: 0.9rem;
   min-height: 100%;
   color: inherit;
   text-decoration: none;
@@ -40,31 +40,38 @@
 }
 
 .visualWrap {
+  position: relative;
   display: grid;
-  align-items: center;
-  min-height: clamp(15rem, 28vw, 20rem);
-  padding: 1rem;
+  min-height: clamp(13.5rem, 24vw, 17rem);
   border-radius: calc(var(--radius-card) - 0.45rem);
-  background:
-    linear-gradient(180deg, rgba(241, 251, 255, 0.92), rgba(255, 253, 248, 0.72)),
-    radial-gradient(circle at 18% 14%, rgba(255, 255, 255, 0.84), rgba(255, 255, 255, 0) 42%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(255, 253, 248, 0.96));
+  border: 1px solid rgba(31, 52, 74, 0.07);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92);
   overflow: hidden;
+}
+
+.visualImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transform: scale(1.02);
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.visualFallback {
+  min-height: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(255, 253, 248, 0.96));
 }
 
 .copy {
   display: grid;
-  gap: 0.65rem;
+  gap: 0.3rem;
 }
 
 .name {
   font-size: clamp(1.35rem, 2vw, 1.75rem);
   line-height: 1.02;
-}
-
-.description {
-  color: var(--text-muted);
-  font-size: 0.98rem;
-  line-height: 1.62;
 }
 
 .footer {
@@ -76,8 +83,34 @@
 
 .price {
   color: var(--text-primary);
-  font-size: 1rem;
-  font-weight: 800;
+  font-size: clamp(1.35rem, 2vw, 1.75rem);
+  font-weight: 400;
+  line-height: 1.02;
+}
+
+.cardLink:hover .visualImage,
+.cardLink:focus-visible .visualImage {
+  transform: scale(1.075);
+}
+
+.card[data-reveal-enter='true'] {
+  animation: serviceCardEnter 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--service-reveal-order, 0) * 38ms);
+}
+
+.card[data-reveal-enter='true'] .visualImage {
+  animation: serviceImageEnter 340ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--service-reveal-order, 0) * 38ms + 26ms);
+}
+
+.card[data-reveal-exit='true'] {
+  animation: serviceCardExit 280ms cubic-bezier(0.55, 0, 0.22, 1) both;
+  animation-delay: calc((6 - var(--service-reveal-order, 0)) * 18ms);
+}
+
+.card[data-reveal-exit='true'] .visualImage {
+  animation: serviceImageExit 280ms cubic-bezier(0.55, 0, 0.22, 1) both;
+  animation-delay: calc((6 - var(--service-reveal-order, 0)) * 18ms);
 }
 
 .link {
@@ -213,6 +246,54 @@
   }
 }
 
+@keyframes serviceCardEnter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes serviceImageEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes serviceCardExit {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+}
+
+@keyframes serviceImageExit {
+  from {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+
 @media (min-width: 760px) {
   .grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -253,27 +334,21 @@
   }
 
   .cardLink {
-    gap: 0.62rem;
+    gap: 0.54rem;
     align-content: start;
   }
 
   .visualWrap {
-    min-height: 7rem;
-    padding: 0.42rem;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 253, 248, 0.96));
+    min-height: 6.6rem;
   }
 
   .copy {
-    gap: 0.28rem;
+    gap: 0.18rem;
   }
 
   .name {
     font-size: 0.88rem;
     line-height: 1.12;
-  }
-
-  .description {
-    display: none;
   }
 
   .footer {
@@ -282,9 +357,10 @@
 
   .price {
     display: block;
-    color: var(--text-muted);
-    font-size: 0.76rem;
-    line-height: 1.2;
+    color: var(--text-primary);
+    font-size: 0.88rem;
+    font-weight: 400;
+    line-height: 1.12;
   }
 
   .link {
@@ -293,5 +369,20 @@
 
   .sliderProgress {
     margin-top: 0.2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .visualImage,
+  .link,
+  .link::before {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .cardLink:hover .visualImage,
+  .cardLink:focus-visible .visualImage {
+    transform: scale(1.02);
   }
 }

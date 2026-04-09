@@ -10,6 +10,15 @@
   tone: 'gold' | 'rose' | 'mint' | 'sky' | 'berry' | 'caramel' | 'chocolate';
 };
 
+export type HomeCardImage = {
+  src: string;
+  fallbackSrc: string;
+  width: number;
+  height: number;
+  sizes: string;
+  objectPosition?: string;
+};
+
 export type OfferingEntity = {
   kind: 'service' | 'extra';
   slug: string;
@@ -22,6 +31,7 @@ export type OfferingEntity = {
   seoTitle: string;
   seoDescription: string;
   visual: CatalogVisual;
+  homeCardImage?: HomeCardImage;
 };
 
 export type MomentEntity = {
@@ -48,23 +58,119 @@ export type ReviewProofEntity = {
 
 const BRAND_NAME = 'Праздник каждый день';
 
-const OFFERING_EMOJI_MAP: Record<string, string> = {
-  'food-trucks': '🚚',
-  'cotton-candy': '☁️',
-  'chocolate-fountain': '🍫',
-  'fondue-station': '🍓',
-  'bubble-waffles': '🧇',
-  'hot-dogs': '🌭',
-  'fried-ice-cream': '🍨',
-  'donut-station': '🍩',
-  'lemonade-bar': '🥤',
-  'popcorn-station': '🍿',
-  'pancake-station': '🥞',
-  'fruit-dessert-zone': '🍓',
-  'branded-serving': '✨',
-  'decor-setup': '🎀',
-  'guest-welcome-point': '🎉',
-  'extended-service': '🕒',
+const HOME_SERVICE_CARD_IMAGE_MAP: Record<string, HomeCardImage> = {
+  'cotton-candy': {
+    src: '/images/services-home/cotton-candy.webp',
+    fallbackSrc: '/images/services-home-fallback/cotton-candy.png',
+    width: 1024,
+    height: 1024,
+    sizes: '(max-width: 720px) 34vw, (max-width: 1120px) 44vw, 29vw',
+  },
+  popcorn: {
+    src: '/images/services-home/popcorn.webp',
+    fallbackSrc: '/images/services-home-fallback/popcorn.png',
+    width: 1024,
+    height: 1024,
+    sizes: '(max-width: 720px) 34vw, (max-width: 1120px) 44vw, 29vw',
+  },
+  'cotton-candy-popcorn': {
+    src: '/images/services-home/cotton-candy-popcorn.webp',
+    fallbackSrc: '/images/services-home-fallback/cotton-candy-popcorn.png',
+    width: 1024,
+    height: 1024,
+    sizes: '(max-width: 720px) 34vw, (max-width: 1120px) 44vw, 29vw',
+  },
+  'roll-ice-cream': {
+    src: '/images/services-home/roll-ice-cream.webp',
+    fallbackSrc: '/images/services-home-fallback/roll-ice-cream.png',
+    width: 1024,
+    height: 1024,
+    sizes: '(max-width: 720px) 34vw, (max-width: 1120px) 44vw, 29vw',
+  },
+  'scoop-ice-cream': {
+    src: '/images/services-home/scoop-ice-cream.webp',
+    fallbackSrc: '/images/services-home-fallback/scoop-ice-cream.png',
+    width: 1024,
+    height: 1024,
+    sizes: '(max-width: 720px) 34vw, (max-width: 1120px) 44vw, 29vw',
+  },
+  'nitro-ice-cream': {
+    src: '/images/services-home/nitro-ice-cream.webp',
+    fallbackSrc: '/images/services-home-fallback/nitro-ice-cream.png',
+    width: 1024,
+    height: 1024,
+    sizes: '(max-width: 720px) 34vw, (max-width: 1120px) 44vw, 29vw',
+  },
+  'chocolate-fountain': {
+    src: '/images/services-home/chocolate-fountain.webp',
+    fallbackSrc: '/images/services-home-fallback/chocolate-fountain.png',
+    width: 1024,
+    height: 1024,
+    sizes: '(max-width: 720px) 34vw, (max-width: 1120px) 44vw, 29vw',
+  },
+  'french-hot-dog': {
+    src: '/images/services-home/french-hot-dog.webp',
+    fallbackSrc: '/images/services-home-fallback/french-hot-dog.png',
+    width: 1024,
+    height: 1024,
+    sizes: '(max-width: 720px) 34vw, (max-width: 1120px) 44vw, 29vw',
+  },
+  'danish-hot-dog': {
+    src: '/images/services-home/danish-hot-dog.webp',
+    fallbackSrc: '/images/services-home-fallback/danish-hot-dog.png',
+    width: 1024,
+    height: 1024,
+    sizes: '(max-width: 720px) 34vw, (max-width: 1120px) 44vw, 29vw',
+  },
+  burgers: {
+    src: '/images/services-home/burgers.webp',
+    fallbackSrc: '/images/services-home-fallback/burgers.png',
+    width: 1024,
+    height: 1024,
+    sizes: '(max-width: 720px) 34vw, (max-width: 1120px) 44vw, 29vw',
+  },
+  'belgian-waffles': {
+    src: '/images/services-home/belgian-waffles.webp',
+    fallbackSrc: '/images/services-home-fallback/belgian-waffles.png',
+    width: 1024,
+    height: 1024,
+    sizes: '(max-width: 720px) 34vw, (max-width: 1120px) 44vw, 29vw',
+  },
+  pancakes: {
+    src: '/images/services-home/pancakes.webp',
+    fallbackSrc: '/images/services-home-fallback/pancakes.png',
+    width: 1024,
+    height: 1024,
+    sizes: '(max-width: 720px) 34vw, (max-width: 1120px) 44vw, 29vw',
+  },
+  'champagne-pyramid': {
+    src: '/images/services-home/champagne-pyramid.webp',
+    fallbackSrc: '/images/services-home-fallback/champagne-pyramid.png',
+    width: 1024,
+    height: 1024,
+    sizes: '(max-width: 720px) 34vw, (max-width: 1120px) 44vw, 29vw',
+  },
+  'craft-lemonade': {
+    src: '/images/services-home/craft-lemonade.webp',
+    fallbackSrc: '/images/services-home-fallback/craft-lemonade.png',
+    width: 1024,
+    height: 1024,
+    sizes: '(max-width: 720px) 34vw, (max-width: 1120px) 44vw, 29vw',
+  },
+  'bubble-tea': {
+    src: '/images/services-home/bubble-tea.webp',
+    fallbackSrc: '/images/services-home-fallback/bubble-tea.png',
+    width: 1024,
+    height: 1024,
+    sizes: '(max-width: 720px) 34vw, (max-width: 1120px) 44vw, 29vw',
+  },
+  'foam-cannon': {
+    src: '/images/services-home/foam-cannon.webp',
+    fallbackSrc: '/images/services-home-fallback/foam-cannon.png',
+    width: 1024,
+    height: 1024,
+    sizes: '(max-width: 720px) 34vw, (max-width: 1120px) 44vw, 29vw',
+  },
 };
 
 const MOMENT_ALT_MAP: Record<string, string> = {
@@ -98,9 +204,10 @@ function normalizeOffering(offering: OfferingEntity): OfferingEntity {
     included,
     seoTitle: buildOfferingSeoTitle(offering),
     seoDescription: buildOfferingSeoDescription(offering),
+    homeCardImage: offering.kind === 'service' ? HOME_SERVICE_CARD_IMAGE_MAP[offering.slug] : offering.homeCardImage,
     visual: {
       ...offering.visual,
-      emoji: OFFERING_EMOJI_MAP[offering.slug] ?? offering.visual.emoji,
+      emoji: offering.visual.emoji,
       alt: buildOfferingAlt(offering.name),
     },
   };
@@ -110,6 +217,45 @@ function normalizeMoment(moment: MomentEntity): MomentEntity {
   return {
     ...moment,
     alt: MOMENT_ALT_MAP[moment.id] ?? moment.alt,
+  };
+}
+
+type ServiceDraft = {
+  slug: string;
+  name: string;
+  shortDescription: string;
+  fullDescription: string;
+  priceFrom: string;
+  included: string[];
+  ctaLabel: string;
+  tone: CatalogVisual['tone'];
+};
+
+function createService({
+  slug,
+  name,
+  shortDescription,
+  fullDescription,
+  priceFrom,
+  included,
+  ctaLabel,
+  tone,
+}: ServiceDraft): OfferingEntity {
+  return {
+    kind: 'service',
+    slug,
+    name,
+    shortDescription,
+    fullDescription,
+    priceFrom,
+    included,
+    ctaLabel,
+    seoTitle: '',
+    seoDescription: '',
+    visual: {
+      emoji: '',
+      tone,
+    },
   };
 }
 
@@ -171,9 +317,9 @@ export const homePageContent = {
     title: 'Услуги',
     description:
       'Собрали основные форматы в виде аккуратного меню-витрины, чтобы было проще быстро сориентироваться и перейти к нужной услуге.',
-    initialVisibleCount: 8,
+    initialVisibleCount: 9,
     revealLabel: 'Показать ещё',
-    collapseLabel: 'Скрыть часть меню',
+    collapseLabel: 'Свернуть',
   },
   extras: {
     eyebrow: 'Дополнительные услуги',
@@ -206,246 +352,182 @@ export const homePageContent = {
 } as const;
 
 const rawServices: readonly OfferingEntity[] = [
-  {
-    kind: 'service',
-    slug: 'food-trucks',
-    name: 'Фудтраки',
-    shortDescription:
-      'Выездной формат, который быстро становится центром притяжения гостей и задаёт живой ритм всему мероприятию.',
-    fullDescription:
-      'Фудтрак — заметная и удобная гастрозона, которая сразу собирает вокруг себя гостей. Такой формат объединяет подачу, эмоцию и удобство обслуживания в одном выразительном решении.',
-    priceFrom: 'от 49 000 ₽',
-    included: ['Выезд и установка зоны', 'Оформление точки', 'Работа персонала', 'Базовая подача и сервис'],
-    ctaLabel: 'Заказать фудтрак',
-    seoTitle: 'Фудтраки на мероприятие — Праздник каждый день',
-    seoDescription:
-      'Фудтраки Праздник каждый день для частных, детских и корпоративных событий. Выездной формат с красивой подачей и живой атмосферой.',
-    visual: {
-      image: '/images/hero/food-truck-card.svg',
-      alt: 'Иллюстрация услуги «Фудтраки» — Праздник каждый день',
-      width: 360,
-      height: 280,
-      emoji: '🚚',
-      tone: 'gold',
-    },
-  },
-  {
-    kind: 'service',
+  createService({
     slug: 'cotton-candy',
-    name: 'Сладкая вата',
-    shortDescription:
-      'Воздушный десертный акцент, который хочется фотографировать ещё до первого укуса.',
+    name: 'Сахарная вата',
+    shortDescription: 'Лёгкий сладкий формат для мероприятий, где нужна понятная и фотогеничная подача.',
     fullDescription:
-      'Станция сладкой ваты хорошо работает там, где хочется добавить мероприятию нежности, цвета и лёгкого детского восторга. Формат быстро привлекает внимание и красиво вписывается в атмосферу праздника.',
-    priceFrom: 'от 7 500 ₽',
-    included: ['Станция и базовый сетап', 'Работа кондитера', 'Порционная подача', 'Подготовка к подключению'],
-    ctaLabel: 'Заказать сладкую вату',
-    seoTitle: 'Сладкая вата на праздник — Праздник каждый день',
-    seoDescription:
-      'Станция сладкой ваты Праздник каждый день для праздников и мероприятий. Аккуратная подача, работа кондитера и выразительная атмосфера.',
-    visual: {
-      image: '/images/hero/cotton-candy-card.svg',
-      alt: 'Иллюстрация услуги «Сладкая вата» — Праздник каждый день',
-      width: 220,
-      height: 260,
-      emoji: '☁️',
-      tone: 'rose',
-    },
-  },
-  {
-    kind: 'service',
+      'Сахарная вата подходит для детских, семейных и городских мероприятий, где важны лёгкость, узнаваемость и дружелюбная атмосфера. Формат удобно встраивается в праздник как самостоятельная сладкая точка или как часть более широкой десертной зоны.',
+    priceFrom: 'от 12.000',
+    included: ['Стойка под выдачу', 'Базовые ингредиенты', 'Работа оператора'],
+    ctaLabel: 'Заказать сахарную вату',
+    tone: 'rose',
+  }),
+  createService({
+    slug: 'popcorn',
+    name: 'Попкорн',
+    shortDescription: 'Простой и любимый формат, который легко вовлекает гостей и работает в разном темпе события.',
+    fullDescription:
+      'Попкорн хорошо подходит для детских праздников, уличных акций и неформальных корпоративных событий, где нужна знакомая и удобная гастрономическая точка. Он легко воспринимается гостями и не перегружает общую композицию площадки.',
+    priceFrom: 'от 13.000',
+    included: ['Стойка под выдачу', 'Попкорн и расходные материалы', 'Работа оператора'],
+    ctaLabel: 'Заказать попкорн',
+    tone: 'gold',
+  }),
+  createService({
+    slug: 'cotton-candy-popcorn',
+    name: 'Сладкая вата + попкорн',
+    shortDescription: 'Комбинированная сладкая зона для событий, где хочется закрыть сразу два понятных гостям формата.',
+    fullDescription:
+      'Комбо из сладкой ваты и попкорна удобно использовать на мероприятиях с активным потоком гостей, когда нужна сразу более насыщенная сладкая точка. Такой формат помогает сделать зону визуально богаче и даёт гостям быстрый выбор без перегруза.',
+    priceFrom: 'от 21.000',
+    included: ['Две точки выдачи', 'Базовые ингредиенты', 'Работа персонала'],
+    ctaLabel: 'Заказать сладкую вату и попкорн',
+    tone: 'berry',
+  }),
+  createService({
+    slug: 'roll-ice-cream',
+    name: 'Мороженое (Ролл)',
+    shortDescription: 'Формат с приготовлением на глазах у гостей, который добавляет десертной зоне живой ритм.',
+    fullDescription:
+      'Ролл-мороженое подходит для мероприятий, где важен эффект свежего приготовления и хочется добавить в сладкую зону больше динамики. Это понятный шоу-формат, который хорошо собирает вокруг себя гостей и поддерживает интерес в течение всего события.',
+    priceFrom: 'от 24.000',
+    included: ['Охлаждаемая станция', 'Базовые вкусы и топпинги', 'Работа мастера'],
+    ctaLabel: 'Заказать ролл-мороженое',
+    tone: 'sky',
+  }),
+  createService({
+    slug: 'scoop-ice-cream',
+    name: 'Мороженое (Шариковое)',
+    shortDescription: 'Классический десертный формат для событий, где нужна аккуратная и знакомая гостям подача.',
+    fullDescription:
+      'Шариковое мороженое удобно для частных и корпоративных мероприятий, где важно дать гостям понятный десерт без сложной механики. Формат легко встраивается в общий сценарий и хорошо работает как самостоятельная сладкая станция.',
+    priceFrom: 'от 15.000',
+    included: ['Холодильная витрина', 'Базовые вкусы', 'Работа оператора'],
+    ctaLabel: 'Заказать шариковое мороженое',
+    tone: 'mint',
+  }),
+  createService({
+    slug: 'nitro-ice-cream',
+    name: 'Мороженое (Азотное)',
+    shortDescription: 'Десертный формат с более выраженным вау-эффектом для событий, где важна эмоция приготовления.',
+    fullDescription:
+      'Азотное мороженое подходит для мероприятий, где хочется усилить впечатление от десертной зоны и добавить элемент шоу. Формат привлекает внимание гостей и делает подачу более запоминающейся, сохраняя при этом аккуратный внешний вид станции.',
+    priceFrom: 'от 17.000',
+    included: ['Оборудование для приготовления', 'Базовые вкусы', 'Работа мастера'],
+    ctaLabel: 'Заказать азотное мороженое',
+    tone: 'chocolate',
+  }),
+  createService({
     slug: 'chocolate-fountain',
     name: 'Шоколадный фонтан',
-    shortDescription:
-      'Тёплая десертная точка, к которой гости возвращаются весь вечер за ещё одной порцией эмоции.',
+    shortDescription: 'Тёплый сладкий акцент для мероприятий, где нужна щедрая и визуально выразительная десертная точка.',
     fullDescription:
-      'Шоколадный фонтан помогает создать на площадке ощущение щедрого и визуально богатого десертного формата. Он работает как центральный сладкий акцент и усиливает общий ритм зоны.',
-    priceFrom: 'от 27 900 ₽',
-    included: ['Фонтан и подготовка', 'Шоколад и базовые компоненты', 'Обслуживание', 'Контроль подачи на площадке'],
+      'Шоколадный фонтан хорошо работает на частных и корпоративных событиях, когда хочется добавить столу более праздничное и собранное ощущение. Этот формат воспринимается как центральный десертный акцент и помогает сделать сладкую зону более заметной.',
+    priceFrom: 'от 11.500',
+    included: ['Фонтан и подготовка', 'Шоколад для работы', 'Сопровождение на площадке'],
     ctaLabel: 'Заказать шоколадный фонтан',
-    seoTitle: 'Шоколадный фонтан на мероприятие — Праздник каждый день',
-    seoDescription:
-      'Шоколадный фонтан Праздник каждый день для мероприятий в Москве и области. Эффектная десертная зона с обслуживанием и красивой подачей.',
-    visual: {
-      image: '/images/hero/chocolate-fountain-card-static.svg',
-      alt: 'Иллюстрация услуги «Шоколадный фонтан» — Праздник каждый день',
-      width: 220,
-      height: 260,
-      emoji: '🍫',
-      tone: 'chocolate',
-    },
-  },
-  {
-    kind: 'service',
-    slug: 'fondue-station',
-    name: 'Станция фондю',
-    shortDescription:
-      'Роскошное фондю с фруктами, печеньем и орехами, которое собирает гостей вокруг красивой десертной сцены.',
+    tone: 'chocolate',
+  }),
+  createService({
+    slug: 'french-hot-dog',
+    name: 'Хот-дог (Французский)',
+    shortDescription: 'Удобный формат для событий, где нужен быстрый и понятный street-food с аккуратной подачей.',
     fullDescription:
-      'Станция фондю — более изысканный десертный формат для событий, где важны мягкая роскошь, тёплая подача и ощущение красивого выбора. Мы собираем её так, чтобы она выглядела цельно и обслуживалась спокойно и аккуратно.',
-    priceFrom: 'от 24 000 ₽',
-    included: ['Фондю-сетап', 'Фрукты и десертные компоненты', 'Работа кондитера', 'Сервис на площадке'],
-    ctaLabel: 'Заказать станцию фондю',
-    seoTitle: 'Станция фондю на праздник — Праздник каждый день',
-    seoDescription:
-      'Станция фондю Праздник каждый день для частных и корпоративных событий. Десертный формат с красивой подачей и обслуживанием на площадке.',
-    visual: {
-      emoji: '🍓',
-      tone: 'berry',
-    },
-  },
-  {
-    kind: 'service',
-    slug: 'bubble-waffles',
-    name: 'Гонконгские вафли',
-    shortDescription:
-      'Выразительный десертный формат с узнаваемой подачей, который выглядит современно и аппетитно.',
+      'Французский хот-дог подходит для мероприятий с активным потоком гостей, когда важно сочетание скорости выдачи и понятного вкуса. Формат легко включается в общий ритм события и хорошо работает как самостоятельная гастрономическая точка.',
+    priceFrom: 'от 15.000',
+    included: ['Станция выдачи', 'Базовые ингредиенты', 'Работа персонала'],
+    ctaLabel: 'Заказать французские хот-доги',
+    tone: 'caramel',
+  }),
+  createService({
+    slug: 'danish-hot-dog',
+    name: 'Хот-дог (Датский)',
+    shortDescription: 'Более насыщенный формат хот-дога для событий, где нужен узнаваемый street-food акцент.',
     fullDescription:
-      'Гонконгские вафли хорошо подходят для событий, где нужна живая, современная и фотогеничная десертная станция. Формат смотрится эффектно и легко воспринимается гостями любого возраста.',
-    priceFrom: 'от 13 500 ₽',
-    included: ['Вафельная станция', 'Начинки и топпинги', 'Подача порциями', 'Работа персонала'],
-    ctaLabel: 'Заказать гонконгские вафли',
-    seoTitle: 'Гонконгские вафли на мероприятие — Праздник каждый день',
-    seoDescription:
-      'Станция гонконгских вафель Праздник каждый день для праздников и мероприятий. Современный десертный формат с красивой подачей.',
-    visual: {
-      emoji: '🧇',
-      tone: 'mint',
-    },
-  },
-  {
-    kind: 'service',
-    slug: 'hot-dogs',
-    name: 'Хот-доги',
-    shortDescription:
-      'Понятный и любимый всеми street-food формат, который быстро включается в ритм мероприятия.',
+      'Датский хот-дог подходит для неформальных и корпоративных мероприятий, где хочется добавить в гастрозону более плотный и выразительный формат. Он хорошо справляется с активной выдачей и остаётся понятным для гостей разного возраста.',
+    priceFrom: 'от 17.500',
+    included: ['Станция выдачи', 'Базовые ингредиенты', 'Работа персонала'],
+    ctaLabel: 'Заказать датские хот-доги',
+    tone: 'caramel',
+  }),
+  createService({
+    slug: 'burgers',
+    name: 'Бургеры',
+    shortDescription: 'Сытный гастроформат для мероприятий, где нужна понятная и уверенная точка основного угощения.',
     fullDescription:
-      'Хот-доги — удобная гастрозона для событий, где важны понятный вкус, быстрый сервис и живая подача. Формат легко работает как самостоятельная точка или как часть более большой линейки услуг.',
-    priceFrom: 'от 19 900 ₽',
-    included: ['Станция выдачи', 'Базовый набор ингредиентов', 'Работа персонала', 'Подача на месте'],
-    ctaLabel: 'Заказать хот-доги',
-    seoTitle: 'Хот-доги на мероприятие — Праздник каждый день',
-    seoDescription:
-      'Хот-доги Праздник каждый день для частных и корпоративных мероприятий. Удобный street-food формат с быстрым обслуживанием и аккуратной подачей.',
-    visual: {
-      emoji: '🌭',
-      tone: 'caramel',
-    },
-  },
-  {
-    kind: 'service',
-    slug: 'fried-ice-cream',
-    name: 'Жареное мороженое',
-    shortDescription:
-      'Эффектный десертный формат, который сразу добавляет вау-эффект и живое взаимодействие с гостями.',
+      'Бургеры хорошо подходят для городских, корпоративных и частных событий, где гости ожидают более плотную еду, а не только сладкие форматы. Такой формат удобно использовать как самостоятельную точку или как часть более крупной гастрономической линейки.',
+    priceFrom: 'от 15.000',
+    included: ['Станция приготовления', 'Базовый набор ингредиентов', 'Работа персонала'],
+    ctaLabel: 'Заказать бургеры',
+    tone: 'gold',
+  }),
+  createService({
+    slug: 'belgian-waffles',
+    name: 'Бельгийские вафли',
+    shortDescription: 'Тёплый десертный формат с понятной подачей для мероприятий с акцентом на уют и сладкую классику.',
     fullDescription:
-      'Жареное мороженое хорошо подходит для событий, где важен эффект приготовления прямо на глазах гостей. Такой формат добавляет шоу-элемент и делает десертную зону более динамичной.',
-    priceFrom: 'от 16 500 ₽',
-    included: ['Мороженая станция', 'Базовые вкусы и топпинги', 'Работа мастера', 'Порционная выдача'],
-    ctaLabel: 'Заказать жареное мороженое',
-    seoTitle: 'Жареное мороженое на праздник — Праздник каждый день',
-    seoDescription:
-      'Жареное мороженое Праздник каждый день для мероприятий. Эффектная десертная станция с приготовлением на глазах у гостей.',
-    visual: {
-      emoji: '🍨',
-      tone: 'sky',
-    },
-  },
-  {
-    kind: 'service',
-    slug: 'donut-station',
-    name: 'Станция донатов',
-    shortDescription:
-      'Яркая сладкая точка с понятной подачей и дружелюбным настроением для частных и корпоративных событий.',
+      'Бельгийские вафли хорошо работают на семейных, частных и корпоративных событиях, где нужна десертная станция с мягким, тёплым впечатлением. Формат выглядит аккуратно, быстро считывается гостями и легко дополняется топпингами под сценарий мероприятия.',
+    priceFrom: 'от 17.000',
+    included: ['Вафельная станция', 'Базовые топпинги', 'Работа оператора'],
+    ctaLabel: 'Заказать бельгийские вафли',
+    tone: 'mint',
+  }),
+  createService({
+    slug: 'pancakes',
+    name: 'Блины',
+    shortDescription: 'Тёплая гастрономическая точка для мероприятий, где важна уютная и знакомая гостям подача.',
     fullDescription:
-      'Станция донатов помогает добавить в праздник тёплый и понятный десертный сценарий. Такой формат легко воспринимается гостями, хорошо фотографируется и работает в разных типах событий.',
-    priceFrom: 'от 14 500 ₽',
-    included: ['Сетап станции', 'Ассортимент донатов', 'Оформление выкладки', 'Поддержка на площадке'],
-    ctaLabel: 'Заказать станцию донатов',
-    seoTitle: 'Станция донатов на мероприятие — Праздник каждый день',
-    seoDescription:
-      'Станция донатов Праздник каждый день для праздников и мероприятий. Яркая десертная подача с аккуратной выкладкой и обслуживанием.',
-    visual: {
-      emoji: '🍩',
-      tone: 'rose',
-    },
-  },
-  {
-    kind: 'service',
-    slug: 'lemonade-bar',
-    name: 'Лимонад-бар',
-    shortDescription:
-      'Свежий напиточный формат, который делает подачу легче и помогает освежить общий сценарий праздника.',
+      'Блины подходят для семейных, городских и корпоративных событий, где хочется предложить гостям понятный и комфортный формат. Такая станция хорошо работает в спокойном ритме и остаётся уместной как в помещении, так и на выездной площадке.',
+    priceFrom: 'от 18.000',
+    included: ['Блинная станция', 'Базовые начинки', 'Работа персонала'],
+    ctaLabel: 'Заказать блины',
+    tone: 'caramel',
+  }),
+  createService({
+    slug: 'champagne-pyramid',
+    name: 'Пирамида из шампанского',
+    shortDescription: 'Эффектный welcome-формат для мероприятий, где важно красивое первое впечатление.',
     fullDescription:
-      'Лимонад-бар хорошо подходит как отдельная напиточная станция или как дополнение к сладким форматам. Он делает картинку более воздушной и помогает поддерживать комфортный ритм события.',
-    priceFrom: 'от 12 900 ₽',
-    included: ['Напиточный бар', 'Ассортимент лимонадов', 'Стаканы и сервировка', 'Работа персонала'],
-    ctaLabel: 'Заказать лимонад-бар',
-    seoTitle: 'Лимонад-бар на мероприятие — Праздник каждый день',
-    seoDescription:
-      'Лимонад-бар Праздник каждый день для праздников и мероприятий. Освежающая напиточная станция с красивой подачей и удобным сервисом.',
-    visual: {
-      emoji: '🥤',
-      tone: 'mint',
-    },
-  },
-  {
-    kind: 'service',
-    slug: 'popcorn-station',
-    name: 'Попкорн-станция',
-    shortDescription:
-      'Лёгкий формат с понятным вкусом и узнаваемым настроением, который быстро вовлекает гостей.',
+      'Пирамида из шампанского подходит для welcome-сценариев, торжественных открытий и событий, где важен выразительный старт. Этот формат работает как визуальный акцент и помогает задать мероприятию более праздничный тон с первых минут.',
+    priceFrom: 'от 12.000',
+    included: ['Сборка пирамиды', 'Базовый сетап зоны', 'Сопровождение подачи'],
+    ctaLabel: 'Заказать пирамиду из шампанского',
+    tone: 'sky',
+  }),
+  createService({
+    slug: 'craft-lemonade',
+    name: 'Крафтовый лимонад',
+    shortDescription: 'Освежающая напиточная станция для событий, где нужен лёгкий и чистый формат подачи.',
     fullDescription:
-      'Попкорн-станция помогает добавить мероприятию лёгкость и дружелюбную атмосферу. Это удобная точка для частных и детских событий, а также для неформальных корпоративных встреч.',
-    priceFrom: 'от 11 900 ₽',
-    included: ['Станция попкорна', 'Базовые вкусы', 'Выдача порциями', 'Поддержка персонала'],
-    ctaLabel: 'Заказать попкорн-станцию',
-    seoTitle: 'Попкорн-станция на праздник — Праздник каждый день',
-    seoDescription:
-      'Попкорн-станция Праздник каждый день для мероприятий. Лёгкий гастроформат с понятной подачей и удобным обслуживанием.',
-    visual: {
-      emoji: '🍿',
-      tone: 'gold',
-    },
-  },
-  {
-    kind: 'service',
-    slug: 'pancake-station',
-    name: 'Блинная станция',
-    shortDescription:
-      'Тёплый формат с домашним ощущением и красивой подачей, который одинаково нравится взрослым и детям.',
+      'Крафтовый лимонад хорошо подходит для тёплых сезонов, welcome-зон и мероприятий с активным потоком гостей, где нужен освежающий напиточный акцент. Формат помогает сделать гастрономическую часть легче и визуально более воздушной.',
+    priceFrom: 'от 15.000',
+    included: ['Напиточная стойка', 'Базовые вкусы лимонада', 'Стаканы и подача'],
+    ctaLabel: 'Заказать крафтовый лимонад',
+    tone: 'mint',
+  }),
+  createService({
+    slug: 'bubble-tea',
+    name: 'Бабл ти',
+    shortDescription: 'Современный напиточный формат для мероприятий, где хочется добавить трендовый и фотогеничный акцент.',
     fullDescription:
-      'Блинная станция создаёт более уютный и понятный гастрономический сценарий. Она подходит для семейных и корпоративных событий, где важны тёплый вкус, спокойный ритм и аккуратная подача.',
-    priceFrom: 'от 17 000 ₽',
-    included: ['Блинная станция', 'Начинки и топпинги', 'Работа персонала', 'Порционная подача'],
-    ctaLabel: 'Заказать блинную станцию',
-    seoTitle: 'Блинная станция на мероприятие — Праздник каждый день',
-    seoDescription:
-      'Блинная станция Праздник каждый день для праздников и мероприятий. Тёплый формат с красивой подачей и комфортным сервисом.',
-    visual: {
-      emoji: '🥞',
-      tone: 'caramel',
-    },
-  },
-  {
-    kind: 'service',
-    slug: 'fruit-dessert-zone',
-    name: 'Фруктово-десертная зона',
-    shortDescription:
-      'Собранная десертная композиция с фруктами и сладкими акцентами, которая делает подачу визуально богаче.',
+      'Бабл ти подходит для молодёжных, городских и корпоративных событий, где важна современная подача и узнаваемый формат. Станция хорошо привлекает внимание и помогает сделать напиточную часть программы более живой.',
+    priceFrom: 'от 15.000',
+    included: ['Станция приготовления', 'Базовые вкусы', 'Работа оператора'],
+    ctaLabel: 'Заказать бабл ти',
+    tone: 'berry',
+  }),
+  createService({
+    slug: 'foam-cannon',
+    name: 'Пенная пушка',
+    shortDescription: 'Активный формат для событий на открытых площадках, где нужна яркая развлекательная точка.',
     fullDescription:
-      'Фруктово-десертная зона хорошо подходит как спокойный, но визуально насыщенный формат. Она усиливает ощущение щедрой подачи и позволяет гостям выбирать удобный для себя темп десерта.',
-    priceFrom: 'от 21 000 ₽',
-    included: ['Подбор десертных компонентов', 'Фруктовая подача', 'Оформление зоны', 'Сервис на площадке'],
-    ctaLabel: 'Заказать фруктово-десертную зону',
-    seoTitle: 'Фруктово-десертная зона на мероприятие — Праздник каждый день',
-    seoDescription:
-      'Фруктово-десертная зона Праздник каждый день для мероприятий. Визуально богатая сладкая подача с фруктами и аккуратным оформлением.',
-    visual: {
-      emoji: '🍓',
-      tone: 'berry',
-    },
-  },
+      'Пенная пушка подходит для летних праздников, детских мероприятий и выездных программ, где важны движение, эмоции и вовлечённость гостей. Это формат для событий, которые хотят усилить игровую часть программы и добавить ей более запоминающийся характер.',
+    priceFrom: 'от 13.500',
+    included: ['Оборудование для работы', 'Подготовка площадки', 'Сопровождение оператора'],
+    ctaLabel: 'Заказать пенную пушку',
+    tone: 'sky',
+  }),
 ] as const;
 
 const rawExtras: readonly OfferingEntity[] = [

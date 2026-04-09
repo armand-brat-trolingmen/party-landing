@@ -27,6 +27,7 @@ test('renders the homepage as a catalog hub inside the shared site shell', () =>
 
   expect(sectionOrder).toEqual([
     'section-hero',
+    'section-concept-loop',
     'section-about',
     'section-services',
     'section-extras',
