@@ -101,7 +101,7 @@ async function resolvePageUrls(vite) {
   try {
     const pageFiles = await walkPages(pagesDir);
     const staticUrls = pageFiles.map(filePathToUrl).filter(Boolean);
-    const { getAllOfferingUrls } = await vite.ssrLoadModule('/src/data/catalogContent.ts');
+    const { getAllOfferingUrls } = await vite.ssrLoadModule('/src/content/index.ts');
     const dynamicUrls = typeof getAllOfferingUrls === 'function' ? getAllOfferingUrls() : [];
     const urls = [...new Set([...staticUrls, ...dynamicUrls])].sort();
 
