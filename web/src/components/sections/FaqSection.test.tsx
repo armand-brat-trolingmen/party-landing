@@ -42,7 +42,7 @@ test('renders faq as a cinematic accordion without a framed outer section shell'
   expect(sectionQueries.getByText(faq?.items[0].question ?? '')).toBeInTheDocument();
   expect(sectionQueries.getByText(faq?.items[0].answer ?? '')).toBeInTheDocument();
 
-  const structuredDataNode = document.head.querySelector('script[type="application/ld+json"]');
+  const structuredDataNode = section.querySelector('script[type="application/ld+json"][data-structured-data="true"]');
   expect(structuredDataNode).not.toBeNull();
 
   const structuredData = JSON.parse(structuredDataNode?.textContent ?? '{}') as {

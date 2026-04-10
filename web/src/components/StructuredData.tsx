@@ -1,6 +1,3 @@
-import { useEffect } from 'react';
-import { Helmet } from 'react-helmet-async';
-
 type StructuredDataEntity = Record<string, unknown>;
 type StructuredDataInput = StructuredDataEntity | StructuredDataEntity[];
 
@@ -42,36 +39,11 @@ type StructuredDataProps = {
 };
 
 export function StructuredData({ data }: StructuredDataProps) {
-  const json = serializeStructuredData(data);
-
-  useEffect(() => {
-    const existingScript = [...document.head.querySelectorAll('script[type="application/ld+json"]')].find(
-      (node) => node.textContent === json,
-    );
-
-    if (existingScript) {
-      return undefined;
-    }
-
-    const script = document.createElement('script');
-    script.type = 'application/ld+json';
-    script.setAttribute('data-structured-data', 'true');
-    script.text = json;
-    document.head.appendChild(script);
-
-    return () => {
-      script.remove();
-    };
-  }, [json]);
-
   return (
-    <Helmet
-      script={[
-        {
-          type: 'application/ld+json',
-          innerHTML: json,
-        },
-      ]}
+    <script
+      type="application/ld+json"
+      data-structured-data="true"
+      dangerouslySetInnerHTML={{ __html: serializeStructuredData(data) }}
     />
   );
 }

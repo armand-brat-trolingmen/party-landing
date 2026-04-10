@@ -1,32 +1,29 @@
-﻿import { render, waitFor } from '@testing-library/react';
-import { HelmetProvider } from 'react-helmet-async';
+import { render, screen } from '@testing-library/react';
 import { StructuredData } from './StructuredData';
 
-test('StructuredData writes valid JSON-LD into the document head', async () => {
+test('StructuredData renders stable JSON-LD markup for SSR hydration', () => {
   render(
-    <HelmetProvider>
-      <StructuredData
-        data={[
-          {
-            '@type': 'Organization',
-            name: 'Праздник каждый день',
-            url: 'https://partylanding.vercel.app/',
-          },
-          {
-            '@type': 'WebSite',
-            name: 'Праздник каждый день',
-            url: 'https://partylanding.vercel.app/',
-          },
-        ]}
-      />
-    </HelmetProvider>,
+    <StructuredData
+      data={[
+        {
+          '@type': 'Organization',
+          name: 'Праздник каждый день',
+          url: 'https://partylanding.vercel.app/',
+        },
+        {
+          '@type': 'WebSite',
+          name: 'Праздник каждый день',
+          url: 'https://partylanding.vercel.app/',
+        },
+      ]}
+    />,
   );
 
-  await waitFor(() => {
-    expect(document.head.querySelector('script[type="application/ld+json"]')).not.toBeNull();
-  });
+  const structuredDataNode = document.querySelector('script[type="application/ld+json"][data-structured-data="true"]');
+  expect(structuredDataNode).not.toBeNull();
+  expect(screen.queryByText('Праздник каждый день')).not.toBeInTheDocument();
 
-  const scriptContent = document.head.querySelector('script[type="application/ld+json"]')?.textContent ?? '';
+  const scriptContent = structuredDataNode?.textContent ?? '';
   const parsed = JSON.parse(scriptContent) as {
     '@context': string;
     '@graph': Array<{ '@type': string }>;
@@ -40,4 +37,3 @@ test('StructuredData writes valid JSON-LD into the document head', async () => {
     ]),
   );
 });
-

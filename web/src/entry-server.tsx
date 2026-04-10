@@ -114,7 +114,7 @@ function extractHoistedHeadHtml(renderedHtml: string) {
   let remaining = renderedHtml.trimStart();
   const headParts: string[] = [];
   const hoistedTagPattern =
-    /^(<(?:title|meta|link|style|base|script)\b[\s\S]*?(?:<\/(?:title|style|script)>|\/>))/i;
+    /^(<(?:title|meta|link|style|base)\b[\s\S]*?(?:<\/(?:title|style)>|\/>))/i;
 
   while (true) {
     const match = remaining.match(hoistedTagPattern);

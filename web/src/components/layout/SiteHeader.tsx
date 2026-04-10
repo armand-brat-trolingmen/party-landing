@@ -36,9 +36,7 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
   const location = useLocation();
   const { openModal } = useOrderModal();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDesktop, setIsDesktop] = useState(
-    () => (typeof window === 'undefined' ? true : window.matchMedia?.('(min-width: 721px)').matches ?? true),
-  );
+  const [isDesktop, setIsDesktop] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
   const isHomeRoute = location.pathname === '/';
