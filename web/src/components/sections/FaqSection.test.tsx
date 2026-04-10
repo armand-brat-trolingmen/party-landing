@@ -1,9 +1,21 @@
 import { render, screen, within } from '@testing-library/react';
 import { HelmetProvider } from 'react-helmet-async';
+import { siteConfig } from '../../content';
 import { faqItems } from '../../data/siteContent';
 import { FaqSection } from './FaqSection';
 
 test('renders faq as a cinematic accordion without a framed outer section shell', () => {
+  const faq = (
+    siteConfig.homepage as {
+      faq?: {
+        title: string;
+        items: typeof faqItems;
+      };
+    }
+  ).faq;
+
+  expect(faq).toBeDefined();
+
   render(
     <HelmetProvider>
       <FaqSection />
@@ -16,12 +28,13 @@ test('renders faq as a cinematic accordion without a framed outer section shell'
   const list = sectionQueries.getByRole('list');
   const buttons = sectionQueries.getAllByRole('button');
 
-  expect(sectionQueries.getByRole('heading', { level: 2, name: 'Частые вопросы' })).toBeInTheDocument();
+  expect(sectionQueries.getByRole('heading', { level: 2, name: faq?.title })).toBeInTheDocument();
   expect(section).not.toHaveAttribute('data-section-tone');
   expect(accordion).toHaveAttribute('data-motion-faq', 'cinematic');
   expect(list).toBeInTheDocument();
-  expect(within(list).getAllByRole('listitem')).toHaveLength(faqItems.length);
-  expect(buttons).toHaveLength(faqItems.length);
+  expect(faqItems).toEqual(faq?.items);
+  expect(within(list).getAllByRole('listitem')).toHaveLength(faq?.items.length ?? 0);
+  expect(buttons).toHaveLength(faq?.items.length ?? 0);
   expect(buttons[0]).toHaveAttribute('aria-expanded', 'true');
   expect(buttons[0]).toHaveAttribute('aria-controls', `faq-panel-${faqItems[0].id}`);
 

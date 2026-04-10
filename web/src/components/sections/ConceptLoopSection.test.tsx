@@ -1,8 +1,20 @@
 import { render, screen, within } from '@testing-library/react';
+import { siteConfig } from '../../content';
 import { conceptLoopItems, conceptLoopSeparator } from '../../data/siteContent';
 import { ConceptLoopSection } from './ConceptLoopSection';
 
 test('renders a decorative concept loop band with the stable shuffled phrases', () => {
+  const conceptLoop = (
+    siteConfig.homepage as {
+      conceptLoop?: {
+        separator: string;
+        items: readonly string[];
+      };
+    }
+  ).conceptLoop;
+
+  expect(conceptLoop).toBeDefined();
+
   render(<ConceptLoopSection />);
 
   const section = screen.getByTestId('section-concept-loop');
@@ -17,9 +29,12 @@ test('renders a decorative concept loop band with the stable shuffled phrases', 
   expect(sectionQueries.getByTestId('text-loop')).toHaveAttribute('data-hover-behavior', 'slowdown');
   expect(sectionQueries.getByTestId('text-loop')).toHaveAttribute('data-direction', 'right');
   expect(sectionQueries.getByTestId('text-loop')).toHaveAttribute('data-edge-mask', 'none');
-  expect(primarySequence.getAllByText(conceptLoopSeparator).length).toBeGreaterThan(0);
+  expect(conceptLoopSeparator).toBe(conceptLoop?.separator);
+  expect(primarySequence.getAllByText(conceptLoop?.separator ?? '').length).toBeGreaterThan(0);
 
-  for (const item of conceptLoopItems) {
+  expect(conceptLoopItems).toEqual(conceptLoop?.items);
+
+  for (const item of conceptLoop?.items ?? []) {
     expect(primarySequence.getAllByText(item).length).toBeGreaterThan(0);
   }
 

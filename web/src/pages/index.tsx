@@ -2,11 +2,11 @@ import { Helmet } from 'react-helmet-async';
 import App from '../App';
 import { SEO } from '../components/SEO';
 import { StructuredData } from '../components/StructuredData';
+import { siteConfig } from '../content';
 import { getHomeStructuredData } from '../config/seo';
-import { heroPosterSlides } from '../data/siteContent';
 
 export default function IndexPage() {
-  const heroPreload = heroPosterSlides[0];
+  const heroPreload = siteConfig.homepage.hero.slides[0];
 
   return (
     <>

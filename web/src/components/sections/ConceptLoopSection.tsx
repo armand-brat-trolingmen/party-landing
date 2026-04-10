@@ -1,8 +1,10 @@
-import { conceptLoopItems, conceptLoopSeparator } from '../../data/siteContent';
+import { siteConfig } from '../../content';
 import { TextLoop } from '../ui/TextLoop';
 import styles from './ConceptLoopSection.module.css';
 
 export function ConceptLoopSection() {
+  const { conceptLoop } = siteConfig.homepage;
+
   return (
     <section
       className={`site-section ${styles.section}`}
@@ -19,8 +21,8 @@ export function ConceptLoopSection() {
         data-content-span="wide"
       >
         <TextLoop
-          items={conceptLoopItems}
-          separator={conceptLoopSeparator}
+          items={conceptLoop.items}
+          separator={conceptLoop.separator}
           className={styles.loop}
           direction="right"
           speed={84}

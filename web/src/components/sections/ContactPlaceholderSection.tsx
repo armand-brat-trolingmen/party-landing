@@ -1,5 +1,4 @@
 import { siteConfig } from '../../content';
-import { contactActionsGuided, contactGuidedCopy } from '../../data/siteContent';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { SectionHeading } from '../ui/SectionHeading';
 import styles from './ContactPlaceholderSection.module.css';
@@ -63,12 +62,13 @@ function EmailIcon() {
 
 export function ContactPlaceholderSection() {
   const { ref, revealState } = useScrollReveal();
+  const { contact } = siteConfig.homepage;
 
   return (
     <section id="contact" className="site-section" data-testid="section-contact" aria-labelledby="contact-title">
       <div ref={ref} className="site-container site-reveal" data-reveal-state={revealState} data-reveal-stagger="true">
         <div className={styles.sectionBody}>
-          <SectionHeading title={<span id="contact-title">Контакты</span>} description={contactGuidedCopy.description} />
+          <SectionHeading title={<span id="contact-title">{contact.title}</span>} description={contact.description} />
 
           <div className={`${styles.layout} reveal-grid`} data-testid="contact-layout" data-contact-layout="split-canvas">
             <div className={styles.copy}>
@@ -97,7 +97,7 @@ export function ContactPlaceholderSection() {
               <div className={styles.socialBlock}>
                 <h3 className={styles.socialTitle}>Социальные сети и мессенджеры</h3>
                 <div className={styles.socialList}>
-                  {contactActionsGuided.map((action) => (
+                  {contact.actions.map((action) => (
                     <a
                       key={action.id}
                       className={styles.socialLink}

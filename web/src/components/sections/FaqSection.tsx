@@ -1,25 +1,24 @@
 import { useState } from 'react';
-import { faqItems, faqSectionCopy } from '../../data/siteContent';
+import { siteConfig } from '../../content';
 import { getFaqStructuredData } from '../../config/seo';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { StructuredData } from '../StructuredData';
 import { SectionHeading } from '../ui/SectionHeading';
 import styles from './FaqSection.module.css';
 
-const FAQ_TITLE = 'Частые вопросы';
-
 export function FaqSection() {
   const { ref, revealState } = useScrollReveal();
-  const [openItemId, setOpenItemId] = useState<string | null>(faqItems[0]?.id ?? null);
+  const { faq } = siteConfig.homepage;
+  const [openItemId, setOpenItemId] = useState<string | null>(faq.items[0]?.id ?? null);
 
   return (
     <section id="faq" className="site-section" data-testid="section-faq" aria-labelledby="faq-title">
-      <StructuredData data={getFaqStructuredData(faqItems)} />
+      <StructuredData data={getFaqStructuredData(faq.items)} />
       <div ref={ref} className="site-container site-reveal" data-reveal-state={revealState} data-reveal-stagger="true">
         <div className={styles.sectionBody}>
-          <SectionHeading title={<span id="faq-title">{FAQ_TITLE}</span>} description={faqSectionCopy.description} />
-          <ul className={`${styles.accordion} reveal-grid`} data-testid="faq-accordion" data-motion-faq="cinematic" aria-label={FAQ_TITLE}>
-            {faqItems.map((item) => {
+          <SectionHeading title={<span id="faq-title">{faq.title}</span>} description={faq.description} />
+          <ul className={`${styles.accordion} reveal-grid`} data-testid="faq-accordion" data-motion-faq="cinematic" aria-label={faq.title}>
+            {faq.items.map((item) => {
               const isOpen = item.id === openItemId;
               const panelId = `faq-panel-${item.id}`;
               const triggerId = `faq-trigger-${item.id}`;

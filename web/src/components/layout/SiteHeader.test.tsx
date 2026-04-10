@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
+import { siteConfig } from '../../content';
 import { navItems, siteContent } from '../../data/siteContent';
 import { OrderModalProvider } from '../cta/OrderModalContext';
 import { SiteHeader } from './SiteHeader';
@@ -42,8 +43,9 @@ test('shows desktop navigation with a dedicated order button on the homepage', (
   const orderButton = within(header).getByTestId('header-order-button');
 
   expect(header).toHaveAttribute('data-header-route', 'home');
-  expect(within(header).getByRole('link', { name: siteContent.brand })).toHaveAttribute('href', '#hero');
-  expect(within(header).getByText(siteContent.brand)).toBeInTheDocument();
+  expect(within(header).getByRole('link', { name: siteConfig.brand.name })).toHaveAttribute('href', '#hero');
+  expect(within(header).getByText(siteConfig.brand.name)).toBeInTheDocument();
+  expect(siteContent.brand).toBe(siteConfig.brand.name);
   expect(orderButton).toBeInTheDocument();
   expect(within(orderButton).getByTestId('header-order-button-arrow')).toHaveAttribute('aria-hidden', 'true');
   expect(screen.getByTestId('nav-active-indicator')).toBeInTheDocument();

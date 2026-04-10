@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type MouseEvent } from 'react';
 import { useLocation } from 'react-router';
-import { navItems, siteContent } from '../../data/siteContent';
+import { siteConfig } from '../../content';
 import { DonutLogo } from '../branding/DonutLogo';
 import { useOrderModal } from '../cta/useOrderModal';
 import styles from './SiteHeader.module.css';
@@ -25,6 +25,7 @@ const NAV_ARIA_LABEL = '\u041e\u0441\u043d\u043e\u0432\u043d\u0430\u044f \u043d\
 const MENU_ARIA_LABEL = '\u041c\u0435\u043d\u044e';
 const CLOSE_MENU_ARIA_LABEL = '\u0417\u0430\u043a\u0440\u044b\u0442\u044c \u043c\u0435\u043d\u044e';
 const ORDER_LABEL = '\u0417\u0430\u043a\u0430\u0437\u0430\u0442\u044c';
+const navItems = siteConfig.navigation;
 
 export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
   const headerRef = useRef<HTMLElement | null>(null);
@@ -389,12 +390,12 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
           className={styles.brand}
           href={brandHref}
           onClick={!legalMode && isHomeRoute ? onAnchorClick('hero') : undefined}
-          aria-label={siteContent.brand}
+          aria-label={siteConfig.brand.name}
         >
           <span className={styles.brandPlate} data-testid="brand-plate">
             <DonutLogo className={styles.logoMark} size={46} />
           </span>
-          <span className={styles.brandText}>{siteContent.brand}</span>
+          <span className={styles.brandText}>{siteConfig.brand.name}</span>
         </a>
 
         {isDesktop ? (

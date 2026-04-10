@@ -1,5 +1,4 @@
-import { homePageContent } from '../../data/catalogContent';
-import { heroPosterSlides, siteContent } from '../../data/siteContent';
+import { siteConfig } from '../../content';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { HeroPosterCarousel } from './HeroPosterCarousel';
 import styles from './HeroSection.module.css';
@@ -20,16 +19,10 @@ function scrollToSection(targetId: string) {
 
 export function HeroSection() {
   const { ref, revealState } = useScrollReveal({ rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
-  const heroTitleLines = ['Фуд-станции', 'на ваше', 'мероприятие'] as const;
+  const { hero } = siteConfig.homepage;
 
   return (
-    <section
-      id="hero"
-      className={styles.hero}
-      data-testid="section-hero"
-      data-hero-style="editorial-poster"
-      aria-label={homePageContent.hero.title}
-    >
+    <section id="hero" className={styles.hero} data-testid="section-hero" data-hero-style="editorial-poster" aria-label={hero.title}>
       <div
         ref={ref}
         className={`site-container ${styles.container} site-reveal`}
@@ -37,28 +30,28 @@ export function HeroSection() {
         data-reveal-stagger="true"
       >
         <div className={styles.copyColumn}>
-          <h1 className={styles.tagline} aria-label={homePageContent.hero.title}>
-            {heroTitleLines.map((line, index) => (
+          <h1 className={styles.tagline} aria-label={hero.title}>
+            {hero.titleLines.map((line, index) => (
               <span key={line} className={styles.taglineLine} data-testid={`hero-title-line-${index + 1}`}>
                 {line}
               </span>
             ))}
           </h1>
 
-          <p className={styles.lead}>{siteContent.heroDescription}</p>
+          <p className={styles.lead}>{hero.description}</p>
 
           <div className={styles.actions}>
             <button type="button" className={styles.primaryAction} onClick={() => scrollToSection('cta')}>
-              {homePageContent.hero.primaryActionLabel}
+              {hero.primaryActionLabel}
             </button>
             <button type="button" className={styles.secondaryAction} onClick={() => scrollToSection('services')}>
-              {homePageContent.hero.secondaryActionLabel}
+              {hero.secondaryActionLabel}
             </button>
           </div>
         </div>
 
         <div className={styles.posterColumn}>
-          <HeroPosterCarousel slides={heroPosterSlides} />
+          <HeroPosterCarousel slides={hero.slides} />
         </div>
       </div>
     </section>
