@@ -53,3 +53,33 @@ test('renders service and extra internal pages', () => {
 
   expect(screen.getByRole('heading', { level: 1, name: 'Брендированная подача' })).toBeInTheDocument();
 });
+
+test('renders a dedicated Russian not found page for unknown routes', () => {
+  render(
+    <MemoryRouter initialEntries={['/missing-page']}>
+      <AppRoutes />
+    </MemoryRouter>,
+  );
+
+  expect(screen.getByRole('heading', { level: 1, name: /Страница не найдена/i })).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: /Вернуться на главную/i })).toHaveAttribute('href', '/');
+});
+
+test('renders not found page for unknown offering slugs', () => {
+  const { unmount } = render(
+    <MemoryRouter initialEntries={['/services/no-such-service']}>
+      <AppRoutes />
+    </MemoryRouter>,
+  );
+
+  expect(screen.getByRole('heading', { level: 1, name: /Страница не найдена/i })).toBeInTheDocument();
+  unmount();
+
+  render(
+    <MemoryRouter initialEntries={['/extras/no-such-extra']}>
+      <AppRoutes />
+    </MemoryRouter>,
+  );
+
+  expect(screen.getByRole('heading', { level: 1, name: /Страница не найдена/i })).toBeInTheDocument();
+});

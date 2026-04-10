@@ -3,6 +3,7 @@ import { contacts } from './contacts';
 import { homepage } from './homepage';
 import { legal } from './legal';
 import { navigation } from './navigation';
+import { notFound } from './notFound';
 import { extras, reviewProofs, services } from './offerings';
 import { seo } from './seo';
 
@@ -16,6 +17,7 @@ export const siteConfig = {
   testimonials: reviewProofs,
   faq: homepage.faq.items,
   legal,
+  notFound,
   seo,
 } as const;
 
@@ -24,6 +26,7 @@ export { contacts } from './contacts';
 export { homepage } from './homepage';
 export { legal } from './legal';
 export { navigation } from './navigation';
+export { notFound } from './notFound';
 export {
   extras,
   findExtraBySlug,

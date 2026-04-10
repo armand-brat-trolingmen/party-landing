@@ -1,4 +1,5 @@
 import { Route, Routes } from 'react-router';
+import NotFoundPage from './pages/404';
 import IndexPage from './pages';
 import ConsentPage from './pages/consent';
 import ExtraPage from './pages/extra';
@@ -15,7 +16,8 @@ export function AppRoutes() {
       <Route path="/privacy" element={<PrivacyPage />} />
       <Route path="/terms" element={<TermsPage />} />
       <Route path="/consent" element={<ConsentPage />} />
-      <Route path="*" element={<IndexPage />} />
+      <Route path="/404" element={<NotFoundPage />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }

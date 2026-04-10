@@ -118,6 +118,10 @@ function getTargetFile(url) {
     return resolve(distDir, 'index.html');
   }
 
+  if (url === '/404') {
+    return resolve(distDir, '404.html');
+  }
+
   const segments = url.replace(/^\/+|\/+$/g, '').split('/').filter(Boolean);
   return resolve(distDir, ...segments, 'index.html');
 }

@@ -8,6 +8,7 @@ test('siteConfig exposes the required top-level content domains', () => {
   expect(siteConfig).toHaveProperty('services');
   expect(siteConfig).toHaveProperty('extras');
   expect(siteConfig).toHaveProperty('legal');
+  expect(siteConfig).toHaveProperty('notFound');
   expect(siteConfig).toHaveProperty('seo');
 });
 
@@ -31,4 +32,10 @@ test('services expose centralized normalized price values', () => {
   expect(firstService).toBeDefined();
   expect(firstService.price?.from).toBe(12000);
   expect(firstService.price?.display).toBe('от 12.000 ₽');
+});
+
+test('not found content is centralized and Russian', () => {
+  expect(siteConfig.notFound.title).toBe('Страница не найдена');
+  expect(siteConfig.notFound.primaryAction.href).toBe('/');
+  expect(siteConfig.notFound.seoTitle).toContain(siteConfig.brand.name);
 });
