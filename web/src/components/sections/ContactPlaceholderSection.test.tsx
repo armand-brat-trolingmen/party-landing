@@ -1,6 +1,5 @@
 import { render, screen, within } from '@testing-library/react';
 import { siteConfig } from '../../content';
-import { contactActionsGuided } from '../../data/siteContent';
 import { ContactPlaceholderSection } from './ContactPlaceholderSection';
 
 test('renders contacts as a split canvas with direct details and a future visual slot', () => {
@@ -25,7 +24,7 @@ test('renders contacts as a split canvas with direct details and a future visual
   expect(sectionQueries.getByTestId('contact-icon-email')).toBeInTheDocument();
   expect(sectionQueries.getByTestId('contact-visual-slot')).toHaveAttribute('data-contact-visual', 'placeholder');
 
-  for (const action of contactActionsGuided) {
+  for (const action of siteConfig.homepage.contact.actions) {
     const link = sectionQueries.getByRole('link', { name: action.label });
     expect(link).toHaveAttribute('href', action.href);
   }

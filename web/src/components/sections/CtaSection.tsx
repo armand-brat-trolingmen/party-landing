@@ -1,5 +1,4 @@
 import { siteConfig } from '../../content';
-import { homePageContent } from '../../data/catalogContent';
 import { SectionHeading } from '../ui/SectionHeading';
 import styles from './CtaSection.module.css';
 
@@ -19,8 +18,8 @@ export function CtaSection({ id, title, description, sectionTestId = 'section-ct
       <div className={styles.content}>
         <div className={styles.copy}>
           <SectionHeading
-            title={<span id={`${sectionTestId}-title`}>{title ?? homePageContent.cta.title}</span>}
-            description={description ?? homePageContent.cta.description}
+            title={<span id={`${sectionTestId}-title`}>{title ?? siteConfig.homepage.cta.title}</span>}
+            description={description ?? siteConfig.homepage.cta.description}
           />
         </div>
 
@@ -36,13 +35,13 @@ export function CtaSection({ id, title, description, sectionTestId = 'section-ct
           </label>
 
           <button type="submit" className={styles.button}>
-            {homePageContent.cta.actionLabel}
+            {siteConfig.homepage.cta.actionLabel}
           </button>
         </form>
       </div>
 
       <p className={styles.note}>
-        {homePageContent.cta.consentPrefix}{' '}
+        {siteConfig.homepage.cta.consentPrefix}{' '}
         {siteConfig.legal.links.map((legalLink, index) => (
           <span key={legalLink.href}>
             {index === siteConfig.legal.links.length - 1 && index > 0 ? 'и ' : null}

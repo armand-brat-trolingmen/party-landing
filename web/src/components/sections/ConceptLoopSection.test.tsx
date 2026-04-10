@@ -1,6 +1,5 @@
 import { render, screen, within } from '@testing-library/react';
 import { siteConfig } from '../../content';
-import { conceptLoopItems, conceptLoopSeparator } from '../../data/siteContent';
 import { ConceptLoopSection } from './ConceptLoopSection';
 
 test('renders a decorative concept loop band with the stable shuffled phrases', () => {
@@ -29,10 +28,7 @@ test('renders a decorative concept loop band with the stable shuffled phrases', 
   expect(sectionQueries.getByTestId('text-loop')).toHaveAttribute('data-hover-behavior', 'slowdown');
   expect(sectionQueries.getByTestId('text-loop')).toHaveAttribute('data-direction', 'right');
   expect(sectionQueries.getByTestId('text-loop')).toHaveAttribute('data-edge-mask', 'none');
-  expect(conceptLoopSeparator).toBe(conceptLoop?.separator);
   expect(primarySequence.getAllByText(conceptLoop?.separator ?? '').length).toBeGreaterThan(0);
-
-  expect(conceptLoopItems).toEqual(conceptLoop?.items);
 
   for (const item of conceptLoop?.items ?? []) {
     expect(primarySequence.getAllByText(item).length).toBeGreaterThan(0);

@@ -1,5 +1,4 @@
 import { siteConfig } from '../../content';
-import { homePageContent } from '../../data/catalogContent';
 import { useOrderModal } from './useOrderModal';
 import styles from './OrderModal.module.css';
 
@@ -38,7 +37,7 @@ export function OrderModal() {
           </div>
 
           <button type="button" className={styles.closeButton} onClick={closeModal} aria-label="Закрыть форму заказа">
-            Г—
+            ×
           </button>
         </div>
 
@@ -54,12 +53,12 @@ export function OrderModal() {
           </label>
 
           <button type="submit" className={styles.submitButton}>
-            {homePageContent.cta.actionLabel}
+            {siteConfig.homepage.cta.actionLabel}
           </button>
         </form>
 
         <p className={styles.consent}>
-          {homePageContent.cta.consentPrefix}{' '}
+          {siteConfig.homepage.cta.consentPrefix}{' '}
           <span className={styles.consentLinks}>
             {siteConfig.legal.links.map((link, index) => (
               <span key={link.href}>

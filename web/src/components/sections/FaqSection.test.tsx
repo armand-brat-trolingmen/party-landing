@@ -1,7 +1,6 @@
 import { render, screen, within } from '@testing-library/react';
 import { HelmetProvider } from 'react-helmet-async';
 import { siteConfig } from '../../content';
-import { faqItems } from '../../data/siteContent';
 import { FaqSection } from './FaqSection';
 
 test('renders faq as a cinematic accordion without a framed outer section shell', () => {
@@ -9,7 +8,7 @@ test('renders faq as a cinematic accordion without a framed outer section shell'
     siteConfig.homepage as {
       faq?: {
         title: string;
-        items: typeof faqItems;
+        items: typeof siteConfig.homepage.faq.items;
       };
     }
   ).faq;
@@ -32,17 +31,16 @@ test('renders faq as a cinematic accordion without a framed outer section shell'
   expect(section).not.toHaveAttribute('data-section-tone');
   expect(accordion).toHaveAttribute('data-motion-faq', 'cinematic');
   expect(list).toBeInTheDocument();
-  expect(faqItems).toEqual(faq?.items);
   expect(within(list).getAllByRole('listitem')).toHaveLength(faq?.items.length ?? 0);
   expect(buttons).toHaveLength(faq?.items.length ?? 0);
   expect(buttons[0]).toHaveAttribute('aria-expanded', 'true');
-  expect(buttons[0]).toHaveAttribute('aria-controls', `faq-panel-${faqItems[0].id}`);
+  expect(buttons[0]).toHaveAttribute('aria-controls', `faq-panel-${faq?.items[0].id}`);
 
   const items = accordion.querySelectorAll('[data-motion-item="glow"]');
-  expect(items).toHaveLength(faqItems.length);
+  expect(items).toHaveLength(faq?.items.length ?? 0);
   expect(items[0]).toHaveAttribute('data-open', 'true');
-  expect(sectionQueries.getByText(faqItems[0].question)).toBeInTheDocument();
-  expect(sectionQueries.getByText(faqItems[0].answer)).toBeInTheDocument();
+  expect(sectionQueries.getByText(faq?.items[0].question ?? '')).toBeInTheDocument();
+  expect(sectionQueries.getByText(faq?.items[0].answer ?? '')).toBeInTheDocument();
 
   const structuredDataNode = document.head.querySelector('script[type="application/ld+json"]');
   expect(structuredDataNode).not.toBeNull();
@@ -57,7 +55,7 @@ test('renders faq as a cinematic accordion without a framed outer section shell'
     expect.arrayContaining([
       expect.objectContaining({
         '@type': 'Question',
-        name: faqItems[0].question,
+        name: faq?.items[0].question,
       }),
     ]),
   );
