@@ -1,4 +1,5 @@
-import { footerContent, type LegalDocument } from '../../data/footerContent';
+import type { LegalDocument } from '../../content/types';
+import { siteConfig } from '../../content';
 import { SiteShell } from '../layout/SiteShell';
 import { SEO } from '../SEO';
 import styles from './LegalPageLayout.module.css';
@@ -16,7 +17,7 @@ export function LegalPageLayout({ document }: LegalPageLayoutProps) {
           <div className="site-container">
             <article className={`${styles.card} site-panel-glow`}>
               <div className={styles.heading}>
-                <span className={styles.eyebrow}>{footerContent.brand}</span>
+                <span className={styles.eyebrow}>{siteConfig.brand.name}</span>
                 <h1 id="legal-page-title" className={styles.title}>
                   {document.title}
                 </h1>

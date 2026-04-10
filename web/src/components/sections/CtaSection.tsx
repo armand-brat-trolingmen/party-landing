@@ -1,5 +1,5 @@
+import { siteConfig } from '../../content';
 import { homePageContent } from '../../data/catalogContent';
-import { footerContent } from '../../data/footerContent';
 import { SectionHeading } from '../ui/SectionHeading';
 import styles from './CtaSection.module.css';
 
@@ -32,7 +32,7 @@ export function CtaSection({ id, title, description, sectionTestId = 'section-ct
 
           <label className={styles.field}>
             <span className={styles.fieldLabel}>Телефон</span>
-            <input className={styles.input} name="phone" autoComplete="tel" placeholder="+79263919225" inputMode="tel" />
+            <input className={styles.input} name="phone" autoComplete="tel" placeholder={siteConfig.contacts.phone.display} inputMode="tel" />
           </label>
 
           <button type="submit" className={styles.button}>
@@ -43,15 +43,15 @@ export function CtaSection({ id, title, description, sectionTestId = 'section-ct
 
       <p className={styles.note}>
         {homePageContent.cta.consentPrefix}{' '}
-        {footerContent.legalLinks.map((legalLink, index) => (
+        {siteConfig.legal.links.map((legalLink, index) => (
           <span key={legalLink.href}>
-            {index === footerContent.legalLinks.length - 1 && index > 0 ? 'и ' : null}
+            {index === siteConfig.legal.links.length - 1 && index > 0 ? 'и ' : null}
             <a className={styles.noteLink} href={legalLink.href}>
               {legalLink.label}
             </a>
-            {index < footerContent.legalLinks.length - 2 ? ', ' : null}
-            {index === footerContent.legalLinks.length - 2 ? ' ' : null}
-            {index === footerContent.legalLinks.length - 1 ? '.' : null}
+            {index < siteConfig.legal.links.length - 2 ? ', ' : null}
+            {index === siteConfig.legal.links.length - 2 ? ' ' : null}
+            {index === siteConfig.legal.links.length - 1 ? '.' : null}
           </span>
         ))}
       </p>

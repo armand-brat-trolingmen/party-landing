@@ -14,3 +14,15 @@ export type SocialLink = {
   label: string;
   href: string;
 };
+
+export type LegalLink = {
+  href: string;
+  label: string;
+};
+
+export type LegalDocument = {
+  path: string;
+  title: string;
+  seoTitle: string;
+  description: string;
+};

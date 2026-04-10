@@ -1,4 +1,4 @@
-import { footerContent } from '../../data/footerContent';
+import { siteConfig } from '../../content';
 import { contactActionsGuided, contactGuidedCopy } from '../../data/siteContent';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { SectionHeading } from '../ui/SectionHeading';
@@ -73,23 +73,23 @@ export function ContactPlaceholderSection() {
           <div className={`${styles.layout} reveal-grid`} data-testid="contact-layout" data-contact-layout="split-canvas">
             <div className={styles.copy}>
               <div className={styles.details}>
-                <a className={styles.contactItem} href={footerContent.phoneHref} aria-label={footerContent.phoneLabel}>
+                <a className={styles.contactItem} href={siteConfig.contacts.phone.href} aria-label={siteConfig.contacts.phone.display}>
                   <span className={styles.contactBadge}>
                     <PhoneIcon />
                   </span>
                   <span className={styles.contactTextWrap}>
                     <span className={styles.contactLabel}>Телефон</span>
-                    <span className={styles.contactLink}>{footerContent.phoneLabel}</span>
+                    <span className={styles.contactLink}>{siteConfig.contacts.phone.display}</span>
                   </span>
                 </a>
 
-                <a className={styles.contactItem} href={footerContent.emailHref} aria-label={footerContent.emailLabel}>
+                <a className={styles.contactItem} href={siteConfig.contacts.email.href} aria-label={siteConfig.contacts.email.display}>
                   <span className={styles.contactBadge}>
                     <EmailIcon />
                   </span>
                   <span className={styles.contactTextWrap}>
                     <span className={styles.contactLabel}>Почта</span>
-                    <span className={styles.contactLink}>{footerContent.emailLabel}</span>
+                    <span className={styles.contactLink}>{siteConfig.contacts.email.display}</span>
                   </span>
                 </a>
               </div>

@@ -1,9 +1,10 @@
-import { footerContent, type FooterSocialLink } from '../../data/footerContent';
+import { siteConfig } from '../../content';
+import type { SocialLink } from '../../content/types';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { DonutLogo } from '../branding/DonutLogo';
 import styles from './SiteFooter.module.css';
 
-function FooterSocialIcon({ id }: { id: FooterSocialLink['id'] }) {
+function FooterSocialIcon({ id }: { id: SocialLink['id'] }) {
   if (id === 'telegram') {
     return (
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -49,17 +50,17 @@ export function SiteFooter() {
       >
         <div className={styles.topRow}>
           <div className={styles.brandCluster}>
-            <a className={styles.brand} href="/" aria-label={footerContent.brand} data-testid="footer-brand-link">
+            <a className={styles.brand} href="/" aria-label={siteConfig.brand.name} data-testid="footer-brand-link">
               <span className={styles.brandBadge} aria-hidden="true">
                 <DonutLogo className={styles.logoMark} size={46} />
               </span>
             </a>
-            <p className={styles.brandDescriptor}>{footerContent.descriptor}</p>
+            <p className={styles.brandDescriptor}>{siteConfig.brand.descriptor}</p>
           </div>
 
           <div className={styles.actionsCluster}>
             <div className={styles.socials} aria-label="Соцсети и мессенджеры">
-              {footerContent.socialLinks.map((socialLink) => (
+              {siteConfig.contacts.socialLinks.map((socialLink) => (
                 <a
                   key={socialLink.id}
                   className={styles.socialLink}
@@ -74,11 +75,11 @@ export function SiteFooter() {
             </div>
 
             <div className={styles.contactLinks}>
-              <a className={styles.contactLink} href={footerContent.phoneHref}>
-                {footerContent.phoneLabel}
+              <a className={styles.contactLink} href={siteConfig.contacts.phone.href}>
+                {siteConfig.contacts.phone.display}
               </a>
-              <a className={styles.contactLink} href={footerContent.emailHref}>
-                {footerContent.emailLabel}
+              <a className={styles.contactLink} href={siteConfig.contacts.email.href}>
+                {siteConfig.contacts.email.display}
               </a>
             </div>
           </div>
@@ -88,14 +89,14 @@ export function SiteFooter() {
 
         <div className={styles.bottomRow}>
           <div className={styles.legalDetails}>
-            <p>{footerContent.businessName}</p>
-            <p>{footerContent.inn}</p>
-            <p>{footerContent.ogrnip}</p>
-            <p>{footerContent.legalAddress}</p>
+            <p>{siteConfig.legal.business.name}</p>
+            <p>{siteConfig.legal.business.inn}</p>
+            <p>{siteConfig.legal.business.ogrnip}</p>
+            <p>{siteConfig.legal.business.address}</p>
           </div>
 
           <div className={styles.legalLinks}>
-            {footerContent.legalLinks.map((legalLink) => (
+            {siteConfig.legal.links.map((legalLink) => (
               <a key={legalLink.href} className={styles.legalLink} href={legalLink.href}>
                 {legalLink.label}
               </a>

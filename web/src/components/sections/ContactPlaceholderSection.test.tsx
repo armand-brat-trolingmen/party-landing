@@ -1,5 +1,5 @@
 import { render, screen, within } from '@testing-library/react';
-import { footerContent } from '../../data/footerContent';
+import { siteConfig } from '../../content';
 import { contactActionsGuided } from '../../data/siteContent';
 import { ContactPlaceholderSection } from './ContactPlaceholderSection';
 
@@ -12,9 +12,15 @@ test('renders contacts as a split canvas with direct details and a future visual
   expect(sectionQueries.getByRole('heading', { level: 2, name: 'Контакты' })).toBeInTheDocument();
   expect(section).not.toHaveAttribute('data-section-tone');
   expect(sectionQueries.getByTestId('contact-layout')).toHaveAttribute('data-contact-layout', 'split-canvas');
-  expect(sectionQueries.queryByText(footerContent.legalAddress)).not.toBeInTheDocument();
-  expect(sectionQueries.getByRole('link', { name: footerContent.phoneLabel })).toHaveAttribute('href', footerContent.phoneHref);
-  expect(sectionQueries.getByRole('link', { name: footerContent.emailLabel })).toHaveAttribute('href', footerContent.emailHref);
+  expect(sectionQueries.queryByText(siteConfig.legal.business.address)).not.toBeInTheDocument();
+  expect(sectionQueries.getByRole('link', { name: siteConfig.contacts.phone.display })).toHaveAttribute(
+    'href',
+    siteConfig.contacts.phone.href,
+  );
+  expect(sectionQueries.getByRole('link', { name: siteConfig.contacts.email.display })).toHaveAttribute(
+    'href',
+    siteConfig.contacts.email.href,
+  );
   expect(sectionQueries.getByTestId('contact-icon-phone')).toBeInTheDocument();
   expect(sectionQueries.getByTestId('contact-icon-email')).toBeInTheDocument();
   expect(sectionQueries.getByTestId('contact-visual-slot')).toHaveAttribute('data-contact-visual', 'placeholder');

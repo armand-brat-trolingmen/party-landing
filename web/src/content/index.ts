@@ -1,5 +1,6 @@
 import { brand } from './brand';
 import { contacts } from './contacts';
+import { legal } from './legal';
 import { navigation } from './navigation';
 
 export const siteConfig = {
@@ -11,10 +12,11 @@ export const siteConfig = {
   extras: [],
   testimonials: [],
   faq: [],
-  legal: {},
+  legal,
   seo: {},
 } as const;
 
 export { brand } from './brand';
 export { contacts } from './contacts';
+export { legal } from './legal';
 export { navigation } from './navigation';

@@ -1,5 +1,5 @@
+import { siteConfig } from '../../content';
 import { homePageContent } from '../../data/catalogContent';
-import { footerContent } from '../../data/footerContent';
 import { useOrderModal } from './useOrderModal';
 import styles from './OrderModal.module.css';
 
@@ -38,7 +38,7 @@ export function OrderModal() {
           </div>
 
           <button type="button" className={styles.closeButton} onClick={closeModal} aria-label="Закрыть форму заказа">
-            ×
+            Г—
           </button>
         </div>
 
@@ -50,7 +50,7 @@ export function OrderModal() {
 
           <label className={styles.field}>
             <span className={styles.fieldLabel}>Телефон</span>
-            <input className={styles.input} name="phone" autoComplete="tel" placeholder="+79263919225" inputMode="tel" />
+            <input className={styles.input} name="phone" autoComplete="tel" placeholder={siteConfig.contacts.phone.display} inputMode="tel" />
           </label>
 
           <button type="submit" className={styles.submitButton}>
@@ -61,13 +61,13 @@ export function OrderModal() {
         <p className={styles.consent}>
           {homePageContent.cta.consentPrefix}{' '}
           <span className={styles.consentLinks}>
-            {footerContent.legalLinks.map((link, index) => (
+            {siteConfig.legal.links.map((link, index) => (
               <span key={link.href}>
                 {index > 0 ? 'и ' : null}
                 <a className={styles.consentLink} href={link.href}>
                   {link.label.toLowerCase()}
                 </a>
-                {index < footerContent.legalLinks.length - 1 ? ' ' : null}
+                {index < siteConfig.legal.links.length - 1 ? ' ' : null}
               </span>
             ))}
           </span>

@@ -1,9 +1,9 @@
-import { avitoProfileUrl } from '../data/siteContent';
 import { buildMailtoHref, buildPhoneHref } from './formatters';
 import type { SocialLink } from './types';
 
 const phoneRaw = '+79263919225';
 const emailRaw = 'Glad_2015@bk.ru';
+const avitoProfileUrl = 'https://www.avito.ru/brands/i82014135/all';
 
 const socialLinks = [
   {
@@ -36,3 +36,5 @@ export const contacts = {
   },
   socialLinks,
 } as const;
+
+export { avitoProfileUrl };
