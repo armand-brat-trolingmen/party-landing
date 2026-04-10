@@ -4,7 +4,7 @@
   SITE_NAME as ROOT_SITE_NAME,
   SITE_URL as ROOT_SITE_URL,
 } from '../../site.config.js';
-import { homePageContent, services, type OfferingEntity } from '../data/catalogContent';
+import { siteConfig, type OfferingEntity } from '../content';
 
 export const SITE_URL = ROOT_SITE_URL;
 export const SITE_NAME = ROOT_SITE_NAME;
@@ -43,7 +43,7 @@ export function getHomeStructuredData() {
   const organizationId = `${homeUrl}#organization`;
   const websiteId = `${homeUrl}#website`;
   const serviceId = `${homeUrl}#service`;
-  const visibleFormats = services.slice(0, 6).map((service) => service.name).join(', ');
+  const visibleFormats = siteConfig.services.slice(0, 6).map((service) => service.name).join(', ');
 
   return [
     {
@@ -70,7 +70,7 @@ export function getHomeStructuredData() {
       '@id': serviceId,
       name: 'Каталог сладких станций и кейтеринга Праздник каждый день',
       serviceType: 'Кейтеринг для праздников и мероприятий',
-      description: `${homePageContent.hero.description} На сайте представлены форматы: ${visibleFormats}.`,
+      description: `${siteConfig.homepage.hero.description} На сайте представлены форматы: ${visibleFormats}.`,
       provider: {
         '@id': organizationId,
       },
@@ -106,7 +106,7 @@ export function getOfferingStructuredData(offering: OfferingEntity) {
         '@type': 'PriceSpecification',
         priceCurrency: 'RUB',
         valueAddedTaxIncluded: false,
-        description: offering.priceFrom,
+        description: offering.price?.display ?? offering.priceFrom,
       },
     },
   };

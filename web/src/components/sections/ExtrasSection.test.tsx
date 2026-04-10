@@ -1,6 +1,8 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
-import { extras } from '../../data/catalogContent';
+import { siteConfig } from '../../content';
 import { ExtrasSection } from './ExtrasSection';
+
+const extras = siteConfig.extras;
 
 function mockViewport(isMobile: boolean) {
   Object.defineProperty(window, 'matchMedia', {

@@ -1,6 +1,8 @@
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
-import { services } from '../../data/catalogContent';
+import { siteConfig } from '../../content';
 import { ServicesSection } from './ServicesSection';
+
+const services = siteConfig.services;
 
 function mockViewport(isMobile: boolean) {
   Object.defineProperty(window, 'matchMedia', {

@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import type { CatalogVisual } from '../../data/catalogContent';
+import type { CatalogVisual } from '../../content';
 import styles from './OfferingVisual.module.css';
 
 type OfferingVisualProps = {

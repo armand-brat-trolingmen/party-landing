@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react';
 import { startTransition, useEffect, useMemo, useRef, useState } from 'react';
-import { getOfferingPath, homePageContent, services as defaultServices, type OfferingEntity } from '../../data/catalogContent';
+import { getOfferingPath, siteConfig, type OfferingEntity } from '../../content';
 import { useHorizontalScrollProgress } from '../../hooks/useHorizontalScrollProgress';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
@@ -18,16 +18,12 @@ type ServicesSectionProps = {
 
 const COLLAPSE_ANIMATION_MS = 280;
 
-function formatServiceCardPrice(priceFrom: string) {
-  return priceFrom.includes('₽') ? priceFrom : `${priceFrom} ₽`;
-}
-
 export function ServicesSection({
-  items = defaultServices,
+  items = siteConfig.services,
   sectionId = 'services',
-  title = homePageContent.services.title,
-  description = homePageContent.services.description,
-  initialVisibleCount = homePageContent.services.initialVisibleCount,
+  title = siteConfig.homepage.services.title,
+  description = siteConfig.homepage.services.description,
+  initialVisibleCount = siteConfig.homepage.services.initialVisibleCount,
   allowReveal = true,
 }: ServicesSectionProps) {
   const { ref, revealState } = useScrollReveal();
@@ -159,7 +155,7 @@ export function ServicesSection({
                     </div>
 
                     <div className={styles.footer}>
-                      <span className={styles.price}>{formatServiceCardPrice(service.priceFrom)}</span>
+                      <span className={styles.price}>{service.price?.display ?? service.priceFrom}</span>
                       <span className={styles.link} aria-hidden="true">
                         <span>Подробнее</span>
                         <span className={styles.linkArrow}>→</span>
@@ -193,7 +189,7 @@ export function ServicesSection({
                 data-testid="services-reveal-button"
                 onClick={handleRevealToggle}
               >
-                {isExpanded ? homePageContent.services.collapseLabel : homePageContent.services.revealLabel}
+                {isExpanded ? siteConfig.homepage.services.collapseLabel : siteConfig.homepage.services.revealLabel}
               </button>
             </div>
           ) : null}

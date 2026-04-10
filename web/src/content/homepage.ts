@@ -1,4 +1,4 @@
-import { homePageContent, moments } from '../data/catalogContent';
+import { homePageContent, moments } from './offerings';
 import { contacts } from './contacts';
 
 export const heroPosterSlides = [

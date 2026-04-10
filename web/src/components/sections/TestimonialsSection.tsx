@@ -1,5 +1,4 @@
-import { homePageContent, reviewProofs } from '../../data/catalogContent';
-import { avitoProfileUrl } from '../../data/siteContent';
+import { avitoProfileUrl, siteConfig } from '../../content';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { SectionHeading } from '../ui/SectionHeading';
 import styles from './TestimonialsSection.module.css';
@@ -12,12 +11,12 @@ export function TestimonialsSection() {
       <div ref={ref} className="site-container site-reveal" data-reveal-state={revealState} data-reveal-stagger="true">
         <div className={styles.sectionBody}>
           <SectionHeading
-            title={<span id="testimonials-title">{homePageContent.reviews.title}</span>}
-            description={homePageContent.reviews.description}
+            title={<span id="testimonials-title">{siteConfig.homepage.reviews.title}</span>}
+            description={siteConfig.homepage.reviews.description}
           />
 
           <div className={`${styles.grid} reveal-grid`} data-testid="testimonials-grid">
-            {reviewProofs.map((review) => (
+            {siteConfig.testimonials.map((review) => (
               <article key={review.id} className={styles.card}>
                 <div className={styles.cardTop}>
                   <div className={styles.meta}>
@@ -33,8 +32,8 @@ export function TestimonialsSection() {
 
           <div className={styles.proof} data-testid="testimonials-proof">
             <div className={styles.proofCopy}>
-              <p className={styles.proofTitle}>{homePageContent.reviews.avitoTitle}</p>
-              <p className={styles.proofDescription}>{homePageContent.reviews.avitoDescription}</p>
+              <p className={styles.proofTitle}>{siteConfig.homepage.reviews.avitoTitle}</p>
+              <p className={styles.proofDescription}>{siteConfig.homepage.reviews.avitoDescription}</p>
             </div>
             <a className={styles.proofLink} href={avitoProfileUrl} target="_blank" rel="noreferrer">
               Перейти на Avito

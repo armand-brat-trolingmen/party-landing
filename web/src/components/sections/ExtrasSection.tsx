@@ -1,4 +1,4 @@
-import { extras, getOfferingPath, homePageContent, type OfferingEntity } from '../../data/catalogContent';
+import { getOfferingPath, siteConfig, type OfferingEntity } from '../../content';
 import { useHorizontalScrollProgress } from '../../hooks/useHorizontalScrollProgress';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
@@ -14,10 +14,10 @@ type ExtrasSectionProps = {
 };
 
 export function ExtrasSection({
-  items = extras,
+  items = siteConfig.extras,
   sectionId = 'extras',
-  title = homePageContent.extras.title,
-  description = homePageContent.extras.description,
+  title = siteConfig.homepage.extras.title,
+  description = siteConfig.homepage.extras.description,
 }: ExtrasSectionProps) {
   const { ref, revealState } = useScrollReveal();
   const isMobile = useMediaQuery('(max-width: 720px)');
@@ -53,7 +53,7 @@ export function ExtrasSection({
                     <p className={styles.description}>{item.shortDescription}</p>
                   </div>
                   <div className={styles.footer}>
-                    <span className={styles.price}>{item.priceFrom}</span>
+                    <span className={styles.price}>{item.price?.display ?? item.priceFrom}</span>
                     <span className={styles.link} aria-hidden="true">
                       <span>Подробнее</span>
                       <span className={styles.linkArrow}>→</span>

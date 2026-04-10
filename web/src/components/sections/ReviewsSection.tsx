@@ -1,19 +1,19 @@
-import { homePageContent, moments } from '../../data/catalogContent';
+import { siteConfig } from '../../content';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { SectionHeading } from '../ui/SectionHeading';
 import styles from './ReviewsSection.module.css';
 
 export function ReviewsSection() {
   const { ref, revealState } = useScrollReveal();
-  const featuredMoments = moments.slice(0, 3);
+  const featuredMoments = siteConfig.homepage.moments.items.slice(0, 3);
 
   return (
     <section id="moments" className="site-section" data-testid="section-moments" aria-labelledby="moments-title">
       <div ref={ref} className="site-container site-reveal" data-reveal-state={revealState} data-reveal-stagger="true">
         <div className={styles.sectionBody}>
           <SectionHeading
-            title={<span id="moments-title">{homePageContent.moments.title}</span>}
-            description={homePageContent.moments.description}
+            title={<span id="moments-title">{siteConfig.homepage.moments.title}</span>}
+            description={siteConfig.homepage.moments.description}
           />
 
           <div className={`${styles.gallery} reveal-grid`} data-testid="moment-feed-gallery" data-gallery-style="editorial-mosaic">

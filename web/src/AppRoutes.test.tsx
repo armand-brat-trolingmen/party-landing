@@ -1,7 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import { services } from './data/catalogContent';
+import { siteConfig } from './content';
 import { AppRoutes } from './AppRoutes';
+
+const services = siteConfig.services;
 
 test('renders dedicated privacy page route', () => {
   render(

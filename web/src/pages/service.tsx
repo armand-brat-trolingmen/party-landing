@@ -3,7 +3,7 @@ import { OfferingPageTemplate } from '../components/pages/OfferingPageTemplate';
 import { SEO } from '../components/SEO';
 import { StructuredData } from '../components/StructuredData';
 import { SiteShell } from '../components/layout/SiteShell';
-import { findServiceBySlug } from '../data/catalogContent';
+import { findServiceBySlug } from '../content';
 import { getOfferingStructuredData } from '../config/seo';
 
 export default function ServicePage() {

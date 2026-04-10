@@ -1,4 +1,4 @@
-import { services, type OfferingEntity } from '../../data/catalogContent';
+import { siteConfig, type OfferingEntity } from '../../content';
 import { useOrderModal } from '../cta/useOrderModal';
 import { ContactPlaceholderSection } from '../sections/ContactPlaceholderSection';
 import { CtaSection } from '../sections/CtaSection';
@@ -35,7 +35,7 @@ export function OfferingPageTemplate({ offering, typeLabel }: OfferingPageTempla
                 <p className={styles.description}>{offering.fullDescription}</p>
 
                 <div className={styles.metaRow}>
-                  <span className={styles.priceBadge}>{offering.priceFrom}</span>
+                  <span className={styles.priceBadge}>{offering.price?.display ?? offering.priceFrom}</span>
                   <button type="button" className={styles.orderButton} onClick={openModal}>
                     Заказать
                   </button>
@@ -58,7 +58,7 @@ export function OfferingPageTemplate({ offering, typeLabel }: OfferingPageTempla
         </div>
       </section>
 
-      <ServicesSection allowReveal={false} items={services} />
+      <ServicesSection allowReveal={false} items={siteConfig.services} />
       <ExtrasSection />
       <TestimonialsSection />
       <FaqSection />
