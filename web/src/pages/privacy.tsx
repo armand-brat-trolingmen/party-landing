@@ -1,6 +1,6 @@
 import { LegalPageLayout } from '../components/legal/LegalPageLayout';
-import { legalDocuments } from '../data/footerContent';
+import { siteConfig } from '../content';
 
 export default function PrivacyPage() {
-  return <LegalPageLayout document={legalDocuments.privacy} />;
+  return <LegalPageLayout document={siteConfig.legal.documents.privacy} />;
 }

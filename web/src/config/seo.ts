@@ -4,14 +4,13 @@
   SITE_NAME as ROOT_SITE_NAME,
   SITE_URL as ROOT_SITE_URL,
 } from '../../site.config.js';
-import { siteConfig, type OfferingEntity } from '../content';
+import { buildHomeServiceDescription, getOfferingSeoDescription, siteConfig, type OfferingEntity } from '../content';
 
 export const SITE_URL = ROOT_SITE_URL;
 export const SITE_NAME = ROOT_SITE_NAME;
 export const DEFAULT_LOCALE = ROOT_DEFAULT_LOCALE;
 export const DEFAULT_OG_IMAGE = OG_IMAGE_URL;
-export const BUSINESS_DESCRIPTION =
-  'Праздник каждый день — кейтеринг и сладкие станции для частных, детских и корпоративных событий в Москве и Московской области.';
+export const BUSINESS_DESCRIPTION = siteConfig.seo.defaults.businessDescription;
 export const LOGO_URL = toAbsoluteUrl('/brand-logo.png');
 
 export type FaqStructuredItem = {
@@ -70,7 +69,7 @@ export function getHomeStructuredData() {
       '@id': serviceId,
       name: 'Каталог сладких станций и кейтеринга Праздник каждый день',
       serviceType: 'Кейтеринг для праздников и мероприятий',
-      description: `${siteConfig.homepage.hero.description} На сайте представлены форматы: ${visibleFormats}.`,
+      description: buildHomeServiceDescription(visibleFormats),
       provider: {
         '@id': organizationId,
       },
@@ -106,7 +105,7 @@ export function getOfferingStructuredData(offering: OfferingEntity) {
         '@type': 'PriceSpecification',
         priceCurrency: 'RUB',
         valueAddedTaxIncluded: false,
-        description: offering.price?.display ?? offering.priceFrom,
+        description: getOfferingSeoDescription(offering),
       },
     },
   };

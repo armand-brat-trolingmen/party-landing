@@ -4,6 +4,7 @@ import { homepage } from './homepage';
 import { legal } from './legal';
 import { navigation } from './navigation';
 import { extras, reviewProofs, services } from './offerings';
+import { seo } from './seo';
 
 export const siteConfig = {
   brand,
@@ -15,7 +16,7 @@ export const siteConfig = {
   testimonials: reviewProofs,
   faq: homepage.faq.items,
   legal,
-  seo: {},
+  seo,
 } as const;
 
 export { brand } from './brand';
@@ -36,3 +37,4 @@ export {
 } from './offerings';
 export type { CatalogVisual, HomeCardImage, MomentEntity, OfferingEntity, ReviewProofEntity } from './offerings';
 export { avitoProfileUrl } from './contacts';
+export { buildHomeServiceDescription, getOfferingSeoDescription, seo } from './seo';

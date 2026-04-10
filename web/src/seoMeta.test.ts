@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { siteConfig } from './content';
 
 test('index html defines production-friendly SEO tags for the landing page', () => {
   const html = readFileSync(resolve(import.meta.dirname, '../index.html'), 'utf8');
@@ -17,4 +18,24 @@ test('index html defines production-friendly SEO tags for the landing page', () 
   expect(html).not.toMatch(/name="robots"[^>]*noindex/i);
   expect(html).not.toMatch(/name="robots"[^>]*nofollow/i);
   expect(html).not.toMatch(/name="robots"[^>]*none/i);
+});
+
+test('siteConfig exposes centralized SEO copy', () => {
+  const seo = siteConfig.seo as {
+    defaults?: {
+      siteName: string;
+      businessDescription: string;
+    };
+    legal?: {
+      privacy: {
+        title: string;
+        description: string;
+      };
+    };
+  };
+
+  expect(seo.defaults?.siteName).toBe(siteConfig.brand.name);
+  expect(seo.defaults?.businessDescription).toContain(siteConfig.brand.name);
+  expect(seo.legal?.privacy.title).toBe(siteConfig.legal.documents.privacy.seoTitle);
+  expect(seo.legal?.privacy.description).toBe(siteConfig.legal.documents.privacy.description);
 });
