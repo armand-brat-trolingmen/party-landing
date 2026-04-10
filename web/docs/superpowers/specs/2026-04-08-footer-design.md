@@ -18,13 +18,13 @@ Add a compact, status-oriented footer to the landing page without competing with
 ### Row 1
 
 - Logo
-- `Party Everyday`
+- `Праздник каждый день`
 - Social links:
   - Telegram
   - WhatsApp
   - Avito
-- Phone: `+7 (999) 999-99-99`
-- Email: `contact@party-everyday.ru`
+- Phone: `+79263919225`
+- Email: `Glad_2015@bk.ru`
 
 ### Row 2
 

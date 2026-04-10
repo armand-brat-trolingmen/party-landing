@@ -25,7 +25,7 @@
 **Modify**
 - `src/App.tsx` — render the new footer after the current Contacts section
 - `src/AppRoutes.tsx` — add explicit routes for `/privacy`, `/terms`, `/consent`
-- `src/data/siteContent.ts` — add centralized footer content, legal links, legal page copy, and placeholder contact values
+- `src/data/siteContent.ts` — add centralized footer content, legal links, legal page copy, and real contact values
 - `src/config/seo.ts` — add helpers/constants for legal page titles/descriptions if needed
 - `src/pages/index.tsx` — keep homepage SEO distinct from legal pages
 - `src/App.test.tsx` — assert footer presence in the main landing shell
@@ -46,9 +46,9 @@
 - [ ] **Step 1: Write the failing test**
 
 Add assertions for:
-- brand name `Party Everyday`
-- phone `+7 (999) 999-99-99`
-- email `contact@party-everyday.ru`
+- brand name `Праздник каждый день`
+- phone `+79263919225`
+- email `Glad_2015@bk.ru`
 - legal text entries for ИП / ИНН / ОГРНИП / address
 - internal links `/privacy`, `/terms`, `/consent`
 - external links for Telegram / WhatsApp / Avito
