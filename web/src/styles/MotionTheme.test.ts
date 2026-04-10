@@ -55,8 +55,9 @@ test('services styles preserve card interactions but drop the outer frame rule',
   expect(css).toContain('@keyframes serviceButtonSheen');
   expect(css).toContain('.link::before');
   expect(css).toContain('transform: translate3d(0, -8px, 0);');
-  expect(css).toContain('scroll-snap-type: x proximity;');
-  expect(css).toContain('grid-auto-columns: calc((100% - 1rem) / 2.9);');
+  expect(css).toContain('scroll-snap-type: x mandatory;');
+  expect(css).toContain('grid-auto-columns: clamp(8.9rem, 44vw, 10.4rem);');
+  expect(css).toContain('scroll-snap-stop: always;');
   expect(css).not.toContain('.frame {');
   expect(extrasCss).toContain('@keyframes extraButtonSheen');
   expect(extrasCss).toContain('.link::before');
