@@ -33,13 +33,24 @@ test('renders extras inside the wide canvas without a framed outer surface', () 
   expect(sectionQueries.getByTestId('extras-track')).toHaveAttribute('data-extras-style', 'continuation-grid');
   expect(sectionQueries.getByTestId('extras-track')).toHaveAttribute('data-mobile-layout', 'grid');
   expect(sectionQueries.queryByTestId('extras-slider-progress')).not.toBeInTheDocument();
+  expect(within(sectionQueries.getByTestId('extras-track')).getAllByRole('article')).toHaveLength(2);
+  expect(sectionQueries.getByRole('heading', { level: 3, name: 'Брендирование тележки для кейтеринга' })).toBeInTheDocument();
+  expect(sectionQueries.getByRole('heading', { level: 3, name: 'Аренда оборудования' })).toBeInTheDocument();
+  expect(sectionQueries.queryByText(/от \d/i)).not.toBeInTheDocument();
+  const visualSlots = sectionQueries.queryAllByTestId('extra-visual-blank');
+  const brandingImage = sectionQueries.getByRole('img', { name: /Брендирование тележки для кейтеринга/ });
+  const equipmentImage = sectionQueries.getByRole('img', { name: /Аренда оборудования/ });
+
+  expect(visualSlots).toHaveLength(0);
+  expect(brandingImage).toHaveAttribute('src', '/images/extras/branding.png');
+  expect(equipmentImage).toHaveAttribute('src', '/images/extras/equipment.png');
   expect(sectionQueries.getByRole('link', { name: `Открыть страницу услуги ${extras[0].name}` })).toHaveAttribute(
     'data-link-appearance',
     'button',
   );
 });
 
-test('switches extras to a single-card mobile slider with a swipe progress indicator', () => {
+test('switches extras to a compact mobile slider with a swipe progress indicator', () => {
   mockViewport(true);
   render(<ExtrasSection />);
 
@@ -47,7 +58,7 @@ test('switches extras to a single-card mobile slider with a swipe progress indic
   const firstLink = within(track).getByRole('link', { name: `Открыть страницу услуги ${extras[0].name}` });
   const progress = screen.getByTestId('extras-slider-progress');
 
-  expect(track).toHaveAttribute('data-mobile-layout', 'slider-single');
+  expect(track).toHaveAttribute('data-mobile-layout', 'slider-compact');
   expect(firstLink).toHaveAttribute('data-link-appearance', 'card');
   expect(progress).toHaveAttribute('role', 'progressbar');
   expect(progress).toHaveAttribute('aria-valuenow', '0');

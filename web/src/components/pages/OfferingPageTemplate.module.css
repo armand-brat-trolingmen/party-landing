@@ -32,6 +32,25 @@
   padding: clamp(1rem, 2.6vw, 1.45rem);
 }
 
+.extraVisualBlank {
+  min-height: inherit;
+  border-radius: calc(var(--radius-card) - 0.8rem);
+  background: #ffffff;
+  border: 1px solid rgba(31, 52, 74, 0.06);
+}
+
+.extraVisualImage {
+  display: block;
+  align-self: center;
+  justify-self: center;
+  width: min(100%, 28rem);
+  max-height: clamp(16rem, 42vw, 28rem);
+  object-fit: contain;
+  object-position: center center;
+  border-radius: calc(var(--radius-card) - 0.8rem);
+  background: #ffffff;
+}
+
 .copyCard {
   gap: 1rem;
   align-content: start;
@@ -204,6 +223,10 @@
   .visualCard {
     min-height: 11.5rem;
     padding: 0.75rem;
+  }
+
+  .extraVisualImage {
+    max-height: 10rem;
   }
 
   .copyCard {

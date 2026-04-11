@@ -100,14 +100,111 @@
 }
 
 .visualSlot {
+  margin: 0;
   min-height: clamp(18rem, 38vw, 26rem);
   border-radius: var(--radius-frame);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 253, 248, 0.74)),
-    radial-gradient(circle at 22% 18%, rgba(224, 247, 255, 0.9), rgba(224, 247, 255, 0) 34%),
-    radial-gradient(circle at 82% 78%, rgba(255, 238, 245, 0.76), rgba(255, 238, 245, 0) 30%);
-  border: 1px dashed rgba(31, 52, 74, 0.12);
+  background: #ffffff;
+  border: 1px solid rgba(31, 52, 74, 0.1);
   box-shadow: var(--shadow-soft);
+  overflow: hidden;
+}
+
+.visualButton {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
+}
+
+.visualImage {
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  object-fit: contain;
+  object-position: center center;
+}
+
+.visualDialogOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  padding: clamp(0.8rem, 2vw, 1.5rem);
+  background: rgba(17, 24, 34, 0.72);
+  backdrop-filter: blur(10px);
+  animation: contactPreviewFade 180ms ease both;
+}
+
+.visualDialog {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 0.75rem;
+  width: min(96vw, 88rem);
+  max-height: min(94svh, 58rem);
+  padding: 0.8rem;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.74);
+  box-shadow: 0 28px 80px rgba(12, 17, 24, 0.34);
+  animation: contactPreviewIn 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.visualDialogHeader {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.visualDialogClose {
+  display: inline-grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid rgba(31, 52, 74, 0.1);
+  border-radius: 8px;
+  background: rgba(241, 251, 255, 0.78);
+  color: var(--text-primary);
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.visualDialogImage {
+  width: 100%;
+  max-height: calc(94svh - 5rem);
+  min-height: 0;
+  object-fit: contain;
+  object-position: center center;
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+@keyframes contactPreviewFade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes contactPreviewIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
 }
 
 @media (min-width: 980px) {
@@ -159,5 +256,22 @@
 
   .visualSlot {
     min-height: 14.5rem;
+  }
+
+  .visualDialog {
+    width: min(96vw, 52rem);
+    max-height: 92svh;
+    padding: 0.65rem;
+  }
+
+  .visualDialogImage {
+    max-height: calc(92svh - 4.8rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .visualDialogOverlay,
+  .visualDialog {
+    animation: none;
   }
 }

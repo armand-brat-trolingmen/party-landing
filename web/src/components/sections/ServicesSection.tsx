@@ -94,7 +94,7 @@ export function ServicesSection({
             data-showcase-style="premium-grid"
             data-services-expanded={isExpanded ? 'true' : 'false'}
             data-services-collapsing={isCollapsing ? 'true' : 'false'}
-            data-mobile-layout={isMobile ? 'slider-trio' : 'grid'}
+            data-mobile-layout={isMobile ? 'slider-single' : 'grid'}
           >
             {visibleItems.map((service, index) => {
               const isExtraCard = index >= initialVisibleCount;

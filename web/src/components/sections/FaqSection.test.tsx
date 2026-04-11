@@ -3,6 +3,15 @@ import { HelmetProvider } from 'react-helmet-async';
 import { siteConfig } from '../../content';
 import { FaqSection } from './FaqSection';
 
+const expectedQuestions = [
+  'Когда обращаться в «В праздник каждый день»?',
+  'На какие праздники можно организовать сладкий кейтеринг?',
+  'Что Вы получаете с арендой станции?',
+  'Есть ли технические требования для работы станций?',
+  'Работаете ли вы по Москве и Московской области?',
+  'Можно ли заказать ваши услуги в другой регион?',
+] as const;
+
 test('renders faq as a cinematic accordion without a framed outer section shell', () => {
   const faq = (
     siteConfig.homepage as {
@@ -39,8 +48,13 @@ test('renders faq as a cinematic accordion without a framed outer section shell'
   const items = accordion.querySelectorAll('[data-motion-item="glow"]');
   expect(items).toHaveLength(faq?.items.length ?? 0);
   expect(items[0]).toHaveAttribute('data-open', 'true');
-  expect(sectionQueries.getByText(faq?.items[0].question ?? '')).toBeInTheDocument();
-  expect(sectionQueries.getByText(faq?.items[0].answer ?? '')).toBeInTheDocument();
+  for (const question of expectedQuestions) {
+    expect(sectionQueries.getByText(question)).toBeInTheDocument();
+  }
+
+  for (const item of faq?.items ?? []) {
+    expect(item.answer).toBe('');
+  }
 
   const structuredDataNode = section.querySelector('script[type="application/ld+json"][data-structured-data="true"]');
   expect(structuredDataNode).not.toBeNull();
@@ -55,7 +69,7 @@ test('renders faq as a cinematic accordion without a framed outer section shell'
     expect.arrayContaining([
       expect.objectContaining({
         '@type': 'Question',
-        name: faq?.items[0].question,
+        name: expectedQuestions[0],
       }),
     ]),
   );

@@ -46,12 +46,12 @@ test('renders service and extra internal pages', () => {
   unmount();
 
   render(
-    <MemoryRouter initialEntries={['/extras/branded-serving']}>
+    <MemoryRouter initialEntries={['/extras/branded-cart']}>
       <AppRoutes />
     </MemoryRouter>,
   );
 
-  expect(screen.getByRole('heading', { level: 1, name: 'Брендированная подача' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { level: 1, name: 'Брендирование тележки для кейтеринга' })).toBeInTheDocument();
 });
 
 test('renders a dedicated Russian not found page for unknown routes', () => {

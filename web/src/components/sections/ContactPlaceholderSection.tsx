@@ -1,7 +1,10 @@
+import { useEffect, useRef, useState } from 'react';
 import { siteConfig } from '../../content';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { SectionHeading } from '../ui/SectionHeading';
 import styles from './ContactPlaceholderSection.module.css';
+
+const AVITO_SCREENSHOT_SRC = '/images/contact/avito.jpg';
 
 type ContactIconKind = 'telegram' | 'whatsapp' | 'avito';
 
@@ -63,6 +66,38 @@ function EmailIcon() {
 export function ContactPlaceholderSection() {
   const { ref, revealState } = useScrollReveal();
   const { contact } = siteConfig.homepage;
+  const [isAvitoPreviewOpen, setIsAvitoPreviewOpen] = useState(false);
+  const avitoPreviewTriggerRef = useRef<HTMLButtonElement>(null);
+  const avitoPreviewCloseRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!isAvitoPreviewOpen) {
+      return;
+    }
+
+    const previousBodyOverflow = document.body.style.overflow;
+    const avitoPreviewTrigger = avitoPreviewTriggerRef.current;
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        setIsAvitoPreviewOpen(false);
+      }
+    }
+
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', handleKeyDown);
+    avitoPreviewCloseRef.current?.focus();
+
+    return () => {
+      document.body.style.overflow = previousBodyOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+      avitoPreviewTrigger?.focus();
+    };
+  }, [isAvitoPreviewOpen]);
+
+  function closeAvitoPreview() {
+    setIsAvitoPreviewOpen(false);
+  }
 
   return (
     <section id="contact" className="site-section" data-testid="section-contact" aria-labelledby="contact-title">
@@ -113,10 +148,63 @@ export function ContactPlaceholderSection() {
               </div>
             </div>
 
-            <div className={styles.visualSlot} data-testid="contact-visual-slot" data-contact-visual="placeholder" aria-hidden="true" />
+            <figure className={styles.visualSlot} data-testid="contact-visual-slot" data-contact-visual="avito">
+              <button
+                ref={avitoPreviewTriggerRef}
+                type="button"
+                className={styles.visualButton}
+                aria-label="Открыть скриншот Avito на весь экран"
+                onClick={() => setIsAvitoPreviewOpen(true)}
+              >
+                <img
+                  className={styles.visualImage}
+                  src={AVITO_SCREENSHOT_SRC}
+                  alt="Профиль Праздник каждый день на Avito"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </button>
+            </figure>
           </div>
         </div>
       </div>
+
+      {isAvitoPreviewOpen ? (
+        <div
+          className={styles.visualDialogOverlay}
+          role="presentation"
+          onClick={closeAvitoPreview}
+          data-testid="contact-visual-dialog-overlay"
+          data-dialog-state="open"
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Скриншот Avito"
+            className={styles.visualDialog}
+            data-testid="contact-visual-dialog"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className={styles.visualDialogHeader}>
+              <button
+                ref={avitoPreviewCloseRef}
+                type="button"
+                className={styles.visualDialogClose}
+                onClick={closeAvitoPreview}
+                aria-label="Закрыть скриншот Avito"
+              >
+                ×
+              </button>
+            </div>
+            <img
+              className={styles.visualDialogImage}
+              src={AVITO_SCREENSHOT_SRC}
+              alt="Скриншот профиля Праздник каждый день на Avito"
+              decoding="async"
+            />
+          </div>
+        </div>
+      ) : null}
     </section>
   );
 }

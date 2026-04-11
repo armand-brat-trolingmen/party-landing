@@ -3,7 +3,6 @@ import { useHorizontalScrollProgress } from '../../hooks/useHorizontalScrollProg
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { SectionHeading } from '../ui/SectionHeading';
-import { OfferingVisual } from '../ui/OfferingVisual';
 import styles from './ExtrasSection.module.css';
 
 type ExtrasSectionProps = {
@@ -35,7 +34,7 @@ export function ExtrasSection({
             className={`${styles.track} reveal-grid`}
             data-testid="extras-track"
             data-extras-style="continuation-grid"
-            data-mobile-layout={isMobile ? 'slider-single' : 'grid'}
+            data-mobile-layout={isMobile ? 'slider-compact' : 'grid'}
           >
             {items.map((item) => (
               <article key={item.slug} className={styles.card}>
@@ -45,15 +44,28 @@ export function ExtrasSection({
                   aria-label={`Открыть страницу услуги ${item.name}`}
                   data-link-appearance={isMobile ? 'card' : 'button'}
                 >
-                  <div className={styles.visualWrap}>
-                    <OfferingVisual visual={item.visual} label={item.name} />
+                  <div
+                    className={styles.visualWrap}
+                    data-testid={item.visual.image ? 'extra-visual-image-wrap' : 'extra-visual-blank'}
+                    aria-hidden={item.visual.image ? undefined : true}
+                  >
+                    {item.visual.image ? (
+                      <img
+                        className={styles.visualImage}
+                        src={item.visual.image}
+                        alt={item.visual.alt ?? item.name}
+                        width={item.visual.width}
+                        height={item.visual.height}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    ) : null}
                   </div>
                   <div className={styles.copy}>
                     <h3 className={styles.name}>{item.name}</h3>
                     <p className={styles.description}>{item.shortDescription}</p>
                   </div>
                   <div className={styles.footer}>
-                    <span className={styles.price}>{item.price?.display ?? item.priceFrom}</span>
                     <span className={styles.link} aria-hidden="true">
                       <span>Подробнее</span>
                       <span className={styles.linkArrow}>→</span>

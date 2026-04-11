@@ -98,7 +98,7 @@ test('routes each desktop card to its dedicated internal service page through a 
   expect(firstLink).toHaveAttribute('data-link-appearance', 'button');
 });
 
-test('switches to a mobile trio slider with a swipe progress indicator', () => {
+test('switches to a full-width mobile slider with a swipe progress indicator', () => {
   mockViewport(true);
   render(<ServicesSection />);
 
@@ -107,7 +107,7 @@ test('switches to a mobile trio slider with a swipe progress indicator', () => {
   const firstLink = within(catalog).getByRole('link', { name: 'Открыть страницу услуги Сахарная вата' });
   const progress = screen.getByTestId('services-slider-progress');
 
-  expect(catalog).toHaveAttribute('data-mobile-layout', 'slider-trio');
+  expect(catalog).toHaveAttribute('data-mobile-layout', 'slider-single');
   expect(within(catalog).getAllByTestId('service-card')).toHaveLength(services.length);
   expect(screen.queryByTestId('services-reveal-button')).not.toBeInTheDocument();
   expect(firstLink).toHaveAttribute('data-link-appearance', 'card');

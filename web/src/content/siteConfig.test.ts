@@ -34,6 +34,16 @@ test('services expose centralized normalized price values', () => {
   expect(firstService.price?.display).toBe('от 12.000 ₽');
 });
 
+test('extras expose only the current additional service catalog', () => {
+  expect(siteConfig.extras).toHaveLength(2);
+  expect(siteConfig.extras.map((extra) => extra.name)).toEqual([
+    'Брендирование тележки для кейтеринга',
+    'Аренда оборудования',
+  ]);
+  expect(siteConfig.extras.find((extra) => extra.slug === 'branded-cart')?.visual.image).toBe('/images/extras/branding.png');
+  expect(siteConfig.extras.find((extra) => extra.slug === 'equipment-rental')?.visual.image).toBe('/images/extras/equipment.png');
+});
+
 test('not found content is centralized and Russian', () => {
   expect(siteConfig.notFound.title).toBe('Страница не найдена');
   expect(siteConfig.notFound.primaryAction.href).toBe('/');

@@ -24,7 +24,24 @@ export function OfferingPageTemplate({ offering, typeLabel }: OfferingPageTempla
           <article className={`${styles.leadFrame} site-panel-glow`}>
             <div className={styles.leadLayout}>
               <div className={styles.visualCard}>
-                <OfferingVisual visual={offering.visual} label={offering.name} />
+                {offering.kind === 'extra' ? (
+                  offering.visual.image ? (
+                    <img
+                      className={styles.extraVisualImage}
+                      data-testid="offering-extra-visual-image"
+                      src={offering.visual.image}
+                      alt={offering.visual.alt ?? offering.name}
+                      width={offering.visual.width}
+                      height={offering.visual.height}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  ) : (
+                    <div className={styles.extraVisualBlank} data-testid="offering-extra-visual-blank" aria-hidden="true" />
+                  )
+                ) : (
+                  <OfferingVisual visual={offering.visual} label={offering.name} />
+                )}
               </div>
 
               <div className={styles.copyCard}>

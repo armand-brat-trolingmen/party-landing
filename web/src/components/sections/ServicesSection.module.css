@@ -315,16 +315,16 @@
 @media (max-width: 720px) {
   .grid {
     grid-auto-flow: column;
-    grid-auto-columns: clamp(8.9rem, 44vw, 10.4rem);
-    gap: 0.6rem;
+    grid-auto-columns: 100%;
+    gap: 0.8rem;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-x: contain;
-    scroll-padding-inline: 0.35rem;
+    scroll-padding-inline: 0.15rem;
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
     touch-action: pan-x;
-    padding: 0 0.35rem 0.35rem;
+    padding: 0 0.15rem 0.35rem;
     scrollbar-width: none;
   }
 
@@ -333,7 +333,7 @@
   }
 
   .card {
-    padding: 0.7rem;
+    padding: 0.95rem;
     background: rgba(255, 255, 255, 0.98);
     border-color: rgba(31, 52, 74, 0.06);
     box-shadow: 0 12px 28px rgba(31, 52, 74, 0.05);
@@ -342,21 +342,21 @@
   }
 
   .cardLink {
-    gap: 0.54rem;
+    gap: 0.9rem;
     align-content: start;
   }
 
   .visualWrap {
-    min-height: 6.6rem;
+    min-height: 11.5rem;
   }
 
   .copy {
-    gap: 0.18rem;
+    gap: 0.3rem;
   }
 
   .name {
-    font-size: 0.88rem;
-    line-height: 1.12;
+    font-size: 1.2rem;
+    line-height: 1.04;
   }
 
   .footer {
@@ -366,8 +366,8 @@
   .price {
     display: block;
     color: var(--text-primary);
-    font-size: 0.88rem;
-    font-weight: 400;
+    font-size: 0.96rem;
+    font-weight: 800;
     line-height: 1.12;
   }
 

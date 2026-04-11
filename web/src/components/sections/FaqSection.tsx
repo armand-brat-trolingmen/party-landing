@@ -20,6 +20,7 @@ export function FaqSection() {
           <ul className={`${styles.accordion} reveal-grid`} data-testid="faq-accordion" data-motion-faq="cinematic" aria-label={faq.title}>
             {faq.items.map((item) => {
               const isOpen = item.id === openItemId;
+              const answer = item.answer.trim();
               const panelId = `faq-panel-${item.id}`;
               const triggerId = `faq-trigger-${item.id}`;
 
@@ -50,7 +51,7 @@ export function FaqSection() {
                     data-open={isOpen ? 'true' : 'false'}
                   >
                     <div className={styles.answerInner}>
-                      <p className={styles.answerText}>{item.answer}</p>
+                      {answer ? <p className={styles.answerText}>{answer}</p> : null}
                     </div>
                   </div>
                 </li>

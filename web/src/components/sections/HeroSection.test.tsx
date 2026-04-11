@@ -23,6 +23,7 @@ test('renders the editorial hero with a poster carousel and no supporting tag pi
   expect(screen.getByTestId('hero-poster-carousel')).toBeInTheDocument();
   expect(screen.getByTestId('hero-poster-frame')).toBeInTheDocument();
   expect(screen.getByRole('img', { name: 'Шоколадный фонтан на премиальной фуд-станции' })).toBeInTheDocument();
+  expect(screen.queryByRole('img', { name: 'Фудтрак как часть кейтеринг-сцены мероприятия', hidden: true })).not.toBeInTheDocument();
   expect(within(hero).queryByText('Праздник каждый день')).not.toBeInTheDocument();
 });
 

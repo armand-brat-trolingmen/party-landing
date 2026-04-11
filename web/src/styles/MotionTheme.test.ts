@@ -56,12 +56,12 @@ test('services styles preserve card interactions but drop the outer frame rule',
   expect(css).toContain('.link::before');
   expect(css).toContain('transform: translate3d(0, -8px, 0);');
   expect(css).toContain('scroll-snap-type: x mandatory;');
-  expect(css).toContain('grid-auto-columns: clamp(8.9rem, 44vw, 10.4rem);');
+  expect(css).toContain('grid-auto-columns: 100%;');
   expect(css).toContain('scroll-snap-stop: always;');
   expect(css).not.toContain('.frame {');
   expect(extrasCss).toContain('@keyframes extraButtonSheen');
   expect(extrasCss).toContain('.link::before');
-  expect(extrasCss).toContain('grid-auto-columns: 100%;');
+  expect(extrasCss).toContain('grid-auto-columns: clamp(12rem, 64vw, 14rem);');
   expect(offeringCss).toContain('.orderButton::before');
   expect(offeringCss).toContain('@keyframes orderButtonSheen');
 });
@@ -79,6 +79,7 @@ test('reviews faq and contact styles rely on internal structure without outer fr
   expect(faqCss).not.toContain('.frame {');
   expect(contactCss).toContain('.sectionBody {');
   expect(contactCss).toContain('.visualSlot {');
+  expect(contactCss).toContain('object-fit: contain;');
   expect(contactCss).not.toContain('.guide {');
 });
 

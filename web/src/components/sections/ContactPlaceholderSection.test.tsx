@@ -1,8 +1,8 @@
-import { render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { siteConfig } from '../../content';
 import { ContactPlaceholderSection } from './ContactPlaceholderSection';
 
-test('renders contacts as a split canvas with direct details and a future visual slot', () => {
+test('renders contacts as a split canvas with direct details and an Avito screenshot', () => {
   render(<ContactPlaceholderSection />);
 
   const section = screen.getByTestId('section-contact');
@@ -22,7 +22,11 @@ test('renders contacts as a split canvas with direct details and a future visual
   );
   expect(sectionQueries.getByTestId('contact-icon-phone')).toBeInTheDocument();
   expect(sectionQueries.getByTestId('contact-icon-email')).toBeInTheDocument();
-  expect(sectionQueries.getByTestId('contact-visual-slot')).toHaveAttribute('data-contact-visual', 'placeholder');
+  const visualSlot = sectionQueries.getByTestId('contact-visual-slot');
+  const avitoImage = sectionQueries.getByRole('img', { name: 'Профиль Праздник каждый день на Avito' });
+
+  expect(visualSlot).toHaveAttribute('data-contact-visual', 'avito');
+  expect(avitoImage).toHaveAttribute('src', '/images/contact/avito.jpg');
 
   for (const action of siteConfig.homepage.contact.actions) {
     const link = sectionQueries.getByRole('link', { name: action.label });
@@ -32,4 +36,28 @@ test('renders contacts as a split canvas with direct details and a future visual
   expect(sectionQueries.getByTestId('contact-icon-telegram')).toBeInTheDocument();
   expect(sectionQueries.getByTestId('contact-icon-whatsapp')).toBeInTheDocument();
   expect(sectionQueries.getByTestId('contact-icon-avito')).toBeInTheDocument();
+});
+
+test('opens the Avito screenshot in a fullscreen dialog from the contact visual', () => {
+  render(<ContactPlaceholderSection />);
+
+  expect(screen.queryByRole('dialog', { name: 'Скриншот Avito' })).not.toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole('button', { name: 'Открыть скриншот Avito на весь экран' }));
+
+  const dialog = screen.getByRole('dialog', { name: 'Скриншот Avito' });
+  const dialogQueries = within(dialog);
+
+  expect(dialog).toHaveAttribute('aria-modal', 'true');
+  expect(dialog).toHaveAttribute('aria-label', 'Скриншот Avito');
+  expect(dialogQueries.queryByText('Скриншот Avito')).not.toBeInTheDocument();
+  expect(screen.getByTestId('contact-visual-dialog-overlay')).toHaveAttribute('data-dialog-state', 'open');
+  expect(dialogQueries.getByRole('img', { name: 'Скриншот профиля Праздник каждый день на Avito' })).toHaveAttribute(
+    'src',
+    '/images/contact/avito.jpg',
+  );
+
+  fireEvent.keyDown(window, { key: 'Escape' });
+
+  expect(screen.queryByRole('dialog', { name: 'Скриншот Avito' })).not.toBeInTheDocument();
 });
