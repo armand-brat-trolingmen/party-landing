@@ -443,7 +443,7 @@
   }
 }
 
-@media (max-width: 720px) {
+@media (max-width: 960px) {
   .header {
     position: fixed;
     inset: 0 0 auto;
@@ -473,8 +473,8 @@
   }
 
   .brandText {
-    font-size: 0.84rem;
-    max-width: min(66vw, 16rem);
+    font-size: clamp(0.86rem, 1.9vw, 1rem);
+    max-width: clamp(11rem, 40vw, 17rem);
   }
 
   .menuButton {
@@ -488,5 +488,31 @@
     max-height: calc(100dvh - var(--header-offset) - 12px);
     padding: 0.75rem 0.75rem max(0.75rem, env(safe-area-inset-bottom, 0px));
     border-radius: 1.15rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .inner {
+    width: min(calc(100% - 0.75rem), var(--shell-max-width));
+    padding: 0.76rem 0.82rem;
+  }
+
+  .brand {
+    gap: 0.5rem;
+  }
+
+  .brandPlate {
+    width: 2.45rem;
+    height: 2.45rem;
+  }
+
+  .brandText {
+    font-size: 0.8rem;
+    max-width: min(58vw, 11.5rem);
+  }
+
+  .menuButton {
+    width: 2.85rem;
+    height: 2.85rem;
   }
 }

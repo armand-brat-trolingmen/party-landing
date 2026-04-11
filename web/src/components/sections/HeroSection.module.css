@@ -113,15 +113,16 @@
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1120px) {
   .hero {
     min-height: auto;
+    padding-block: clamp(3.6rem, 8.4vh, 5.8rem);
   }
 
   .container {
     grid-template-columns: 1fr;
     align-content: start;
-    gap: 1.55rem;
+    gap: 1.8rem;
   }
 
   .copyColumn {
@@ -130,7 +131,7 @@
 
   .posterColumn {
     justify-self: center;
-    width: min(100%, 28rem);
+    width: min(100%, 29rem);
   }
 }
 

@@ -92,6 +92,12 @@ svg {
   z-index: 1;
 }
 
+@media (max-width: 960px) {
+  .site-shell {
+    padding-top: var(--header-offset);
+  }
+}
+
 @media (max-width: 720px) {
   .site-shell {
     padding-top: var(--header-offset);

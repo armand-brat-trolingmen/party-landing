@@ -100,6 +100,49 @@ test('mobile services and extras catalogs are horizontally scrollable', async ({
   }
 });
 
+test('narrow mobile header keeps the menu trigger fully inside the viewport', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 700 });
+  await page.goto('/');
+
+  const menuButton = page.getByTestId('menu-button');
+  await expect(menuButton).toBeVisible();
+
+  const bounds = await menuButton.boundingBox();
+  expect(bounds).not.toBeNull();
+  if (!bounds) return;
+
+  expect(bounds.x).toBeGreaterThanOrEqual(0);
+  expect(bounds.x + bounds.width).toBeLessThanOrEqual(320);
+});
+
+test('tablet header switches to the mobile menu before the desktop nav starts colliding', async ({ page }) => {
+  await page.setViewportSize({ width: 900, height: 900 });
+  await page.goto('/');
+
+  await expect(page.getByTestId('menu-button')).toBeVisible();
+  await expect(page.getByRole('navigation')).toHaveCount(0);
+  await expect(page.getByTestId('header-order-button')).toHaveCount(0);
+});
+
+test('tablet hero stacks the poster below the copy before the two-column layout starts colliding', async ({ page }) => {
+  await page.setViewportSize({ width: 960, height: 900 });
+  await page.goto('/');
+
+  const secondaryButton = page.getByRole('button', { name: 'В каталог' });
+  const posterFrame = page.getByTestId('hero-poster-frame');
+  await expect(secondaryButton).toBeVisible();
+  await expect(posterFrame).toBeVisible();
+
+  const buttonBox = await secondaryButton.boundingBox();
+  const posterBox = await posterFrame.boundingBox();
+
+  expect(buttonBox).not.toBeNull();
+  expect(posterBox).not.toBeNull();
+  if (!buttonBox || !posterBox) return;
+
+  expect(posterBox.y).toBeGreaterThan(buttonBox.y + buttonBox.height + 12);
+});
+
 test('homepage sections expose the current content surfaces', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/');
@@ -123,6 +166,33 @@ test('homepage sections expose the current content surfaces', async ({ page }) =
   await expect(page.getByTestId('faq-accordion')).toHaveAttribute('data-motion-faq', 'cinematic');
   await expect(page.getByTestId('contact-layout')).toHaveAttribute('data-contact-layout', 'split-canvas');
   await expect(page.getByTestId('cta-inline-form')).toBeVisible();
+});
+
+test('legal pages stay inside the mobile viewport without horizontal clipping', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+
+  for (const url of ['/privacy', '/terms', '/consent'] as const) {
+    await page.goto(url);
+
+    const metrics = await page.evaluate(() => ({
+      clientWidth: document.documentElement.clientWidth,
+      scrollWidth: document.documentElement.scrollWidth,
+    }));
+    const title = page.getByRole('heading', { level: 1 });
+    const sheet = page.getByTestId('legal-document-sheet');
+    const titleBox = await title.boundingBox();
+    const sheetBox = await sheet.boundingBox();
+
+    expect(metrics.scrollWidth).toBeLessThanOrEqual(metrics.clientWidth);
+    expect(titleBox).not.toBeNull();
+    expect(sheetBox).not.toBeNull();
+    if (!titleBox || !sheetBox) continue;
+
+    expect(titleBox.x).toBeGreaterThanOrEqual(0);
+    expect(titleBox.x + titleBox.width).toBeLessThanOrEqual(390);
+    expect(sheetBox.x).toBeGreaterThanOrEqual(0);
+    expect(sheetBox.x + sheetBox.width).toBeLessThanOrEqual(390);
+  }
 });
 
 test('service and extra pages render the shared offering shell', async ({ page }) => {

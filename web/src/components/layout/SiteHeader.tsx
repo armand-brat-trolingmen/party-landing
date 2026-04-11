@@ -153,7 +153,7 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
       return;
     }
 
-    const query = window.matchMedia('(min-width: 721px)');
+    const query = window.matchMedia('(min-width: 961px)');
     const sync = () => {
       setIsDesktop(query.matches);
       if (query.matches) {
