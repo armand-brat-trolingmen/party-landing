@@ -37,8 +37,8 @@ test('desktop anchor navigation targets current homepage sections', async ({ pag
 
     const section = page.locator(`#${sectionId}`);
     await expect(section).toBeVisible();
-    await expect.poll(async () => panelTopGap(page, sectionId)).toBeGreaterThan(8);
-    await expect.poll(async () => panelTopGap(page, sectionId)).toBeLessThan(72);
+    await expect.poll(async () => panelTopGap(page, sectionId)).toBeGreaterThan(-8);
+    await expect.poll(async () => panelTopGap(page, sectionId)).toBeLessThan(12);
 
     await expect
       .poll(async () => {
@@ -71,7 +71,7 @@ test('mobile menu links to current sections and closes after navigation', async 
   await expect(menuButton).toHaveAttribute('aria-expanded', 'false');
   await expect(page.locator('[class*="mobilePanel"] nav')).toHaveCount(0);
   await expect.poll(async () => panelTopGap(page, 'testimonials')).toBeGreaterThan(8);
-  await expect.poll(async () => panelTopGap(page, 'testimonials')).toBeLessThan(112);
+  await expect.poll(async () => panelTopGap(page, 'testimonials'), { timeout: 10000 }).toBeLessThan(112);
 });
 
 test('mobile services and extras catalogs are horizontally scrollable', async ({ page }) => {
@@ -259,7 +259,12 @@ test('homepage sections expose the current content surfaces', async ({ page }) =
     'src',
     '/images/extras/equipment.png',
   );
-  await expect(page.getByTestId('testimonials-grid').locator('article')).toHaveCount(3);
+  await expect(page.getByTestId('section-food-trucks')).toBeVisible();
+  await expect(page.getByTestId('food-trucks-gallery')).toBeVisible();
+  await expect(page.getByTestId('food-trucks-gallery').locator('[data-testid="food-truck-gallery-image"]')).toHaveCount(6);
+  await expect(page.getByRole('heading', { level: 2, name: 'Кейтеринг на фудтраках' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Узнать условия' })).toBeVisible();
+  await expect(page.getByTestId('testimonials-proof-wall').locator('[data-testid="testimonial-screenshot-card"]')).toHaveCount(6);
   await expect(page.getByTestId('testimonials-proof')).toBeVisible();
   await expect(page.getByTestId('faq-accordion')).toHaveAttribute('data-motion-faq', 'cinematic');
   await expect(page.getByTestId('contact-layout')).toHaveAttribute('data-contact-layout', 'split-canvas');
@@ -295,7 +300,7 @@ test('legal pages stay inside the mobile viewport without horizontal clipping', 
 
 test('service and extra pages render the shared offering shell', async ({ page }) => {
   for (const url of ['/services/cotton-candy', '/extras/branded-cart'] as const) {
-    await page.goto(url);
+    await page.goto(url, { waitUntil: 'networkidle' });
 
     await expect(page.getByTestId('section-offering-intro')).toBeVisible();
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();

@@ -31,6 +31,7 @@ test('renders the homepage as a catalog hub inside the shared site shell', () =>
     'section-about',
     'section-services',
     'section-extras',
+    'section-food-trucks',
     'section-testimonials',
     'section-faq',
     'section-contact',
@@ -48,6 +49,10 @@ test('renders hub-specific actions and keeps the testimonial proof section', () 
   expect(screen.getByRole('button', { name: 'В каталог' })).toBeInTheDocument();
   expect(screen.getAllByRole('button', { name: 'Заказать' }).length).toBeGreaterThanOrEqual(3);
   expect(screen.queryByTestId('section-moments')).not.toBeInTheDocument();
+  expect(screen.getByTestId('section-food-trucks')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { level: 2, name: 'Кейтеринг на фудтраках' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { level: 3, name: 'Почему клиенты доверяют нам?' })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Узнать условия' })).toBeInTheDocument();
   expect(screen.getByTestId('section-testimonials')).toBeInTheDocument();
-  expect(screen.getByTestId('testimonials-grid')).toBeInTheDocument();
+  expect(screen.getByTestId('testimonials-proof-wall')).toBeInTheDocument();
 });

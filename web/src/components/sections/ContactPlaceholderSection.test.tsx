@@ -22,6 +22,7 @@ test('renders contacts as a split canvas with direct details and an Avito screen
   );
   expect(sectionQueries.getByTestId('contact-icon-phone')).toBeInTheDocument();
   expect(sectionQueries.getByTestId('contact-icon-email')).toBeInTheDocument();
+
   const visualSlot = sectionQueries.getByTestId('contact-visual-slot');
   const avitoImage = sectionQueries.getByRole('img', { name: 'Профиль Праздник каждый день на Avito' });
 
@@ -38,7 +39,7 @@ test('renders contacts as a split canvas with direct details and an Avito screen
   expect(sectionQueries.getByTestId('contact-icon-avito')).toBeInTheDocument();
 });
 
-test('opens the Avito screenshot in a fullscreen dialog from the contact visual', () => {
+test('opens the Avito screenshot in a true fullscreen dialog from the contact visual', () => {
   render(<ContactPlaceholderSection />);
 
   expect(screen.queryByRole('dialog', { name: 'Скриншот Avito' })).not.toBeInTheDocument();
@@ -47,11 +48,14 @@ test('opens the Avito screenshot in a fullscreen dialog from the contact visual'
 
   const dialog = screen.getByRole('dialog', { name: 'Скриншот Avito' });
   const dialogQueries = within(dialog);
+  const overlay = screen.getByTestId('contact-visual-dialog-overlay');
 
   expect(dialog).toHaveAttribute('aria-modal', 'true');
   expect(dialog).toHaveAttribute('aria-label', 'Скриншот Avito');
+  expect(dialog).toHaveAttribute('data-dialog-presentation', 'fullscreen');
   expect(dialogQueries.queryByText('Скриншот Avito')).not.toBeInTheDocument();
-  expect(screen.getByTestId('contact-visual-dialog-overlay')).toHaveAttribute('data-dialog-state', 'open');
+  expect(overlay).toHaveAttribute('data-dialog-state', 'open');
+  expect(overlay.parentElement).toBe(document.body);
   expect(dialogQueries.getByRole('img', { name: 'Скриншот профиля Праздник каждый день на Avito' })).toHaveAttribute(
     'src',
     '/images/contact/avito.jpg',

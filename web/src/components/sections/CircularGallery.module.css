@@ -1,0 +1,90 @@
+.root {
+  position: relative;
+  width: 100%;
+  height: clamp(21rem, 65vw, 42rem);
+  overflow: hidden;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y pinch-zoom;
+}
+
+.root:has(.stage[data-dragging='true']) {
+  cursor: grabbing;
+}
+
+.stage {
+  width: 100%;
+  height: 100%;
+}
+
+.canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.semanticTrack,
+.semanticTrackHidden {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-content: center;
+  gap: 0.95rem;
+  padding-inline: clamp(0.75rem, 2vw, 2rem);
+}
+
+.semanticTrack {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.semanticTrackHidden {
+  opacity: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.semanticCard {
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  margin: 0;
+  border-radius: 0.45rem;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 16px 34px rgba(31, 52, 74, 0.08);
+}
+
+.semanticImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (max-width: 900px) {
+  .root {
+    height: clamp(18rem, 88vw, 29rem);
+  }
+
+  .semanticTrack {
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(15rem, 72vw);
+    overflow-x: auto;
+    align-content: stretch;
+    padding-block: 0.4rem;
+    scrollbar-width: none;
+    scroll-snap-type: x mandatory;
+  }
+
+  .semanticTrack::-webkit-scrollbar {
+    display: none;
+  }
+
+  .semanticCard {
+    scroll-snap-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root {
+    cursor: default;
+  }
+}

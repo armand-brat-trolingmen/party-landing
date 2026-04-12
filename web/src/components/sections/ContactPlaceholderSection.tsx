@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { siteConfig } from '../../content';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { SectionHeading } from '../ui/SectionHeading';
@@ -99,6 +100,53 @@ export function ContactPlaceholderSection() {
     setIsAvitoPreviewOpen(false);
   }
 
+  const avitoPreviewDialog =
+    isAvitoPreviewOpen && typeof document !== 'undefined'
+      ? createPortal(
+          <div
+            className={styles.visualDialogOverlay}
+            role="presentation"
+            onClick={closeAvitoPreview}
+            data-testid="contact-visual-dialog-overlay"
+            data-dialog-state="open"
+          >
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-label="Скриншот Avito"
+              aria-describedby="contact-avito-preview-description"
+              className={styles.visualDialog}
+              data-testid="contact-visual-dialog"
+              data-dialog-presentation="fullscreen"
+            >
+              <p id="contact-avito-preview-description" className={styles.visualDialogDescription}>
+                Скриншот профиля Avito в полноэкранном режиме.
+              </p>
+
+              <div className={styles.visualDialogMedia} onClick={(event) => event.stopPropagation()}>
+                <button
+                  ref={avitoPreviewCloseRef}
+                  type="button"
+                  className={styles.visualDialogClose}
+                  onClick={closeAvitoPreview}
+                  aria-label="Закрыть скриншот Avito"
+                >
+                  ×
+                </button>
+
+                <img
+                  className={styles.visualDialogImage}
+                  src={AVITO_SCREENSHOT_SRC}
+                  alt="Скриншот профиля Праздник каждый день на Avito"
+                  decoding="async"
+                />
+              </div>
+            </div>
+          </div>,
+          document.body,
+        )
+      : null;
+
   return (
     <section id="contact" className="site-section" data-testid="section-contact" aria-labelledby="contact-title">
       <div ref={ref} className="site-container site-reveal" data-reveal-state={revealState} data-reveal-stagger="true">
@@ -169,42 +217,7 @@ export function ContactPlaceholderSection() {
         </div>
       </div>
 
-      {isAvitoPreviewOpen ? (
-        <div
-          className={styles.visualDialogOverlay}
-          role="presentation"
-          onClick={closeAvitoPreview}
-          data-testid="contact-visual-dialog-overlay"
-          data-dialog-state="open"
-        >
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-label="Скриншот Avito"
-            className={styles.visualDialog}
-            data-testid="contact-visual-dialog"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <div className={styles.visualDialogHeader}>
-              <button
-                ref={avitoPreviewCloseRef}
-                type="button"
-                className={styles.visualDialogClose}
-                onClick={closeAvitoPreview}
-                aria-label="Закрыть скриншот Avito"
-              >
-                ×
-              </button>
-            </div>
-            <img
-              className={styles.visualDialogImage}
-              src={AVITO_SCREENSHOT_SRC}
-              alt="Скриншот профиля Праздник каждый день на Avito"
-              decoding="async"
-            />
-          </div>
-        </div>
-      ) : null}
+      {avitoPreviewDialog}
     </section>
   );
 }

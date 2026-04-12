@@ -131,58 +131,74 @@
 .visualDialogOverlay {
   position: fixed;
   inset: 0;
-  z-index: 90;
+  z-index: 140;
   display: grid;
   place-items: center;
-  padding: clamp(0.8rem, 2vw, 1.5rem);
-  background: rgba(17, 24, 34, 0.72);
-  backdrop-filter: blur(10px);
+  padding: 0;
+  background: rgba(10, 14, 22, 0.88);
+  backdrop-filter: blur(12px);
   animation: contactPreviewFade 180ms ease both;
 }
 
 .visualDialog {
+  position: relative;
+  width: 100vw;
+  height: 100svh;
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
-  gap: 0.75rem;
-  width: min(96vw, 88rem);
-  max-height: min(94svh, 58rem);
-  padding: 0.8rem;
-  border-radius: 8px;
-  background: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.74);
-  box-shadow: 0 28px 80px rgba(12, 17, 24, 0.34);
-  animation: contactPreviewIn 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  place-items: center;
+  padding: max(1rem, env(safe-area-inset-top, 0px)) max(1rem, env(safe-area-inset-right, 0px))
+    max(1rem, env(safe-area-inset-bottom, 0px)) max(1rem, env(safe-area-inset-left, 0px));
+  pointer-events: none;
 }
 
-.visualDialogHeader {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 0.75rem;
+.visualDialogDescription {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.visualDialogMedia {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  pointer-events: auto;
 }
 
 .visualDialogClose {
+  position: absolute;
+  top: max(0.4rem, env(safe-area-inset-top, 0px));
+  right: max(0.4rem, env(safe-area-inset-right, 0px));
   display: inline-grid;
   place-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border: 1px solid rgba(31, 52, 74, 0.1);
+  width: 3rem;
+  height: 3rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 8px;
-  background: rgba(241, 251, 255, 0.78);
-  color: var(--text-primary);
-  font-size: 1.6rem;
+  background: rgba(20, 28, 39, 0.7);
+  color: rgba(255, 253, 248, 0.96);
+  font-size: 1.9rem;
   line-height: 1;
   cursor: pointer;
+  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.22);
 }
 
 .visualDialogImage {
-  width: 100%;
-  max-height: calc(94svh - 5rem);
-  min-height: 0;
+  width: min(100%, 96rem);
+  height: min(100%, 100svh);
+  max-width: 100%;
+  max-height: 100%;
   object-fit: contain;
   object-position: center center;
-  border-radius: 6px;
-  background: #ffffff;
+  border-radius: 0;
+  background: transparent;
 }
 
 @keyframes contactPreviewFade {
@@ -192,18 +208,6 @@
 
   to {
     opacity: 1;
-  }
-}
-
-@keyframes contactPreviewIn {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 10px, 0) scale(0.98);
-  }
-
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
   }
 }
 
@@ -259,19 +263,21 @@
   }
 
   .visualDialog {
-    width: min(96vw, 52rem);
-    max-height: 92svh;
-    padding: 0.65rem;
+    padding-top: max(0.8rem, env(safe-area-inset-top, 0px));
+    padding-right: max(0.75rem, env(safe-area-inset-right, 0px));
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
+    padding-left: max(0.75rem, env(safe-area-inset-left, 0px));
   }
 
-  .visualDialogImage {
-    max-height: calc(92svh - 4.8rem);
+  .visualDialogClose {
+    width: 2.7rem;
+    height: 2.7rem;
+    font-size: 1.7rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .visualDialogOverlay,
-  .visualDialog {
+  .visualDialogOverlay {
     animation: none;
   }
 }
