@@ -261,6 +261,7 @@ test('homepage sections expose the current content surfaces', async ({ page }) =
   );
   await expect(page.getByTestId('section-food-trucks')).toBeVisible();
   await expect(page.getByTestId('food-trucks-gallery')).toBeVisible();
+  await expect(page.getByTestId('food-trucks-gallery')).toHaveAttribute('data-gallery-mode', 'interactive');
   await expect(page.getByTestId('food-trucks-gallery').locator('[data-testid="food-truck-gallery-image"]')).toHaveCount(6);
   await expect(page.getByRole('heading', { level: 2, name: 'Кейтеринг на фудтраках' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Узнать условия' })).toBeVisible();
@@ -317,5 +318,5 @@ test('unknown routes render the non-indexable 404 page', async ({ page }) => {
   await page.goto('/not-a-real-page');
 
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
+  await expect(page.locator('meta[name="robots"][content="noindex, nofollow"]')).toHaveCount(1);
 });

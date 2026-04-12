@@ -133,11 +133,19 @@ export function CircularGallery({
   testId = 'food-trucks-gallery',
 }: CircularGalleryProps) {
   const stageRef = useRef<HTMLDivElement | null>(null);
-  const [isInteractive] = useState(() => items.length > 0 && supportsInteractiveGallery());
+  const [isInteractive, setIsInteractive] = useState(false);
   const rootClassName = useMemo(
     () => [styles.root, className].filter(Boolean).join(' '),
     [className],
   );
+
+  useEffect(() => {
+    const rafId = window.requestAnimationFrame(() => {
+      setIsInteractive(items.length > 0 && supportsInteractiveGallery());
+    });
+
+    return () => window.cancelAnimationFrame(rafId);
+  }, [items.length]);
 
   useEffect(() => {
     const stage = stageRef.current;
