@@ -143,6 +143,104 @@ test('tablet hero stacks the poster below the copy before the two-column layout 
   expect(posterBox.y).toBeGreaterThan(buttonBox.y + buttonBox.height + 12);
 });
 
+test('desktop header does not snap the page back to the top when it enters compact mode', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/');
+
+  const header = page.getByTestId('site-header');
+  await page.evaluate(() => window.scrollTo({ top: 180, behavior: 'auto' }));
+
+  await expect
+    .poll(async () => {
+      const state = await header.getAttribute('data-header-state');
+      const y = await page.evaluate(() => Math.round(window.scrollY));
+      return { state, y };
+    })
+    .toEqual({ state: 'compact', y: 180 });
+});
+
+test('mobile brand text stays on one line without clipping in both header states', async ({ page }) => {
+  for (const viewport of [
+    { width: 390, height: 844 },
+    { width: 320, height: 700 },
+  ] as const) {
+    await page.setViewportSize(viewport);
+    await page.goto('/');
+    await page.evaluate(async () => {
+      if (document.fonts?.ready) {
+        await document.fonts.ready;
+      }
+    });
+
+    const brandText = page.locator('[class*="brandText"]').first();
+
+    const restMetrics = await brandText.evaluate((node) => {
+      const element = node as HTMLElement;
+      const style = getComputedStyle(element);
+      const clone = document.createElement('span');
+      clone.textContent = element.textContent;
+      clone.style.position = 'fixed';
+      clone.style.visibility = 'hidden';
+      clone.style.whiteSpace = 'nowrap';
+      clone.style.fontFamily = style.fontFamily;
+      clone.style.fontSize = style.fontSize;
+      clone.style.fontWeight = style.fontWeight;
+      clone.style.letterSpacing = style.letterSpacing;
+      clone.style.lineHeight = style.lineHeight;
+      document.body.appendChild(clone);
+      const naturalWidth = clone.getBoundingClientRect().width;
+      clone.remove();
+
+      return {
+        clientWidth: element.clientWidth,
+        scrollWidth: element.scrollWidth,
+        clientHeight: element.clientHeight,
+        scrollHeight: element.scrollHeight,
+        whiteSpace: style.whiteSpace,
+        naturalWidth,
+      };
+    });
+
+    expect(restMetrics.whiteSpace).toBe('nowrap');
+    expect(restMetrics.naturalWidth).toBeLessThanOrEqual(restMetrics.clientWidth);
+    expect(restMetrics.scrollHeight - restMetrics.clientHeight).toBeLessThanOrEqual(1);
+
+    await page.evaluate(() => window.scrollTo({ top: 900, behavior: 'auto' }));
+    await page.waitForTimeout(700);
+
+    const compactMetrics = await brandText.evaluate((node) => {
+      const element = node as HTMLElement;
+      const style = getComputedStyle(element);
+      const clone = document.createElement('span');
+      clone.textContent = element.textContent;
+      clone.style.position = 'fixed';
+      clone.style.visibility = 'hidden';
+      clone.style.whiteSpace = 'nowrap';
+      clone.style.fontFamily = style.fontFamily;
+      clone.style.fontSize = style.fontSize;
+      clone.style.fontWeight = style.fontWeight;
+      clone.style.letterSpacing = style.letterSpacing;
+      clone.style.lineHeight = style.lineHeight;
+      document.body.appendChild(clone);
+      const naturalWidth = clone.getBoundingClientRect().width;
+      clone.remove();
+
+      return {
+        clientWidth: element.clientWidth,
+        scrollWidth: element.scrollWidth,
+        clientHeight: element.clientHeight,
+        scrollHeight: element.scrollHeight,
+        whiteSpace: style.whiteSpace,
+        naturalWidth,
+      };
+    });
+
+    expect(compactMetrics.whiteSpace).toBe('nowrap');
+    expect(compactMetrics.naturalWidth).toBeLessThanOrEqual(compactMetrics.clientWidth);
+    expect(compactMetrics.scrollHeight - compactMetrics.clientHeight).toBeLessThanOrEqual(1);
+  }
+});
+
 test('homepage sections expose the current content surfaces', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/');

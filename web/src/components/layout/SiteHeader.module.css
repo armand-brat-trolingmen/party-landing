@@ -1,21 +1,66 @@
 .header {
-  position: sticky;
-  top: 0;
+  --header-progress: 0;
+  --header-pad-top-rest: 0.56rem;
+  --header-pad-top-compact: 0.28rem;
+  --header-pad-bottom-rest: 0.42rem;
+  --header-pad-bottom-compact: 0.24rem;
+  --header-inner-pad-y-rest: 0.58rem;
+  --header-inner-pad-y-compact: 0.46rem;
+  --header-inner-pad-x-rest: 1.5rem;
+  --header-inner-pad-x-compact: 0.96rem;
+  --header-brand-gap-rest: 0.96rem;
+  --header-brand-gap-compact: 0.56rem;
+  --header-brand-plate-size-rest: 11rem;
+  --header-brand-plate-size-compact: 3.7rem;
+  --header-brand-text-size-rest: 1.06rem;
+  --header-brand-text-size-compact: 0.88rem;
+  --header-brand-text-max-width-rest: 24rem;
+  --header-brand-text-max-width-compact: 16rem;
+  --header-nav-link-height-rest: 2.7rem;
+  --header-nav-link-height-compact: 2.08rem;
+  --header-nav-link-pad-x-rest: 0.72rem;
+  --header-nav-link-pad-x-compact: 0.52rem;
+  --header-nav-font-size-rest: 0.9rem;
+  --header-nav-font-size-compact: 0.84rem;
+  --header-nav-indicator-height-rest: 2.7rem;
+  --header-nav-indicator-height-compact: 2.08rem;
+  --header-cta-min-width-rest: 11.8rem;
+  --header-cta-min-width-compact: 10.2rem;
+  --header-cta-min-height-rest: 4.2rem;
+  --header-cta-min-height-compact: 2.86rem;
+  --header-cta-font-size-rest: 1rem;
+  --header-cta-font-size-compact: 0.9rem;
+  --header-menu-size-rest: 3.2rem;
+  --header-menu-size-compact: 3.2rem;
+  --header-mobile-inner-min-height-rest: 0rem;
+  --header-mobile-inner-min-height-compact: 0rem;
+  --header-pad-top: calc(var(--header-pad-top-rest) + (var(--header-pad-top-compact) - var(--header-pad-top-rest)) * var(--header-progress));
+  --header-pad-bottom: calc(var(--header-pad-bottom-rest) + (var(--header-pad-bottom-compact) - var(--header-pad-bottom-rest)) * var(--header-progress));
+  --header-inner-pad-y: calc(var(--header-inner-pad-y-rest) + (var(--header-inner-pad-y-compact) - var(--header-inner-pad-y-rest)) * var(--header-progress));
+  --header-inner-pad-x: calc(var(--header-inner-pad-x-rest) + (var(--header-inner-pad-x-compact) - var(--header-inner-pad-x-rest)) * var(--header-progress));
+  --header-brand-gap: calc(var(--header-brand-gap-rest) + (var(--header-brand-gap-compact) - var(--header-brand-gap-rest)) * var(--header-progress));
+  --header-brand-plate-size: calc(var(--header-brand-plate-size-rest) + (var(--header-brand-plate-size-compact) - var(--header-brand-plate-size-rest)) * var(--header-progress));
+  --header-brand-text-size: calc(var(--header-brand-text-size-rest) + (var(--header-brand-text-size-compact) - var(--header-brand-text-size-rest)) * var(--header-progress));
+  --header-brand-text-max-width: calc(var(--header-brand-text-max-width-rest) + (var(--header-brand-text-max-width-compact) - var(--header-brand-text-max-width-rest)) * var(--header-progress));
+  --header-nav-link-height: calc(var(--header-nav-link-height-rest) + (var(--header-nav-link-height-compact) - var(--header-nav-link-height-rest)) * var(--header-progress));
+  --header-nav-link-pad-x: calc(var(--header-nav-link-pad-x-rest) + (var(--header-nav-link-pad-x-compact) - var(--header-nav-link-pad-x-rest)) * var(--header-progress));
+  --header-nav-font-size: calc(var(--header-nav-font-size-rest) + (var(--header-nav-font-size-compact) - var(--header-nav-font-size-rest)) * var(--header-progress));
+  --header-nav-indicator-height: calc(var(--header-nav-indicator-height-rest) + (var(--header-nav-indicator-height-compact) - var(--header-nav-indicator-height-rest)) * var(--header-progress));
+  --header-cta-min-width: calc(var(--header-cta-min-width-rest) + (var(--header-cta-min-width-compact) - var(--header-cta-min-width-rest)) * var(--header-progress));
+  --header-cta-min-height: calc(var(--header-cta-min-height-rest) + (var(--header-cta-min-height-compact) - var(--header-cta-min-height-rest)) * var(--header-progress));
+  --header-cta-font-size: calc(var(--header-cta-font-size-rest) + (var(--header-cta-font-size-compact) - var(--header-cta-font-size-rest)) * var(--header-progress));
+  --header-menu-size: calc(var(--header-menu-size-rest) + (var(--header-menu-size-compact) - var(--header-menu-size-rest)) * var(--header-progress));
+  --header-mobile-inner-min-height: calc(var(--header-mobile-inner-min-height-rest) + (var(--header-mobile-inner-min-height-compact) - var(--header-mobile-inner-min-height-rest)) * var(--header-progress));
+  position: fixed;
+  inset: 0 0 auto;
+  width: 100%;
   z-index: 20;
-  padding: 1.2rem 0 0.95rem;
+  padding: var(--header-pad-top) 0 var(--header-pad-bottom);
   background: transparent;
-  transition:
-    padding 320ms cubic-bezier(0.22, 1, 0.36, 1),
-    background 320ms ease;
 }
 
 .header[data-header-route='home'][data-header-state='rest'] {
   background: transparent;
-}
-
-.header[data-header-route='inner'],
-.header[data-header-state='compact'] {
-  padding: 0.8rem 0 0.75rem;
 }
 
 .inner {
@@ -25,35 +70,45 @@
   gap: 1rem 1.75rem;
   width: min(calc(100% - 2.4rem), var(--shell-max-width));
   margin: 0 auto;
-  padding: 0.95rem 1.15rem;
+  padding: var(--header-inner-pad-y) var(--header-inner-pad-x);
   border: 1px solid transparent;
   border-radius: var(--radius-panel);
   background: transparent;
   box-shadow: none;
   backdrop-filter: none;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, calc(0.9 * var(--header-progress))),
+      rgba(255, 253, 248, calc(0.84 * var(--header-progress)))
+    ),
+    radial-gradient(circle at 12% 18%, rgba(224, 247, 255, calc(0.72 * var(--header-progress))), rgba(224, 247, 255, 0) 34%),
+    radial-gradient(circle at 86% 18%, rgba(255, 238, 245, calc(0.78 * var(--header-progress))), rgba(255, 238, 245, 0) 32%);
+  border-color: rgba(31, 52, 74, calc(0.08 * var(--header-progress)));
+  box-shadow: 0 14px 28px rgba(31, 52, 74, calc(0.08 * var(--header-progress)));
+  backdrop-filter: blur(calc(18px * var(--header-progress))) saturate(calc(1 + (0.08 * var(--header-progress))));
   transition:
-    padding 320ms cubic-bezier(0.22, 1, 0.36, 1),
-    background 320ms ease,
-    border-color 320ms ease,
-    box-shadow 320ms ease,
-    backdrop-filter 320ms ease;
+    background 180ms linear,
+    border-color 180ms linear,
+    box-shadow 180ms linear,
+    backdrop-filter 180ms linear;
 }
 
-.header[data-header-route='inner'] .inner,
-.header[data-header-state='compact'] .inner {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 253, 248, 0.84)),
-    radial-gradient(circle at 12% 18%, rgba(224, 247, 255, 0.72), rgba(224, 247, 255, 0) 34%),
-    radial-gradient(circle at 86% 18%, rgba(255, 238, 245, 0.78), rgba(255, 238, 245, 0) 32%);
-  border-color: rgba(31, 52, 74, 0.08);
-  box-shadow: var(--shadow-soft);
-  backdrop-filter: blur(18px) saturate(1.08);
+.header[data-header-lock='jump'],
+.header[data-header-lock='jump'] .inner,
+.header[data-header-lock='jump'] .brand,
+.header[data-header-lock='jump'] .brandPlate,
+.header[data-header-lock='jump'] .brandText,
+.header[data-header-lock='jump'] .navLink,
+.header[data-header-lock='jump'] .headerCta,
+.header[data-header-lock='jump'] .navIndicator {
+  transition: none !important;
 }
 
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: var(--header-brand-gap);
   min-width: 0;
   flex: 0 0 auto;
 }
@@ -62,28 +117,35 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 3rem;
-  height: 3rem;
+  width: var(--header-brand-plate-size);
+  height: var(--header-brand-plate-size);
+  padding: 0;
   flex: 0 0 auto;
+  border-radius: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
 }
 
 .logoMark {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  filter: drop-shadow(0 6px 12px rgba(31, 52, 74, 0.08));
   transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .brandText {
   color: var(--text-primary);
   font-family: var(--font-display);
-  font-size: clamp(1rem, 1.45vw, 1.32rem);
+  font-size: var(--header-brand-text-size);
   font-weight: 600;
   line-height: 1;
   letter-spacing: -0.04em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: var(--header-brand-text-max-width);
 }
 
 .brand:hover .logoMark,
@@ -121,7 +183,7 @@
   position: absolute;
   left: 0;
   bottom: 0.1rem;
-  height: 2.25rem;
+  height: var(--header-nav-indicator-height);
   width: var(--nav-indicator-width);
   border-radius: 999px;
   background:
@@ -147,11 +209,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 2.25rem;
-  padding: 0 0.6rem;
+  min-height: var(--header-nav-link-height);
+  padding: 0 var(--header-nav-link-pad-x);
   border-radius: 999px;
   color: var(--text-primary);
-  font-size: clamp(0.88rem, 0.96vw, 0.95rem);
+  font-size: var(--header-nav-font-size);
   font-weight: 500;
   white-space: nowrap;
   transition:
@@ -170,13 +232,13 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 11.4rem;
-  min-height: 3.1rem;
+  min-width: var(--header-cta-min-width);
+  min-height: var(--header-cta-min-height);
   padding: 0.55rem 0.95rem;
   border: 0;
   background: transparent;
   color: var(--text-primary);
-  font-size: 1.02rem;
+  font-size: var(--header-cta-font-size);
   font-weight: 800;
   line-height: 1;
   letter-spacing: -0.03em;
@@ -226,8 +288,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 3.2rem;
-  height: 3.2rem;
+  width: var(--header-menu-size);
+  height: var(--header-menu-size);
   padding: 0;
   border-radius: 999px;
   border: 1px solid rgba(31, 52, 74, 0.1);
@@ -411,21 +473,21 @@
 }
 
 @media (max-width: 1180px) {
-  .brandText {
-    font-size: 1.18rem;
+  .header {
+    --header-brand-text-size-rest: 0.98rem;
+    --header-brand-text-size-compact: 0.82rem;
+    --header-nav-font-size-rest: 0.88rem;
+    --header-nav-font-size-compact: 0.82rem;
+    --header-cta-min-width-rest: 10.4rem;
+    --header-cta-font-size-rest: 0.94rem;
   }
 
   .navList {
     gap: 0.3rem;
   }
 
-  .navLink {
-    padding: 0 0.45rem;
-  }
-
-  .headerCta {
-    min-width: 10.4rem;
-    font-size: 0.96rem;
+  .header {
+    --header-nav-link-pad-x-rest: 0.5rem;
   }
 }
 
@@ -434,52 +496,71 @@
     gap: 0.85rem 1rem;
   }
 
-  .brandText {
-    font-size: 1.05rem;
-  }
-
-  .navLink {
-    font-size: 0.84rem;
+  .header {
+    --header-brand-text-size-rest: 0.92rem;
+    --header-brand-text-size-compact: 0.78rem;
+    --header-nav-font-size-rest: 0.82rem;
+    --header-nav-font-size-compact: 0.78rem;
   }
 }
 
 @media (max-width: 960px) {
+  .mobileActions {
+    margin-left: 0;
+    flex: 0 0 auto;
+    gap: 0.2rem;
+  }
+
   .header {
+    --header-pad-top-rest: calc(1.05rem + env(safe-area-inset-top, 0px));
+    --header-pad-top-compact: calc(0.74rem + env(safe-area-inset-top, 0px));
+    --header-pad-bottom-rest: 0.82rem;
+    --header-pad-bottom-compact: 0.62rem;
+    --header-inner-pad-y-rest: 0.92rem;
+    --header-inner-pad-y-compact: 0.62rem;
+    --header-inner-pad-x-rest: 0.94rem;
+    --header-inner-pad-x-compact: 0.8rem;
+    --header-brand-gap-rest: 0.42rem;
+    --header-brand-gap-compact: 0.2rem;
+    --header-brand-plate-size-rest: 4.7rem;
+    --header-brand-plate-size-compact: 2.7rem;
+    --header-brand-text-size-rest: 0.89rem;
+    --header-brand-text-size-compact: 0.62rem;
+    --header-brand-text-max-width-rest: 11rem;
+    --header-brand-text-max-width-compact: 8.8rem;
+    --header-menu-size-rest: 2.7rem;
+    --header-menu-size-compact: 2.24rem;
+    --header-mobile-inner-min-height-rest: 3.7rem;
+    --header-mobile-inner-min-height-compact: 2.82rem;
     position: fixed;
     inset: 0 0 auto;
     width: 100%;
-    padding: calc(1rem + env(safe-area-inset-top, 0px)) 0 0.75rem;
-  }
-
-  .header[data-header-route='inner'],
-  .header[data-header-state='compact'] {
-    padding: calc(0.85rem + env(safe-area-inset-top, 0px)) 0 0.7rem;
   }
 
   .inner {
+    justify-content: flex-start;
+    gap: 0.5rem;
     width: min(calc(100% - 1rem), var(--shell-max-width));
-    min-height: 3.2rem;
-    padding: 0.8rem 0.95rem;
-    border-radius: 1.35rem;
+    min-height: var(--header-mobile-inner-min-height);
+    padding: var(--header-inner-pad-y) var(--header-inner-pad-x);
+    border-radius: 1.45rem;
   }
 
   .brand {
-    gap: 0.6rem;
+    flex: 1 1 auto;
+    max-width: calc(100% - var(--header-menu-size) - 0.1rem);
   }
 
   .brandPlate {
-    width: 2.65rem;
-    height: 2.65rem;
+    width: var(--header-brand-plate-size);
+    height: var(--header-brand-plate-size);
   }
 
   .brandText {
-    font-size: clamp(0.86rem, 1.9vw, 1rem);
-    max-width: clamp(11rem, 40vw, 17rem);
-  }
-
-  .menuButton {
-    width: 3rem;
-    height: 3rem;
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: none;
+    line-height: 1.08;
   }
 
   .mobilePanel {
@@ -492,27 +573,48 @@
 }
 
 @media (max-width: 420px) {
+  .header {
+    --header-inner-pad-y-rest: 0.82rem;
+    --header-inner-pad-y-compact: 0.56rem;
+    --header-inner-pad-x-rest: 0.76rem;
+    --header-inner-pad-x-compact: 0.7rem;
+    --header-brand-gap-rest: 0.34rem;
+    --header-brand-gap-compact: 0.16rem;
+    --header-brand-plate-size-rest: 4.15rem;
+    --header-brand-plate-size-compact: 2.46rem;
+    --header-brand-text-size-rest: 0.76rem;
+    --header-brand-text-size-compact: 0.54rem;
+    --header-brand-text-max-width-rest: 8.7rem;
+    --header-brand-text-max-width-compact: 6.9rem;
+    --header-menu-size-rest: 2.62rem;
+    --header-menu-size-compact: 2.14rem;
+    --header-mobile-inner-min-height-rest: 3.46rem;
+    --header-mobile-inner-min-height-compact: 2.62rem;
+  }
+
   .inner {
-    width: min(calc(100% - 0.75rem), var(--shell-max-width));
-    padding: 0.76rem 0.82rem;
-  }
-
-  .brand {
-    gap: 0.5rem;
-  }
-
-  .brandPlate {
-    width: 2.45rem;
-    height: 2.45rem;
+    gap: 0.38rem;
+    width: min(calc(100% - 0.72rem), var(--shell-max-width));
+    padding: var(--header-inner-pad-y) var(--header-inner-pad-x);
   }
 
   .brandText {
-    font-size: 0.8rem;
-    max-width: min(58vw, 11.5rem);
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: none;
+    line-height: 1.08;
+  }
+}
+
+@media (max-width: 360px) {
+  .header {
+    --header-inner-pad-x-rest: 0.62rem;
+    --header-brand-gap-rest: 0.24rem;
+    --header-brand-plate-size-rest: 3.5rem;
+    --header-brand-text-size-rest: 0.76rem;
   }
 
-  .menuButton {
-    width: 2.85rem;
-    height: 2.85rem;
+  .inner {
+    gap: 0.24rem;
   }
 }

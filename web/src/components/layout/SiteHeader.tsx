@@ -1,8 +1,19 @@
-import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type MouseEvent } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type MouseEvent,
+} from 'react';
+import { flushSync } from 'react-dom';
 import { useLocation } from 'react-router';
 import { siteConfig } from '../../content';
 import { DonutLogo } from '../branding/DonutLogo';
 import { useOrderModal } from '../cta/useOrderModal';
+import { resolveHeaderCompactState, resolveHeaderScrollProgress } from './SiteHeaderScrollState';
 import styles from './SiteHeader.module.css';
 
 type SiteHeaderProps = {
@@ -10,15 +21,7 @@ type SiteHeaderProps = {
 };
 
 function getDocumentTop(element: HTMLElement) {
-  let top = 0;
-  let node: HTMLElement | null = element;
-
-  while (node) {
-    top += node.offsetTop;
-    node = node.offsetParent instanceof HTMLElement ? node.offsetParent : null;
-  }
-
-  return top;
+  return element.getBoundingClientRect().top + window.scrollY;
 }
 
 const NAV_ARIA_LABEL = '\u041e\u0441\u043d\u043e\u0432\u043d\u0430\u044f \u043d\u0430\u0432\u0438\u0433\u0430\u0446\u0438\u044f';
@@ -34,12 +37,34 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
   const navigationLockRef = useRef<{ id: string; unlockAt: number } | null>(null);
   const panelId = useId();
   const location = useLocation();
+  const isHomeRoute = location.pathname === '/';
   const { openModal } = useOrderModal();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(true);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(() => !isHomeRoute || legalMode);
+  const [scrollProgress, setScrollProgress] = useState(() => (!isHomeRoute || legalMode ? 1 : 0));
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
-  const isHomeRoute = location.pathname === '/';
+
+  const prepareCompactHeaderForJump = useCallback(() => {
+    const header = headerRef.current;
+    if (!header) {
+      return () => undefined;
+    }
+
+    header.dataset.headerLock = 'jump';
+    flushSync(() => {
+      setIsScrolled(true);
+      setScrollProgress(1);
+    });
+
+    return () => {
+      window.requestAnimationFrame(() => {
+        if (headerRef.current === header) {
+          delete header.dataset.headerLock;
+        }
+      });
+    };
+  }, []);
 
   const getSectionScrollTop = useCallback((target: HTMLElement) => {
     const headerHeight = headerRef.current?.getBoundingClientRect().height ?? 0;
@@ -91,16 +116,22 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
 
       const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
       const behavior: ScrollBehavior = prefersReducedMotion ? 'auto' : 'smooth';
-      const top = getSectionScrollTop(target);
+      const shouldPrepareCompactHeader = isDesktop && isHomeRoute && id !== 'hero';
+      const releaseHeaderLock = shouldPrepareCompactHeader ? prepareCompactHeaderForJump() : () => undefined;
+      const performScroll = () => {
+        const top = getSectionScrollTop(target);
+        window.scrollTo({ top, behavior });
+        releaseHeaderLock();
+      };
 
       if (window.requestAnimationFrame) {
-        window.requestAnimationFrame(() => window.scrollTo({ top, behavior }));
+        window.requestAnimationFrame(performScroll);
         return;
       }
 
-      window.setTimeout(() => window.scrollTo({ top, behavior }), 0);
+      window.setTimeout(performScroll, 0);
     },
-    [getSectionScrollTop],
+    [getSectionScrollTop, isDesktop, isHomeRoute, prepareCompactHeaderForJump],
   );
 
   const onAnchorClick = useCallback(
@@ -200,7 +231,19 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
         return;
       }
 
-      root.style.setProperty('--header-offset', `${Math.ceil(height)}px`);
+      const nextHeight = `${Math.ceil(height)}px`;
+      const currentShellOffset = Number.parseFloat(root.style.getPropertyValue('--header-shell-offset'));
+      const shouldHoldHomeShellOffset = isHomeRoute && !legalMode && scrollProgress > 0.001;
+
+      root.style.setProperty('--header-offset', nextHeight);
+
+      if (
+        !shouldHoldHomeShellOffset ||
+        !Number.isFinite(currentShellOffset) ||
+        currentShellOffset < height
+      ) {
+        root.style.setProperty('--header-shell-offset', nextHeight);
+      }
     };
 
     sync();
@@ -217,7 +260,7 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
       window.removeEventListener('resize', sync);
       resizeObserver?.disconnect();
     };
-  }, []);
+  }, [isHomeRoute, legalMode, scrollProgress]);
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -229,7 +272,8 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
     const sync = () => {
       if (legalMode) {
         setActiveSectionId(null);
-        setIsScrolled(window.scrollY > 18);
+        setScrollProgress(1);
+        setIsScrolled(true);
         rafId = 0;
         return;
       }
@@ -268,8 +312,12 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
         }
       }
 
+      const nextProgress = isHomeRoute ? resolveHeaderScrollProgress({ isDesktop, scrollY: window.scrollY }) : 1;
       setActiveSectionId((current) => (current === nextActive ? current : nextActive));
-      setIsScrolled(window.scrollY > 18);
+      setScrollProgress((current) => (current === nextProgress ? current : nextProgress));
+      setIsScrolled((current) =>
+        isHomeRoute ? resolveHeaderCompactState({ current, isDesktop, scrollY: window.scrollY }) : true,
+      );
       rafId = 0;
     };
 
@@ -293,7 +341,7 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
     };
-  }, [canScrollInCurrentPage, getSectionScrollTop, legalMode]);
+  }, [canScrollInCurrentPage, getSectionScrollTop, isDesktop, isHomeRoute, legalMode]);
 
   useEffect(() => {
     if (!location.hash || legalMode) {
@@ -312,15 +360,21 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
 
     const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
     const behavior: ScrollBehavior = prefersReducedMotion ? 'auto' : 'smooth';
-    const top = getSectionScrollTop(target);
+    const shouldPrepareCompactHeader = isDesktop && isHomeRoute && id !== 'hero';
+    const releaseHeaderLock = shouldPrepareCompactHeader ? prepareCompactHeaderForJump() : () => undefined;
+    const performScroll = () => {
+      const top = getSectionScrollTop(target);
+      window.scrollTo({ top, behavior });
+      releaseHeaderLock();
+    };
 
     if (window.requestAnimationFrame) {
-      window.requestAnimationFrame(() => window.scrollTo({ top, behavior }));
+      window.requestAnimationFrame(performScroll);
       return;
     }
 
-    window.setTimeout(() => window.scrollTo({ top, behavior }), 0);
-  }, [canScrollInCurrentPage, getSectionScrollTop, legalMode, location.hash, location.pathname]);
+    window.setTimeout(performScroll, 0);
+  }, [canScrollInCurrentPage, getSectionScrollTop, isDesktop, isHomeRoute, legalMode, location.hash, location.pathname, prepareCompactHeaderForJump]);
 
   useLayoutEffect(() => {
     const nav = navRef.current;
@@ -373,11 +427,13 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
   }, [activeSectionId, isDesktop, legalMode]);
 
   const brandHref = !legalMode && isHomeRoute ? '#hero' : '/';
+  const headerStyle = { '--header-progress': scrollProgress.toFixed(4) } as CSSProperties;
 
   return (
     <header
       className={styles.header}
       ref={headerRef}
+      style={headerStyle}
       data-header-route={!legalMode && isHomeRoute ? 'home' : 'inner'}
       data-header-state={isScrolled ? 'compact' : 'rest'}
       data-header-material="glass"
