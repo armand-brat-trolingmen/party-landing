@@ -101,6 +101,7 @@ export function ServicesSection({
               const isRevealEnter = shouldReveal && isExpanded && !isCollapsing && isExtraCard;
               const isRevealExit = shouldReveal && isCollapsing && isExtraCard;
               const shouldPrioritizeImage = index < 3;
+              const shouldEagerLoadImage = isMobile || shouldPrioritizeImage;
               const revealStyle =
                 isRevealEnter || isRevealExit
                   ? ({
@@ -138,7 +139,7 @@ export function ServicesSection({
                             data-testid="service-card-media-image"
                             src={service.homeCardImage.fallbackSrc}
                             alt=""
-                            loading={shouldPrioritizeImage ? 'eager' : 'lazy'}
+                            loading={shouldEagerLoadImage ? 'eager' : 'lazy'}
                             decoding="async"
                             fetchPriority={shouldPrioritizeImage ? 'high' : 'low'}
                             width={service.homeCardImage.width}

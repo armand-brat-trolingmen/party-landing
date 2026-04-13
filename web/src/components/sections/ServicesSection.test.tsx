@@ -137,3 +137,21 @@ test('switches to a full-width mobile slider with a swipe progress indicator', (
   fireEvent.scroll(catalog);
   expect(progress).toHaveAttribute('aria-valuenow', '50');
 });
+
+test('eagerly loads all mobile slider service images before swipe reaches them', () => {
+  mockViewport(true);
+  render(<ServicesSection />);
+
+  const catalog = screen.getByTestId('services-catalog');
+  const images = within(catalog).getAllByTestId('service-card-media-image');
+  const fourthImage = images[3];
+  const lastImage = images.at(-1);
+
+  expect(images.length).toBe(services.length);
+  images.forEach((image) => {
+    expect(image).toHaveAttribute('loading', 'eager');
+  });
+  expect(images[0]).toHaveAttribute('fetchpriority', 'high');
+  expect(fourthImage).toHaveAttribute('fetchpriority', 'low');
+  expect(lastImage).toHaveAttribute('fetchpriority', 'low');
+});
