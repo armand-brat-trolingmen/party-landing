@@ -18,7 +18,7 @@ type HeroPosterCarouselProps = {
   intervalMs?: number;
 };
 
-export function HeroPosterCarousel({ slides, intervalMs = 5200 }: HeroPosterCarouselProps) {
+export function HeroPosterCarousel({ slides, intervalMs = 3000 }: HeroPosterCarouselProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const progressWidth = useMemo(() => `${100 / Math.max(slides.length, 1)}%`, [slides.length]);
 

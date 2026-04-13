@@ -46,13 +46,13 @@ test('autoplays through one premium poster frame at a time without manual contro
   expect(screen.queryByRole('button')).not.toBeInTheDocument();
 
   act(() => {
-    vi.advanceTimersByTime(5200);
+    vi.advanceTimersByTime(3000);
   });
 
   expect(screen.getByRole('img', { name: slides[1].alt })).toBeInTheDocument();
 
   act(() => {
-    vi.advanceTimersByTime(5200);
+    vi.advanceTimersByTime(3000);
   });
 
   expect(screen.getByRole('img', { name: slides[2].alt })).toBeInTheDocument();

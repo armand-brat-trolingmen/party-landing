@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { vi } from 'vitest';
+import { heroPosterSlides } from '../../content/homepage';
 import { HeroSection } from './HeroSection';
 
 test('renders the editorial hero with a poster carousel and no supporting tag pill', () => {
@@ -22,7 +23,7 @@ test('renders the editorial hero with a poster carousel and no supporting tag pi
   expect(screen.getByRole('button', { name: 'В каталог' })).toBeInTheDocument();
   expect(screen.getByTestId('hero-poster-carousel')).toBeInTheDocument();
   expect(screen.getByTestId('hero-poster-frame')).toBeInTheDocument();
-  expect(screen.getByRole('img', { name: 'Шоколадный фонтан на премиальной фуд-станции' })).toBeInTheDocument();
+  expect(screen.getByRole('img', { name: heroPosterSlides[0].alt })).toBeInTheDocument();
   expect(screen.queryByRole('img', { name: 'Фудтрак как часть кейтеринг-сцены мероприятия', hidden: true })).not.toBeInTheDocument();
   expect(within(hero).queryByText('Праздник каждый день')).not.toBeInTheDocument();
 });

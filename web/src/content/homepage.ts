@@ -1,6 +1,155 @@
 import { homePageContent, moments } from './offerings';
 import { contacts } from './contacts';
 
+const heroPosterSlideSizes = '(max-width: 900px) min(100vw - 2rem, 28rem), 31rem';
+
+const heroGallerySlides = [
+  {
+    id: 'gallery-01',
+    image: '/images/hero/hero-gallery-01.jpg',
+    fallbackImage: '/images/hero/hero-gallery-01.jpg',
+    imageWebpSrcSet:
+      '/images/hero/hero-gallery-01-480.webp 480w, /images/hero/hero-gallery-01-720.webp 720w, /images/hero/hero-gallery-01-960.webp 960w',
+    sizes: heroPosterSlideSizes,
+    width: 960,
+    height: 1280,
+    alt: 'Party Landing hero gallery photo 1',
+  },
+  {
+    id: 'gallery-02',
+    image: '/images/hero/hero-gallery-02.jpg',
+    fallbackImage: '/images/hero/hero-gallery-02.jpg',
+    imageWebpSrcSet:
+      '/images/hero/hero-gallery-02-480.webp 480w, /images/hero/hero-gallery-02-720.webp 720w, /images/hero/hero-gallery-02-960.webp 960w, /images/hero/hero-gallery-02-1280.webp 1280w',
+    sizes: heroPosterSlideSizes,
+    width: 1920,
+    height: 2560,
+    alt: 'Party Landing hero gallery photo 2',
+  },
+  {
+    id: 'gallery-03',
+    image: '/images/hero/hero-gallery-03.jpg',
+    fallbackImage: '/images/hero/hero-gallery-03.jpg',
+    imageWebpSrcSet:
+      '/images/hero/hero-gallery-03-480.webp 480w, /images/hero/hero-gallery-03-720.webp 720w, /images/hero/hero-gallery-03-960.webp 960w',
+    sizes: heroPosterSlideSizes,
+    width: 1200,
+    height: 1600,
+    alt: 'Party Landing hero gallery photo 3',
+  },
+  {
+    id: 'gallery-04',
+    image: '/images/hero/hero-gallery-04.jpg',
+    fallbackImage: '/images/hero/hero-gallery-04.jpg',
+    imageWebpSrcSet:
+      '/images/hero/hero-gallery-04-480.webp 480w, /images/hero/hero-gallery-04-720.webp 720w, /images/hero/hero-gallery-04-960.webp 960w',
+    sizes: heroPosterSlideSizes,
+    width: 960,
+    height: 1280,
+    alt: 'Party Landing hero gallery photo 4',
+  },
+  {
+    id: 'gallery-05',
+    image: '/images/hero/hero-gallery-05.jpg',
+    fallbackImage: '/images/hero/hero-gallery-05.jpg',
+    imageWebpSrcSet:
+      '/images/hero/hero-gallery-05-480.webp 480w, /images/hero/hero-gallery-05-720.webp 720w, /images/hero/hero-gallery-05-960.webp 960w, /images/hero/hero-gallery-05-1280.webp 1280w',
+    sizes: heroPosterSlideSizes,
+    width: 1920,
+    height: 2560,
+    alt: 'Party Landing hero gallery photo 5',
+  },
+  {
+    id: 'gallery-06',
+    image: '/images/hero/hero-gallery-06.jpg',
+    fallbackImage: '/images/hero/hero-gallery-06.jpg',
+    imageWebpSrcSet:
+      '/images/hero/hero-gallery-06-480.webp 480w, /images/hero/hero-gallery-06-720.webp 720w, /images/hero/hero-gallery-06-960.webp 960w, /images/hero/hero-gallery-06-1280.webp 1280w',
+    sizes: heroPosterSlideSizes,
+    width: 1920,
+    height: 2560,
+    alt: 'Party Landing hero gallery photo 6',
+  },
+  {
+    id: 'gallery-07',
+    image: '/images/hero/hero-gallery-07.jpg',
+    fallbackImage: '/images/hero/hero-gallery-07.jpg',
+    imageWebpSrcSet:
+      '/images/hero/hero-gallery-07-480.webp 480w, /images/hero/hero-gallery-07-720.webp 720w',
+    sizes: heroPosterSlideSizes,
+    width: 959,
+    height: 1173,
+    alt: 'Party Landing hero gallery photo 7',
+  },
+  {
+    id: 'gallery-08',
+    image: '/images/hero/hero-gallery-08.jpg',
+    fallbackImage: '/images/hero/hero-gallery-08.jpg',
+    imageWebpSrcSet:
+      '/images/hero/hero-gallery-08-480.webp 480w, /images/hero/hero-gallery-08-720.webp 720w, /images/hero/hero-gallery-08-960.webp 960w, /images/hero/hero-gallery-08-1280.webp 1280w',
+    sizes: heroPosterSlideSizes,
+    width: 1920,
+    height: 2560,
+    alt: 'Party Landing hero gallery photo 8',
+  },
+  {
+    id: 'gallery-09',
+    image: '/images/hero/hero-gallery-09.jpg',
+    fallbackImage: '/images/hero/hero-gallery-09.jpg',
+    imageWebpSrcSet:
+      '/images/hero/hero-gallery-09-480.webp 480w, /images/hero/hero-gallery-09-720.webp 720w, /images/hero/hero-gallery-09-960.webp 960w',
+    sizes: heroPosterSlideSizes,
+    width: 960,
+    height: 1280,
+    alt: 'Party Landing hero gallery photo 9',
+  },
+  {
+    id: 'gallery-10',
+    image: '/images/hero/hero-gallery-10.jpg',
+    fallbackImage: '/images/hero/hero-gallery-10.jpg',
+    imageWebpSrcSet:
+      '/images/hero/hero-gallery-10-480.webp 480w, /images/hero/hero-gallery-10-720.webp 720w, /images/hero/hero-gallery-10-960.webp 960w, /images/hero/hero-gallery-10-1280.webp 1280w',
+    sizes: heroPosterSlideSizes,
+    width: 1920,
+    height: 2560,
+    alt: 'Party Landing hero gallery photo 10',
+  },
+  {
+    id: 'gallery-11',
+    image: '/images/hero/hero-gallery-11.jpg',
+    fallbackImage: '/images/hero/hero-gallery-11.jpg',
+    imageWebpSrcSet:
+      '/images/hero/hero-gallery-11-480.webp 480w, /images/hero/hero-gallery-11-720.webp 720w, /images/hero/hero-gallery-11-960.webp 960w, /images/hero/hero-gallery-11-1280.webp 1280w',
+    sizes: heroPosterSlideSizes,
+    width: 1920,
+    height: 2560,
+    alt: 'Party Landing hero gallery photo 11',
+  },
+  {
+    id: 'gallery-12',
+    image: '/images/hero/hero-gallery-12.jpg',
+    fallbackImage: '/images/hero/hero-gallery-12.jpg',
+    imageWebpSrcSet:
+      '/images/hero/hero-gallery-12-480.webp 480w, /images/hero/hero-gallery-12-720.webp 720w',
+    sizes: heroPosterSlideSizes,
+    width: 919,
+    height: 1228,
+    alt: 'Party Landing hero gallery photo 12',
+  },
+  {
+    id: 'gallery-13',
+    image: '/images/hero/hero-gallery-13.jpg',
+    fallbackImage: '/images/hero/hero-gallery-13.jpg',
+    imageWebpSrcSet:
+      '/images/hero/hero-gallery-13-480.webp 480w, /images/hero/hero-gallery-13-720.webp 720w, /images/hero/hero-gallery-13-960.webp 960w, /images/hero/hero-gallery-13-1280.webp 1280w',
+    sizes: heroPosterSlideSizes,
+    width: 1607,
+    height: 2000,
+    alt: 'Party Landing hero gallery photo 13',
+  },
+] as const;
+
+
 export const heroPosterSlides = [
   {
     id: 'main-fountain',
@@ -8,24 +157,13 @@ export const heroPosterSlides = [
     fallbackImage: '/images/hero/hero-main.png',
     imageWebpSrcSet:
       '/images/hero/hero-main-480.webp 480w, /images/hero/hero-main-720.webp 720w, /images/hero/hero-main-960.webp 960w, /images/hero/hero-main-1258.webp 1258w',
-    sizes: '(max-width: 900px) min(100vw - 2rem, 28rem), 31rem',
+    sizes: heroPosterSlideSizes,
     width: 1258,
     height: 2048,
-    alt: 'Шоколадный фонтан на премиальной фуд-станции',
+    alt: 'Chocolate fountain on the premium food station',
     objectPosition: '52% 44%',
   },
-  {
-    id: 'cotton-candy',
-    image: '/images/hero/hero-cotton.jpg',
-    fallbackImage: '/images/hero/hero-cotton.jpg',
-    imageWebpSrcSet:
-      '/images/hero/hero-cotton-480.webp 480w, /images/hero/hero-cotton-720.webp 720w, /images/hero/hero-cotton-960.webp 960w, /images/hero/hero-cotton-1280.webp 1280w',
-    sizes: '(max-width: 900px) min(100vw - 2rem, 28rem), 31rem',
-    width: 2560,
-    height: 1920,
-    alt: 'Сладкая вата в выездном премиальном формате',
-    objectPosition: '54% 36%',
-  },
+  ...heroGallerySlides,
 ] as const;
 
 export const conceptLoop = {
