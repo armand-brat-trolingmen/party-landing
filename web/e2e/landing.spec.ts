@@ -216,7 +216,7 @@ test('narrow mobile header keeps the menu trigger fully inside the viewport', as
   expect(bounds.x + bounds.width).toBeLessThanOrEqual(320);
 });
 
-test('mobile compact header keeps its visual shell pinned to the viewport top', async ({ page }) => {
+test('mobile compact header keeps its visual shell just below the viewport top without drifting', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
 
@@ -234,8 +234,8 @@ test('mobile compact header keeps its visual shell pinned to the viewport top', 
 
   expect(headerBox.y).toBeGreaterThanOrEqual(-1);
   expect(headerBox.y).toBeLessThanOrEqual(1);
-  expect(innerBox.y).toBeGreaterThanOrEqual(-1);
-  expect(innerBox.y).toBeLessThanOrEqual(1);
+  expect(innerBox.y).toBeGreaterThanOrEqual(2);
+  expect(innerBox.y).toBeLessThanOrEqual(8);
 });
 
 test('tablet header switches to the mobile menu before the desktop nav starts colliding', async ({ page }) => {

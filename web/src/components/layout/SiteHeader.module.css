@@ -513,7 +513,7 @@
 
   .header {
     --header-pad-top-rest: calc(1.05rem + env(safe-area-inset-top, 0px));
-    --header-pad-top-compact: env(safe-area-inset-top, 0px);
+    --header-pad-top-compact: calc(0.22rem + env(safe-area-inset-top, 0px));
     --header-pad-bottom-rest: 0.82rem;
     --header-pad-bottom-compact: 0.62rem;
     --header-inner-pad-y-rest: 0.92rem;

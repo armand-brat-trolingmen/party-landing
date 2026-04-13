@@ -19,7 +19,7 @@ test('tablet-and-mobile header switches to the compact menu layout before nav it
 
   expect(css).toContain('@media (max-width: 960px)');
   expect(mobileBlock).toContain('--header-brand-plate-size-rest: 4.7rem;');
-  expect(mobileBlock).toContain('--header-pad-top-compact: env(safe-area-inset-top, 0px);');
+  expect(mobileBlock).toContain('--header-pad-top-compact: calc(0.22rem + env(safe-area-inset-top, 0px));');
   expect(mobileBlock).toContain('--header-brand-text-size-rest: 0.89rem;');
   expect(mobileBlock).toContain('--header-brand-text-max-width-rest: 11rem;');
   expect(mobileBlock).toContain('--header-menu-size-rest: 2.7rem;');
