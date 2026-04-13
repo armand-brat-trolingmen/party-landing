@@ -82,13 +82,7 @@ function createMediaProgram(gl: GL) {
       uniform sampler2D tMap;
       uniform vec2 uImageSizes;
       uniform vec2 uPlaneSizes;
-      uniform float uCornerRadius;
       varying vec2 vUv;
-
-      float roundedBoxSDF(vec2 point, vec2 bounds, float radius) {
-        vec2 delta = abs(point) - bounds;
-        return length(max(delta, vec2(0.0))) + min(max(delta.x, delta.y), 0.0) - radius;
-      }
 
       vec2 coverUv(vec2 uv, vec2 planeSize, vec2 imageSize) {
         float planeRatio = planeSize.x / planeSize.y;
@@ -110,19 +104,13 @@ function createMediaProgram(gl: GL) {
       void main() {
         vec2 uv = coverUv(vUv, uPlaneSizes, uImageSizes);
         vec4 color = texture2D(tMap, uv);
-
-        float sdf = roundedBoxSDF(vUv - 0.5, vec2(0.5 - uCornerRadius), uCornerRadius);
-        float edgeSoftness = 0.004;
-        float alpha = 1.0 - smoothstep(-edgeSoftness, edgeSoftness, sdf);
-
-        gl_FragColor = vec4(color.rgb, color.a * alpha);
+        gl_FragColor = color;
       }
     `,
     uniforms: {
       tMap: { value: new Texture(gl, { generateMipmaps: true }) },
       uImageSizes: { value: [1, 1] },
       uPlaneSizes: { value: [1, 1] },
-      uCornerRadius: { value: 0.042 },
     },
   });
 }

@@ -33,8 +33,9 @@ export function OfferingPageTemplate({ offering, typeLabel }: OfferingPageTempla
                       alt={offering.visual.alt ?? offering.name}
                       width={offering.visual.width}
                       height={offering.visual.height}
-                      loading="lazy"
+                      loading="eager"
                       decoding="async"
+                      fetchPriority="high"
                     />
                   ) : (
                     <div className={styles.extraVisualBlank} data-testid="offering-extra-visual-blank" aria-hidden="true" />

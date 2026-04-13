@@ -49,8 +49,9 @@ test('renders the services catalog as a revealable centered showcase without hel
     expect(within(catalog).getByRole('heading', { level: 3, name: 'Сахарная вата' })).toBeInTheDocument();
     expect(firstImage).toBeInTheDocument();
     expect(firstWebpSource).toHaveAttribute('srcset', expect.stringContaining('/images/services-home/cotton-candy.webp'));
-    expect(firstImage).toHaveAttribute('src', expect.stringContaining('/images/services-home-fallback/cotton-candy.png'));
-    expect(firstImage).toHaveAttribute('loading', 'lazy');
+    expect(firstImage).toHaveAttribute('src', expect.stringContaining('/images/services-home/cotton-candy.webp'));
+    expect(firstImage).toHaveAttribute('loading', 'eager');
+    expect(firstImage).toHaveAttribute('fetchpriority', 'high');
     expect(firstImage).toHaveAttribute('width', '1024');
     expect(firstImage).toHaveAttribute('height', '1024');
     expect(firstImage).toHaveAttribute('sizes', '(max-width: 720px) 34vw, (max-width: 1120px) 44vw, 29vw');
@@ -117,7 +118,7 @@ test('switches to a full-width mobile slider with a swipe progress indicator', (
     'srcset',
     expect.stringContaining('/images/services-home/cotton-candy.webp'),
   );
-  expect(images[0]).toHaveAttribute('src', expect.stringContaining('/images/services-home-fallback/cotton-candy.png'));
+  expect(images[0]).toHaveAttribute('src', expect.stringContaining('/images/services-home/cotton-candy.webp'));
   expect(within(firstCard).getByText('от 12.000 ₽')).toBeInTheDocument();
   expect(progress).toHaveAttribute('role', 'progressbar');
   expect(progress).toHaveAttribute('aria-valuenow', '0');

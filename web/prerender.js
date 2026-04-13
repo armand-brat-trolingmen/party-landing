@@ -126,10 +126,32 @@ function getTargetFile(url) {
   return resolve(distDir, ...segments, 'index.html');
 }
 
+function getCleanUrlFile(url) {
+  if (url === '/' || url === '/404') {
+    return null;
+  }
+
+  const segments = url.replace(/^\/+|\/+$/g, '').split('/').filter(Boolean);
+
+  if (segments.length === 0) {
+    return null;
+  }
+
+  const fileName = `${segments.pop()}.html`;
+  return resolve(distDir, ...segments, fileName);
+}
+
 async function writeRouteHtml(url, html) {
   const targetFile = getTargetFile(url);
   await mkdir(dirname(targetFile), { recursive: true });
   await writeFile(targetFile, html, 'utf8');
+
+  const cleanUrlFile = getCleanUrlFile(url);
+
+  if (cleanUrlFile) {
+    await mkdir(dirname(cleanUrlFile), { recursive: true });
+    await writeFile(cleanUrlFile, html, 'utf8');
+  }
 }
 
 async function prerender() {

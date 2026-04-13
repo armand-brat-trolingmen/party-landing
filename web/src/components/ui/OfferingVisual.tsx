@@ -28,9 +28,9 @@ export function OfferingVisual({ visual, label }: OfferingVisualProps) {
           className={styles.image}
           width={visual.width}
           height={visual.height}
-          loading="lazy"
+          loading="eager"
           decoding="async"
-          fetchPriority="low"
+          fetchPriority="high"
         />
       ) : (
         <div className={styles.placeholder} aria-label={label}>

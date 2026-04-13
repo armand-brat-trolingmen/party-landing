@@ -13,15 +13,14 @@ function shouldRevealImmediately() {
   }
 
   const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
-  return prefersReducedMotion || typeof window.IntersectionObserver === 'undefined';
+  const isMobileViewport = window.matchMedia?.('(max-width: 720px)').matches ?? false;
+  return prefersReducedMotion || isMobileViewport || typeof window.IntersectionObserver === 'undefined';
 }
 
 export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(options: ScrollRevealOptions = {}) {
   const { rootMargin = '0px 0px -12% 0px', threshold = 0.18 } = options;
   const ref = useRef<T | null>(null);
-  const [revealState, setRevealState] = useState<RevealState>(() =>
-    shouldRevealImmediately() ? 'visible' : 'pending',
-  );
+  const [revealState, setRevealState] = useState<RevealState>('pending');
 
   useEffect(() => {
     const node = ref.current;
@@ -31,7 +30,19 @@ export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(options:
 
     node.style.setProperty('--reveal-soft-duration', '880ms');
 
-    if (revealState === 'visible' || shouldRevealImmediately()) {
+    if (shouldRevealImmediately()) {
+      if (revealState !== 'visible') {
+        const frameId = window.requestAnimationFrame(() => {
+          setRevealState('visible');
+        });
+
+        return () => window.cancelAnimationFrame(frameId);
+      }
+
+      return;
+    }
+
+    if (revealState === 'visible') {
       return;
     }
 

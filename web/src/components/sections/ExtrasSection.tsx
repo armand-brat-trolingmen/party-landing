@@ -36,7 +36,7 @@ export function ExtrasSection({
             data-extras-style="continuation-grid"
             data-mobile-layout={isMobile ? 'slider-compact' : 'grid'}
           >
-            {items.map((item) => (
+            {items.map((item, index) => (
               <article key={item.slug} className={styles.card}>
                 <a
                   className={styles.cardLink}
@@ -56,8 +56,9 @@ export function ExtrasSection({
                         alt={item.visual.alt ?? item.name}
                         width={item.visual.width}
                         height={item.visual.height}
-                        loading="lazy"
+                        loading={index < 2 ? 'eager' : 'lazy'}
                         decoding="async"
+                        fetchPriority={index < 2 ? 'high' : 'low'}
                       />
                     ) : null}
                   </div>

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700&display=swap');
+@import './fonts.css';
 @import './tokens.css';
 
 :root {
@@ -257,6 +257,10 @@ svg {
 }
 
 @media (max-width: 720px) {
+  html {
+    scroll-behavior: auto;
+  }
+
   .site-section {
     padding-block: clamp(3rem, 8vh, 4.7rem);
   }
@@ -272,6 +276,18 @@ svg {
   .site-section__description {
     font-size: 0.98rem;
     line-height: 1.64;
+  }
+
+  .site-reveal,
+  .site-reveal[data-reveal-state='pending'],
+  .site-reveal[data-reveal-state='visible'],
+  .site-reveal[data-reveal-stagger='true'] > *,
+  .reveal-grid > * {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+    transition-delay: 0ms !important;
   }
 }
 

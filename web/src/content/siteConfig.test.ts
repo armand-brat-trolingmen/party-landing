@@ -40,8 +40,8 @@ test('extras expose only the current additional service catalog', () => {
     'Брендирование тележки для кейтеринга',
     'Аренда оборудования',
   ]);
-  expect(siteConfig.extras.find((extra) => extra.slug === 'branded-cart')?.visual.image).toBe('/images/extras/branding.png');
-  expect(siteConfig.extras.find((extra) => extra.slug === 'equipment-rental')?.visual.image).toBe('/images/extras/equipment.png');
+  expect(siteConfig.extras.find((extra) => extra.slug === 'branded-cart')?.visual.image).toBe('/images/extras/branding.webp');
+  expect(siteConfig.extras.find((extra) => extra.slug === 'equipment-rental')?.visual.image).toBe('/images/extras/equipment.webp');
 });
 
 test('not found content is centralized and Russian', () => {

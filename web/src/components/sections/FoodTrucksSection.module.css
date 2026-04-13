@@ -175,16 +175,22 @@
 }
 
 @media (max-width: 720px) {
+  .section {
+    scroll-margin-top: calc(var(--header-offset) + 1rem);
+    padding-block: 2.35rem 3.4rem;
+  }
+
   .sectionBody {
-    gap: 1.2rem;
+    gap: 1rem;
   }
 
   .galleryBand {
-    padding-block: 0.7rem 1.1rem;
+    padding-block: 0.35rem 0.15rem;
+    border-block: 0;
   }
 
   .copyGrid {
-    gap: 1rem;
+    gap: 0.95rem;
   }
 
   .copyTitle {

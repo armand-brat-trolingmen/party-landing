@@ -42,8 +42,10 @@ test('renders extras inside the wide canvas without a framed outer surface', () 
   const equipmentImage = sectionQueries.getByRole('img', { name: /Аренда оборудования/ });
 
   expect(visualSlots).toHaveLength(0);
-  expect(brandingImage).toHaveAttribute('src', '/images/extras/branding.png');
-  expect(equipmentImage).toHaveAttribute('src', '/images/extras/equipment.png');
+  expect(brandingImage).toHaveAttribute('src', '/images/extras/branding.webp');
+  expect(equipmentImage).toHaveAttribute('src', '/images/extras/equipment.webp');
+  expect(brandingImage).toHaveAttribute('loading', 'eager');
+  expect(equipmentImage).toHaveAttribute('loading', 'eager');
   expect(sectionQueries.getByRole('link', { name: `Открыть страницу услуги ${extras[0].name}` })).toHaveAttribute(
     'data-link-appearance',
     'button',

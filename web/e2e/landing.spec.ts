@@ -100,6 +100,69 @@ test('mobile services and extras catalogs are horizontally scrollable', async ({
   }
 });
 
+test('mobile pages do not run section reveal transition animations', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/services/cotton-candy', { waitUntil: 'networkidle' });
+
+  const leadSectionContainer = page.locator('.site-reveal').first();
+  await expect(leadSectionContainer).toBeVisible();
+
+  const motion = await leadSectionContainer.evaluate((node) => {
+    const style = window.getComputedStyle(node);
+    return {
+      opacity: style.opacity,
+      transform: style.transform,
+      filter: style.filter,
+      transitionDuration: style.transitionDuration,
+    };
+  });
+
+  expect(motion).toEqual({
+    opacity: '1',
+    transform: 'none',
+    filter: 'none',
+    transitionDuration: '0s',
+  });
+});
+
+test('homepage loads typography from local font files only', async ({ page }) => {
+  const externalFontRequests: string[] = [];
+  const localFontRequests: string[] = [];
+
+  page.on('request', (request) => {
+    const url = request.url();
+
+    if (url.includes('fonts.googleapis.com') || url.includes('fonts.gstatic.com')) {
+      externalFontRequests.push(url);
+    }
+
+    if (url.includes('/fonts/') && url.endsWith('.woff2')) {
+      localFontRequests.push(url);
+    }
+  });
+
+  await page.goto('/', { waitUntil: 'networkidle' });
+
+  const families = await page.evaluate(async () => {
+    await document.fonts.ready;
+
+    const heading = document.querySelector('h1, h2, h3');
+
+    return {
+      body: window.getComputedStyle(document.body).fontFamily,
+      heading: heading ? window.getComputedStyle(heading).fontFamily : '',
+      loadedFamilies: Array.from(document.fonts).map((fontFace) => `${fontFace.family}:${fontFace.status}`),
+    };
+  });
+
+  expect(externalFontRequests).toEqual([]);
+  expect(localFontRequests.length).toBeGreaterThan(0);
+  expect(families.body).toContain('Manrope');
+  expect(families.heading).toContain('Unbounded');
+  expect(families.loadedFamilies.some((entry) => entry.startsWith('Manrope:loaded'))).toBeTruthy();
+  expect(families.loadedFamilies.some((entry) => entry.startsWith('Unbounded:loaded'))).toBeTruthy();
+});
+
 test('narrow mobile header keeps the menu trigger fully inside the viewport', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 700 });
   await page.goto('/');
@@ -253,11 +316,11 @@ test('homepage sections expose the current content surfaces', async ({ page }) =
   await expect(page.getByTestId('extras-track').getByTestId('extra-visual-blank')).toHaveCount(0);
   await expect(page.getByTestId('extras-track').getByRole('img', { name: /Брендирование тележки для кейтеринга/ })).toHaveAttribute(
     'src',
-    '/images/extras/branding.png',
+    '/images/extras/branding.webp',
   );
   await expect(page.getByTestId('extras-track').getByRole('img', { name: /Аренда оборудования/ })).toHaveAttribute(
     'src',
-    '/images/extras/equipment.png',
+    '/images/extras/equipment.webp',
   );
   await expect(page.getByTestId('section-food-trucks')).toBeVisible();
   await expect(page.getByTestId('food-trucks-gallery')).toBeVisible();
@@ -299,7 +362,22 @@ test('legal pages stay inside the mobile viewport without horizontal clipping', 
   }
 });
 
+test('extensionless offering urls return route-specific prerendered html', async ({ page }) => {
+  const response = await page.goto('/services/cotton-candy', { waitUntil: 'domcontentloaded' });
+
+  expect(response?.ok()).toBeTruthy();
+
+  const html = await response?.text();
+  expect(html).toContain('https://partylanding.vercel.app/services/cotton-candy#service');
+  expect(html).toContain('href="https://partylanding.vercel.app/services/cotton-candy"');
+});
+
 test('service and extra pages render the shared offering shell', async ({ page }) => {
+  const pageErrors: string[] = [];
+  page.on('pageerror', (error) => {
+    pageErrors.push(error.message);
+  });
+
   for (const url of ['/services/cotton-candy', '/extras/branded-cart'] as const) {
     await page.goto(url, { waitUntil: 'networkidle' });
 
@@ -312,6 +390,8 @@ test('service and extra pages render the shared offering shell', async ({ page }
     await expect(page.getByTestId('section-contact')).toBeVisible();
     await expect(page.getByTestId('section-offering-cta')).toBeVisible();
   }
+
+  expect(pageErrors).toEqual([]);
 });
 
 test('unknown routes render the non-indexable 404 page', async ({ page }) => {
