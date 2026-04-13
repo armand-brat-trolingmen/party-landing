@@ -147,6 +147,17 @@ const heroGallerySlides = [
     height: 2000,
     alt: 'Party Landing hero gallery photo 13',
   },
+  {
+    id: 'gallery-14',
+    image: '/images/hero/hero-gallery-14.jpg',
+    fallbackImage: '/images/hero/hero-gallery-14.jpg',
+    imageWebpSrcSet:
+      '/images/hero/hero-gallery-14-480.webp 480w, /images/hero/hero-gallery-14-720.webp 720w, /images/hero/hero-gallery-14-960.webp 960w, /images/hero/hero-gallery-14-1280.webp 1280w',
+    sizes: heroPosterSlideSizes,
+    width: 1714,
+    height: 2560,
+    alt: 'Party Landing hero gallery photo 14',
+  },
 ] as const;
 
 
