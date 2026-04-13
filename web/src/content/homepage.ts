@@ -110,8 +110,8 @@ const heroGallerySlides = [
     imageWebpSrcSet:
       '/images/hero/hero-gallery-10-480.webp 480w, /images/hero/hero-gallery-10-720.webp 720w, /images/hero/hero-gallery-10-960.webp 960w, /images/hero/hero-gallery-10-1280.webp 1280w',
     sizes: heroPosterSlideSizes,
-    width: 1920,
-    height: 2560,
+    width: 2560,
+    height: 1920,
     alt: 'Party Landing hero gallery photo 10',
   },
   {
