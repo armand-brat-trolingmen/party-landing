@@ -14,7 +14,7 @@ const DESKTOP_COMPACT_EXIT_Y = 42;
 const MOBILE_COMPACT_ENTER_Y = 72;
 const MOBILE_COMPACT_EXIT_Y = 20;
 const DESKTOP_PROGRESS_END_Y = 220;
-const MOBILE_PROGRESS_END_Y = 96;
+const MOBILE_PROGRESS_END_Y = 72;
 
 function clamp01(value: number) {
   if (value <= 0) {

@@ -25,6 +25,6 @@ test('desktop header uses a continuous scroll progress instead of a binary size 
 
 test('mobile header reaches the compact size over a shorter scroll distance', () => {
   expect(resolveHeaderScrollProgress({ isDesktop: false, scrollY: 0 })).toBe(0);
-  expect(resolveHeaderScrollProgress({ isDesktop: false, scrollY: 48 })).toBeCloseTo(0.5, 1);
-  expect(resolveHeaderScrollProgress({ isDesktop: false, scrollY: 120 })).toBe(1);
+  expect(resolveHeaderScrollProgress({ isDesktop: false, scrollY: 36 })).toBeCloseTo(0.5, 1);
+  expect(resolveHeaderScrollProgress({ isDesktop: false, scrollY: 72 })).toBe(1);
 });
