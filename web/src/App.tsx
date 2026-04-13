@@ -4,6 +4,7 @@ import { ContactPlaceholderSection } from './components/sections/ContactPlacehol
 import { ConceptLoopSection } from './components/sections/ConceptLoopSection';
 import { CtaSection } from './components/sections/CtaSection';
 import { ExtrasSection } from './components/sections/ExtrasSection';
+import { FoodTruckRentalSection } from './components/sections/FoodTruckRentalSection';
 import { FaqSection } from './components/sections/FaqSection';
 import { FoodTrucksSection } from './components/sections/FoodTrucksSection';
 import { HeroSection } from './components/sections/HeroSection';
@@ -19,6 +20,7 @@ export default function App() {
       <AboutSection />
       <ServicesSection />
       <ExtrasSection />
+      <FoodTruckRentalSection />
       <FoodTrucksSection />
       <TestimonialsSection />
       <FaqSection />

@@ -163,6 +163,44 @@ test('homepage loads typography from local font files only', async ({ page }) =>
   expect(families.loadedFamilies.some((entry) => entry.startsWith('Unbounded:loaded'))).toBeTruthy();
 });
 
+test('mobile food truck rental and catering copy stays inside the viewport', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/', { waitUntil: 'networkidle' });
+
+  const rentalSection = page.getByTestId('section-food-truck-rental');
+  const section = page.getByTestId('section-food-trucks');
+  await rentalSection.scrollIntoViewIfNeeded();
+
+  const checkedCopy = [
+    rentalSection.getByRole('heading', { level: 2, name: 'Аренда фудтраков' }),
+    rentalSection.getByText(/Фудтрак можно взять на краткосрочный или долгосрочный срок/),
+    rentalSection.getByText('MobiTruck SL-7'),
+    rentalSection.getByText(/роликовые грили, фритюрницы и жарочные поверхности/),
+    rentalSection.getByText(/Итоговая стоимость зависит от срока аренды/),
+    section.getByRole('heading', { level: 2, name: 'Кейтеринг на фудтраках' }),
+    section.getByText(/Мы привозим не просто еду/),
+    section.getByRole('heading', { level: 3, name: 'Почему клиенты доверяют нам?' }),
+    section.getByText(/Мы берем на себя не только подачу/),
+  ];
+
+  const viewportWidth = await page.evaluate(() => document.documentElement.clientWidth);
+  const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
+  expect(scrollWidth).toBeLessThanOrEqual(viewportWidth);
+
+  for (const locator of checkedCopy) {
+    await expect(locator).toBeVisible();
+    const box = await locator.boundingBox();
+
+    expect(box).not.toBeNull();
+    if (!box) {
+      continue;
+    }
+
+    expect(box.x).toBeGreaterThanOrEqual(0);
+    expect(box.x + box.width).toBeLessThanOrEqual(viewportWidth);
+  }
+});
+
 test('narrow mobile header keeps the menu trigger fully inside the viewport', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 700 });
   await page.goto('/');
@@ -322,6 +360,11 @@ test('homepage sections expose the current content surfaces', async ({ page }) =
     'src',
     '/images/extras/equipment.webp',
   );
+  await expect(page.getByTestId('section-food-truck-rental')).toBeVisible();
+  await expect(page.getByTestId('food-truck-rental-gallery').locator('[data-testid="food-truck-rental-image"]')).toHaveCount(3);
+  await expect(page.getByRole('heading', { level: 2, name: 'Аренда фудтраков' })).toBeVisible();
+  await expect(page.getByText('MobiTruck SL-7')).toBeVisible();
+  await expect(page.getByText('Посуточная аренда от 15.000 ₽ в сутки')).toBeVisible();
   await expect(page.getByTestId('section-food-trucks')).toBeVisible();
   await expect(page.getByTestId('food-trucks-gallery')).toBeVisible();
   await expect(page.getByTestId('food-trucks-gallery')).toHaveAttribute('data-gallery-mode', 'interactive');
