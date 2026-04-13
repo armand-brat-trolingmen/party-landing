@@ -20,8 +20,7 @@ export function ExtrasSection({
 }: ExtrasSectionProps) {
   const { ref, revealState } = useScrollReveal();
   const isMobile = useMediaQuery('(max-width: 720px)');
-  const { scrollerRef, progress } = useHorizontalScrollProgress(isMobile);
-  const progressVisual = Math.max(progress, 16);
+  const { scrollerRef } = useHorizontalScrollProgress(isMobile);
 
   return (
     <section id={sectionId} className="site-section" data-testid="section-extras" aria-labelledby={`${sectionId}-title`}>
@@ -76,20 +75,6 @@ export function ExtrasSection({
               </article>
             ))}
           </div>
-
-          {isMobile ? (
-            <div
-              className={styles.sliderProgress}
-              data-testid="extras-slider-progress"
-              role="progressbar"
-              aria-label="Прокрутка дополнительных услуг"
-              aria-valuemin={0}
-              aria-valuemax={100}
-              aria-valuenow={progress}
-            >
-              <span className={styles.sliderProgressFill} style={{ transform: `scaleX(${progressVisual / 100})` }} />
-            </div>
-          ) : null}
         </div>
       </div>
     </section>

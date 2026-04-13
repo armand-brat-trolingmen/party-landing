@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { siteConfig } from '../../content';
 import { ExtrasSection } from './ExtrasSection';
 
@@ -52,30 +52,14 @@ test('renders extras inside the wide canvas without a framed outer surface', () 
   );
 });
 
-test('switches extras to a compact mobile slider with a swipe progress indicator', () => {
+test('switches extras to a compact mobile slider without a swipe progress indicator', () => {
   mockViewport(true);
   render(<ExtrasSection />);
 
   const track = screen.getByTestId('extras-track');
   const firstLink = within(track).getByRole('link', { name: `Открыть страницу услуги ${extras[0].name}` });
-  const progress = screen.getByTestId('extras-slider-progress');
 
   expect(track).toHaveAttribute('data-mobile-layout', 'slider-compact');
   expect(firstLink).toHaveAttribute('data-link-appearance', 'card');
-  expect(progress).toHaveAttribute('role', 'progressbar');
-  expect(progress).toHaveAttribute('aria-valuenow', '0');
-
-  Object.defineProperties(track, {
-    clientWidth: { configurable: true, value: 320 },
-    scrollWidth: { configurable: true, value: 640 },
-  });
-
-  Object.defineProperty(track, 'scrollLeft', {
-    configurable: true,
-    writable: true,
-    value: 160,
-  });
-
-  fireEvent.scroll(track);
-  expect(progress).toHaveAttribute('aria-valuenow', '50');
+  expect(screen.queryByTestId('extras-slider-progress')).not.toBeInTheDocument();
 });
