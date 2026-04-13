@@ -6,6 +6,7 @@
   --bg-soft-blue: #F1FBFF;
   --bg-soft-cream: #FFF6EE;
   --bg-soft-rose: #FFEEF5;
+  --page-gradient-base: linear-gradient(180deg, #FFF8FC 0%, #EAF8FF 20%, #FFE7F3 40%, #E8FBF1 62%, #F0E9FF 82%, #ECF8FF 100%);
   --surface-primary: rgba(255, 255, 255, 0.84);
   --surface-secondary: rgba(255, 255, 255, 0.64);
   --surface-raised: #FFFFFF;

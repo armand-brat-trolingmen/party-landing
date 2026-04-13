@@ -5,20 +5,28 @@ function readCss(path: string) {
   return readFileSync(resolve(process.cwd(), path), 'utf8').replace(/\r\n/g, '\n');
 }
 
-test('global shell defines wide section tone washes without framed surface islands', () => {
+test('global shell defines one continuous page wash without framed surface islands', () => {
   const globalCss = readCss('src/styles/global.css');
   const tokensCss = readCss('src/styles/tokens.css');
 
   expect(globalCss).toContain('.site-shell {');
-  expect(globalCss).toContain('background: var(--bg-base);');
+  expect(globalCss).toContain('background: var(--page-gradient-base);');
+  expect(globalCss).toContain('.site-shell::before');
+  expect(globalCss).toContain('.site-shell > [data-testid^="section-"]');
+  expect(globalCss).toContain('background: transparent;');
   expect(globalCss).toContain('.site-section {');
   expect(globalCss).toContain("[data-heading-align='center']");
-  expect(globalCss).not.toContain('.site-shell::before');
+  expect(globalCss).not.toContain('--section-start');
+  expect(globalCss).not.toContain('[data-testid="section-food-truck-rental"]');
+  expect(globalCss).not.toContain('#FFF0D8');
+  expect(globalCss).not.toContain('#FFF4CC');
+  expect(globalCss).not.toContain('#FFEADA');
   expect(globalCss).not.toContain(".site-section[data-section-tone='rose']::before");
   expect(globalCss).not.toContain('.site-section::after');
   expect(globalCss).not.toContain('.site-section__eyebrow');
   expect(globalCss).not.toContain('.site-section__content');
   expect(globalCss).not.toContain('story-trail');
+  expect(tokensCss).toContain('--page-gradient-base:');
   expect(tokensCss).toContain("--font-display: 'Unbounded'");
   expect(tokensCss).toContain("--font-body: 'Manrope'");
   expect(tokensCss).toContain('--bg-base: #FFFDF8;');
