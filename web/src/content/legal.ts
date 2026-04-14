@@ -1,4 +1,5 @@
 import type { LegalDocument, LegalLink } from './types';
+import { legalDocuments } from './legalDocuments';
 
 export const legal = {
   business: {
@@ -22,25 +23,8 @@ export const legal = {
     },
   ] as const satisfies readonly LegalLink[],
   documents: {
-    privacy: {
-      path: '/privacy',
-      title: 'Политика конфиденциальности',
-      seoTitle: 'Политика конфиденциальности | Праздник каждый день',
-      description:
-        'Страница политики конфиденциальности Праздник каждый день. Здесь будет размещен актуальный документ проекта.',
-    },
-    offer: {
-      path: '/offer',
-      title: 'Договор-оферта',
-      seoTitle: 'Договор-оферта | Праздник каждый день',
-      description: 'Страница договора-оферты Праздник каждый день. Здесь будет размещен актуальный документ проекта.',
-    },
-    cookies: {
-      path: '/cookies',
-      title: 'Политика использования cookie',
-      seoTitle: 'Политика использования cookie | Праздник каждый день',
-      description:
-        'Страница политики использования cookie Праздник каждый день. Здесь будет размещен актуальный документ проекта.',
-    },
+    privacy: legalDocuments.privacy,
+    offer: legalDocuments.offer,
+    cookies: legalDocuments.cookies,
   } as const satisfies Record<'privacy' | 'offer' | 'cookies', LegalDocument>,
 } as const;

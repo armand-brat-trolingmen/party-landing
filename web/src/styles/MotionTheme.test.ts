@@ -25,6 +25,7 @@ test('global shell defines one continuous page wash without framed surface islan
   expect(globalCss).not.toContain('.site-section::after');
   expect(globalCss).not.toContain('.site-section__eyebrow');
   expect(globalCss).not.toContain('.site-section__content');
+  expect(globalCss).toContain('scroll-behavior: smooth;');
   expect(globalCss).not.toContain('story-trail');
   expect(tokensCss).toContain('--page-gradient-base:');
   expect(tokensCss).toContain("--font-display: 'Unbounded'");
@@ -121,7 +122,11 @@ test('mobile breakpoints keep the premium layout but calm the motion and spacing
   const offeringCss = readCss('src/components/pages/OfferingPageTemplate.module.css');
   const contactCss = readCss('src/components/sections/ContactPlaceholderSection.module.css');
 
-  expect(globalCss).toContain('@media (hover: none), (pointer: coarse)');
+  expect(globalCss).not.toContain("--reveal-distance:");
+  expect(globalCss).not.toContain("html[data-js='true'] .site-reveal[data-reveal-state='pending']");
+  expect(globalCss).not.toContain("html[data-js='true'] .site-reveal[data-reveal-state='pending'][data-reveal-stagger='true'] > *");
+  expect(globalCss).not.toContain('transition-delay: 70ms;');
+  expect(globalCss).not.toContain('filter 980ms ease;');
   expect(globalCss).toContain('width: min(calc(100% - 1rem), var(--shell-max-width));');
   expect(headerCss).toContain('text-overflow: clip;');
   expect(headerCss).toContain('width: min(calc(100vw - 0.75rem), 24rem);');

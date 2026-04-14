@@ -8,6 +8,66 @@ type LegalPageLayoutProps = {
   document: LegalDocument;
 };
 
+function LegalDocumentBody({ document }: { document: LegalDocument }) {
+  return (
+    <div className={styles.sheetBody} data-testid="legal-document-body">
+      {document.intro.length ? (
+        <div className={styles.intro}>
+          {document.intro.map((block, index) => {
+            if (block.kind === 'list') {
+              return (
+                <ul key={`intro-list-${index}`} className={styles.list}>
+                  {block.items.map((item) => (
+                    <li key={item} className={styles.listItem}>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              );
+            }
+
+            return (
+              <p key={`intro-paragraph-${index}`} className={styles.paragraph}>
+                {block.text}
+              </p>
+            );
+          })}
+        </div>
+      ) : null}
+
+      {document.sections.map((section, index) => (
+        <section key={section.title} className={styles.documentSection} aria-labelledby={`legal-section-${index}`}>
+          <h2 id={`legal-section-${index}`} className={styles.sectionTitle}>
+            {section.title}
+          </h2>
+
+          <div className={styles.sectionContent}>
+            {section.blocks.map((block, index) => {
+              if (block.kind === 'list') {
+                return (
+                  <ul key={`${section.title}-list-${index}`} className={styles.list}>
+                    {block.items.map((item) => (
+                      <li key={item} className={styles.listItem}>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                );
+              }
+
+              return (
+                <p key={`${section.title}-paragraph-${index}`} className={styles.paragraph}>
+                  {block.text}
+                </p>
+              );
+            })}
+          </div>
+        </section>
+      ))}
+    </div>
+  );
+}
+
 export function LegalPageLayout({ document }: LegalPageLayoutProps) {
   return (
     <>
@@ -25,17 +85,7 @@ export function LegalPageLayout({ document }: LegalPageLayoutProps) {
 
               <div className={styles.sheet} data-testid="legal-document-sheet" aria-label={document.title}>
                 <div className={styles.sheetInner}>
-                  <div className={styles.sheetHeader} aria-hidden="true">
-                    <span className={styles.sheetDot} />
-                    <span className={styles.sheetDot} />
-                    <span className={styles.sheetDot} />
-                  </div>
-
-                  <div className={styles.sheetLines} data-testid="legal-document-lines" aria-hidden="true">
-                    {Array.from({ length: 11 }, (_, index) => (
-                      <span key={index} className={styles.sheetLine} />
-                    ))}
-                  </div>
+                  <LegalDocumentBody document={document} />
                 </div>
               </div>
             </article>

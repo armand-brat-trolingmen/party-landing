@@ -20,6 +20,8 @@ test('tablet-and-mobile header switches to the compact menu layout before nav it
   expect(css).toContain('@media (max-width: 960px)');
   expect(mobileBlock).toContain('--header-brand-plate-size-rest: 4.7rem;');
   expect(mobileBlock).toContain('--header-pad-top-compact: calc(0.22rem + env(safe-area-inset-top, 0px));');
+  expect(mobileBlock).toContain('--header-brand-gap-rest: 0.66rem;');
+  expect(mobileBlock).toContain('--header-brand-gap-compact: 0.34rem;');
   expect(mobileBlock).toContain('--header-brand-text-size-rest: 0.89rem;');
   expect(mobileBlock).toContain('--header-brand-text-max-width-rest: 11rem;');
   expect(mobileBlock).toContain('--header-menu-size-rest: 2.7rem;');
@@ -28,6 +30,8 @@ test('tablet-and-mobile header switches to the compact menu layout before nav it
   expect(mobileBlock).toContain('--header-brand-text-max-width-compact: 8.8rem;');
   expect(css).toContain('@media (max-width: 420px)');
   expect(mobileNarrowBlock).toContain('--header-brand-plate-size-rest: 4.15rem;');
+  expect(mobileNarrowBlock).toContain('--header-brand-gap-rest: 0.54rem;');
+  expect(mobileNarrowBlock).toContain('--header-brand-gap-compact: 0.28rem;');
   expect(mobileNarrowBlock).toContain('--header-brand-text-size-rest: 0.76rem;');
   expect(mobileNarrowBlock).toContain('--header-brand-text-max-width-rest: 8.7rem;');
   expect(mobileNarrowBlock).toContain('--header-menu-size-rest: 2.62rem;');
@@ -35,7 +39,7 @@ test('tablet-and-mobile header switches to the compact menu layout before nav it
   expect(mobileNarrowBlock).toContain('--header-brand-text-size-compact: 0.54rem;');
   expect(css).toContain('@media (max-width: 360px)');
   expect(mobileUltraNarrowBlock).toContain('--header-inner-pad-x-rest: 0.62rem;');
-  expect(mobileUltraNarrowBlock).toContain('--header-brand-gap-rest: 0.24rem;');
+  expect(mobileUltraNarrowBlock).toContain('--header-brand-gap-rest: 0.4rem;');
   expect(mobileUltraNarrowBlock).toContain('--header-brand-plate-size-rest: 3.5rem;');
   expect(mobileBlock).not.toContain('white-space: normal;');
   expect(mobileNarrowBlock).not.toContain('white-space: normal;');
@@ -46,17 +50,19 @@ test('desktop header scales the brand block up so the logo reads clearly', () =>
   const css = readFileSync(resolve(process.cwd(), 'src/components/layout/SiteHeader.module.css'), 'utf8');
 
   expect(css).toContain('--header-progress: 0;');
-  expect(css).toContain('--header-brand-plate-size-rest: 11rem;');
+  expect(css).toContain('--header-logo-scale-rest: 1.3;');
+  expect(css).toContain('--header-logo-scale-compact: 1.15;');
   expect(css).toContain('--header-cta-min-height-rest: 4.2rem;');
   expect(css).toContain('padding: var(--header-inner-pad-y) var(--header-inner-pad-x);');
   expect(css).toContain('padding: 0;');
   expect(css).toContain('background: transparent;');
+  expect(css).toContain('width: calc(100% * var(--header-logo-scale));');
 });
 
 test('compact desktop header eases the logo back down after the hero state', () => {
   const css = readFileSync(resolve(process.cwd(), 'src/components/layout/SiteHeader.module.css'), 'utf8');
 
-  expect(css).toContain('--header-brand-plate-size-compact: 3.7rem;');
+  expect(css).toContain('--header-logo-scale-compact: 1.15;');
   expect(css).toContain('--header-brand-gap-compact: 0.56rem;');
   expect(css).toContain('--header-pad-top-compact: 0.28rem;');
 });
@@ -64,10 +70,8 @@ test('compact desktop header eases the logo back down after the hero state', () 
 test('mobile header grows in the static state and shrinks back after scroll', () => {
   const css = readFileSync(resolve(process.cwd(), 'src/components/layout/SiteHeader.module.css'), 'utf8');
 
-  expect(css).toContain('--header-brand-plate-size-compact: 2.7rem;');
-  expect(css).toContain('--header-brand-text-size-compact: 0.62rem;');
-  expect(css).toContain('--header-brand-plate-size-compact: 2.46rem;');
-  expect(css).toContain('--header-brand-text-size-compact: 0.54rem;');
+  expect(css).toContain('--header-logo-scale-rest: 2.5;');
+  expect(css).toContain('--header-logo-scale-compact: 1.85;');
 });
 
 test('brand text stays in one line without horizontal ellipsis clipping', () => {

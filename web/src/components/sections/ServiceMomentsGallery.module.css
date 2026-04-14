@@ -1,0 +1,77 @@
+.section {
+  display: grid;
+  gap: clamp(1rem, 2.4vw, 1.5rem);
+  margin-top: clamp(2.35rem, 5vw, 3.4rem);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.title {
+  font-size: clamp(1.35rem, 2.3vw, 1.8rem);
+  line-height: 1.05;
+}
+
+.track {
+  display: grid;
+  grid-auto-flow: column;
+  width: 100%;
+  grid-auto-columns: max(clamp(13rem, 24vw, 17.5rem), calc((100% - (0.9rem * 3)) / 4));
+  gap: 0.9rem;
+  min-height: min(50svh, 32rem);
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(143, 216, 248, 0.7) rgba(255, 255, 255, 0.5);
+}
+
+.track::-webkit-scrollbar {
+  height: 0.5rem;
+}
+
+.track::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(143, 216, 248, 0.82), rgba(255, 126, 182, 0.68));
+}
+
+.track::-webkit-scrollbar-track {
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.56);
+}
+
+.card {
+  width: 100%;
+  min-height: clamp(13rem, 24vw, 17.5rem);
+  aspect-ratio: 1 / 1;
+  border-radius: calc(var(--radius-card) - 0.8rem);
+  border: 1px solid rgba(31, 52, 74, 0.1);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(252, 252, 252, 0.96)),
+    radial-gradient(circle at 14% 18%, rgba(255, 238, 245, 0.58), rgba(255, 238, 245, 0) 42%);
+  box-shadow:
+    0 12px 24px rgba(31, 52, 74, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.72);
+  scroll-snap-align: start;
+}
+
+@media (max-width: 720px) {
+  .section {
+    margin-top: 2rem;
+  }
+
+  .track {
+    grid-auto-columns: minmax(11rem, 74vw);
+    gap: 0.75rem;
+    min-height: auto;
+    padding-bottom: 0.15rem;
+  }
+
+  .card {
+    min-height: 11rem;
+  }
+}

@@ -5,6 +5,7 @@ import { ContactPlaceholderSection } from '../sections/ContactPlaceholderSection
 import { CtaSection } from '../sections/CtaSection';
 import { ExtrasSection } from '../sections/ExtrasSection';
 import { FaqSection } from '../sections/FaqSection';
+import { ServiceMomentsGallery } from '../sections/ServiceMomentsGallery';
 import { ServicesSection } from '../sections/ServicesSection';
 import { TestimonialsSection } from '../sections/TestimonialsSection';
 import { OfferingVisual } from '../ui/OfferingVisual';
@@ -110,6 +111,53 @@ function DetailPanel({
   );
 }
 
+function getDeliveryContent(value: string) {
+  const parts = value
+    .split('—')
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  if (parts.length > 1) {
+    return parts.slice(1).join(' — ');
+  }
+
+  return parts[0] ?? value;
+}
+
+function capitalizeFirstLetter(value: string) {
+  if (!value) {
+    return value;
+  }
+
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+function formatDurationLabel(value: string) {
+  const duration = value.trim();
+
+  if (duration.startsWith('от ')) {
+    return duration;
+  }
+
+  if (/час$/u.test(duration)) {
+    return `от ${duration.replace(/час$/u, 'часа')}`;
+  }
+
+  if (/часа$/u.test(duration)) {
+    return `от ${duration.replace(/часа$/u, 'часов')}`;
+  }
+
+  if (/минута$/u.test(duration)) {
+    return `от ${duration.replace(/минута$/u, 'минуты')}`;
+  }
+
+  if (/минуты$/u.test(duration)) {
+    return `от ${duration.replace(/минуты$/u, 'минут')}`;
+  }
+
+  return `от ${duration}`;
+}
+
 function LegacyOfferingPage({ offering, typeLabel }: OfferingPageTemplateProps) {
   const { openModal } = useOrderModal();
 
@@ -117,9 +165,41 @@ function LegacyOfferingPage({ offering, typeLabel }: OfferingPageTemplateProps) 
     <>
       <section className={`site-section ${styles.leadSection}`} data-testid="section-offering-intro" aria-labelledby="offering-title">
         <div className="site-container">
-          <article className={`${styles.leadFrame} site-panel-glow`}>
+          <article className={`${styles.leadFrame} site-panel-glow`} data-testid="offering-extra-hero">
             <div className={styles.leadLayout}>
-              <div className={styles.visualCard}>
+              <div className={styles.copyCard}>
+                <span className={styles.eyebrow}>{typeLabel}</span>
+                <div className={styles.extraHeadlineBlock}>
+                  <h1 id="offering-title" className={styles.title}>
+                    {offering.name}
+                  </h1>
+                  <p className={styles.leadHighlight}>{offering.shortDescription}</p>
+                </div>
+                <p className={styles.description}>{offering.fullDescription}</p>
+
+                <div className={styles.metaRow}>
+                  <span className={styles.priceBadge} data-testid="offering-extra-price">
+                    {offering.price?.display ?? offering.priceFrom}
+                  </span>
+                  <button type="button" className={styles.orderButton} onClick={openModal}>
+                    Заказать
+                  </button>
+                </div>
+
+                <div className={styles.includedBlock} data-testid="offering-extra-included">
+                  <h2 className={styles.includedTitle}>Что входит в формат</h2>
+                  <ul className={styles.includedList}>
+                    {offering.included.map((item) => (
+                      <li key={item} className={styles.includedItem}>
+                        <span className={styles.includedDot} aria-hidden="true" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              <div className={`${styles.visualCard} ${styles.extraVisualCard}`} data-testid="offering-extra-visual">
                 {offering.kind === 'extra' ? (
                   offering.visual.image ? (
                     <img
@@ -139,33 +219,6 @@ function LegacyOfferingPage({ offering, typeLabel }: OfferingPageTemplateProps) 
                 ) : (
                   <OfferingVisual visual={offering.visual} label={offering.name} />
                 )}
-              </div>
-
-              <div className={styles.copyCard}>
-                <span className={styles.eyebrow}>{typeLabel}</span>
-                <h1 id="offering-title" className={styles.title}>
-                  {offering.name}
-                </h1>
-                <p className={styles.description}>{offering.fullDescription}</p>
-
-                <div className={styles.metaRow}>
-                  <span className={styles.priceBadge}>{offering.price?.display ?? offering.priceFrom}</span>
-                  <button type="button" className={styles.orderButton} onClick={openModal}>
-                    Заказать
-                  </button>
-                </div>
-
-                <div className={styles.includedBlock}>
-                  <h2 className={styles.includedTitle}>Что входит в формат</h2>
-                  <ul className={styles.includedList}>
-                    {offering.included.map((item) => (
-                      <li key={item} className={styles.includedItem}>
-                        <span className={styles.includedDot} aria-hidden="true" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
               </div>
             </div>
           </article>
@@ -195,12 +248,15 @@ export function OfferingPageTemplate({ offering, typeLabel }: OfferingPageTempla
   }
 
   const otherServices = siteConfig.services.filter((service) => service.slug !== offering.slug);
+  const heroPrice = offering.price?.display ?? offering.priceFrom;
+  const deliveryMoscowAccent = getDeliveryContent(servicePage.delivery.moscow);
+  const deliveryRegionAccent = capitalizeFirstLetter(getDeliveryContent(servicePage.delivery.region));
 
   return (
     <>
       <section className={`site-section ${styles.servicePageSection}`} data-testid="section-offering-intro" aria-labelledby="offering-title">
         <div className="site-container">
-          <div className={styles.serviceHero}>
+          <article className={`${styles.serviceHero} site-panel-glow`} data-testid="offering-hero">
             <div className={styles.serviceHeroCopy}>
               {servicePage.comboBadge ? (
                 <div className={styles.serviceHeroMeta}>
@@ -216,16 +272,26 @@ export function OfferingPageTemplate({ offering, typeLabel }: OfferingPageTempla
               </h1>
               <p className={styles.serviceDescription}>{offering.shortDescription}</p>
 
-              <div className={styles.quickFacts}>
-                <div className={styles.quickFact} data-testid="offering-duration">
-                  <span>Длительность</span>
-                  <strong>{servicePage.duration}</strong>
-                </div>
-                <div className={styles.quickFact} data-testid="offering-age">
-                  <span>Рекомендованный возраст</span>
-                  <strong>{servicePage.recommendedAge}</strong>
-                </div>
+              <div className={styles.serviceHeroActions}>
+                <button type="button" className={styles.orderButton} onClick={openModal}>
+                  Заказать
+                </button>
               </div>
+
+              {heroPrice ? (
+                <div className={styles.quickFacts}>
+                  <div className={`${styles.quickFact} ${styles.priceQuickFact}`} data-testid="offering-price">
+                    <span>Цена</span>
+                    <strong>{heroPrice}</strong>
+                  </div>
+                  {servicePage.duration ? (
+                    <div className={styles.quickFact} data-testid="offering-duration">
+                      <span>Длительность</span>
+                      <strong>{formatDurationLabel(servicePage.duration)}</strong>
+                    </div>
+                  ) : null}
+                </div>
+              ) : null}
 
               {servicePage.notes?.length ? (
                 <div className={styles.serviceNotes}>
@@ -236,10 +302,6 @@ export function OfferingPageTemplate({ offering, typeLabel }: OfferingPageTempla
                   ))}
                 </div>
               ) : null}
-
-              <button type="button" className={styles.orderButton} onClick={openModal}>
-                Заказать
-              </button>
             </div>
 
             {offering.homeCardImage ? (
@@ -272,7 +334,9 @@ export function OfferingPageTemplate({ offering, typeLabel }: OfferingPageTempla
             ) : (
               <div className={styles.serviceHeroVisual} data-testid="offering-hero-placeholder" aria-label={`Будущее фото услуги ${offering.name}`} />
             )}
-          </div>
+          </article>
+
+          <ServiceMomentsGallery />
 
           <div className={styles.detailGrid}>
             <DetailPanel title="В стоимость включено" testId="offering-included">
@@ -307,8 +371,14 @@ export function OfferingPageTemplate({ offering, typeLabel }: OfferingPageTempla
 
           <DetailPanel title="Доставка" testId="offering-delivery" variant="plain">
             <div className={styles.deliveryRows} data-testid="offering-delivery-box">
-              <strong>{servicePage.delivery.moscow}</strong>
-              <p>{servicePage.delivery.region}</p>
+              <article className={styles.deliverySegment} data-testid="offering-delivery-moscow">
+                <strong className={styles.deliveryLabel}>Москва</strong>
+                <p className={styles.deliveryValue}>{deliveryMoscowAccent}</p>
+              </article>
+              <article className={styles.deliverySegment} data-testid="offering-delivery-region">
+                <strong className={styles.deliveryLabel}>Московская область</strong>
+                <p className={`${styles.deliveryValue} ${styles.deliveryRegionText}`}>{deliveryRegionAccent}</p>
+              </article>
             </div>
           </DetailPanel>
         </div>

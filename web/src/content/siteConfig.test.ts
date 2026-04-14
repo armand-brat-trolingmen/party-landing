@@ -44,12 +44,14 @@ test('services expose dedicated page tariff content without changing the homepag
     ]),
   );
   expect(cottonCandy?.servicePage?.tariffs[2].note).toBeUndefined();
+  expect(cottonCandy?.servicePage?.duration).toBe('2 часа');
   expect(cottonCandy?.servicePage?.notes).toContain('Цветная сахарная вата +1.000 ₽ к стоимости');
   expect(combo?.servicePage?.notes).toContain('Цветная сахарная вата +1.000 ₽ к стоимости');
+  expect(chocolateFountain?.servicePage?.duration).toBe('1 час');
   expect(chocolateFountain?.servicePage?.comboBadge?.label).toBe('Комбо −20%');
   expect(chocolateFountain?.servicePage?.packages?.[0].items).toContain('2.5 кг бельгийского шоколада Barry Callebaut');
-  expect(champagnePyramid?.servicePage?.recommendedAge).toBe('18+ 😂');
-  expect(champagnePyramid?.servicePage?.delivery.moscow).toBe('Доставка в пределах МКАД — бесплатно');
+  expect(champagnePyramid?.servicePage?.duration).toBe('1 час');
+  expect(champagnePyramid?.servicePage?.delivery.moscow).toBe('Москва — 3.500 ₽');
   expect(champagnePyramid?.servicePage?.packages).toBeUndefined();
   expect(champagnePyramid?.servicePage?.included).toContain(
     'Качественные бокалы, которые подчеркнут изысканность вашего праздника',
@@ -61,18 +63,27 @@ test('services expose dedicated page tariff content without changing the homepag
     'Оборудование и материалы под выбранный тариф',
   ]);
   expect(foamCannon?.homeCardImage?.objectFit).toBe('contain');
-  expect(caramelApples?.price?.from).toBe(10000);
+  expect(caramelApples?.price?.from).toBe(12500);
+  expect(caramelApples?.price?.display).toBe('от 12.500 ₽');
   expect(caramelApples?.homeCardImage?.fallbackSrc).toBe('/images/services-home/caramel-apples.png');
   expect(caramelApples?.servicePage?.tariffs).toEqual([
     expect.objectContaining({
-      title: 'Формат под мероприятие',
-      price: 'от 10.000 ₽',
-      note: 'Точную стоимость согласуем отдельно: она зависит от объёма, оформления станции и сценария подачи.',
+      title: '50 порций',
+      subtitle: '1 час',
+      price: '12.500 ₽',
+    }),
+    expect.objectContaining({
+      title: '100 порций',
+      subtitle: '2 часа',
+      price: '22.000 ₽',
+    }),
+    expect.objectContaining({
+      title: '150 порций',
+      subtitle: '3 часа',
+      price: '31.500 ₽',
     }),
   ]);
-  expect(caramelApples?.servicePage?.notes).toContain(
-    'Тариф сейчас в предварительном формате — финальную смету соберём под вашу площадку и нужный объём.',
-  );
+  expect(caramelApples?.servicePage?.notes).toBeUndefined();
 });
 
 test('extras expose only the current additional service catalog', () => {

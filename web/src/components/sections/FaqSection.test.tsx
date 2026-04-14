@@ -53,7 +53,11 @@ test('renders faq as a cinematic accordion without a framed outer section shell'
   }
 
   for (const item of faq?.items ?? []) {
-    expect(item.answer).toBe('');
+    expect(item.answer.trim().length).toBeGreaterThan(30);
+  }
+
+  if (faq?.items[0]?.answer) {
+    expect(sectionQueries.getByText(faq.items[0].answer)).toBeInTheDocument();
   }
 
   const structuredDataNode = section.querySelector('script[type="application/ld+json"][data-structured-data="true"]');
@@ -61,7 +65,7 @@ test('renders faq as a cinematic accordion without a framed outer section shell'
 
   const structuredData = JSON.parse(structuredDataNode?.textContent ?? '{}') as {
     '@type': string;
-    mainEntity: Array<{ '@type': string; name: string }>;
+    mainEntity: Array<{ '@type': string; name: string; acceptedAnswer: { '@type': string; text: string } }>;
   };
 
   expect(structuredData['@type']).toBe('FAQPage');
@@ -70,6 +74,10 @@ test('renders faq as a cinematic accordion without a framed outer section shell'
       expect.objectContaining({
         '@type': 'Question',
         name: expectedQuestions[0],
+        acceptedAnswer: expect.objectContaining({
+          '@type': 'Answer',
+          text: faq?.items[0].answer,
+        }),
       }),
     ]),
   );

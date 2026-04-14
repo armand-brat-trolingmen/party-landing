@@ -56,8 +56,7 @@ export type ServicePageComboBadge = {
 };
 
 export type ServicePageContent = {
-  duration: string;
-  recommendedAge: string;
+  duration?: string;
   included: string[];
   materials: string[];
   delivery: ServicePageDelivery;
@@ -462,7 +461,7 @@ const rawServices: readonly OfferingEntity[] = [
     shortDescription: 'Сладкий акцент для мероприятий, где хочется добавить фотогеничную и сезонную десертную подачу.',
     fullDescription:
       'Карамельные яблоки хорошо подходят для ярмарок, сезонных праздников, детских мероприятий и камерных корпоративных форматов, где важна заметная и аккуратная десертная зона. Станция выглядит выразительно сама по себе и легко встраивается в сладкую зону как отдельный акцент.',
-    priceFrom: 'от 10.000',
+    priceFrom: 'от 12.500',
     included: ['Станция выдачи', 'Подготовленные яблоки в карамели', 'Работа оператора'],
     ctaLabel: 'Заказать карамельные яблоки',
     tone: 'caramel',
@@ -720,7 +719,6 @@ const rawMoments: readonly MomentEntity[] = [
 
 type ServicePageDraft = {
   duration?: string;
-  recommendedAge?: string;
   included?: string[];
   materials?: string[];
   delivery?: ServicePageDelivery;
@@ -745,10 +743,7 @@ const DEFAULT_DELIVERY: ServicePageDelivery = {
   region: 'Московская область — рассчитывается индивидуально по удаленности площадки',
 };
 
-const CHAMPAGNE_DELIVERY: ServicePageDelivery = {
-  moscow: 'Доставка в пределах МКАД — бесплатно',
-  region: 'Московская область — рассчитывается индивидуально по удаленности площадки',
-};
+const CHAMPAGNE_DELIVERY: ServicePageDelivery = DEFAULT_DELIVERY;
 
 const DEFAULT_TARIFF_ITEMS = ['Монтаж и демонтаж', 'Работа специалиста', 'Расходные материалы'];
 
@@ -757,9 +752,28 @@ const COMBO_DISCOUNT_BADGE: ServicePageComboBadge = {
   text: 'Скидка действует при заказе пирамиды из шампанского вместе с шоколадным фонтаном и применяется к этим двум услугам.',
 };
 
+const DURATION_PATTERN = /(\d+\s*(?:часов|часа|час|минуты|минута|минут))/u;
+
+function extractDurationFromText(value?: string) {
+  if (!value) {
+    return undefined;
+  }
+
+  return value.match(DURATION_PATTERN)?.[1];
+}
+
+function resolveMinimumTariffDuration(tariffs: readonly ServicePageTariff[]) {
+  const minimumTariff = tariffs[0];
+
+  if (!minimumTariff) {
+    return undefined;
+  }
+
+  return extractDurationFromText(minimumTariff.subtitle) ?? extractDurationFromText(minimumTariff.title);
+}
+
 function createServicePage({
-  duration = 'от 1 часа',
-  recommendedAge = 'от 3 лет',
+  duration,
   included = DEFAULT_SERVICE_PAGE_INCLUDED,
   materials = DEFAULT_SERVICE_PAGE_MATERIALS,
   delivery = DEFAULT_DELIVERY,
@@ -769,8 +783,7 @@ function createServicePage({
   notes,
 }: ServicePageDraft): ServicePageContent {
   return {
-    duration,
-    recommendedAge,
+    duration: duration ?? resolveMinimumTariffDuration(tariffs),
     included,
     materials,
     delivery,
@@ -813,13 +826,10 @@ const SERVICE_PAGE_CONTENT_BY_SLUG: Record<string, ServicePageContent> = {
       'Настраиваем станцию так, чтобы она выглядела аккуратно и спокойно работала в ритме мероприятия',
     ],
     tariffs: [
-      {
-        title: 'Формат под мероприятие',
-        price: 'от 10.000 ₽',
-        note: 'Точную стоимость согласуем отдельно: она зависит от объёма, оформления станции и сценария подачи.',
-      },
+      portionTariff('50 порций', '1 час', '12.500 ₽'),
+      portionTariff('100 порций', '2 часа', '22.000 ₽'),
+      portionTariff('150 порций', '3 часа', '31.500 ₽'),
     ],
-    notes: ['Тариф сейчас в предварительном формате — финальную смету соберём под вашу площадку и нужный объём.'],
   }),
   'roll-ice-cream': createServicePage({
     tariffs: [tariff('2 часа', '24.000 ₽'), tariff('3 часа', '30.000 ₽'), tariff('4 часа', '38.000 ₽')],
@@ -935,7 +945,7 @@ const SERVICE_PAGE_CONTENT_BY_SLUG: Record<string, ServicePageContent> = {
     ],
   }),
   'champagne-pyramid': createServicePage({
-    recommendedAge: '18+ 😂',
+    duration: '1 час',
     delivery: CHAMPAGNE_DELIVERY,
     comboBadge: COMBO_DISCOUNT_BADGE,
     included: [
@@ -944,7 +954,6 @@ const SERVICE_PAGE_CONTENT_BY_SLUG: Record<string, ServicePageContent> = {
       'Ведра для льда',
       'Вишня или сироп в каждый бокал',
       'Монтаж и демонтаж',
-      'Доставка в пределах МКАД бесплатно',
       'Шампанское предоставляется заказчиком либо закупается барменом',
     ],
     tariffs: [tariff('35 бокалов', '12.000 ₽'), tariff('56 бокалов', '14.000 ₽'), tariff('84 бокала', '20.000 ₽')],
@@ -964,7 +973,7 @@ const SERVICE_PAGE_CONTENT_BY_SLUG: Record<string, ServicePageContent> = {
     ],
   }),
   'foam-cannon': createServicePage({
-    duration: 'от 30 минут',
+    duration: '30 минут',
     tariffs: [
       {
         title: 'Пакет Стандарт',

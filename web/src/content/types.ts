@@ -20,9 +20,27 @@ export type LegalLink = {
   label: string;
 };
 
+export type LegalDocumentBlock =
+  | {
+      kind: 'paragraph';
+      text: string;
+    }
+  | {
+      kind: 'list';
+      style: 'unordered';
+      items: string[];
+    };
+
+export type LegalDocumentSection = {
+  title: string;
+  blocks: LegalDocumentBlock[];
+};
+
 export type LegalDocument = {
   path: string;
   title: string;
   seoTitle: string;
   description: string;
+  intro: LegalDocumentBlock[];
+  sections: LegalDocumentSection[];
 };
