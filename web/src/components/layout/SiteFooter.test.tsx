@@ -2,7 +2,7 @@ import { render, screen, within } from '@testing-library/react';
 import { siteConfig } from '../../content';
 import { SiteFooter } from './SiteFooter';
 
-test('renders compact footer with contact data, legal details, and legal links', () => {
+test('renders compact footer with contact data, legal details, legal links, and the metadata notice', () => {
   render(<SiteFooter />);
 
   const footer = screen.getByRole('contentinfo');
@@ -26,6 +26,10 @@ test('renders compact footer with contact data, legal details, and legal links',
   expect(within(footer).getByText(siteConfig.legal.business.inn)).toBeInTheDocument();
   expect(within(footer).getByText(siteConfig.legal.business.ogrnip)).toBeInTheDocument();
   expect(within(footer).getByText(siteConfig.legal.business.address)).toBeInTheDocument();
+
+  expect(
+    within(footer).getByText(/Мы собираем обезличенные метаданные пользователя \(cookie, данные об IP-адресе и местоположении\)/i),
+  ).toBeInTheDocument();
 
   for (const legalLink of siteConfig.legal.links) {
     expect(within(footer).getByRole('link', { name: legalLink.label })).toHaveAttribute('href', legalLink.href);

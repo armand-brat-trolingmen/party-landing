@@ -6,3 +6,7 @@ web/node_modules/
 web/dist/
 web/playwright-report/
 web/test-results/
+server/node_modules/
+server/dist/
+server/.env
+server/data/

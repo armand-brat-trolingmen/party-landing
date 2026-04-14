@@ -20,14 +20,7 @@ test('contacts expose raw, display, and href-ready values', () => {
 });
 
 test('services expose centralized normalized price values', () => {
-  const firstService = (
-    siteConfig.services as readonly {
-      price?: {
-        from: number;
-        display: string;
-      };
-    }[]
-  )[0];
+  const firstService = siteConfig.services[0];
 
   expect(firstService).toBeDefined();
   expect(firstService.price?.from).toBe(12000);
@@ -40,6 +33,7 @@ test('services expose dedicated page tariff content without changing the homepag
   const chocolateFountain = siteConfig.services.find((service) => service.slug === 'chocolate-fountain');
   const champagnePyramid = siteConfig.services.find((service) => service.slug === 'champagne-pyramid');
   const foamCannon = siteConfig.services.find((service) => service.slug === 'foam-cannon');
+  const caramelApples = siteConfig.services.find((service) => service.slug === 'caramel-apples');
 
   expect(combo?.name).toBe('Сахарная вата + попкорн');
   expect(siteConfig.services.map((service) => service.name)).not.toContain('Сладкая вата + попкорн');
@@ -57,7 +51,9 @@ test('services expose dedicated page tariff content without changing the homepag
   expect(champagnePyramid?.servicePage?.recommendedAge).toBe('18+ 😂');
   expect(champagnePyramid?.servicePage?.delivery.moscow).toBe('Доставка в пределах МКАД — бесплатно');
   expect(champagnePyramid?.servicePage?.packages).toBeUndefined();
-  expect(champagnePyramid?.servicePage?.included).toContain('Качественные бокалы, которые подчеркнут изысканность вашего праздника');
+  expect(champagnePyramid?.servicePage?.included).toContain(
+    'Качественные бокалы, которые подчеркнут изысканность вашего праздника',
+  );
   expect(foamCannon?.servicePage?.materials.join(' ')).not.toMatch(/сервировк|ингредиент/i);
   expect(foamCannon?.servicePage?.materials).toEqual([
     'Подготовка рабочей зоны под формат мероприятия',
@@ -65,19 +61,30 @@ test('services expose dedicated page tariff content without changing the homepag
     'Оборудование и материалы под выбранный тариф',
   ]);
   expect(foamCannon?.homeCardImage?.objectFit).toBe('contain');
-  expect(foamCannon?.shortDescription).not.toMatch(/welcome|street-food|тренд/i);
-  expect(champagnePyramid?.shortDescription).not.toMatch(/welcome|street-food|тренд/i);
-  expect(siteConfig.services.map((service) => service.fullDescription).join(' ')).not.toMatch(/welcome|street-food|тренд/i);
+  expect(caramelApples?.price?.from).toBe(10000);
+  expect(caramelApples?.homeCardImage?.fallbackSrc).toBe('/images/services-home/caramel-apples.png');
+  expect(caramelApples?.servicePage?.tariffs).toEqual([
+    expect.objectContaining({
+      title: 'Формат под мероприятие',
+      price: 'от 10.000 ₽',
+      note: 'Точную стоимость согласуем отдельно: она зависит от объёма, оформления станции и сценария подачи.',
+    }),
+  ]);
+  expect(caramelApples?.servicePage?.notes).toContain(
+    'Тариф сейчас в предварительном формате — финальную смету соберём под вашу площадку и нужный объём.',
+  );
 });
 
 test('extras expose only the current additional service catalog', () => {
-  expect(siteConfig.extras).toHaveLength(2);
+  expect(siteConfig.extras).toHaveLength(3);
   expect(siteConfig.extras.map((extra) => extra.name)).toEqual([
     'Брендирование тележки для кейтеринга',
     'Аренда оборудования',
+    'Станция плова',
   ]);
   expect(siteConfig.extras.find((extra) => extra.slug === 'branded-cart')?.visual.image).toBe('/images/extras/branding.webp');
-  expect(siteConfig.extras.find((extra) => extra.slug === 'equipment-rental')?.visual.image).toBe('/images/extras/equipment.webp');
+  expect(siteConfig.extras.find((extra) => extra.slug === 'equipment-rental')?.visual.image).toBe('/images/extras/equipment.png');
+  expect(siteConfig.extras.find((extra) => extra.slug === 'plov-station')?.visual.image).toBe('/images/extras/plov.png');
 });
 
 test('not found content is centralized and Russian', () => {

@@ -1,4 +1,5 @@
 import { siteConfig } from '../../content';
+import { useLeadForm } from '../../features/leads/useLeadForm';
 import { SectionHeading } from '../ui/SectionHeading';
 import styles from './CtaSection.module.css';
 
@@ -12,6 +13,10 @@ type CtaSectionProps = {
 export function CtaSection({ id, title, description, sectionTestId = 'section-cta' }: CtaSectionProps) {
   const variant = 'home';
   const resolvedId = id ?? (sectionTestId === 'section-cta' ? 'cta' : undefined);
+  const leadForm = useLeadForm();
+
+  const isNameInvalid = Boolean(leadForm.errors.name) || leadForm.hasGeneralError;
+  const isPhoneInvalid = Boolean(leadForm.errors.phone) || leadForm.hasGeneralError;
 
   const body = (
     <>
@@ -23,36 +28,50 @@ export function CtaSection({ id, title, description, sectionTestId = 'section-ct
           />
         </div>
 
-        <form className={styles.form} data-testid="cta-inline-form" onSubmit={(event) => event.preventDefault()}>
+        <form className={styles.form} data-testid="cta-inline-form" onSubmit={leadForm.handleSubmit} noValidate>
           <label className={styles.field}>
             <span className={styles.fieldLabel}>Имя</span>
-            <input className={styles.input} name="name" autoComplete="name" placeholder="Как к вам обращаться" />
+            <input
+              className={styles.input}
+              name="name"
+              autoComplete="name"
+              placeholder="Как к вам обращаться"
+              value={leadForm.values.name}
+              onChange={leadForm.handleNameChange}
+              aria-invalid={isNameInvalid}
+            />
           </label>
 
           <label className={styles.field}>
             <span className={styles.fieldLabel}>Телефон</span>
-            <input className={styles.input} name="phone" autoComplete="tel" placeholder={siteConfig.contacts.phone.display} inputMode="tel" />
+            <input
+              className={styles.input}
+              name="phone"
+              autoComplete="tel"
+              placeholder={siteConfig.contacts.phone.display}
+              inputMode="tel"
+              value={leadForm.values.phone}
+              onChange={leadForm.handlePhoneChange}
+              aria-invalid={isPhoneInvalid}
+            />
           </label>
 
-          <button type="submit" className={styles.button}>
-            {siteConfig.homepage.cta.actionLabel}
+          <button type="submit" className={styles.button} disabled={leadForm.isSubmitDisabled}>
+            {leadForm.submitLabel}
           </button>
+
+          <span className={styles.visuallyHidden} aria-live="polite">
+            {leadForm.status === 'loading' ? 'Отправляем заявку' : leadForm.status === 'success' ? 'Заявка отправлена' : ''}
+          </span>
         </form>
       </div>
 
       <p className={styles.note}>
-        {siteConfig.homepage.cta.consentPrefix}{' '}
-        {siteConfig.legal.links.map((legalLink, index) => (
-          <span key={legalLink.href}>
-            {index === siteConfig.legal.links.length - 1 && index > 0 ? 'и ' : null}
-            <a className={styles.noteLink} href={legalLink.href}>
-              {legalLink.label}
-            </a>
-            {index < siteConfig.legal.links.length - 2 ? ', ' : null}
-            {index === siteConfig.legal.links.length - 2 ? ' ' : null}
-            {index === siteConfig.legal.links.length - 1 ? '.' : null}
-          </span>
-        ))}
+        Отправляя форму вы принимаете условия передачи данных и согласны с{' '}
+        <a className={styles.noteLink} href="/privacy">
+          политикой конфиденциальности
+        </a>
+        .
       </p>
     </>
   );

@@ -1,0 +1,90 @@
+.wrapper {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: clamp(0.9rem, 2vw, 1.35rem);
+  z-index: 46;
+  padding-inline: clamp(0.9rem, 2vw, 1.4rem);
+  pointer-events: none;
+}
+
+.banner {
+  width: min(100%, 48rem);
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem 1.1rem;
+  align-items: center;
+  padding: 1rem 1.1rem 1rem 1.2rem;
+  border-radius: 1.2rem;
+  border: 1px solid rgba(18, 24, 35, 0.08);
+  background: rgba(255, 253, 248, 0.96);
+  box-shadow:
+    0 22px 48px rgba(18, 24, 35, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.76);
+  backdrop-filter: blur(14px);
+  pointer-events: auto;
+}
+
+.copyBlock {
+  display: grid;
+  gap: 0.38rem;
+  min-width: 0;
+}
+
+.copy {
+  color: var(--text-primary);
+  font-size: 0.97rem;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.link {
+  color: var(--accent-primary);
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+  text-decoration-thickness: 1px;
+}
+
+.detailsButton {
+  justify-self: start;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--accent-primary);
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.acceptButton {
+  min-width: 7.4rem;
+  min-height: 3.2rem;
+  padding: 0.9rem 1.35rem;
+  border: 0;
+  border-radius: 0.8rem;
+  background: #111111;
+  box-shadow: 0 14px 28px rgba(17, 17, 17, 0.18);
+  color: #ffffff;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    box-shadow 220ms ease,
+    opacity 220ms ease;
+}
+
+.acceptButton:hover,
+.acceptButton:focus-visible {
+  box-shadow: 0 18px 34px rgba(17, 17, 17, 0.22);
+}
+
+@media (max-width: 720px) {
+  .banner {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+
+  .acceptButton {
+    width: 100%;
+  }
+}

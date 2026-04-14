@@ -1,0 +1,56 @@
+import { describe, expect, test } from 'vitest';
+import { validateLeadInput } from './leadValidation';
+
+describe('validateLeadInput', () => {
+  test('rejects empty fields', () => {
+    const result = validateLeadInput({
+      name: '',
+      phone: '',
+    });
+
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.fieldErrors.name).toBeDefined();
+      expect(result.fieldErrors.phone).toBeDefined();
+    }
+  });
+
+  test('rejects names with non-letter symbols', () => {
+    const result = validateLeadInput({
+      name: 'Иван123',
+      phone: '+7 (999) 111 22 33',
+    });
+
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.fieldErrors.name).toMatch(/имя/i);
+    }
+  });
+
+  test('rejects phone values outside the required mask', () => {
+    const result = validateLeadInput({
+      name: 'Иван',
+      phone: '89991112233',
+    });
+
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.fieldErrors.phone).toMatch(/\+7/i);
+    }
+  });
+
+  test('accepts valid name and phone values', () => {
+    const result = validateLeadInput({
+      name: 'Анна-Мария',
+      phone: '+7 (999) 111 22 33',
+    });
+
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.value).toEqual({
+        name: 'Анна-Мария',
+        phone: '+7 (999) 111 22 33',
+      });
+    }
+  });
+});

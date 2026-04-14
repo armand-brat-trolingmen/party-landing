@@ -14,7 +14,7 @@ function OpenHarness() {
   );
 }
 
-test('opens the shared modal with animated appearance, compact fields, and legal consent links', () => {
+test('opens the shared modal with animated appearance, compact fields, and privacy consent link', () => {
   render(
     <MemoryRouter>
       <OrderModalProvider>
@@ -32,7 +32,7 @@ test('opens the shared modal with animated appearance, compact fields, and legal
   expect(screen.getByRole('textbox', { name: 'Имя' })).toBeInTheDocument();
   expect(screen.getByRole('textbox', { name: 'Телефон' })).toBeInTheDocument();
   expect(screen.queryByRole('textbox', { name: /Комментарий/i })).not.toBeInTheDocument();
-  expect(screen.getByRole('link', { name: 'политика конфиденциальности' })).toHaveAttribute('href', '/privacy');
-  expect(screen.getByRole('link', { name: 'пользовательское соглашение' })).toHaveAttribute('href', '/terms');
-  expect(screen.getByRole('link', { name: 'согласие на обработку персональных данных' })).toHaveAttribute('href', '/consent');
+  expect(screen.getByRole('link', { name: 'политикой конфиденциальности' })).toHaveAttribute('href', '/privacy');
+  expect(screen.queryByRole('link', { name: /договор-оферта/i })).not.toBeInTheDocument();
+  expect(screen.queryByRole('link', { name: /cookie/i })).not.toBeInTheDocument();
 });

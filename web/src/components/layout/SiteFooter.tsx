@@ -4,6 +4,9 @@ import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { DonutLogo } from '../branding/DonutLogo';
 import styles from './SiteFooter.module.css';
 
+const DATA_NOTICE_TEXT =
+  'Мы собираем обезличенные метаданные пользователя (cookie, данные об IP-адресе и местоположении) для нормального функционирования сайта и если вы не желаете, чтобы эти данные обрабатывались, то пожалуйста покиньте сайт.';
+
 function FooterSocialIcon({ id }: { id: SocialLink['id'] }) {
   if (id === 'telegram') {
     return (
@@ -86,6 +89,8 @@ export function SiteFooter() {
         </div>
 
         <div className={styles.divider} aria-hidden="true" />
+
+        <p className={styles.dataNotice}>{DATA_NOTICE_TEXT}</p>
 
         <div className={styles.bottomRow}>
           <div className={styles.legalDetails}>

@@ -18,6 +18,7 @@ export type HomeCardImage = {
   width: number;
   height: number;
   sizes: string;
+  sourceType?: string;
   objectPosition?: string;
   objectFit?: 'cover' | 'contain';
 };
@@ -132,6 +133,14 @@ const HOME_SERVICE_CARD_IMAGE_MAP: Record<string, HomeCardImage> = {
     height: 1024,
     sizes: '(max-width: 720px) 34vw, (max-width: 1120px) 44vw, 29vw',
   },
+  'caramel-apples': {
+    src: '/images/services-home/caramel-apples.png',
+    fallbackSrc: '/images/services-home/caramel-apples.png',
+    width: 1024,
+    height: 1024,
+    sizes: '(max-width: 720px) 34vw, (max-width: 1120px) 44vw, 29vw',
+    sourceType: 'image/png',
+  },
   'roll-ice-cream': {
     src: '/images/services-home/roll-ice-cream.webp',
     fallbackSrc: '/images/services-home/roll-ice-cream.webp',
@@ -161,11 +170,12 @@ const HOME_SERVICE_CARD_IMAGE_MAP: Record<string, HomeCardImage> = {
     sizes: '(max-width: 720px) 34vw, (max-width: 1120px) 44vw, 29vw',
   },
   'french-hot-dog': {
-    src: '/images/services-home/french-hot-dog.webp',
-    fallbackSrc: '/images/services-home/french-hot-dog.webp',
+    src: '/images/services-home/french-hot-dog.png',
+    fallbackSrc: '/images/services-home/french-hot-dog.png',
     width: 1024,
     height: 1024,
     sizes: '(max-width: 720px) 34vw, (max-width: 1120px) 44vw, 29vw',
+    sourceType: 'image/png',
   },
   'danish-hot-dog': {
     src: '/images/services-home/danish-hot-dog.webp',
@@ -189,11 +199,12 @@ const HOME_SERVICE_CARD_IMAGE_MAP: Record<string, HomeCardImage> = {
     sizes: '(max-width: 720px) 34vw, (max-width: 1120px) 44vw, 29vw',
   },
   pancakes: {
-    src: '/images/services-home/pancakes.webp',
-    fallbackSrc: '/images/services-home/pancakes.webp',
+    src: '/images/services-home/pancakes.png',
+    fallbackSrc: '/images/services-home/pancakes.png',
     width: 1024,
     height: 1024,
     sizes: '(max-width: 720px) 34vw, (max-width: 1120px) 44vw, 29vw',
+    sourceType: 'image/png',
   },
   'champagne-pyramid': {
     src: '/images/services-home/champagne-pyramid.webp',
@@ -446,6 +457,17 @@ const rawServices: readonly OfferingEntity[] = [
     tone: 'berry',
   }),
   createService({
+    slug: 'caramel-apples',
+    name: 'Карамельные яблоки',
+    shortDescription: 'Сладкий акцент для мероприятий, где хочется добавить фотогеничную и сезонную десертную подачу.',
+    fullDescription:
+      'Карамельные яблоки хорошо подходят для ярмарок, сезонных праздников, детских мероприятий и камерных корпоративных форматов, где важна заметная и аккуратная десертная зона. Станция выглядит выразительно сама по себе и легко встраивается в сладкую зону как отдельный акцент.',
+    priceFrom: 'от 10.000',
+    included: ['Станция выдачи', 'Подготовленные яблоки в карамели', 'Работа оператора'],
+    ctaLabel: 'Заказать карамельные яблоки',
+    tone: 'caramel',
+  }),
+  createService({
     slug: 'roll-ice-cream',
     name: 'Мороженое (Ролл)',
     shortDescription: 'Формат с приготовлением на глазах у гостей, который добавляет десертной зоне живой ритм.',
@@ -626,9 +648,29 @@ const rawExtras: readonly OfferingEntity[] = [
     seoDescription:
       'Аренда оборудования от Праздник каждый день для мероприятий в Москве и области. Подбираем оборудование под формат площадки и сценарий события.',
     visual: {
-      image: '/images/extras/equipment.webp',
+      image: '/images/extras/equipment.png',
       emoji: '',
       tone: 'sky',
+    },
+  },
+  {
+    kind: 'extra',
+    slug: 'plov-station',
+    name: 'Станция плова',
+    shortDescription:
+      'Гастрономическая точка с более плотной подачей для мероприятий, где нужен сытный формат и выразительный ароматный акцент.',
+    fullDescription:
+      'Станция плова подходит для городских, семейных и корпоративных событий, где хочется добавить горячее блюдо с понятной подачей и живой атмосферой приготовления. Такой формат хорошо работает как самостоятельная гастрозона или как часть более насыщенной выездной кухни.',
+    priceFrom: 'от 10 000 ₽',
+    included: ['Подбор формата станции', 'Согласование подачи под площадку', 'Подготовка гастрозоны к работе'],
+    ctaLabel: 'Заказать станцию плова',
+    seoTitle: 'Станция плова для мероприятия — Праздник каждый день',
+    seoDescription:
+      'Станция плова от Праздник каждый день для мероприятий в Москве и области. Подберём формат подачи и встроим горячую гастрозону в общий сценарий события.',
+    visual: {
+      image: '/images/extras/plov.png',
+      emoji: '',
+      tone: 'gold',
     },
   },
 ] as const;
@@ -762,6 +804,22 @@ const SERVICE_PAGE_CONTENT_BY_SLUG: Record<string, ServicePageContent> = {
   'cotton-candy-popcorn': createServicePage({
     notes: [COLOR_COTTON_CANDY_NOTE],
     tariffs: [tariff('2 часа', '21.000 ₽'), tariff('3 часа', '30.000 ₽'), tariff('4 часа', '38.000 ₽')],
+  }),
+  'caramel-apples': createServicePage({
+    included: ['Монтаж и демонтаж', 'Подготовка станции', 'Расходные материалы', 'Работа специалиста'],
+    materials: [
+      'Подбираем формат подачи под площадку и поток гостей',
+      'Готовим яблоки, карамель и расходные материалы под согласованный объём',
+      'Настраиваем станцию так, чтобы она выглядела аккуратно и спокойно работала в ритме мероприятия',
+    ],
+    tariffs: [
+      {
+        title: 'Формат под мероприятие',
+        price: 'от 10.000 ₽',
+        note: 'Точную стоимость согласуем отдельно: она зависит от объёма, оформления станции и сценария подачи.',
+      },
+    ],
+    notes: ['Тариф сейчас в предварительном формате — финальную смету соберём под вашу площадку и нужный объём.'],
   }),
   'roll-ice-cream': createServicePage({
     tariffs: [tariff('2 часа', '24.000 ₽'), tariff('3 часа', '30.000 ₽'), tariff('4 часа', '38.000 ₽')],

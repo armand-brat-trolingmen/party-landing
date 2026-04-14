@@ -33,17 +33,21 @@ test('renders extras inside the wide canvas without a framed outer surface', () 
   expect(sectionQueries.getByTestId('extras-track')).toHaveAttribute('data-extras-style', 'continuation-grid');
   expect(sectionQueries.getByTestId('extras-track')).toHaveAttribute('data-mobile-layout', 'grid');
   expect(sectionQueries.queryByTestId('extras-slider-progress')).not.toBeInTheDocument();
-  expect(within(sectionQueries.getByTestId('extras-track')).getAllByRole('article')).toHaveLength(2);
+  expect(within(sectionQueries.getByTestId('extras-track')).getAllByRole('article')).toHaveLength(3);
   expect(sectionQueries.getByRole('heading', { level: 3, name: 'Брендирование тележки для кейтеринга' })).toBeInTheDocument();
   expect(sectionQueries.getByRole('heading', { level: 3, name: 'Аренда оборудования' })).toBeInTheDocument();
+  expect(sectionQueries.getByRole('heading', { level: 3, name: 'Станция плова' })).toBeInTheDocument();
   expect(sectionQueries.queryByText(/от \d/i)).not.toBeInTheDocument();
+
   const visualSlots = sectionQueries.queryAllByTestId('extra-visual-blank');
   const brandingImage = sectionQueries.getByRole('img', { name: /Брендирование тележки для кейтеринга/ });
   const equipmentImage = sectionQueries.getByRole('img', { name: /Аренда оборудования/ });
+  const plovImage = sectionQueries.getByRole('img', { name: /Станция плова/ });
 
   expect(visualSlots).toHaveLength(0);
   expect(brandingImage).toHaveAttribute('src', '/images/extras/branding.webp');
-  expect(equipmentImage).toHaveAttribute('src', '/images/extras/equipment.webp');
+  expect(equipmentImage).toHaveAttribute('src', '/images/extras/equipment.png');
+  expect(plovImage).toHaveAttribute('src', '/images/extras/plov.png');
   expect(brandingImage).toHaveAttribute('loading', 'eager');
   expect(equipmentImage).toHaveAttribute('loading', 'eager');
   expect(sectionQueries.getByRole('link', { name: `Открыть страницу услуги ${extras[0].name}` })).toHaveAttribute(

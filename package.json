@@ -1,13 +1,21 @@
 {
   "name": "site",
+  "private": true,
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Party landing with React frontend and simple Node lead backend",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev:web": "npm --prefix web run dev",
+    "dev:server": "npm --prefix server run dev",
+    "build:web": "npm --prefix web run build",
+    "build:server": "npm --prefix server run build",
+    "build": "npm run build:web && npm run build:server",
+    "test:web": "npm --prefix web run test",
+    "test:server": "npm --prefix server run test",
+    "test": "npm run test:web && npm run test:server",
+    "server:start": "npm --prefix server run start"
   },
   "keywords": [],
   "author": "",

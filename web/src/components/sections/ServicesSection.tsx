@@ -137,7 +137,7 @@ export function ServicesSection({
                         <picture className={styles.visualPicture}>
                           <source
                             data-testid="service-card-media-source-webp"
-                            type="image/webp"
+                            type={service.homeCardImage.sourceType ?? 'image/webp'}
                             srcSet={service.homeCardImage.src}
                             sizes={service.homeCardImage.sizes}
                           />

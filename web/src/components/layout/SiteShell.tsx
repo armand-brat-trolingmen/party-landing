@@ -1,6 +1,8 @@
 import { lazy, startTransition, Suspense, useEffect, useState, type ReactNode } from 'react';
+import { ensureLeadSourceCookies } from '../../features/trafficSource/attribution';
 import { useOrderModal } from '../cta/useOrderModal';
 import { OrderModalProvider } from '../cta/OrderModalContext';
+import { CookieBanner } from './CookieBanner';
 import { SiteFooter } from './SiteFooter';
 import { SiteHeader } from './SiteHeader';
 
@@ -104,6 +106,10 @@ function DeferredSpeedInsights() {
 }
 
 export function SiteShell({ children, motionPath, mainClassName, legalMode = false }: SiteShellProps) {
+  useEffect(() => {
+    ensureLeadSourceCookies();
+  }, []);
+
   return (
     <OrderModalProvider>
       <SiteHeader legalMode={legalMode} />
@@ -111,6 +117,7 @@ export function SiteShell({ children, motionPath, mainClassName, legalMode = fal
         {children}
       </main>
       <SiteFooter />
+      <CookieBanner />
       <DeferredOrderModal />
       <DeferredSpeedInsights />
     </OrderModalProvider>

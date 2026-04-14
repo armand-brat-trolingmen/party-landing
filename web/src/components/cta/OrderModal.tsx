@@ -1,19 +1,29 @@
 import { siteConfig } from '../../content';
+import { useLeadForm } from '../../features/leads/useLeadForm';
 import { useOrderModal } from './useOrderModal';
 import styles from './OrderModal.module.css';
 
 export function OrderModal() {
   const { isOpen, closeModal } = useOrderModal();
+  const leadForm = useLeadForm();
+
+  const handleClose = () => {
+    leadForm.resetForm();
+    closeModal();
+  };
 
   if (!isOpen) {
     return null;
   }
 
+  const isNameInvalid = Boolean(leadForm.errors.name) || leadForm.hasGeneralError;
+  const isPhoneInvalid = Boolean(leadForm.errors.phone) || leadForm.hasGeneralError;
+
   return (
     <div
       className={styles.overlay}
       role="presentation"
-      onClick={closeModal}
+      onClick={handleClose}
       data-testid="order-modal-overlay"
       data-modal-state="open"
     >
@@ -36,40 +46,53 @@ export function OrderModal() {
             </p>
           </div>
 
-          <button type="button" className={styles.closeButton} onClick={closeModal} aria-label="Закрыть форму заказа">
+          <button type="button" className={styles.closeButton} onClick={handleClose} aria-label="Закрыть форму заказа">
             ×
           </button>
         </div>
 
-        <form className={styles.form} onSubmit={(event) => event.preventDefault()}>
+        <form className={styles.form} onSubmit={leadForm.handleSubmit} noValidate>
           <label className={styles.field}>
             <span className={styles.fieldLabel}>Имя</span>
-            <input className={styles.input} name="name" autoComplete="name" placeholder="Как к вам обращаться" />
+            <input
+              className={styles.input}
+              name="name"
+              autoComplete="name"
+              placeholder="Как к вам обращаться"
+              value={leadForm.values.name}
+              onChange={leadForm.handleNameChange}
+              aria-invalid={isNameInvalid}
+            />
           </label>
 
           <label className={styles.field}>
             <span className={styles.fieldLabel}>Телефон</span>
-            <input className={styles.input} name="phone" autoComplete="tel" placeholder={siteConfig.contacts.phone.display} inputMode="tel" />
+            <input
+              className={styles.input}
+              name="phone"
+              autoComplete="tel"
+              placeholder={siteConfig.contacts.phone.display}
+              inputMode="tel"
+              value={leadForm.values.phone}
+              onChange={leadForm.handlePhoneChange}
+              aria-invalid={isPhoneInvalid}
+            />
           </label>
 
-          <button type="submit" className={styles.submitButton}>
-            {siteConfig.homepage.cta.actionLabel}
+          <button type="submit" className={styles.submitButton} disabled={leadForm.isSubmitDisabled}>
+            {leadForm.submitLabel}
           </button>
+
+          <span className={styles.visuallyHidden} aria-live="polite">
+            {leadForm.status === 'loading' ? 'Отправляем заявку' : leadForm.status === 'success' ? 'Заявка отправлена' : ''}
+          </span>
         </form>
 
         <p className={styles.consent}>
-          {siteConfig.homepage.cta.consentPrefix}{' '}
-          <span className={styles.consentLinks}>
-            {siteConfig.legal.links.map((link, index) => (
-              <span key={link.href}>
-                {index > 0 ? 'и ' : null}
-                <a className={styles.consentLink} href={link.href}>
-                  {link.label.toLowerCase()}
-                </a>
-                {index < siteConfig.legal.links.length - 1 ? ' ' : null}
-              </span>
-            ))}
-          </span>
+          Отправляя форму вы принимаете условия передачи данных и согласны с{' '}
+          <a className={styles.consentLink} href="/privacy">
+            политикой конфиденциальности
+          </a>
           .
         </p>
       </div>

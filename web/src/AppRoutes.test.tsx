@@ -15,24 +15,24 @@ test('renders dedicated privacy page route', () => {
   expect(screen.getByRole('heading', { level: 1, name: 'Политика конфиденциальности' })).toBeInTheDocument();
 });
 
-test('renders dedicated terms page route', () => {
+test('renders dedicated offer page route', () => {
   render(
-    <MemoryRouter initialEntries={['/terms']}>
+    <MemoryRouter initialEntries={['/offer']}>
       <AppRoutes />
     </MemoryRouter>,
   );
 
-  expect(screen.getByRole('heading', { level: 1, name: 'Пользовательское соглашение' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { level: 1, name: 'Договор-оферта' })).toBeInTheDocument();
 });
 
-test('renders dedicated consent page route', () => {
+test('renders dedicated cookies page route', () => {
   render(
-    <MemoryRouter initialEntries={['/consent']}>
+    <MemoryRouter initialEntries={['/cookies']}>
       <AppRoutes />
     </MemoryRouter>,
   );
 
-  expect(screen.getByRole('heading', { level: 1, name: 'Согласие на обработку персональных данных' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { level: 1, name: 'Политика использования cookie' })).toBeInTheDocument();
 });
 
 test('renders service and extra internal pages', () => {

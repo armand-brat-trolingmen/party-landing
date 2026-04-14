@@ -3,7 +3,7 @@ import { MemoryRouter } from 'react-router';
 import { OrderModalProvider } from '../cta/OrderModalContext';
 import { CtaSection } from './CtaSection';
 
-test('renders the homepage CTA as a compact inline form with legal links and no WhatsApp promise line', () => {
+test('renders the homepage CTA as a compact inline form with privacy consent link and no WhatsApp promise line', () => {
   render(
     <MemoryRouter>
       <OrderModalProvider>
@@ -23,10 +23,7 @@ test('renders the homepage CTA as a compact inline form with legal links and no 
   expect(sectionQueries.getByLabelText('Телефон')).toBeInTheDocument();
   expect(sectionQueries.getByRole('button', { name: 'Заказать' })).toBeInTheDocument();
   expect(sectionQueries.queryByText(/whatsapp в течение 15 минут/i)).not.toBeInTheDocument();
-  expect(sectionQueries.getByRole('link', { name: 'Политика конфиденциальности' })).toHaveAttribute('href', '/privacy');
-  expect(sectionQueries.getByRole('link', { name: 'Пользовательское соглашение' })).toHaveAttribute('href', '/terms');
-  expect(sectionQueries.getByRole('link', { name: 'Согласие на обработку персональных данных' })).toHaveAttribute(
-    'href',
-    '/consent',
-  );
+  expect(sectionQueries.getByRole('link', { name: 'политикой конфиденциальности' })).toHaveAttribute('href', '/privacy');
+  expect(sectionQueries.queryByRole('link', { name: /договор-оферта/i })).not.toBeInTheDocument();
+  expect(sectionQueries.queryByRole('link', { name: /cookie/i })).not.toBeInTheDocument();
 });

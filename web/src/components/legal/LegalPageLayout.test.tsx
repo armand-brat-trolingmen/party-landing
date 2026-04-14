@@ -2,9 +2,9 @@ import { render, screen } from '@testing-library/react';
 import { HelmetProvider } from 'react-helmet-async';
 import { MemoryRouter } from 'react-router';
 import { siteConfig } from '../../content';
-import ConsentPage from '../../pages/consent';
+import CookiesPage from '../../pages/cookies';
+import OfferPage from '../../pages/offer';
 import PrivacyPage from '../../pages/privacy';
-import TermsPage from '../../pages/terms';
 
 function renderLegalPage(page: React.ReactNode, entry = '/') {
   return render(
@@ -35,19 +35,19 @@ test('renders privacy page with the shared legal shell and live footer contacts'
 });
 
 test('keeps distinct legal page titles while reusing the same blank document layout', () => {
-  const { rerender } = renderLegalPage(<TermsPage />, '/terms');
+  const { rerender } = renderLegalPage(<OfferPage />, '/offer');
 
-  expect(screen.getByRole('heading', { level: 1, name: siteConfig.legal.documents.terms.title })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { level: 1, name: siteConfig.legal.documents.offer.title })).toBeInTheDocument();
   expect(screen.getByTestId('legal-document-sheet')).toBeInTheDocument();
 
   rerender(
     <HelmetProvider>
-      <MemoryRouter initialEntries={['/consent']}>
-        <ConsentPage />
+      <MemoryRouter initialEntries={['/cookies']}>
+        <CookiesPage />
       </MemoryRouter>
     </HelmetProvider>,
   );
 
-  expect(screen.getByRole('heading', { level: 1, name: siteConfig.legal.documents.consent.title })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { level: 1, name: siteConfig.legal.documents.cookies.title })).toBeInTheDocument();
   expect(screen.getByTestId('legal-document-sheet')).toBeInTheDocument();
 });

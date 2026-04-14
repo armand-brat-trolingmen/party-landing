@@ -248,7 +248,11 @@ export function OfferingPageTemplate({ offering, typeLabel }: OfferingPageTempla
                 data-image-fit={offering.homeCardImage.objectFit}
                 data-service-slug={offering.slug}
               >
-                <source type="image/webp" srcSet={offering.homeCardImage.src} sizes={offering.homeCardImage.sizes} />
+                <source
+                  type={offering.homeCardImage.sourceType ?? 'image/webp'}
+                  srcSet={offering.homeCardImage.src}
+                  sizes={offering.homeCardImage.sizes}
+                />
                 <img
                   className={styles.serviceHeroImage}
                   data-image-fit={offering.homeCardImage.objectFit}

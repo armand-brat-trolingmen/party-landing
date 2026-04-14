@@ -118,3 +118,22 @@ test('renders champagne pyramid details with adult age and free MKAD delivery', 
   expect(within(intro).getByText('Шампанское предоставляется заказчиком либо закупается барменом')).toBeInTheDocument();
   expect(within(intro).queryByText('В формат включено')).not.toBeInTheDocument();
 });
+
+test('renders caramel apples page with preliminary pricing note and new icon', () => {
+  render(
+    <MemoryRouter initialEntries={['/services/caramel-apples']}>
+      <Routes>
+        <Route path="/services/:slug" element={<ServicePage />} />
+      </Routes>
+    </MemoryRouter>,
+  );
+
+  const intro = screen.getByTestId('section-offering-intro');
+
+  expect(screen.getByRole('heading', { level: 1, name: 'Карамельные яблоки' })).toBeInTheDocument();
+  expect(within(intro).getByTestId('offering-hero-image')).toHaveAttribute('src', '/images/services-home/caramel-apples.png');
+  expect(within(intro).getByTestId('offering-included')).toHaveTextContent('Подготовка станции');
+  expect(within(intro).getByTestId('offering-tariffs')).toHaveTextContent('Формат под мероприятие');
+  expect(within(intro).getByTestId('offering-tariffs')).toHaveTextContent('от 10.000 ₽');
+  expect(within(intro).getByText('Тариф сейчас в предварительном формате — финальную смету соберём под вашу площадку и нужный объём.')).toBeInTheDocument();
+});

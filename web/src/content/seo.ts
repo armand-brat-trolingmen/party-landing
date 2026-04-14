@@ -18,13 +18,13 @@ export const seo = {
       title: legal.documents.privacy.seoTitle,
       description: legal.documents.privacy.description,
     },
-    terms: {
-      title: legal.documents.terms.seoTitle,
-      description: legal.documents.terms.description,
+    offer: {
+      title: legal.documents.offer.seoTitle,
+      description: legal.documents.offer.description,
     },
-    consent: {
-      title: legal.documents.consent.seoTitle,
-      description: legal.documents.consent.description,
+    cookies: {
+      title: legal.documents.cookies.seoTitle,
+      description: legal.documents.cookies.description,
     },
   },
 } as const;

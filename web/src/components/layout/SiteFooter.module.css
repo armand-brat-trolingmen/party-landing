@@ -129,6 +129,14 @@
   background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0));
 }
 
+.dataNotice {
+  margin: 0;
+  max-width: 58rem;
+  color: rgba(255, 253, 248, 0.5);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
 .bottomRow {
   display: grid;
   gap: 1rem;
@@ -203,7 +211,8 @@
   }
 
   .brandDescriptor,
-  .legalDetails {
+  .legalDetails,
+  .dataNotice {
     font-size: 0.9rem;
   }
 
