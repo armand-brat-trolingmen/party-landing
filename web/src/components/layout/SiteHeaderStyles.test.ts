@@ -70,6 +70,17 @@ test('mobile header grows in the static state and shrinks back after scroll', ()
   expect(css).toContain('--header-brand-text-size-compact: 0.54rem;');
 });
 
+test('brand text stays in one line without horizontal ellipsis clipping', () => {
+  const css = readFileSync(resolve(process.cwd(), 'src/components/layout/SiteHeader.module.css'), 'utf8');
+  const brandTextBlock = sliceBetween(css, '.brandText {', '.brand:hover');
+
+  expect(brandTextBlock).toContain('white-space: nowrap;');
+  expect(brandTextBlock).toContain('overflow: visible;');
+  expect(brandTextBlock).toContain('text-overflow: clip;');
+  expect(brandTextBlock).toContain('letter-spacing: 0;');
+  expect(brandTextBlock).not.toContain('text-overflow: ellipsis;');
+});
+
 test('header transitions compact sizing more smoothly across scroll states', () => {
   const css = readFileSync(resolve(process.cwd(), 'src/components/layout/SiteHeader.module.css'), 'utf8');
 

@@ -123,7 +123,7 @@ test('mobile breakpoints keep the premium layout but calm the motion and spacing
 
   expect(globalCss).toContain('@media (hover: none), (pointer: coarse)');
   expect(globalCss).toContain('width: min(calc(100% - 1rem), var(--shell-max-width));');
-  expect(headerCss).toContain('text-overflow: ellipsis;');
+  expect(headerCss).toContain('text-overflow: clip;');
   expect(headerCss).toContain('width: min(calc(100vw - 0.75rem), 24rem);');
   expect(heroCss).toContain('justify-self: center;');
   expect(carouselCss).toContain('aspect-ratio: 4 / 4.9;');

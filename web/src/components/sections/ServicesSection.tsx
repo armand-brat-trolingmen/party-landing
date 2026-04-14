@@ -14,6 +14,7 @@ type ServicesSectionProps = {
   description?: string;
   initialVisibleCount?: number;
   allowReveal?: boolean;
+  revealOnScroll?: boolean;
 };
 
 const COLLAPSE_ANIMATION_MS = 280;
@@ -25,6 +26,7 @@ export function ServicesSection({
   description = siteConfig.homepage.services.description,
   initialVisibleCount = siteConfig.homepage.services.initialVisibleCount,
   allowReveal = true,
+  revealOnScroll = true,
 }: ServicesSectionProps) {
   const { ref, revealState } = useScrollReveal();
   const isMobile = useMediaQuery('(max-width: 720px)');
@@ -83,7 +85,12 @@ export function ServicesSection({
 
   return (
     <section id={sectionId} className="site-section" data-testid="section-services" aria-labelledby={`${sectionId}-title`}>
-      <div ref={ref} className="site-container site-reveal" data-reveal-state={revealState} data-reveal-stagger="true">
+      <div
+        ref={ref}
+        className={`site-container${revealOnScroll ? ' site-reveal' : ''}`}
+        data-reveal-state={revealOnScroll ? revealState : undefined}
+        data-reveal-stagger={revealOnScroll ? 'true' : undefined}
+      >
         <div className={styles.sectionBody}>
           <SectionHeading align="center" title={<span id={`${sectionId}-title`}>{title}</span>} description={description} />
 
@@ -125,7 +132,7 @@ export function ServicesSection({
                     aria-label={`Открыть страницу услуги ${service.name}`}
                     data-link-appearance={isMobile ? 'card' : 'button'}
                   >
-                    <div className={styles.visualWrap} aria-hidden="true">
+                    <div className={styles.visualWrap} data-image-fit={service.homeCardImage?.objectFit} aria-hidden="true">
                       {service.homeCardImage ? (
                         <picture className={styles.visualPicture}>
                           <source
@@ -137,6 +144,8 @@ export function ServicesSection({
                           <img
                             className={styles.visualImage}
                             data-testid="service-card-media-image"
+                            data-image-fit={service.homeCardImage.objectFit}
+                            data-service-image-slug={service.slug}
                             src={service.homeCardImage.fallbackSrc}
                             alt=""
                             loading={shouldEagerLoadImage ? 'eager' : 'lazy'}
@@ -145,7 +154,7 @@ export function ServicesSection({
                             width={service.homeCardImage.width}
                             height={service.homeCardImage.height}
                             sizes={service.homeCardImage.sizes}
-                            style={{ objectPosition: service.homeCardImage.objectPosition }}
+                            style={{ objectFit: service.homeCardImage.objectFit, objectPosition: service.homeCardImage.objectPosition }}
                           />
                         </picture>
                       ) : (

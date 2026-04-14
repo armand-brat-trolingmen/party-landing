@@ -141,10 +141,10 @@
   font-size: var(--header-brand-text-size);
   font-weight: 600;
   line-height: 1;
-  letter-spacing: -0.04em;
+  letter-spacing: 0;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow: visible;
+  text-overflow: clip;
   max-width: var(--header-brand-text-max-width);
 }
 

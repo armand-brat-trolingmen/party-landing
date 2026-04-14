@@ -19,6 +19,51 @@ export type HomeCardImage = {
   height: number;
   sizes: string;
   objectPosition?: string;
+  objectFit?: 'cover' | 'contain';
+};
+
+export type ServicePageTariffVariant = {
+  label: string;
+  price: string;
+};
+
+export type ServicePageTariff = {
+  title: string;
+  subtitle?: string;
+  price?: string;
+  weekdayPrice?: string;
+  note?: string;
+  items?: string[];
+  variants?: ServicePageTariffVariant[];
+};
+
+export type ServicePagePackage = {
+  title: string;
+  meta?: string;
+  items: string[];
+  additions?: string[];
+};
+
+export type ServicePageDelivery = {
+  moscow: string;
+  region: string;
+};
+
+export type ServicePageComboBadge = {
+  label: string;
+  text: string;
+};
+
+export type ServicePageContent = {
+  duration: string;
+  recommendedAge: string;
+  included: string[];
+  materials: string[];
+  delivery: ServicePageDelivery;
+  tariffs: ServicePageTariff[];
+  packages?: ServicePagePackage[];
+  comboBadge?: ServicePageComboBadge;
+  notes?: string[];
 };
 
 export type OfferingEntity = {
@@ -38,6 +83,7 @@ export type OfferingEntity = {
   seoDescription: string;
   visual: CatalogVisual;
   homeCardImage?: HomeCardImage;
+  servicePage?: ServicePageContent;
 };
 
 export type MomentEntity = {
@@ -176,6 +222,7 @@ const HOME_SERVICE_CARD_IMAGE_MAP: Record<string, HomeCardImage> = {
     width: 1024,
     height: 1024,
     sizes: '(max-width: 720px) 34vw, (max-width: 1120px) 44vw, 29vw',
+    objectFit: 'contain',
   },
 };
 
@@ -211,6 +258,7 @@ function normalizeOffering(offering: OfferingEntity): OfferingEntity {
     seoTitle: buildOfferingSeoTitle(offering),
     seoDescription: buildOfferingSeoDescription(offering),
     homeCardImage: offering.kind === 'service' ? HOME_SERVICE_CARD_IMAGE_MAP[offering.slug] : offering.homeCardImage,
+    servicePage: offering.kind === 'service' ? SERVICE_PAGE_CONTENT_BY_SLUG[offering.slug] : offering.servicePage,
     visual: {
       ...offering.visual,
       emoji: offering.visual.emoji,
@@ -388,13 +436,13 @@ const rawServices: readonly OfferingEntity[] = [
   }),
   createService({
     slug: 'cotton-candy-popcorn',
-    name: 'Сладкая вата + попкорн',
+    name: 'Сахарная вата + попкорн',
     shortDescription: 'Комбинированная сладкая зона для событий, где хочется закрыть сразу два понятных гостям формата.',
     fullDescription:
-      'Комбо из сладкой ваты и попкорна удобно использовать на мероприятиях с активным потоком гостей, когда нужна сразу более насыщенная сладкая точка. Такой формат помогает сделать зону визуально богаче и даёт гостям быстрый выбор без перегруза.',
+      'Комбо из сахарной ваты и попкорна удобно использовать на мероприятиях с активным потоком гостей, когда нужна сразу более насыщенная сладкая точка. Такой формат помогает сделать зону визуально богаче и даёт гостям быстрый выбор без перегруза.',
     priceFrom: 'от 21.000',
     included: ['Две точки выдачи', 'Базовые ингредиенты', 'Работа персонала'],
-    ctaLabel: 'Заказать сладкую вату и попкорн',
+    ctaLabel: 'Заказать сахарную вату и попкорн',
     tone: 'berry',
   }),
   createService({
@@ -455,7 +503,7 @@ const rawServices: readonly OfferingEntity[] = [
   createService({
     slug: 'danish-hot-dog',
     name: 'Хот-дог (Датский)',
-    shortDescription: 'Более насыщенный формат хот-дога для событий, где нужен узнаваемый street-food акцент.',
+    shortDescription: 'Более насыщенный формат хот-дога для событий, где нужен узнаваемый акцент уличной еды.',
     fullDescription:
       'Датский хот-дог подходит для неформальных и корпоративных мероприятий, где хочется добавить в гастрозону более плотный и выразительный формат. Он хорошо справляется с активной выдачей и остаётся понятным для гостей разного возраста.',
     priceFrom: 'от 17.500',
@@ -499,9 +547,9 @@ const rawServices: readonly OfferingEntity[] = [
   createService({
     slug: 'champagne-pyramid',
     name: 'Пирамида из шампанского',
-    shortDescription: 'Эффектный welcome-формат для мероприятий, где важно красивое первое впечатление.',
+    shortDescription: 'Эффектный формат встречи гостей для мероприятий, где важно красивое первое впечатление.',
     fullDescription:
-      'Пирамида из шампанского подходит для welcome-сценариев, торжественных открытий и событий, где важен выразительный старт. Этот формат работает как визуальный акцент и помогает задать мероприятию более праздничный тон с первых минут.',
+      'Пирамида из шампанского подходит для встречи гостей, торжественных открытий и событий, где важен выразительный старт. Этот формат работает как визуальный акцент и помогает задать мероприятию более праздничный тон с первых минут.',
     priceFrom: 'от 12.000',
     included: ['Сборка пирамиды', 'Базовый сетап зоны', 'Сопровождение подачи'],
     ctaLabel: 'Заказать пирамиду из шампанского',
@@ -512,7 +560,7 @@ const rawServices: readonly OfferingEntity[] = [
     name: 'Крафтовый лимонад',
     shortDescription: 'Освежающая напиточная станция для событий, где нужен лёгкий и чистый формат подачи.',
     fullDescription:
-      'Крафтовый лимонад хорошо подходит для тёплых сезонов, welcome-зон и мероприятий с активным потоком гостей, где нужен освежающий напиточный акцент. Формат помогает сделать гастрономическую часть легче и визуально более воздушной.',
+      'Крафтовый лимонад хорошо подходит для тёплых сезонов, зон встречи гостей и мероприятий с активным потоком гостей, где нужен освежающий напиточный акцент. Формат помогает сделать гастрономическую часть легче и визуально более воздушной.',
     priceFrom: 'от 15.000',
     included: ['Напиточная стойка', 'Базовые вкусы лимонада', 'Стаканы и подача'],
     ctaLabel: 'Заказать крафтовый лимонад',
@@ -521,7 +569,7 @@ const rawServices: readonly OfferingEntity[] = [
   createService({
     slug: 'bubble-tea',
     name: 'Бабл ти',
-    shortDescription: 'Современный напиточный формат для мероприятий, где хочется добавить трендовый и фотогеничный акцент.',
+    shortDescription: 'Современный напиточный формат для мероприятий, где хочется добавить заметный и фотогеничный акцент.',
     fullDescription:
       'Бабл ти подходит для молодёжных, городских и корпоративных событий, где важна современная подача и узнаваемый формат. Станция хорошо привлекает внимание и помогает сделать напиточную часть программы более живой.',
     priceFrom: 'от 15.000',
@@ -627,6 +675,319 @@ const rawMoments: readonly MomentEntity[] = [
     tone: 'chocolate',
   },
 ] as const;
+
+type ServicePageDraft = {
+  duration?: string;
+  recommendedAge?: string;
+  included?: string[];
+  materials?: string[];
+  delivery?: ServicePageDelivery;
+  tariffs: ServicePageTariff[];
+  packages?: ServicePagePackage[];
+  comboBadge?: ServicePageComboBadge;
+  notes?: string[];
+};
+
+const DEFAULT_SERVICE_PAGE_INCLUDED = ['Монтаж и демонтаж', 'Работа специалиста', 'Расходные материалы', 'Подготовка зоны выдачи'];
+
+const DEFAULT_SERVICE_PAGE_MATERIALS = [
+  'Подготовка рабочей зоны под формат мероприятия',
+  'Расходные материалы и инвентарь для комфортной работы',
+  'Оборудование и материалы под выбранный тариф',
+];
+
+const COLOR_COTTON_CANDY_NOTE = 'Цветная сахарная вата +1.000 ₽ к стоимости';
+
+const DEFAULT_DELIVERY: ServicePageDelivery = {
+  moscow: 'Москва — 3.500 ₽',
+  region: 'Московская область — рассчитывается индивидуально по удаленности площадки',
+};
+
+const CHAMPAGNE_DELIVERY: ServicePageDelivery = {
+  moscow: 'Доставка в пределах МКАД — бесплатно',
+  region: 'Московская область — рассчитывается индивидуально по удаленности площадки',
+};
+
+const DEFAULT_TARIFF_ITEMS = ['Монтаж и демонтаж', 'Работа специалиста', 'Расходные материалы'];
+
+const COMBO_DISCOUNT_BADGE: ServicePageComboBadge = {
+  label: 'Комбо −20%',
+  text: 'Скидка действует при заказе пирамиды из шампанского вместе с шоколадным фонтаном и применяется к этим двум услугам.',
+};
+
+function createServicePage({
+  duration = 'от 1 часа',
+  recommendedAge = 'от 3 лет',
+  included = DEFAULT_SERVICE_PAGE_INCLUDED,
+  materials = DEFAULT_SERVICE_PAGE_MATERIALS,
+  delivery = DEFAULT_DELIVERY,
+  tariffs,
+  packages,
+  comboBadge,
+  notes,
+}: ServicePageDraft): ServicePageContent {
+  return {
+    duration,
+    recommendedAge,
+    included,
+    materials,
+    delivery,
+    tariffs,
+    packages,
+    comboBadge,
+    notes,
+  };
+}
+
+function tariff(title: string, price: string, note?: string): ServicePageTariff {
+  return { title, price, note, items: DEFAULT_TARIFF_ITEMS };
+}
+
+function portionTariff(title: string, subtitle: string, price: string): ServicePageTariff {
+  return { title, subtitle, price, items: DEFAULT_TARIFF_ITEMS };
+}
+
+const SERVICE_PAGE_CONTENT_BY_SLUG: Record<string, ServicePageContent> = {
+  'cotton-candy': createServicePage({
+    notes: [COLOR_COTTON_CANDY_NOTE],
+    tariffs: [
+      tariff('2 часа', '12.000 ₽'),
+      tariff('3 часа', '16.500 ₽'),
+      tariff('4 часа', '21.000 ₽'),
+    ],
+  }),
+  popcorn: createServicePage({
+    tariffs: [tariff('2 часа', '13.000 ₽'), tariff('3 часа', '17.500 ₽'), tariff('4 часа', '22.000 ₽')],
+  }),
+  'cotton-candy-popcorn': createServicePage({
+    notes: [COLOR_COTTON_CANDY_NOTE],
+    tariffs: [tariff('2 часа', '21.000 ₽'), tariff('3 часа', '30.000 ₽'), tariff('4 часа', '38.000 ₽')],
+  }),
+  'roll-ice-cream': createServicePage({
+    tariffs: [tariff('2 часа', '24.000 ₽'), tariff('3 часа', '30.000 ₽'), tariff('4 часа', '38.000 ₽')],
+  }),
+  'scoop-ice-cream': createServicePage({
+    tariffs: [
+      portionTariff('50 порций', '1 час', '15.000 ₽'),
+      portionTariff('100 порций', '2 часа', '22.000 ₽'),
+      portionTariff('150 порций', '3 часа', '30.000 ₽'),
+    ],
+  }),
+  'nitro-ice-cream': createServicePage({
+    tariffs: [
+      portionTariff('50 порций', '1 час', '17.000 ₽'),
+      portionTariff('100 порций', '2 часа', '24.000 ₽'),
+      portionTariff('150 порций', '3 часа', '32.000 ₽'),
+    ],
+  }),
+  'chocolate-fountain': createServicePage({
+    comboBadge: COMBO_DISCOUNT_BADGE,
+    tariffs: [
+      {
+        title: '1 час',
+        variants: [
+          { label: 'Стандарт', price: '11.500 ₽' },
+          { label: 'VIP', price: '14.500 ₽' },
+        ],
+        items: DEFAULT_TARIFF_ITEMS,
+      },
+      {
+        title: '2 часа',
+        variants: [
+          { label: 'Стандарт', price: '17.000 ₽' },
+          { label: 'VIP', price: '19.000 ₽' },
+        ],
+        items: DEFAULT_TARIFF_ITEMS,
+      },
+      {
+        title: '3 часа',
+        variants: [
+          { label: 'Стандарт', price: '21.000 ₽' },
+          { label: 'VIP', price: '24.000 ₽' },
+        ],
+        items: DEFAULT_TARIFF_ITEMS,
+      },
+    ],
+    packages: [
+      {
+        title: 'Пакет Стандарт',
+        meta: 'до 30 человек',
+        items: [
+          'Аренда профессионального шоколадного фонтана высотой 70 см, 5 ярусов',
+          '2.5 кг бельгийского шоколада Barry Callebaut',
+          '5 кг фруктового ассорти и сладостей: банан, киви, ананас, апельсин, яблоко, маршмеллоу',
+          'Салфетки и бумажные тарелочки',
+          'Шпажки',
+          'Профессиональный кондитер на протяжении мероприятия',
+          'Установка и сервировка фонтана',
+          'Демонтаж после завершения работы',
+        ],
+        additions: ['Клубника +2.000 ₽ за 1 кг', 'Манго +800 ₽ за 1 кг'],
+      },
+      {
+        title: 'Пакет VIP',
+        meta: 'до 50 человек',
+        items: [
+          'Аренда профессионального шоколадного фонтана высотой 75 см, 5 ярусов',
+          '3.5 кг бельгийского шоколада Barry Callebaut',
+          '7 кг фруктового ассорти и сладостей: банан, киви, ананас, апельсин, яблоко, маршмеллоу',
+          'Салфетки и бумажные тарелочки',
+          'Шпажки',
+          'Профессиональный кондитер на протяжении мероприятия',
+          'Установка и сервировка фонтана',
+          'Демонтаж после завершения работы',
+        ],
+        additions: ['Клубника +2.000 ₽ за 1 кг', 'Манго +800 ₽ за 1 кг'],
+      },
+    ],
+  }),
+  'french-hot-dog': createServicePage({
+    tariffs: [
+      portionTariff('50 порций', '1 час', '15.000 ₽'),
+      portionTariff('100 порций', '2 часа', '28.000 ₽'),
+      portionTariff('150 порций', '3 часа', '40.000 ₽'),
+    ],
+  }),
+  'danish-hot-dog': createServicePage({
+    tariffs: [
+      portionTariff('50 порций', '1 час', '17.500 ₽'),
+      portionTariff('100 порций', '2 часа', '33.000 ₽'),
+      portionTariff('150 порций', '3 часа', '47.000 ₽'),
+    ],
+  }),
+  burgers: createServicePage({
+    tariffs: [
+      portionTariff('25 порций', '1 час', '15.000 ₽'),
+      portionTariff('50 порций', '2 часа', '25.000 ₽'),
+      portionTariff('100 порций', '3 часа', '48.000 ₽'),
+    ],
+  }),
+  'belgian-waffles': createServicePage({
+    tariffs: [
+      portionTariff('50 порций', '1 час', '17.000 ₽'),
+      portionTariff('100 порций', '2 часа', '31.000 ₽'),
+      portionTariff('150 порций', '3 часа', '45.000 ₽'),
+    ],
+  }),
+  pancakes: createServicePage({
+    tariffs: [
+      portionTariff('50 порций', '1 час', '18.000 ₽'),
+      portionTariff('100 порций', '2 часа', '32.000 ₽'),
+      portionTariff('150 порций', '3 часа', '46.000 ₽'),
+    ],
+  }),
+  'champagne-pyramid': createServicePage({
+    recommendedAge: '18+ 😂',
+    delivery: CHAMPAGNE_DELIVERY,
+    comboBadge: COMBO_DISCOUNT_BADGE,
+    included: [
+      'Качественные бокалы, которые подчеркнут изысканность вашего праздника',
+      'Эффект дыма',
+      'Ведра для льда',
+      'Вишня или сироп в каждый бокал',
+      'Монтаж и демонтаж',
+      'Доставка в пределах МКАД бесплатно',
+      'Шампанское предоставляется заказчиком либо закупается барменом',
+    ],
+    tariffs: [tariff('35 бокалов', '12.000 ₽'), tariff('56 бокалов', '14.000 ₽'), tariff('84 бокала', '20.000 ₽')],
+  }),
+  'craft-lemonade': createServicePage({
+    tariffs: [
+      portionTariff('50 порций', '1 час', '15.000 ₽'),
+      portionTariff('100 порций', '2 часа', '24.000 ₽'),
+      portionTariff('150 порций', '3 часа', '32.000 ₽'),
+    ],
+  }),
+  'bubble-tea': createServicePage({
+    tariffs: [
+      portionTariff('25 порций', '1 час', '15.000 ₽'),
+      portionTariff('50 порций', '2 часа', '23.000 ₽'),
+      portionTariff('100 порций', '3 часа', '40.000 ₽'),
+    ],
+  }),
+  'foam-cannon': createServicePage({
+    duration: 'от 30 минут',
+    tariffs: [
+      {
+        title: 'Пакет Стандарт',
+        price: '13.500 ₽',
+        weekdayPrice: 'Пн-Чт — 11.500 ₽',
+        items: [
+          'Профессиональная пенная пушка',
+          'Выброс пены до 8 метров мягкими воздушными облаками',
+          'Площадь покрытия пеной до 50 кв. м',
+          '220 литров пены на 30 минут',
+          'Технический специалист без аниматора',
+          'Профессиональная колонка с современными треками',
+        ],
+      },
+      {
+        title: 'Пакет Премиум',
+        price: '18.000 ₽',
+        weekdayPrice: 'Пн-Чт — 16.000 ₽',
+        items: [
+          'Профессиональная пенная пушка',
+          'Выброс пены до 8 метров и площадь покрытия до 50 кв. м',
+          '220 литров пены на 50 минут',
+          'Ведущий-аниматор пенной дискотеки',
+          'Профессиональная колонка с современными треками',
+          'Надувные игрушки: круги, пончики, фламинго, мячи и другое',
+        ],
+      },
+      {
+        title: 'Пакет VIP',
+        price: '27.000 ₽',
+        weekdayPrice: 'Пн-Чт — 25.000 ₽',
+        items: [
+          'Профессиональная пенная пушка',
+          'Выброс пены до 8 метров и площадь покрытия до 50 кв. м',
+          '500 литров пены на 80 минут',
+          'Два профессиональных ведущих-аниматора пенной дискотеки',
+          'Профессиональная колонка с современными треками',
+          'Надувные игрушки: круги, пончики, фламинго, мячи и другое',
+          'Водные бластеры',
+          'Конкурсы и игры для участников дискотеки',
+        ],
+      },
+    ],
+    packages: [
+      {
+        title: 'Пакет Стандарт',
+        meta: '220 литров пены · 30 минут',
+        items: [
+          'Профессиональная пенная пушка с выбросом пены до 8 метров мягкими воздушными облаками',
+          'Площадь покрытия пеной до 50 кв. м',
+          'Технический специалист без аниматора',
+          'Профессиональная колонка с современными треками',
+        ],
+      },
+      {
+        title: 'Пакет Премиум',
+        meta: '220 литров пены · 50 минут',
+        items: [
+          'Профессиональная пенная пушка с выбросом пены до 8 метров мягкими воздушными облаками',
+          'Площадь покрытия пеной до 50 кв. м',
+          'Ведущий-аниматор пенной дискотеки',
+          'Профессиональная колонка с современными треками',
+          'Надувные игрушки: круги, пончики, фламинго, надувные мячи и другие',
+        ],
+      },
+      {
+        title: 'Пакет VIP',
+        meta: '500 литров пены · 80 минут',
+        items: [
+          'Профессиональная пенная пушка с выбросом пены до 8 метров мягкими воздушными облаками',
+          'Площадь покрытия пеной до 50 кв. м',
+          'Два профессиональных ведущих-аниматора пенной дискотеки',
+          'Профессиональная колонка с современными треками',
+          'Надувные игрушки: круги, пончики, фламинго, надувные мячи и другие',
+          'Водные бластеры',
+          'Конкурсы и игры для участников дискотеки',
+        ],
+      },
+    ],
+  }),
+};
 
 export const services: readonly OfferingEntity[] = rawServices.map(normalizeOffering);
 export const extras: readonly OfferingEntity[] = rawExtras.map(normalizeOffering);

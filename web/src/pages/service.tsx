@@ -19,7 +19,7 @@ export default function ServicePage() {
     <>
       <SEO title={service.seoTitle} description={service.seoDescription} canonical={`/services/${service.slug}`} />
       <StructuredData data={getOfferingStructuredData(service)} />
-      <SiteShell motionPath="story-trail">
+      <SiteShell>
         <OfferingPageTemplate offering={service} typeLabel="Основная услуга" />
       </SiteShell>
     </>

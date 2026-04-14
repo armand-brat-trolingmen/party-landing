@@ -34,6 +34,42 @@ test('services expose centralized normalized price values', () => {
   expect(firstService.price?.display).toBe('от 12.000 ₽');
 });
 
+test('services expose dedicated page tariff content without changing the homepage catalog contract', () => {
+  const combo = siteConfig.services.find((service) => service.slug === 'cotton-candy-popcorn');
+  const cottonCandy = siteConfig.services.find((service) => service.slug === 'cotton-candy');
+  const chocolateFountain = siteConfig.services.find((service) => service.slug === 'chocolate-fountain');
+  const champagnePyramid = siteConfig.services.find((service) => service.slug === 'champagne-pyramid');
+  const foamCannon = siteConfig.services.find((service) => service.slug === 'foam-cannon');
+
+  expect(combo?.name).toBe('Сахарная вата + попкорн');
+  expect(siteConfig.services.map((service) => service.name)).not.toContain('Сладкая вата + попкорн');
+  expect(cottonCandy?.servicePage?.tariffs).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({ title: '2 часа', price: '12.000 ₽' }),
+      expect.objectContaining({ title: '4 часа', price: '21.000 ₽' }),
+    ]),
+  );
+  expect(cottonCandy?.servicePage?.tariffs[2].note).toBeUndefined();
+  expect(cottonCandy?.servicePage?.notes).toContain('Цветная сахарная вата +1.000 ₽ к стоимости');
+  expect(combo?.servicePage?.notes).toContain('Цветная сахарная вата +1.000 ₽ к стоимости');
+  expect(chocolateFountain?.servicePage?.comboBadge?.label).toBe('Комбо −20%');
+  expect(chocolateFountain?.servicePage?.packages?.[0].items).toContain('2.5 кг бельгийского шоколада Barry Callebaut');
+  expect(champagnePyramid?.servicePage?.recommendedAge).toBe('18+ 😂');
+  expect(champagnePyramid?.servicePage?.delivery.moscow).toBe('Доставка в пределах МКАД — бесплатно');
+  expect(champagnePyramid?.servicePage?.packages).toBeUndefined();
+  expect(champagnePyramid?.servicePage?.included).toContain('Качественные бокалы, которые подчеркнут изысканность вашего праздника');
+  expect(foamCannon?.servicePage?.materials.join(' ')).not.toMatch(/сервировк|ингредиент/i);
+  expect(foamCannon?.servicePage?.materials).toEqual([
+    'Подготовка рабочей зоны под формат мероприятия',
+    'Расходные материалы и инвентарь для комфортной работы',
+    'Оборудование и материалы под выбранный тариф',
+  ]);
+  expect(foamCannon?.homeCardImage?.objectFit).toBe('contain');
+  expect(foamCannon?.shortDescription).not.toMatch(/welcome|street-food|тренд/i);
+  expect(champagnePyramid?.shortDescription).not.toMatch(/welcome|street-food|тренд/i);
+  expect(siteConfig.services.map((service) => service.fullDescription).join(' ')).not.toMatch(/welcome|street-food|тренд/i);
+});
+
 test('extras expose only the current additional service catalog', () => {
   expect(siteConfig.extras).toHaveLength(2);
   expect(siteConfig.extras.map((extra) => extra.name)).toEqual([

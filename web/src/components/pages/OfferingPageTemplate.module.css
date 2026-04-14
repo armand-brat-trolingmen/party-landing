@@ -189,6 +189,434 @@
   box-shadow: 0 0 0 4px rgba(143, 216, 248, 0.14);
 }
 
+.servicePageSection {
+  align-items: start;
+  padding-top: clamp(2.6rem, 7vh, 5rem);
+}
+
+.serviceHero {
+  display: grid;
+  gap: clamp(1.4rem, 4vw, 3rem);
+  align-items: center;
+}
+
+.serviceHeroCopy {
+  display: grid;
+  gap: clamp(0.95rem, 1.8vw, 1.35rem);
+  align-content: center;
+}
+
+.serviceHeroMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  align-items: center;
+}
+
+.comboBadge {
+  display: inline-flex;
+  gap: 0.55rem;
+  align-items: center;
+  width: fit-content;
+  max-width: 34rem;
+  min-height: 2.3rem;
+  padding: 0.46rem 0.8rem;
+  border-radius: var(--radius-card);
+  background: rgba(255, 126, 182, 0.14);
+  border: 1px solid rgba(255, 126, 182, 0.34);
+  color: var(--text-primary);
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.comboBadge span {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.serviceTitle {
+  max-width: min(100%, 22ch);
+  font-size: clamp(2rem, 3vw, 3rem);
+  line-height: 1.02;
+  text-wrap: balance;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.serviceDescription {
+  max-width: 43rem;
+  color: var(--text-muted);
+  font-size: clamp(1rem, 1.35vw, 1.16rem);
+  font-weight: 500;
+  line-height: 1.72;
+}
+
+.serviceHeroVisual {
+  display: grid;
+  place-items: center;
+  min-height: clamp(18rem, 38vw, 34rem);
+  border-radius: calc(var(--radius-card) - 0.6rem);
+  background: transparent;
+}
+
+.serviceHeroVisual[data-image-fit='contain'] {
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.38) 52%, rgba(255, 255, 255, 0) 100%);
+}
+
+.serviceHeroImage {
+  display: block;
+  width: min(100%, 34rem);
+  height: auto;
+  max-height: clamp(18rem, 38vw, 34rem);
+  object-fit: contain;
+  object-position: center;
+}
+
+.serviceHeroImage[data-image-fit='contain'] {
+  width: min(84%, 29rem);
+  filter: drop-shadow(0 18px 28px rgba(31, 52, 74, 0.1));
+  mask-image: radial-gradient(ellipse at 43% 50%, #000 0 60%, rgba(0, 0, 0, 0.72) 78%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse at 43% 50%, #000 0 60%, rgba(0, 0, 0, 0.72) 78%, transparent 100%);
+}
+
+.serviceHeroVisual[data-service-slug='foam-cannon'] {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 52%, rgba(255, 255, 255, 0.96) 0 44%, rgba(255, 255, 255, 0.72) 64%, transparent 82%),
+    linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.46) 55%, rgba(255, 255, 255, 0) 100%);
+}
+
+.serviceHeroImage[data-service-slug='foam-cannon'] {
+  width: min(92%, 32rem);
+  transform: translateX(-4%);
+  filter: none;
+  mask-image: linear-gradient(90deg, #000 0 58%, rgba(0, 0, 0, 0.86) 72%, rgba(0, 0, 0, 0.28) 88%, transparent 99%);
+  -webkit-mask-image: linear-gradient(90deg, #000 0 58%, rgba(0, 0, 0, 0.86) 72%, rgba(0, 0, 0, 0.28) 88%, transparent 99%);
+}
+
+.quickFacts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(8.5rem, 13.5rem));
+  justify-content: start;
+  gap: 0.75rem;
+  margin-top: 0.2rem;
+}
+
+.quickFact,
+.detailPanel,
+.tariffCard,
+.packageCard {
+  border-radius: calc(var(--radius-card) - 0.65rem);
+  border: 1px solid rgba(31, 52, 74, 0.11);
+  background: rgba(255, 255, 255, 0.38);
+  box-shadow: 0 18px 44px rgba(31, 52, 74, 0.06);
+  backdrop-filter: blur(12px);
+}
+
+.quickFact {
+  display: grid;
+  justify-items: center;
+  gap: 0.28rem;
+  min-height: 5.6rem;
+  padding: 0.88rem 1rem;
+  border-color: rgba(255, 126, 182, 0.34);
+  background: rgba(255, 126, 182, 0.12);
+  box-shadow: 0 14px 30px rgba(244, 94, 161, 0.08);
+  text-align: center;
+}
+
+.quickFact span {
+  color: var(--text-muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.quickFact strong {
+  font-family: var(--font-display);
+  font-size: clamp(0.98rem, 1.7vw, 1.28rem);
+  line-height: 1.08;
+}
+
+.serviceNotes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.serviceNote {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  min-height: 2.6rem;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid rgba(255, 126, 182, 0.34);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 126, 182, 0.12);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.detailGrid {
+  display: grid;
+  gap: 1rem;
+  margin-top: clamp(2.2rem, 5.5vw, 4.5rem);
+}
+
+.detailPanel,
+.tariffCard,
+.packageCard {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+  padding: clamp(1.05rem, 2.6vw, 1.55rem);
+}
+
+.detailPanel:not(.plainDetailPanel),
+.packageCard {
+  background: #ffffff;
+  border-color: rgba(31, 52, 74, 0.12);
+  box-shadow: 0 18px 36px rgba(31, 52, 74, 0.08);
+  backdrop-filter: none;
+}
+
+.detailTitle,
+.blockHeading h2 {
+  font-size: clamp(1.4rem, 2.7vw, 2rem);
+  line-height: 1.05;
+}
+
+.tariffTitle,
+.packageTitle {
+  font-family: var(--font-body);
+  font-size: clamp(1.08rem, 1.7vw, 1.45rem);
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1.16;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.detailList {
+  display: grid;
+  gap: 0.62rem;
+  align-content: start;
+  justify-items: start;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.detailItem {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.65rem;
+  align-items: start;
+  color: var(--text-muted);
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+.detailMark {
+  width: 0.4rem;
+  height: 0.4rem;
+  margin-top: 0.55rem;
+  border-radius: 999px;
+  background: var(--accent-primary);
+}
+
+.responsibilityList {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.responsibilityItem {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.9rem;
+  align-items: start;
+  padding: 0.9rem 1rem;
+  border-radius: calc(var(--radius-card) - 0.8rem);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(250, 253, 255, 0.98)),
+    radial-gradient(circle at 10% 18%, rgba(255, 238, 245, 0.42), rgba(255, 238, 245, 0) 44%);
+  border: 1px solid rgba(31, 52, 74, 0.08);
+}
+
+.responsibilityNumber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.45rem;
+  height: 2.45rem;
+  padding: 0 0.55rem;
+  border-radius: 999px;
+  background: rgba(255, 126, 182, 0.12);
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.responsibilityItem p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.98rem;
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+.tariffsSection,
+.packageSection {
+  display: grid;
+  gap: 1rem;
+  margin-top: clamp(2.8rem, 7vw, 5.5rem);
+}
+
+.blockHeading {
+  display: grid;
+  gap: 0.6rem;
+  max-width: 48rem;
+}
+
+.blockHeading p {
+  color: var(--text-muted);
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.tariffsGrid,
+.packageGrid {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.tariffCard {
+  background: #ffffff;
+  border-color: rgba(31, 52, 74, 0.12);
+  box-shadow: 0 18px 36px rgba(31, 52, 74, 0.08);
+  backdrop-filter: none;
+}
+
+.tariffTopline,
+.packageHeader {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.tariffSubtitle,
+.packageMeta,
+.tariffWeekday,
+.tariffNote {
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.tariffPrice {
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 3.5vw, 2.8rem);
+  font-weight: 700;
+  line-height: 0.96;
+}
+
+.tariffVariants {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  gap: 0.55rem;
+}
+
+.tariffVariant,
+.addition {
+  display: inline-grid;
+  width: 100%;
+  gap: 0.28rem;
+  min-height: 2.25rem;
+  align-items: start;
+  padding: 0.65rem 0.75rem;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 126, 182, 0.09);
+  color: var(--text-primary);
+  font-weight: 800;
+}
+
+.tariffVariant strong {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.8vw, 1.3rem);
+  line-height: 1;
+}
+
+.addition {
+  width: fit-content;
+}
+
+.additions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.deliveryRows {
+  display: grid;
+  gap: 0.28rem;
+}
+
+.plainDetailPanel {
+  margin-top: clamp(2.3rem, 5vw, 4.2rem);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.plainDetailPanel .detailTitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 2.7vw, 2rem);
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+.deliveryRows span {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.deliveryRows strong {
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  font-size: clamp(1.15rem, 1.9vw, 1.35rem);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.deliveryRows p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+.deliveryRows {
+  width: min(100%, 42rem);
+  max-width: min(100%, 42rem);
+  padding: clamp(1.05rem, 2.4vw, 1.3rem) clamp(1.1rem, 2.7vw, 1.55rem);
+  border: 1px solid rgba(255, 126, 182, 0.18);
+  border-radius: calc(var(--radius-card) - 0.45rem);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(255, 252, 254, 0.98)),
+    radial-gradient(circle at 8% 18%, rgba(255, 238, 245, 0.58), rgba(255, 238, 245, 0) 42%),
+    radial-gradient(circle at 88% 82%, rgba(224, 247, 255, 0.48), rgba(224, 247, 255, 0) 36%);
+  box-shadow: 0 18px 34px rgba(31, 52, 74, 0.08);
+}
+
 @keyframes orderButtonSheen {
   0% {
     transform: translateX(-145%);
@@ -202,6 +630,27 @@
 @media (min-width: 960px) {
   .leadLayout {
     grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  }
+
+  .serviceHero {
+    grid-template-columns: minmax(0, 0.95fr) minmax(22rem, 0.9fr);
+  }
+
+  .detailGrid,
+  .packageGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tariffsGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .packageGrid[data-package-count='3'] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .packageGrid[data-package-count='3'] .packageCard {
+    padding-inline: clamp(0.9rem, 1.8vw, 1.15rem);
   }
 }
 
@@ -283,6 +732,71 @@
     gap: 0.55rem;
     font-size: 0.95rem;
     line-height: 1.48;
+  }
+
+  .servicePageSection {
+    padding-top: 1.6rem;
+  }
+
+  .serviceHero {
+    gap: 1rem;
+  }
+
+  .serviceHeroMeta {
+    align-items: stretch;
+  }
+
+  .comboBadge {
+    width: 100%;
+  }
+
+  .serviceTitle {
+    max-width: none;
+    font-size: clamp(1.15rem, 5.4vw, 1.55rem);
+    line-height: 1.08;
+    white-space: nowrap;
+  }
+
+  .serviceDescription {
+    font-size: 0.98rem;
+    line-height: 1.62;
+  }
+
+  .serviceHeroVisual {
+    min-height: 15rem;
+    order: -1;
+  }
+
+  .serviceHeroImage[data-image-fit='contain'] {
+    width: min(88%, 20rem);
+    max-height: 13.5rem;
+  }
+
+  .serviceHeroImage[data-service-slug='foam-cannon'] {
+    width: min(96%, 22rem);
+    transform: translateX(-5%);
+  }
+
+  .quickFacts,
+  .detailGrid,
+  .tariffsGrid,
+  .packageGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .quickFact {
+    min-height: 4.9rem;
+    padding: 0.82rem 0.9rem;
+  }
+
+  .detailPanel,
+  .tariffCard,
+  .packageCard {
+    padding: 1rem;
+  }
+
+  .plainDetailPanel {
+    padding: 0;
   }
 }
 

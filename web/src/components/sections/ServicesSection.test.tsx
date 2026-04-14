@@ -154,4 +154,5 @@ test('eagerly loads all mobile slider service images before swipe reaches them',
   expect(images[0]).toHaveAttribute('fetchpriority', 'high');
   expect(fourthImage).toHaveAttribute('fetchpriority', 'low');
   expect(lastImage).toHaveAttribute('fetchpriority', 'low');
+  expect(catalog.querySelector('[data-service-image-slug="foam-cannon"]')).toHaveStyle({ objectFit: 'contain' });
 });

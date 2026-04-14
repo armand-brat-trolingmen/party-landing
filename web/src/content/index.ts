@@ -38,6 +38,14 @@ export {
   reviewProofs,
   services,
 } from './offerings';
-export type { CatalogVisual, HomeCardImage, MomentEntity, OfferingEntity, ReviewProofEntity } from './offerings';
+export type {
+  CatalogVisual,
+  HomeCardImage,
+  MomentEntity,
+  OfferingEntity,
+  ReviewProofEntity,
+  ServicePagePackage,
+  ServicePageTariff,
+} from './offerings';
 export { avitoProfileUrl } from './contacts';
 export { buildHomeServiceDescription, getOfferingSeoDescription, seo } from './seo';
