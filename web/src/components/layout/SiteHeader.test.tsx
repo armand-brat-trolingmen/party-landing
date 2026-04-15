@@ -107,7 +107,7 @@ test('keeps mobile navigation collapsed by default and moves order CTA into the 
   expect(screen.getByTestId('mobile-menu-order-button')).toBeInTheDocument();
 });
 
-test('mobile rest header measures the visible logo edge so the title does not slide back into the artwork', () => {
+test('mobile rest header keeps the measured text shift reset while the brand title stays hidden', () => {
   mockViewport(false);
 
   const rectSpy = vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function mockRect(this: Element) {
@@ -138,7 +138,45 @@ test('mobile rest header measures the visible logo edge so the title does not sl
     const header = screen.getByTestId('site-header');
     fireEvent(window, new Event('resize'));
 
-    expect(Number.parseFloat(header.style.getPropertyValue('--mobile-brand-text-shift'))).toBeGreaterThan(0);
+    expect(Number.parseFloat(header.style.getPropertyValue('--mobile-brand-text-shift'))).toBe(0);
+  } finally {
+    rectSpy.mockRestore();
+  }
+});
+
+test('mobile compact header measures a text shift so the brand title stays centered between the logo and menu button', () => {
+  mockViewport(false);
+
+  const rectSpy = vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function mockRect(this: Element) {
+    const element = this as HTMLElement;
+
+    if (element.dataset.testid === 'brand-plate') {
+      return createRect({ left: 14, top: 10, width: 50, height: 50 });
+    }
+
+    if (element.dataset.testid === 'donut-logo') {
+      return createRect({ left: 2, top: 2, width: 74, height: 74 });
+    }
+
+    if (element.dataset.testid === 'menu-button') {
+      return createRect({ left: 308, top: 14, width: 40, height: 40 });
+    }
+
+    if (element.tagName === 'SPAN' && element.textContent === siteConfig.brand.name) {
+      return createRect({ left: 104, top: 22, width: 166, height: 18 });
+    }
+
+    return createRect({ left: 0, top: 0, width: 0, height: 0 });
+  });
+
+  try {
+    renderHeader(['/services/cotton-candy']);
+
+    const header = screen.getByTestId('site-header');
+    fireEvent(window, new Event('resize'));
+
+    expect(header).toHaveAttribute('data-header-state', 'compact');
+    expect(Number.parseFloat(header.style.getPropertyValue('--mobile-brand-text-shift'))).not.toBe(0);
   } finally {
     rectSpy.mockRestore();
   }

@@ -448,7 +448,12 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
       header.style.setProperty('--mobile-brand-text-shift', '0px');
     };
 
-    if (isDesktop || isScrolled || !brandPlate || !brandText || !menuButton) {
+    if (isDesktop || !brandPlate || !brandText || !menuButton) {
+      resetShift();
+      return;
+    }
+
+    if (!isScrolled) {
       resetShift();
       return;
     }
