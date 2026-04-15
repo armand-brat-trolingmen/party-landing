@@ -13,7 +13,8 @@ function sliceBetween(source: string, startMarker: string, endMarker?: string) {
 
 test('tablet-and-mobile header switches to the compact menu layout before nav items start colliding', () => {
   const css = readFileSync(resolve(process.cwd(), 'src/components/layout/SiteHeader.module.css'), 'utf8');
-  const mobileBlock = sliceBetween(css, '@media (max-width: 1080px)', '@media (max-width: 420px)');
+  const mobileBlock = sliceBetween(css, '@media (max-width: 1080px)', '@media (max-width: 520px)');
+  const mobileMediumBlock = sliceBetween(css, '@media (max-width: 520px)', '@media (max-width: 420px)');
   const mobileNarrowBlock = sliceBetween(css, '@media (max-width: 420px)', '@media (max-width: 360px)');
   const mobileUltraNarrowBlock = sliceBetween(css, '@media (max-width: 360px)');
 
@@ -28,6 +29,15 @@ test('tablet-and-mobile header switches to the compact menu layout before nav it
   expect(mobileBlock).toContain('--header-brand-plate-size-compact: 3.12rem;');
   expect(mobileBlock).toContain('--header-brand-text-size-compact: 0.72rem;');
   expect(mobileBlock).toContain('--header-brand-text-max-width-compact: 10.2rem;');
+  expect(css).toContain('@media (max-width: 520px)');
+  expect(mobileMediumBlock).toContain('--header-brand-plate-size-rest: 4.34rem;');
+  expect(mobileMediumBlock).toContain('--header-logo-scale-rest: 2.12;');
+  expect(mobileMediumBlock).toContain('--header-brand-text-size-rest: 0.83rem;');
+  expect(mobileMediumBlock).toContain('--header-brand-text-max-width-rest: 11.4rem;');
+  expect(mobileMediumBlock).toContain('--header-menu-size-rest: 2.64rem;');
+  expect(mobileMediumBlock).toContain('--header-brand-plate-size-compact: 2.94rem;');
+  expect(mobileMediumBlock).toContain('--header-logo-scale-compact: 1.86;');
+  expect(mobileMediumBlock).toContain('--header-brand-text-size-compact: 0.64rem;');
   expect(css).toContain('@media (max-width: 420px)');
   expect(mobileNarrowBlock).toContain('--header-brand-plate-size-rest: 4.18rem;');
   expect(mobileNarrowBlock).toContain('--header-brand-gap-rest: 0.68rem;');
@@ -39,18 +49,19 @@ test('tablet-and-mobile header switches to the compact menu layout before nav it
   expect(mobileNarrowBlock).toContain('--header-menu-size-rest: 2.62rem;');
   expect(mobileNarrowBlock).toContain('--header-brand-plate-size-compact: 2.88rem;');
   expect(mobileNarrowBlock).toContain('--header-brand-text-size-compact: 0.6rem;');
-  expect(mobileNarrowBlock).toContain('--mobile-brand-text-rest-nudge: 0.48rem;');
   expect(css).toContain('@media (max-width: 360px)');
   expect(mobileUltraNarrowBlock).toContain('--header-inner-pad-x-rest: 0.62rem;');
   expect(mobileUltraNarrowBlock).toContain('--header-brand-gap-rest: 0.56rem;');
   expect(mobileUltraNarrowBlock).toContain('--header-brand-plate-size-rest: 3.82rem;');
   expect(mobileUltraNarrowBlock).toContain('--header-logo-scale-rest: 1.82;');
   expect(mobileUltraNarrowBlock).toContain('--header-logo-scale-compact: 1.58;');
-  expect(mobileUltraNarrowBlock).toContain('--mobile-brand-text-rest-nudge: 0.18rem;');
+  expect(mobileMediumBlock).toContain(".header[data-header-state='rest'] .brand {");
+  expect(mobileMediumBlock).toContain("margin-left: -0.68rem;");
   expect(mobileNarrowBlock).toContain(".header[data-header-state='rest'] .brand {");
   expect(mobileNarrowBlock).toContain("margin-left: -0.62rem;");
   expect(mobileUltraNarrowBlock).toContain("margin-left: -0.44rem;");
   expect(mobileBlock).not.toContain('white-space: normal;');
+  expect(mobileMediumBlock).not.toContain('white-space: normal;');
   expect(mobileNarrowBlock).not.toContain('white-space: normal;');
   expect(mobileUltraNarrowBlock).not.toContain('white-space: normal;');
 });
@@ -117,12 +128,12 @@ test('header transitions compact sizing more smoothly across scroll states', () 
   expect(css).toContain('backdrop-filter: blur(calc(18px * var(--header-progress)))');
 });
 
-test('mobile rest header combines the measured shift with a small extra text nudge away from the logo', () => {
+test('mobile rest header uses only the measured shift and does not force the title toward the menu button', () => {
   const css = readFileSync(resolve(process.cwd(), 'src/components/layout/SiteHeader.module.css'), 'utf8');
-  const mobileBlock = sliceBetween(css, '@media (max-width: 1080px)', '@media (max-width: 420px)');
+  const mobileBlock = sliceBetween(css, '@media (max-width: 1080px)', '@media (max-width: 520px)');
 
   expect(css).toContain('--mobile-brand-text-shift: 0px;');
-  expect(mobileBlock).toContain('--mobile-brand-text-rest-nudge: 0.92rem;');
-  expect(mobileBlock).toContain("transform: translateX(calc(var(--mobile-brand-text-shift) + var(--mobile-brand-text-rest-nudge)));");
+  expect(css).not.toContain('--mobile-brand-text-rest-nudge');
+  expect(mobileBlock).toContain("transform: translateX(var(--mobile-brand-text-shift));");
   expect(mobileBlock).not.toContain('transform: translateX(clamp(');
 });
