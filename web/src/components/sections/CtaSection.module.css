@@ -132,6 +132,22 @@
   box-shadow: 0 22px 38px rgba(244, 94, 161, 0.24);
 }
 
+.feedback {
+  grid-column: 1 / -1;
+  margin: -0.15rem 0 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.feedbackSuccess {
+  color: #dff9d5;
+}
+
+.feedbackError {
+  color: #ffe1ea;
+}
+
 .note {
   max-width: 40rem;
   color: var(--text-soft);

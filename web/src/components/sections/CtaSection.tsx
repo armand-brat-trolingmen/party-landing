@@ -14,6 +14,8 @@ export function CtaSection({ id, title, description, sectionTestId = 'section-ct
   const variant = 'home';
   const resolvedId = id ?? (sectionTestId === 'section-cta' ? 'cta' : undefined);
   const leadForm = useLeadForm();
+  const feedbackStatus =
+    leadForm.status === 'success' ? 'success' : leadForm.status === 'error' && leadForm.statusMessage ? 'error' : null;
 
   const isNameInvalid = Boolean(leadForm.errors.name) || leadForm.hasGeneralError;
   const isPhoneInvalid = Boolean(leadForm.errors.phone) || leadForm.hasGeneralError;
@@ -35,6 +37,7 @@ export function CtaSection({ id, title, description, sectionTestId = 'section-ct
               className={styles.input}
               name="name"
               autoComplete="name"
+              maxLength={16}
               placeholder="Как к вам обращаться"
               value={leadForm.values.name}
               onChange={leadForm.handleNameChange}
@@ -59,6 +62,15 @@ export function CtaSection({ id, title, description, sectionTestId = 'section-ct
           <button type="submit" className={styles.button} disabled={leadForm.isSubmitDisabled}>
             {leadForm.submitLabel}
           </button>
+
+          {feedbackStatus ? (
+            <p
+              className={`${styles.feedback} ${feedbackStatus === 'success' ? styles.feedbackSuccess : styles.feedbackError}`}
+              aria-live="polite"
+            >
+              {leadForm.statusMessage}
+            </p>
+          ) : null}
 
           <span className={styles.visuallyHidden} aria-live="polite">
             {leadForm.status === 'loading' ? 'Отправляем заявку' : leadForm.status === 'success' ? 'Заявка отправлена' : ''}

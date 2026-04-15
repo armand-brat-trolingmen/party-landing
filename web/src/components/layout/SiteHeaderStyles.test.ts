@@ -92,3 +92,12 @@ test('header transitions compact sizing more smoothly across scroll states', () 
   expect(css).toContain('--header-brand-plate-size: calc(');
   expect(css).toContain('backdrop-filter: blur(calc(18px * var(--header-progress)))');
 });
+
+test('mobile rest header avoids a hard-coded text offset and uses a measured shift variable instead', () => {
+  const css = readFileSync(resolve(process.cwd(), 'src/components/layout/SiteHeader.module.css'), 'utf8');
+  const mobileBlock = sliceBetween(css, '@media (max-width: 960px)', '@media (max-width: 420px)');
+
+  expect(css).toContain('--mobile-brand-text-shift: 0px;');
+  expect(mobileBlock).toContain("transform: translateX(var(--mobile-brand-text-shift));");
+  expect(mobileBlock).not.toContain('transform: translateX(clamp(');
+});

@@ -43,4 +43,53 @@ describe('leadsRepository', () => {
     });
     expect(lead?.createdAt).toBeTruthy();
   });
+  test('counts leads from the same ip inside the requested utc window', () => {
+    const db = createDatabase(':memory:');
+    runMigrations(db);
+    const repository = createLeadsRepository(db);
+
+    repository.insertLead({
+      name: 'Иван',
+      phone: '+7 (999) 111 22 33',
+      ip: '127.0.0.1',
+      userAgent: 'vitest',
+      firstTrafficSource: null,
+      lastTrafficSource: null,
+      vkPeerId: null,
+      vkSendStatus: 'skipped',
+      vkSendError: null,
+    });
+
+    repository.insertLead({
+      name: 'Анна',
+      phone: '+7 (999) 111 22 34',
+      ip: '127.0.0.1',
+      userAgent: 'vitest',
+      firstTrafficSource: null,
+      lastTrafficSource: null,
+      vkPeerId: null,
+      vkSendStatus: 'skipped',
+      vkSendError: null,
+    });
+
+    repository.insertLead({
+      name: 'Мария',
+      phone: '+7 (999) 111 22 35',
+      ip: '127.0.0.2',
+      userAgent: 'vitest',
+      firstTrafficSource: null,
+      lastTrafficSource: null,
+      vkPeerId: null,
+      vkSendStatus: 'skipped',
+      vkSendError: null,
+    });
+
+    const count = repository.countLeadsByIpBetween({
+      ip: '127.0.0.1',
+      createdAtFrom: '2000-01-01 00:00:00',
+      createdAtTo: '2999-01-01 00:00:00',
+    });
+
+    expect(count).toBe(2);
+  });
 });

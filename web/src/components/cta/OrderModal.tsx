@@ -6,6 +6,8 @@ import styles from './OrderModal.module.css';
 export function OrderModal() {
   const { isOpen, closeModal } = useOrderModal();
   const leadForm = useLeadForm();
+  const feedbackStatus =
+    leadForm.status === 'success' ? 'success' : leadForm.status === 'error' && leadForm.statusMessage ? 'error' : null;
 
   const handleClose = () => {
     leadForm.resetForm();
@@ -58,6 +60,7 @@ export function OrderModal() {
               className={styles.input}
               name="name"
               autoComplete="name"
+              maxLength={16}
               placeholder="Как к вам обращаться"
               value={leadForm.values.name}
               onChange={leadForm.handleNameChange}
@@ -82,6 +85,15 @@ export function OrderModal() {
           <button type="submit" className={styles.submitButton} disabled={leadForm.isSubmitDisabled}>
             {leadForm.submitLabel}
           </button>
+
+          {feedbackStatus ? (
+            <p
+              className={`${styles.feedback} ${feedbackStatus === 'success' ? styles.feedbackSuccess : styles.feedbackError}`}
+              aria-live="polite"
+            >
+              {leadForm.statusMessage}
+            </p>
+          ) : null}
 
           <span className={styles.visuallyHidden} aria-live="polite">
             {leadForm.status === 'loading' ? 'Отправляем заявку' : leadForm.status === 'success' ? 'Заявка отправлена' : ''}

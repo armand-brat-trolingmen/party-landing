@@ -31,6 +31,7 @@ export type LeadApiResponse = {
   vkSendStatus?: VkSendStatus;
   fieldErrors?: LeadFieldErrors;
   message?: string;
+  statusCode?: number;
 };
 
 export type ValidatedLeadInput = {

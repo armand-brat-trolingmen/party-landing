@@ -30,6 +30,33 @@ describe('GET /healthz', () => {
       service: 'server',
     });
   });
+  test('returns 429 when the lead service rejects the ip for the rest of the day', async () => {
+    const app = createApp({
+      leadService: {
+        createLead: vi.fn().mockResolvedValue({
+          ok: false,
+          message: 'С этого IP уже отправлено 2 заявки за сегодня. Попробуйте завтра.',
+          statusCode: 429,
+        }),
+      },
+      rateLimitWindowMs: 60000,
+      rateLimitMaxRequests: 5,
+    });
+
+    const response = await request(app)
+      .post('/api/leads')
+      .set('X-Forwarded-For', '1.2.3.4')
+      .send({
+        name: 'Иван',
+        phone: '+7 (999) 111 22 33',
+      });
+
+    expect(response.status).toBe(429);
+    expect(response.body).toMatchObject({
+      ok: false,
+      message: 'С этого IP уже отправлено 2 заявки за сегодня. Попробуйте завтра.',
+    });
+  });
 });
 
 describe('POST /api/leads', () => {

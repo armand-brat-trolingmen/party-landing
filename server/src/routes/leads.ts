@@ -16,6 +16,7 @@ type LeadService = {
     vkSendStatus?: 'success' | 'failed' | 'skipped';
     fieldErrors?: Partial<Record<'name' | 'phone', string>>;
     message?: string;
+    statusCode?: number;
   }>;
 };
 
@@ -34,7 +35,8 @@ export function createLeadsRouter({ leadService }: { leadService: LeadService })
       });
 
       if (!result.ok) {
-        response.status(400).json(result);
+        const { statusCode, ...payload } = result;
+        response.status(statusCode ?? 400).json(payload);
         return;
       }
 

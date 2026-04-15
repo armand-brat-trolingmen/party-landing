@@ -80,6 +80,14 @@ export function createLeadsRepository(db: Database.Database) {
     WHERE id = ?
   `);
 
+  const countLeadsByIpBetweenStatement = db.prepare(`
+    SELECT COUNT(*) AS total
+    FROM leads
+    WHERE ip = @ip
+      AND created_at >= @createdAtFrom
+      AND created_at < @createdAtTo
+  `);
+
   return {
     insertLead(input: InsertLeadInput) {
       const result = insertStatement.run(input);
@@ -91,6 +99,10 @@ export function createLeadsRepository(db: Database.Database) {
     findById(id: number) {
       const row = findByIdStatement.get(id) as LeadRow | undefined;
       return row ? mapLeadRow(row) : null;
+    },
+    countLeadsByIpBetween(input: { ip: string; createdAtFrom: string; createdAtTo: string }) {
+      const row = countLeadsByIpBetweenStatement.get(input) as { total: number } | undefined;
+      return row?.total ?? 0;
     },
   };
 }

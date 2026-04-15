@@ -2,6 +2,11 @@ import type { LeadApiResponse } from '../types';
 import { validateLeadInput } from '../validation/leadValidation';
 
 type Repository = {
+  countLeadsByIpBetween(input: {
+    ip: string;
+    createdAtFrom: string;
+    createdAtTo: string;
+  }): number;
   insertLead(input: {
     name: string;
     phone: string;
@@ -52,6 +57,30 @@ function normalizeLeadSource(source: string | null | undefined) {
   return normalized ? normalized.slice(0, 160) : null;
 }
 
+const DAILY_IP_LEAD_LIMIT = 2;
+const MOSCOW_UTC_OFFSET = '+03:00';
+
+function formatSqliteUtcTimestamp(value: Date) {
+  return value.toISOString().slice(0, 19).replace('T', ' ');
+}
+
+function getMoscowDayWindow(date: Date) {
+  const formatter = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Europe/Moscow',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
+  const [{ value: year }, , { value: month }, , { value: day }] = formatter.formatToParts(date);
+  const start = new Date(`${year}-${month}-${day}T00:00:00${MOSCOW_UTC_OFFSET}`);
+  const end = new Date(start.getTime() + 24 * 60 * 60 * 1000);
+
+  return {
+    createdAtFrom: formatSqliteUtcTimestamp(start),
+    createdAtTo: formatSqliteUtcTimestamp(end),
+  };
+}
+
 export function createLeadService({
   repository,
   vkAdapter,
@@ -81,6 +110,23 @@ export function createLeadService({
           fieldErrors: validation.fieldErrors,
           message: 'Проверьте заполнение формы',
         };
+      }
+
+      if (input.ip) {
+        const { createdAtFrom, createdAtTo } = getMoscowDayWindow(nowFactory());
+        const dailyLeadsCount = repository.countLeadsByIpBetween({
+          ip: input.ip,
+          createdAtFrom,
+          createdAtTo,
+        });
+
+        if (dailyLeadsCount >= DAILY_IP_LEAD_LIMIT) {
+          return {
+            ok: false,
+            message: 'С этого IP уже отправлено 2 заявки за сегодня. Попробуйте завтра.',
+            statusCode: 429,
+          };
+        }
       }
 
       const firstTrafficSource = normalizeLeadSource(input.firstLeadSource);

@@ -3,7 +3,7 @@ import { MemoryRouter } from 'react-router';
 import { OrderModalProvider } from '../cta/OrderModalContext';
 import { CtaSection } from './CtaSection';
 
-test('renders the homepage CTA as a compact inline form with privacy consent link and no WhatsApp promise line', () => {
+test('renders the homepage CTA as a compact inline form with privacy consent link and capped name length', () => {
   render(
     <MemoryRouter>
       <OrderModalProvider>
@@ -19,7 +19,7 @@ test('renders the homepage CTA as a compact inline form with privacy consent lin
   expect(sectionQueries.getByTestId('cta-surface')).toHaveAttribute('data-cta-surface', 'full-bleed');
   expect(section.querySelector('[data-section-surface]')).toBeNull();
   expect(sectionQueries.getByTestId('cta-inline-form')).toBeInTheDocument();
-  expect(sectionQueries.getByLabelText('Имя')).toBeInTheDocument();
+  expect(sectionQueries.getByLabelText('Имя')).toHaveAttribute('maxlength', '16');
   expect(sectionQueries.getByLabelText('Телефон')).toBeInTheDocument();
   expect(sectionQueries.getByRole('button', { name: 'Заказать' })).toBeInTheDocument();
   expect(sectionQueries.queryByText(/whatsapp в течение 15 минут/i)).not.toBeInTheDocument();

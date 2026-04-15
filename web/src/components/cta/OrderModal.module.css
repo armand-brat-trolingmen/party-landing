@@ -133,6 +133,21 @@
   box-shadow: 0 22px 36px rgba(244, 94, 161, 0.24);
 }
 
+.feedback {
+  margin: -0.15rem 0 0;
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.feedbackSuccess {
+  color: #2f7e52;
+}
+
+.feedbackError {
+  color: #b23b68;
+}
+
 .consent {
   color: var(--text-soft);
   font-size: 0.9rem;

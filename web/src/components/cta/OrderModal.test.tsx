@@ -14,7 +14,7 @@ function OpenHarness() {
   );
 }
 
-test('opens the shared modal with animated appearance, compact fields, and privacy consent link', () => {
+test('opens the shared modal with compact fields, capped name length, and privacy consent link', () => {
   render(
     <MemoryRouter>
       <OrderModalProvider>
@@ -29,7 +29,7 @@ test('opens the shared modal with animated appearance, compact fields, and priva
   expect(screen.getByRole('dialog')).toBeInTheDocument();
   expect(screen.getByTestId('order-modal-overlay')).toHaveAttribute('data-modal-state', 'open');
   expect(screen.getByTestId('order-modal')).toHaveAttribute('data-modal-state', 'open');
-  expect(screen.getByRole('textbox', { name: 'Имя' })).toBeInTheDocument();
+  expect(screen.getByRole('textbox', { name: 'Имя' })).toHaveAttribute('maxlength', '16');
   expect(screen.getByRole('textbox', { name: 'Телефон' })).toBeInTheDocument();
   expect(screen.queryByRole('textbox', { name: /Комментарий/i })).not.toBeInTheDocument();
   expect(screen.getByRole('link', { name: 'политикой конфиденциальности' })).toHaveAttribute('href', '/privacy');

@@ -13,7 +13,11 @@ import { useLocation } from 'react-router';
 import { siteConfig } from '../../content';
 import { DonutLogo } from '../branding/DonutLogo';
 import { useOrderModal } from '../cta/useOrderModal';
-import { resolveHeaderCompactState, resolveHeaderScrollProgress } from './SiteHeaderScrollState';
+import {
+  resolveHeaderCompactState,
+  resolveHeaderScrollProgress,
+  resolveMobileBrandTextShift,
+} from './SiteHeaderScrollState';
 import styles from './SiteHeader.module.css';
 
 type SiteHeaderProps = {
@@ -33,6 +37,9 @@ const navItems = siteConfig.navigation;
 export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
   const headerRef = useRef<HTMLElement | null>(null);
   const navRef = useRef<HTMLElement | null>(null);
+  const brandPlateRef = useRef<HTMLSpanElement | null>(null);
+  const brandTextRef = useRef<HTMLSpanElement | null>(null);
+  const menuButtonRef = useRef<HTMLButtonElement | null>(null);
   const linkRefs = useRef<Record<string, HTMLAnchorElement | null>>({});
   const navigationLockRef = useRef<{ id: string; unlockAt: number } | null>(null);
   const panelId = useId();
@@ -426,6 +433,57 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
     };
   }, [activeSectionId, isDesktop, legalMode]);
 
+  useLayoutEffect(() => {
+    const header = headerRef.current;
+    const brandPlate = brandPlateRef.current;
+    const brandText = brandTextRef.current;
+    const menuButton = menuButtonRef.current;
+
+    if (!header) {
+      return;
+    }
+
+    const resetShift = () => {
+      header.style.setProperty('--mobile-brand-text-shift', '0px');
+    };
+
+    if (isDesktop || isScrolled || !brandPlate || !brandText || !menuButton) {
+      resetShift();
+      return;
+    }
+
+    const syncShift = () => {
+      const currentShift = Number.parseFloat(header.style.getPropertyValue('--mobile-brand-text-shift') || '0');
+      const nextShift = resolveMobileBrandTextShift({
+        currentShift: Number.isFinite(currentShift) ? currentShift : 0,
+        plateRight: brandPlate.getBoundingClientRect().right,
+        textLeft: brandText.getBoundingClientRect().left,
+        textWidth: brandText.getBoundingClientRect().width,
+        menuLeft: menuButton.getBoundingClientRect().left,
+      });
+
+      header.style.setProperty('--mobile-brand-text-shift', `${nextShift.toFixed(2)}px`);
+    };
+
+    syncShift();
+
+    let resizeObserver: ResizeObserver | null = null;
+
+    if (typeof ResizeObserver !== 'undefined') {
+      resizeObserver = new ResizeObserver(syncShift);
+      resizeObserver.observe(header);
+      resizeObserver.observe(brandPlate);
+      resizeObserver.observe(brandText);
+      resizeObserver.observe(menuButton);
+    }
+
+    window.addEventListener('resize', syncShift);
+    return () => {
+      window.removeEventListener('resize', syncShift);
+      resizeObserver?.disconnect();
+    };
+  }, [isDesktop, isScrolled]);
+
   const brandHref = !legalMode && isHomeRoute ? '#hero' : '/';
   const headerStyle = { '--header-progress': scrollProgress.toFixed(4) } as CSSProperties;
 
@@ -446,10 +504,12 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
           onClick={!legalMode && isHomeRoute ? onAnchorClick('hero') : undefined}
           aria-label={siteConfig.brand.name}
         >
-          <span className={styles.brandPlate} data-testid="brand-plate">
+          <span className={styles.brandPlate} data-testid="brand-plate" ref={brandPlateRef}>
             <DonutLogo className={styles.logoMark} size={240} />
           </span>
-          <span className={styles.brandText}>{siteConfig.brand.name}</span>
+          <span className={styles.brandText} ref={brandTextRef}>
+            {siteConfig.brand.name}
+          </span>
         </a>
 
         {isDesktop ? (
@@ -492,6 +552,7 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
               <button
                 type="button"
                 className={`${styles.menuButton} ${isMenuOpen ? styles.menuButtonOpen : ''}`}
+                ref={menuButtonRef}
                 aria-label={MENU_ARIA_LABEL}
                 aria-expanded={isMenuOpen}
                 aria-controls={panelId}

@@ -9,6 +9,8 @@ const initialValues: LeadFormValues = {
 };
 
 const successResetDelayMs = 10_000;
+const defaultSuccessMessage = 'Ваша заявка успешно отправлена.';
+const defaultErrorMessage = 'Форма не отправилась. Свяжитесь с нами, пожалуйста, по контактам в соцсетях.';
 
 function omitFieldError(errors: LeadFieldErrors, fieldName: keyof LeadFieldErrors) {
   if (!errors[fieldName]) {
@@ -25,6 +27,7 @@ export function useLeadForm() {
   const [errors, setErrors] = useState<LeadFieldErrors>({});
   const [status, setStatus] = useState<LeadSubmitStatus>('idle');
   const [hasGeneralError, setHasGeneralError] = useState(false);
+  const [statusMessage, setStatusMessage] = useState('');
 
   useEffect(() => {
     if (status !== 'success') {
@@ -33,6 +36,7 @@ export function useLeadForm() {
 
     const timeoutId = window.setTimeout(() => {
       setStatus('idle');
+      setStatusMessage('');
     }, successResetDelayMs);
 
     return () => window.clearTimeout(timeoutId);
@@ -43,10 +47,12 @@ export function useLeadForm() {
     setErrors({});
     setStatus('idle');
     setHasGeneralError(false);
+    setStatusMessage('');
   }, []);
 
   const clearTransientState = useCallback(() => {
     setHasGeneralError(false);
+    setStatusMessage('');
 
     if (status !== 'idle') {
       setStatus('idle');
@@ -87,6 +93,7 @@ export function useLeadForm() {
         setValues(nextValues);
         setErrors(nextErrors);
         setHasGeneralError(false);
+        setStatusMessage('');
         setStatus('error');
         return;
       }
@@ -94,18 +101,22 @@ export function useLeadForm() {
       setValues(nextValues);
       setErrors({});
       setHasGeneralError(false);
+      setStatusMessage('');
       setStatus('loading');
 
       try {
-        await submitLead(nextValues);
+        const result = await submitLead(nextValues);
         setValues(initialValues);
+        setStatusMessage(result.message ?? defaultSuccessMessage);
         setStatus('success');
       } catch (error) {
         if (error instanceof LeadApiError && error.fieldErrors && Object.keys(error.fieldErrors).length > 0) {
           setErrors(error.fieldErrors);
           setHasGeneralError(false);
+          setStatusMessage('');
         } else {
           setHasGeneralError(true);
+          setStatusMessage(error instanceof LeadApiError && error.message ? error.message : defaultErrorMessage);
         }
 
         setStatus('error');
@@ -125,6 +136,7 @@ export function useLeadForm() {
       errors,
       status,
       hasGeneralError,
+      statusMessage,
       submitLabel,
       isSubmitDisabled,
       handleNameChange,
@@ -132,6 +144,18 @@ export function useLeadForm() {
       handleSubmit,
       resetForm,
     }),
-    [errors, handleNameChange, handlePhoneChange, handleSubmit, hasGeneralError, isSubmitDisabled, resetForm, status, submitLabel, values],
+    [
+      errors,
+      handleNameChange,
+      handlePhoneChange,
+      handleSubmit,
+      hasGeneralError,
+      isSubmitDisabled,
+      resetForm,
+      status,
+      statusMessage,
+      submitLabel,
+      values,
+    ],
   );
 }

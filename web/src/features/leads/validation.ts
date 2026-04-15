@@ -2,6 +2,7 @@ import type { LeadFieldErrors, LeadFormValues } from './types';
 
 const namePattern = /^[\p{L}\s-]+$/u;
 const phonePattern = /^\+7 \(\d{3}\) \d{3} \d{2} \d{2}$/;
+const maxNameLength = 16;
 
 export function sanitizeNameInput(value: string) {
   return value.replace(/[^\p{L}\s-]+/gu, '').replace(/\s{2,}/g, ' ');
@@ -52,6 +53,8 @@ export function validateLeadValues(values: LeadFormValues) {
 
   if (!normalizedName) {
     errors.name = 'Введите имя';
+  } else if (normalizedName.length > maxNameLength) {
+    errors.name = 'Имя должно быть не длиннее 16 символов';
   } else if (!namePattern.test(normalizedName)) {
     errors.name = 'Имя должно содержать только буквы';
   }

@@ -39,6 +39,18 @@ describe('validateLeadInput', () => {
     }
   });
 
+  test('rejects names longer than sixteen symbols', () => {
+    const result = validateLeadInput({
+      name: 'Александрович Петр',
+      phone: '+7 (999) 111 22 33',
+    });
+
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.fieldErrors.name).toMatch(/16/);
+    }
+  });
+
   test('accepts valid name and phone values', () => {
     const result = validateLeadInput({
       name: 'Анна-Мария',
