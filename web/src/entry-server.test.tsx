@@ -13,7 +13,9 @@ test('server entry renders landing HTML and exposes helmet head tags for SSG', (
   expect(result.helmet.link).toContain('rel="canonical"');
   expect(result.helmet.link).toContain('rel="preload"');
   expect(result.helmet.link).toContain('as="image"');
-  expect(result.helmet.link).toContain('/images/hero/hero-main.png');
+  expect(result.helmet.link).toContain('imageSrcSet');
+  expect(result.helmet.link).toContain('/images/hero/hero-main-480.webp');
+  expect(result.helmet.link).not.toContain('href="/images/hero/hero-main.png"');
   expect(result.appHtml).toContain('application/ld+json');
   expect(result.appHtml).toContain('"@type":"Organization"');
   expect(result.appHtml).toContain('"@type":"WebSite"');

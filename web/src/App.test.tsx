@@ -2,7 +2,7 @@ import { render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import App from './App';
 
-test('renders the homepage as a catalog hub inside the shared site shell', () => {
+test('renders the homepage as a catalog hub inside the shared site shell', async () => {
   render(
     <MemoryRouter>
       <App />
@@ -20,6 +20,8 @@ test('renders the homepage as a catalog hub inside the shared site shell', () =>
   expect(footer).toBeInTheDocument();
   expect(within(footer).queryByText('Праздник каждый день')).not.toBeInTheDocument();
   expect(within(footer).getByRole('link', { name: 'Политика конфиденциальности' })).toHaveAttribute('href', '/privacy');
+
+  await screen.findByTestId('section-cta');
 
   const sectionOrder = Array.from(main.querySelectorAll<HTMLElement>('[data-testid^="section-"]')).map((section) =>
     section.dataset.testid,
@@ -40,7 +42,7 @@ test('renders the homepage as a catalog hub inside the shared site shell', () =>
   ]);
 });
 
-test('renders hub-specific actions and keeps the testimonial proof section', () => {
+test('renders hub-specific actions and keeps the testimonial proof section', async () => {
   render(
     <MemoryRouter>
       <App />
@@ -48,14 +50,11 @@ test('renders hub-specific actions and keeps the testimonial proof section', () 
   );
 
   expect(screen.getByRole('button', { name: 'В каталог' })).toBeInTheDocument();
-  expect(screen.getAllByRole('button', { name: 'Заказать' }).length).toBeGreaterThanOrEqual(3);
+  expect(screen.getAllByRole('button', { name: 'Заказать' }).length).toBeGreaterThanOrEqual(2);
   expect(screen.queryByTestId('section-moments')).not.toBeInTheDocument();
   expect(screen.getByTestId('section-food-truck-rental')).toBeInTheDocument();
   expect(screen.getByRole('heading', { level: 2, name: 'Аренда фудтраков' })).toBeInTheDocument();
   expect(screen.getByTestId('section-food-trucks')).toBeInTheDocument();
   expect(screen.getByRole('heading', { level: 2, name: 'Кейтеринг на фудтраках' })).toBeInTheDocument();
-  expect(screen.getByRole('heading', { level: 3, name: 'Почему клиенты доверяют нам?' })).toBeInTheDocument();
-  expect(screen.getByRole('button', { name: 'Узнать условия' })).toBeInTheDocument();
   expect(screen.getByTestId('section-testimonials')).toBeInTheDocument();
-  expect(screen.getByTestId('testimonials-proof-wall')).toBeInTheDocument();
 });

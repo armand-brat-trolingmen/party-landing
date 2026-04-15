@@ -7,6 +7,7 @@ import { getHomeStructuredData } from '../config/seo';
 
 export default function IndexPage() {
   const heroPreload = siteConfig.homepage.hero.slides[0];
+  const heroPreloadSrc = heroPreload.imageWebpSrcSet?.split(',')[0]?.trim().split(/\s+/)[0] ?? heroPreload.image;
 
   return (
     <>
@@ -16,7 +17,15 @@ export default function IndexPage() {
         canonical="/"
       />
       <Helmet prioritizeSeoTags>
-        <link rel="preload" as="image" href={heroPreload.fallbackImage ?? heroPreload.image} />
+        <link
+          rel="preload"
+          as="image"
+          href={heroPreloadSrc}
+          imageSrcSet={heroPreload.imageWebpSrcSet}
+          imageSizes={heroPreload.sizes}
+          fetchPriority="high"
+          type="image/webp"
+        />
       </Helmet>
       <StructuredData data={getHomeStructuredData()} />
       <App />

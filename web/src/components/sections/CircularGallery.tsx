@@ -122,6 +122,8 @@ export function CircularGallery({
 }: CircularGalleryProps) {
   const stageRef = useRef<HTMLDivElement | null>(null);
   const [isInteractive, setIsInteractive] = useState(false);
+  const [isCanvasReady, setIsCanvasReady] = useState(false);
+  const shouldShowCanvas = isInteractive && isCanvasReady;
   const rootClassName = useMemo(
     () => [styles.root, className].filter(Boolean).join(' '),
     [className],
@@ -137,10 +139,20 @@ export function CircularGallery({
 
   useEffect(() => {
     const stage = stageRef.current;
+    let resetReadyFrameId = 0;
+    let interactiveFallbackFrameId = 0;
+    const scheduleCanvasReset = () => {
+      resetReadyFrameId = window.requestAnimationFrame(() => {
+        setIsCanvasReady(false);
+      });
+    };
+
     if (!stage || !isInteractive || items.length === 0) {
-      return;
+      scheduleCanvasReset();
+      return () => window.cancelAnimationFrame(resetReadyFrameId);
     }
     const stageElement = stage;
+    scheduleCanvasReset();
 
     let destroyed = false;
     let rafId = 0;
@@ -163,12 +175,22 @@ export function CircularGallery({
       pixelsToWorld: 0.01,
     };
 
-    const renderer = new Renderer({
-      alpha: true,
-      antialias: true,
-      dpr: Math.min(window.devicePixelRatio || 1, 1.75),
-      premultipliedAlpha: true,
-    });
+    let renderer: Renderer;
+
+    try {
+      renderer = new Renderer({
+        alpha: true,
+        antialias: true,
+        dpr: Math.min(window.devicePixelRatio || 1, 1.75),
+        premultipliedAlpha: true,
+      });
+    } catch {
+      interactiveFallbackFrameId = window.requestAnimationFrame(() => {
+        setIsInteractive(false);
+      });
+      return () => window.cancelAnimationFrame(interactiveFallbackFrameId);
+    }
+
     const gl = renderer.gl;
     const canvas = gl.canvas as HTMLCanvasElement;
     canvas.classList.add(styles.canvas);
@@ -200,7 +222,13 @@ export function CircularGallery({
 
         texture.image = image;
         program.uniforms.uImageSizes.value = [image.naturalWidth, image.naturalHeight];
+        setIsCanvasReady(true);
         startLoop();
+      };
+      image.onerror = () => {
+        if (!destroyed) {
+          setIsInteractive(false);
+        }
       };
 
       return { mesh, program };
@@ -366,7 +394,9 @@ export function CircularGallery({
 
     return () => {
       destroyed = true;
+      window.cancelAnimationFrame(interactiveFallbackFrameId);
       ticking = false;
+      window.cancelAnimationFrame(resetReadyFrameId);
       window.cancelAnimationFrame(rafId);
       resizeObserver.disconnect();
       stageElement.removeEventListener('pointerdown', handlePointerDown);
@@ -386,11 +416,11 @@ export function CircularGallery({
     <div
       className={rootClassName}
       data-testid={testId}
-      data-gallery-mode={isInteractive ? 'interactive' : 'fallback'}
+      data-gallery-mode={shouldShowCanvas ? 'interactive' : 'fallback'}
     >
       <div ref={stageRef} className={styles.stage} data-dragging="false" />
 
-      <div className={isInteractive ? styles.semanticTrackHidden : styles.semanticTrack}>
+      <div className={shouldShowCanvas ? styles.semanticTrackHidden : styles.semanticTrack}>
         {items.map((item) => (
           <figure key={item.image} className={styles.semanticCard}>
             <img

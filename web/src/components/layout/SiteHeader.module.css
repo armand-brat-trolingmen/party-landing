@@ -9,15 +9,15 @@
   --header-inner-pad-x-rest: 1.5rem;
   --header-inner-pad-x-compact: 0.96rem;
   --header-brand-gap-rest: 0.96rem;
-  --header-brand-gap-compact: 0.56rem;
+  --header-brand-gap-compact: 0.82rem;
   --header-brand-plate-size-rest: 11rem;
-  --header-brand-plate-size-compact: 3.7rem;
+  --header-brand-plate-size-compact: 5.9rem;
   --header-logo-scale-rest: 1.3;
-  --header-logo-scale-compact: 1.15;
+  --header-logo-scale-compact: 1.62;
   --header-brand-text-size-rest: 1.06rem;
-  --header-brand-text-size-compact: 0.88rem;
+  --header-brand-text-size-compact: 0.98rem;
   --header-brand-text-max-width-rest: 24rem;
-  --header-brand-text-max-width-compact: 16rem;
+  --header-brand-text-max-width-compact: 18rem;
   --header-nav-link-height-rest: 2.7rem;
   --header-nav-link-height-compact: 2.08rem;
   --header-nav-link-pad-x-rest: 0.72rem;
@@ -109,9 +109,11 @@
 }
 
 .brand {
-  display: inline-flex;
+  display: grid;
+  grid-template-columns: auto minmax(14rem, 1fr);
   align-items: center;
   gap: var(--header-brand-gap);
+  width: clamp(23rem, 31vw, 31rem);
   min-width: 0;
   flex: 0 0 auto;
 }
@@ -143,6 +145,7 @@
 .brandText {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   color: var(--text-primary);
   font-family: var(--font-display);
   font-size: var(--header-brand-text-size);
@@ -153,6 +156,7 @@
   overflow: visible;
   text-overflow: clip;
   max-width: var(--header-brand-text-max-width);
+  text-align: center;
 }
 
 .brand:hover .logoMark,
@@ -169,7 +173,8 @@
 }
 
 .desktopActions {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 1.5rem;
   flex: 1 1 auto;
@@ -523,30 +528,33 @@
     --header-pad-top-compact: calc(0.22rem + env(safe-area-inset-top, 0px));
     --header-pad-bottom-rest: 0.82rem;
     --header-pad-bottom-compact: 0.62rem;
-    --header-inner-pad-y-rest: 0.92rem;
-    --header-inner-pad-y-compact: 0.62rem;
+    --header-inner-pad-y-rest: 1.08rem;
+    --header-inner-pad-y-compact: 0.74rem;
     --header-inner-pad-x-rest: 0.94rem;
     --header-inner-pad-x-compact: 0.8rem;
-    --header-brand-gap-rest: 0.66rem;
-    --header-brand-gap-compact: 0.34rem;
-    --header-brand-plate-size-rest: 4.7rem;
-    --header-brand-plate-size-compact: 2.7rem;
-    --header-logo-scale-rest: 2.5;
-    --header-logo-scale-compact: 1.85;
+    --header-brand-gap-rest: 0.76rem;
+    --header-brand-gap-compact: 0.42rem;
+    --header-brand-plate-size-rest: 4.72rem;
+    --header-brand-plate-size-compact: 3.12rem;
+    --header-logo-scale-rest: 2.36;
+    --header-logo-scale-compact: 1.98;
     --header-brand-text-size-rest: 0.89rem;
-    --header-brand-text-size-compact: 0.62rem;
-    --header-brand-text-max-width-rest: 11rem;
-    --header-brand-text-max-width-compact: 8.8rem;
+    --header-brand-text-size-compact: 0.72rem;
+    --header-brand-text-max-width-rest: 13.6rem;
+    --header-brand-text-max-width-compact: 10.2rem;
     --header-menu-size-rest: 2.7rem;
     --header-menu-size-compact: 2.24rem;
-    --header-mobile-inner-min-height-rest: 3.7rem;
-    --header-mobile-inner-min-height-compact: 2.82rem;
+    --header-mobile-inner-min-height-rest: 4.7rem;
+    --header-mobile-inner-min-height-compact: 3.3rem;
     position: fixed;
     inset: 0 0 auto;
     width: 100%;
   }
 
   .inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
     justify-content: flex-start;
     gap: 0.5rem;
     width: min(calc(100% - 1rem), var(--shell-max-width));
@@ -556,6 +564,10 @@
   }
 
   .brand {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    width: auto;
     flex: 1 1 auto;
     max-width: calc(100% - var(--header-menu-size) - 0.1rem);
   }
@@ -566,15 +578,39 @@
   }
 
   .brandText {
+    display: flex;
     flex: 1 1 auto;
+    width: 100%;
     min-width: 0;
     max-width: none;
     line-height: 1.08;
+    justify-content: center;
+    padding-right: 0;
+    text-align: center;
+  }
+
+  .header[data-header-state='rest'] .brand {
+    margin-left: -0.9rem;
+  }
+
+  .header[data-header-state='rest'] .brandPlate {
+    transform: translateX(-0.46rem);
   }
 
   .header[data-header-state='rest'] .brandText {
-    justify-content: center;
-    text-align: center;
+    transform: translateX(clamp(2.2rem, 8vw, 3.6rem));
+  }
+
+  .header[data-header-state='compact'] .brand {
+    margin-left: -0.34rem;
+  }
+
+  .header[data-header-state='compact'] .brandPlate {
+    transform: translateX(-0.14rem);
+  }
+
+  .header[data-header-state='compact'] .brandText {
+    transform: none;
   }
 
   .mobilePanel {
@@ -588,22 +624,22 @@
 
 @media (max-width: 420px) {
   .header {
-    --header-inner-pad-y-rest: 0.82rem;
-    --header-inner-pad-y-compact: 0.56rem;
+    --header-inner-pad-y-rest: 0.92rem;
+    --header-inner-pad-y-compact: 0.66rem;
     --header-inner-pad-x-rest: 0.76rem;
     --header-inner-pad-x-compact: 0.7rem;
-    --header-brand-gap-rest: 0.54rem;
-    --header-brand-gap-compact: 0.28rem;
-    --header-brand-plate-size-rest: 4.15rem;
-    --header-brand-plate-size-compact: 2.46rem;
-    --header-brand-text-size-rest: 0.76rem;
-    --header-brand-text-size-compact: 0.54rem;
-    --header-brand-text-max-width-rest: 8.7rem;
-    --header-brand-text-max-width-compact: 6.9rem;
+    --header-brand-gap-rest: 0.68rem;
+    --header-brand-gap-compact: 0.38rem;
+    --header-brand-plate-size-rest: 4.18rem;
+    --header-brand-plate-size-compact: 2.88rem;
+    --header-brand-text-size-rest: 0.8rem;
+    --header-brand-text-size-compact: 0.6rem;
+    --header-brand-text-max-width-rest: 10.4rem;
+    --header-brand-text-max-width-compact: 7.6rem;
     --header-menu-size-rest: 2.62rem;
     --header-menu-size-compact: 2.14rem;
-    --header-mobile-inner-min-height-rest: 3.46rem;
-    --header-mobile-inner-min-height-compact: 2.62rem;
+    --header-mobile-inner-min-height-rest: 4.24rem;
+    --header-mobile-inner-min-height-compact: 3.02rem;
   }
 
   .inner {
@@ -613,13 +649,12 @@
   }
 
   .brandText {
+    display: flex;
     flex: 1 1 auto;
+    width: 100%;
     min-width: 0;
     max-width: none;
     line-height: 1.08;
-  }
-
-  .header[data-header-state='rest'] .brandText {
     justify-content: center;
     text-align: center;
   }
@@ -628,8 +663,8 @@
 @media (max-width: 360px) {
   .header {
     --header-inner-pad-x-rest: 0.62rem;
-    --header-brand-gap-rest: 0.4rem;
-    --header-brand-plate-size-rest: 3.5rem;
+    --header-brand-gap-rest: 0.56rem;
+    --header-brand-plate-size-rest: 3.82rem;
     --header-brand-text-size-rest: 0.76rem;
   }
 

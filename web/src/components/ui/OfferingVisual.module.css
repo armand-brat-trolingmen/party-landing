@@ -51,6 +51,10 @@
   background: radial-gradient(circle, rgba(230, 235, 242, 0.9), rgba(230, 235, 242, 0) 66%);
 }
 
+.picture {
+  display: contents;
+}
+
 .image {
   position: relative;
   z-index: 1;

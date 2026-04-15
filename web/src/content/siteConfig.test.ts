@@ -65,7 +65,7 @@ test('services expose dedicated page tariff content without changing the homepag
   expect(foamCannon?.homeCardImage?.objectFit).toBe('contain');
   expect(caramelApples?.price?.from).toBe(12500);
   expect(caramelApples?.price?.display).toBe('от 12.500 ₽');
-  expect(caramelApples?.homeCardImage?.fallbackSrc).toBe('/images/services-home/caramel-apples.png');
+  expect(caramelApples?.homeCardImage?.fallbackSrc).toBe('/images/services-home/caramel-apples-ui.png');
   expect(caramelApples?.servicePage?.tariffs).toEqual([
     expect.objectContaining({
       title: '50 порций',
@@ -93,9 +93,18 @@ test('extras expose only the current additional service catalog', () => {
     'Аренда оборудования',
     'Станция плова',
   ]);
-  expect(siteConfig.extras.find((extra) => extra.slug === 'branded-cart')?.visual.image).toBe('/images/extras/branding.webp');
-  expect(siteConfig.extras.find((extra) => extra.slug === 'equipment-rental')?.visual.image).toBe('/images/extras/equipment.png');
-  expect(siteConfig.extras.find((extra) => extra.slug === 'plov-station')?.visual.image).toBe('/images/extras/plov.png');
+  expect(siteConfig.extras.find((extra) => extra.slug === 'branded-cart')?.visual).toMatchObject({
+    image: '/images/extras/branding-ui.png',
+    imageWebpSrcSet: '/images/extras/branding.webp',
+  });
+  expect(siteConfig.extras.find((extra) => extra.slug === 'equipment-rental')?.visual).toMatchObject({
+    image: '/images/extras/equipment-ui.png',
+    imageWebpSrcSet: '/images/extras/equipment-ui.webp',
+  });
+  expect(siteConfig.extras.find((extra) => extra.slug === 'plov-station')?.visual).toMatchObject({
+    image: '/images/extras/plov-ui.png',
+    imageWebpSrcSet: '/images/extras/plov-ui.webp',
+  });
 });
 
 test('not found content is centralized and Russian', () => {

@@ -44,12 +44,19 @@ test('renders extras inside the wide canvas without a framed outer surface', () 
   const equipmentImage = sectionQueries.getByRole('img', { name: /Аренда оборудования/ });
   const plovImage = sectionQueries.getByRole('img', { name: /Станция плова/ });
 
+  const sources = sectionQueries.getAllByTestId('extra-visual-source-webp');
+
   expect(visualSlots).toHaveLength(0);
-  expect(brandingImage).toHaveAttribute('src', '/images/extras/branding.webp');
-  expect(equipmentImage).toHaveAttribute('src', '/images/extras/equipment.png');
-  expect(plovImage).toHaveAttribute('src', '/images/extras/plov.png');
-  expect(brandingImage).toHaveAttribute('loading', 'eager');
-  expect(equipmentImage).toHaveAttribute('loading', 'eager');
+  expect(brandingImage).toHaveAttribute('src', '/images/extras/branding-ui.png');
+  expect(equipmentImage).toHaveAttribute('src', '/images/extras/equipment-ui.png');
+  expect(plovImage).toHaveAttribute('src', '/images/extras/plov-ui.png');
+  expect(sources).toHaveLength(3);
+  expect(sources[0]).toHaveAttribute('srcset', '/images/extras/branding.webp');
+  expect(sources[1]).toHaveAttribute('srcset', '/images/extras/equipment-ui.webp');
+  expect(sources[2]).toHaveAttribute('srcset', '/images/extras/plov-ui.webp');
+  expect(brandingImage).toHaveAttribute('loading', 'lazy');
+  expect(equipmentImage).toHaveAttribute('loading', 'lazy');
+  expect(equipmentImage).toHaveAttribute('fetchpriority', 'low');
   expect(sectionQueries.getByRole('link', { name: `Открыть страницу услуги ${extras[0].name}` })).toHaveAttribute(
     'data-link-appearance',
     'button',
@@ -66,4 +73,16 @@ test('switches extras to a compact mobile slider without a swipe progress indica
   expect(track).toHaveAttribute('data-mobile-layout', 'slider-compact');
   expect(firstLink).toHaveAttribute('data-link-appearance', 'card');
   expect(screen.queryByTestId('extras-slider-progress')).not.toBeInTheDocument();
+});
+
+test('can promote only the requested extras images when rendered above the fold', () => {
+  mockViewport(false);
+  render(<ExtrasSection priorityImageCount={1} />);
+
+  const images = screen.getAllByTestId('extra-visual-image');
+
+  expect(images[0]).toHaveAttribute('loading', 'eager');
+  expect(images[0]).toHaveAttribute('fetchpriority', 'high');
+  expect(images[1]).toHaveAttribute('loading', 'lazy');
+  expect(images[1]).toHaveAttribute('fetchpriority', 'low');
 });

@@ -157,7 +157,7 @@ test('renders caramel apples page as a full service page with final tariffs and 
   const gallery = within(intro).getByTestId('offering-gallery');
 
   expect(screen.getByRole('heading', { level: 1, name: 'Карамельные яблоки' })).toBeInTheDocument();
-  expect(within(intro).getByTestId('offering-hero-image')).toHaveAttribute('src', '/images/services-home/caramel-apples.png');
+  expect(within(intro).getByTestId('offering-hero-image')).toHaveAttribute('src', '/images/services-home/caramel-apples-ui.png');
   expect(within(gallery).getAllByTestId('offering-gallery-card')).toHaveLength(4);
   expect(within(intro).getByTestId('offering-included')).toHaveTextContent('Подготовка станции');
   expect(within(intro).getByTestId('offering-tariffs')).toHaveTextContent('50 порций');

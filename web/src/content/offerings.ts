@@ -133,12 +133,11 @@ const HOME_SERVICE_CARD_IMAGE_MAP: Record<string, HomeCardImage> = {
     sizes: '(max-width: 720px) 34vw, (max-width: 1120px) 44vw, 29vw',
   },
   'caramel-apples': {
-    src: '/images/services-home/caramel-apples.png',
-    fallbackSrc: '/images/services-home/caramel-apples.png',
+    src: '/images/services-home/caramel-apples.webp',
+    fallbackSrc: '/images/services-home/caramel-apples-ui.png',
     width: 1024,
     height: 1024,
     sizes: '(max-width: 720px) 34vw, (max-width: 1120px) 44vw, 29vw',
-    sourceType: 'image/png',
   },
   'roll-ice-cream': {
     src: '/images/services-home/roll-ice-cream.webp',
@@ -169,12 +168,11 @@ const HOME_SERVICE_CARD_IMAGE_MAP: Record<string, HomeCardImage> = {
     sizes: '(max-width: 720px) 34vw, (max-width: 1120px) 44vw, 29vw',
   },
   'french-hot-dog': {
-    src: '/images/services-home/french-hot-dog.png',
-    fallbackSrc: '/images/services-home/french-hot-dog.png',
+    src: '/images/services-home/french-hot-dog.webp',
+    fallbackSrc: '/images/services-home/french-hot-dog-ui.png',
     width: 1024,
     height: 1024,
     sizes: '(max-width: 720px) 34vw, (max-width: 1120px) 44vw, 29vw',
-    sourceType: 'image/png',
   },
   'danish-hot-dog': {
     src: '/images/services-home/danish-hot-dog.webp',
@@ -198,12 +196,11 @@ const HOME_SERVICE_CARD_IMAGE_MAP: Record<string, HomeCardImage> = {
     sizes: '(max-width: 720px) 34vw, (max-width: 1120px) 44vw, 29vw',
   },
   pancakes: {
-    src: '/images/services-home/pancakes.png',
-    fallbackSrc: '/images/services-home/pancakes.png',
+    src: '/images/services-home/pancakes.webp',
+    fallbackSrc: '/images/services-home/pancakes-ui.png',
     width: 1024,
     height: 1024,
     sizes: '(max-width: 720px) 34vw, (max-width: 1120px) 44vw, 29vw',
-    sourceType: 'image/png',
   },
   'champagne-pyramid': {
     src: '/images/services-home/champagne-pyramid.webp',
@@ -627,7 +624,10 @@ const rawExtras: readonly OfferingEntity[] = [
     seoDescription:
       'Брендирование тележки для кейтеринга от Праздник каждый день. Оформляем тележку под фирменный стиль, сценарий и визуальную концепцию мероприятия.',
     visual: {
-      image: '/images/extras/branding.webp',
+      image: '/images/extras/branding-ui.png',
+      imageWebpSrcSet: '/images/extras/branding.webp',
+      width: 1536,
+      height: 1024,
       emoji: '',
       tone: 'gold',
     },
@@ -647,7 +647,10 @@ const rawExtras: readonly OfferingEntity[] = [
     seoDescription:
       'Аренда оборудования от Праздник каждый день для мероприятий в Москве и области. Подбираем оборудование под формат площадки и сценарий события.',
     visual: {
-      image: '/images/extras/equipment.png',
+      image: '/images/extras/equipment-ui.png',
+      imageWebpSrcSet: '/images/extras/equipment-ui.webp',
+      width: 1024,
+      height: 1024,
       emoji: '',
       tone: 'sky',
     },
@@ -667,7 +670,10 @@ const rawExtras: readonly OfferingEntity[] = [
     seoDescription:
       'Станция плова от Праздник каждый день для мероприятий в Москве и области. Подберём формат подачи и встроим горячую гастрозону в общий сценарий события.',
     visual: {
-      image: '/images/extras/plov.png',
+      image: '/images/extras/plov-ui.png',
+      imageWebpSrcSet: '/images/extras/plov-ui.webp',
+      width: 1024,
+      height: 1024,
       emoji: '',
       tone: 'gold',
     },

@@ -32,15 +32,18 @@ export function TestimonialsSection() {
                 data-review-tone={review.tone}
               >
                 <div className={styles.screenshotFrame}>
-                  <img
-                    className={styles.screenshotImage}
-                    src={review.src}
-                    alt={review.alt}
-                    width={review.width}
-                    height={review.height}
-                    loading="lazy"
-                    decoding="async"
-                  />
+                  <picture className={styles.screenshotPicture}>
+                    <source type="image/webp" srcSet={review.webpSrc} />
+                    <img
+                      className={styles.screenshotImage}
+                      src={review.src}
+                      alt={review.alt}
+                      width={review.width}
+                      height={review.height}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
                 </div>
               </figure>
             ))}

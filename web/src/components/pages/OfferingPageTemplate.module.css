@@ -58,6 +58,10 @@
   border: 1px solid rgba(31, 52, 74, 0.06);
 }
 
+.extraVisualPicture {
+  display: contents;
+}
+
 .extraVisualImage {
   display: block;
   position: relative;

@@ -447,7 +447,7 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
           aria-label={siteConfig.brand.name}
         >
           <span className={styles.brandPlate} data-testid="brand-plate">
-            <DonutLogo className={styles.logoMark} size={46} />
+            <DonutLogo className={styles.logoMark} size={240} />
           </span>
           <span className={styles.brandText}>{siteConfig.brand.name}</span>
         </a>

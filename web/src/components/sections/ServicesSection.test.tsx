@@ -138,7 +138,7 @@ test('switches to a full-width mobile slider with a swipe progress indicator', (
   expect(progress).toHaveAttribute('aria-valuenow', '50');
 });
 
-test('eagerly loads all mobile slider service images before swipe reaches them', () => {
+test('keeps only the first mobile slider images high priority and lazy-loads the rest', () => {
   mockViewport(true);
   render(<ServicesSection />);
 
@@ -148,11 +148,27 @@ test('eagerly loads all mobile slider service images before swipe reaches them',
   const lastImage = images.at(-1);
 
   expect(images.length).toBe(services.length);
-  images.forEach((image) => {
-    expect(image).toHaveAttribute('loading', 'eager');
-  });
+  expect(images[0]).toHaveAttribute('loading', 'eager');
+  expect(images[1]).toHaveAttribute('loading', 'eager');
+  expect(images[2]).toHaveAttribute('loading', 'eager');
+  expect(fourthImage).toHaveAttribute('loading', 'lazy');
+  expect(lastImage).toHaveAttribute('loading', 'lazy');
   expect(images[0]).toHaveAttribute('fetchpriority', 'high');
   expect(fourthImage).toHaveAttribute('fetchpriority', 'low');
   expect(lastImage).toHaveAttribute('fetchpriority', 'low');
   expect(catalog.querySelector('[data-service-image-slug="foam-cannon"]')).toHaveStyle({ objectFit: 'contain' });
+});
+
+test('can render service cards below the fold without image priority', () => {
+  mockViewport(false);
+  render(<ServicesSection allowReveal={false} priorityImageCount={0} />);
+
+  const catalog = screen.getByTestId('services-catalog');
+  const images = within(catalog).getAllByTestId('service-card-media-image');
+
+  expect(images.length).toBe(services.length);
+  images.forEach((image) => {
+    expect(image).toHaveAttribute('loading', 'lazy');
+    expect(image).toHaveAttribute('fetchpriority', 'low');
+  });
 });

@@ -15,6 +15,7 @@ type ServicesSectionProps = {
   initialVisibleCount?: number;
   allowReveal?: boolean;
   revealOnScroll?: boolean;
+  priorityImageCount?: number;
 };
 
 const COLLAPSE_ANIMATION_MS = 280;
@@ -27,6 +28,7 @@ export function ServicesSection({
   initialVisibleCount = siteConfig.homepage.services.initialVisibleCount,
   allowReveal = true,
   revealOnScroll = true,
+  priorityImageCount = 3,
 }: ServicesSectionProps) {
   const { ref, revealState } = useScrollReveal();
   const isMobile = useMediaQuery('(max-width: 720px)');
@@ -107,8 +109,8 @@ export function ServicesSection({
               const isExtraCard = index >= initialVisibleCount;
               const isRevealEnter = shouldReveal && isExpanded && !isCollapsing && isExtraCard;
               const isRevealExit = shouldReveal && isCollapsing && isExtraCard;
-              const shouldPrioritizeImage = index < 3;
-              const shouldEagerLoadImage = isMobile || shouldPrioritizeImage;
+              const shouldPrioritizeImage = index < priorityImageCount;
+              const shouldEagerLoadImage = shouldPrioritizeImage;
               const revealStyle =
                 isRevealEnter || isRevealExit
                   ? ({

@@ -60,7 +60,7 @@ test('autoplays through one premium poster frame at a time without manual contro
   vi.useRealTimers();
 });
 
-test('renders responsive hero media with explicit dimensions and priority only on the first slide', () => {
+test('renders responsive hero media with explicit dimensions and preloads the next slide without high priority', () => {
   render(<HeroPosterCarousel slides={slides} />);
 
   const images = screen.getAllByRole('img', { hidden: true });
@@ -74,6 +74,7 @@ test('renders responsive hero media with explicit dimensions and priority only o
   expect(firstImage).toHaveAttribute('height', '2048');
   expect(firstImage).toHaveAttribute('loading', 'eager');
   expect(firstImage).toHaveAttribute('fetchpriority', 'high');
-  expect(images[1]).toHaveAttribute('loading', 'lazy');
+  expect(images[1]).toHaveAttribute('loading', 'eager');
+  expect(images[1]).toHaveAttribute('fetchpriority', 'auto');
   expect(images[2]).toHaveAttribute('loading', 'lazy');
 });

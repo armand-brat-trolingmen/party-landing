@@ -95,6 +95,10 @@
     radial-gradient(circle at 18% 18%, rgba(255, 240, 217, 0.84), rgba(255, 240, 217, 0) 34%);
 }
 
+.screenshotPicture {
+  display: contents;
+}
+
 .screenshotImage {
   display: block;
   width: 100%;

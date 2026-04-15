@@ -15,8 +15,9 @@ function omitFieldError(errors: LeadFieldErrors, fieldName: keyof LeadFieldError
     return errors;
   }
 
-  const { [fieldName]: _removed, ...rest } = errors;
-  return rest;
+  const nextErrors = { ...errors };
+  delete nextErrors[fieldName];
+  return nextErrors;
 }
 
 export function useLeadForm() {
@@ -131,6 +132,6 @@ export function useLeadForm() {
       handleSubmit,
       resetForm,
     }),
-    [errors, handleNameChange, handlePhoneChange, handleSubmit, hasGeneralError, resetForm, status, submitLabel, values],
+    [errors, handleNameChange, handlePhoneChange, handleSubmit, hasGeneralError, isSubmitDisabled, resetForm, status, submitLabel, values],
   );
 }

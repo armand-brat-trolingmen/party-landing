@@ -10,6 +10,7 @@ type ExtrasSectionProps = {
   sectionId?: string;
   title?: string;
   description?: string;
+  priorityImageCount?: number;
 };
 
 export function ExtrasSection({
@@ -17,6 +18,7 @@ export function ExtrasSection({
   sectionId = 'extras',
   title = siteConfig.homepage.extras.title,
   description = siteConfig.homepage.extras.description,
+  priorityImageCount = 0,
 }: ExtrasSectionProps) {
   const { ref, revealState } = useScrollReveal();
   const isMobile = useMediaQuery('(max-width: 720px)');
@@ -35,7 +37,12 @@ export function ExtrasSection({
             data-extras-style="continuation-grid"
             data-mobile-layout={isMobile ? 'slider-compact' : 'grid'}
           >
-            {items.map((item, index) => (
+            {items.map((item, index) => {
+              const shouldPrioritizeImage = index < priorityImageCount;
+              const imageLoading = shouldPrioritizeImage ? 'eager' : 'lazy';
+              const imageFetchPriority = shouldPrioritizeImage ? 'high' : 'low';
+
+              return (
               <article key={item.slug} className={styles.card}>
                 <a
                   className={styles.cardLink}
@@ -49,16 +56,27 @@ export function ExtrasSection({
                     aria-hidden={item.visual.image ? undefined : true}
                   >
                     {item.visual.image ? (
-                      <img
-                        className={styles.visualImage}
-                        src={item.visual.image}
-                        alt={item.visual.alt ?? item.name}
-                        width={item.visual.width}
-                        height={item.visual.height}
-                        loading={index < 2 ? 'eager' : 'lazy'}
-                        decoding="async"
-                        fetchPriority={index < 2 ? 'high' : 'low'}
-                      />
+                      <picture className={styles.visualPicture}>
+                        {item.visual.imageWebpSrcSet ? (
+                          <source
+                            data-testid="extra-visual-source-webp"
+                            type="image/webp"
+                            srcSet={item.visual.imageWebpSrcSet}
+                            sizes={item.visual.sizes}
+                          />
+                        ) : null}
+                        <img
+                          className={styles.visualImage}
+                          data-testid="extra-visual-image"
+                          src={item.visual.image}
+                          alt={item.visual.alt ?? item.name}
+                          width={item.visual.width}
+                          height={item.visual.height}
+                          loading={imageLoading}
+                          decoding="async"
+                          fetchPriority={imageFetchPriority}
+                        />
+                      </picture>
                     ) : null}
                   </div>
                   <div className={styles.copy}>
@@ -73,7 +91,8 @@ export function ExtrasSection({
                   </div>
                 </a>
               </article>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

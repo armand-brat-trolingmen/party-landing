@@ -6,6 +6,9 @@ import { SectionHeading } from '../ui/SectionHeading';
 import styles from './ContactPlaceholderSection.module.css';
 
 const AVITO_SCREENSHOT_SRC = '/images/contact/avito.jpg';
+const AVITO_SCREENSHOT_WEBP_SRC = '/images/contact/avito.webp';
+const AVITO_SCREENSHOT_WIDTH = 1460;
+const AVITO_SCREENSHOT_HEIGHT = 908;
 
 type ContactIconKind = 'telegram' | 'whatsapp' | 'avito';
 
@@ -134,12 +137,17 @@ export function ContactPlaceholderSection() {
                   ×
                 </button>
 
-                <img
-                  className={styles.visualDialogImage}
-                  src={AVITO_SCREENSHOT_SRC}
-                  alt="Скриншот профиля Праздник каждый день на Avito"
-                  decoding="async"
-                />
+                <picture className={styles.visualPicture}>
+                  <source type="image/webp" srcSet={AVITO_SCREENSHOT_WEBP_SRC} />
+                  <img
+                    className={styles.visualDialogImage}
+                    src={AVITO_SCREENSHOT_SRC}
+                    alt="Скриншот профиля Праздник каждый день на Avito"
+                    width={AVITO_SCREENSHOT_WIDTH}
+                    height={AVITO_SCREENSHOT_HEIGHT}
+                    decoding="async"
+                  />
+                </picture>
               </div>
             </div>
           </div>,
@@ -204,13 +212,18 @@ export function ContactPlaceholderSection() {
                 aria-label="Открыть скриншот Avito на весь экран"
                 onClick={() => setIsAvitoPreviewOpen(true)}
               >
-                <img
-                  className={styles.visualImage}
-                  src={AVITO_SCREENSHOT_SRC}
-                  alt="Профиль Праздник каждый день на Avito"
-                  loading="lazy"
-                  decoding="async"
-                />
+                <picture className={styles.visualPicture}>
+                  <source type="image/webp" srcSet={AVITO_SCREENSHOT_WEBP_SRC} />
+                  <img
+                    className={styles.visualImage}
+                    src={AVITO_SCREENSHOT_SRC}
+                    alt="Профиль Праздник каждый день на Avito"
+                    width={AVITO_SCREENSHOT_WIDTH}
+                    height={AVITO_SCREENSHOT_HEIGHT}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </picture>
               </button>
             </figure>
           </div>

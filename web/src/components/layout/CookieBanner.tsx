@@ -1,16 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 import { acceptCookieConsent, hasCookieConsent } from '../../features/cookies/consent';
 import styles from './CookieBanner.module.css';
 
-export function CookieBanner() {
-  const [isReady, setIsReady] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
+function subscribeCookieConsent() {
+  return () => undefined;
+}
 
-  useEffect(() => {
-    setIsReady(true);
-    setIsVisible(!hasCookieConsent());
-  }, []);
+export function CookieBanner() {
+  const [isDismissed, setIsDismissed] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const isReady = useSyncExternalStore(subscribeCookieConsent, () => true, () => false);
+  const hasConsent = useSyncExternalStore(subscribeCookieConsent, hasCookieConsent, () => true);
+  const isVisible = isReady && !isDismissed && !hasConsent;
 
   if (!isReady || !isVisible) {
     return null;
@@ -18,7 +19,7 @@ export function CookieBanner() {
 
   const handleAccept = () => {
     acceptCookieConsent();
-    setIsVisible(false);
+    setIsDismissed(true);
   };
 
   return (

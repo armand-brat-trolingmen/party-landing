@@ -202,17 +202,27 @@ function LegacyOfferingPage({ offering, typeLabel }: OfferingPageTemplateProps) 
               <div className={`${styles.visualCard} ${styles.extraVisualCard}`} data-testid="offering-extra-visual">
                 {offering.kind === 'extra' ? (
                   offering.visual.image ? (
-                    <img
-                      className={styles.extraVisualImage}
-                      data-testid="offering-extra-visual-image"
-                      src={offering.visual.image}
-                      alt={offering.visual.alt ?? offering.name}
-                      width={offering.visual.width}
-                      height={offering.visual.height}
-                      loading="eager"
-                      decoding="async"
-                      fetchPriority="high"
-                    />
+                    <picture className={styles.extraVisualPicture}>
+                      {offering.visual.imageWebpSrcSet ? (
+                        <source
+                          data-testid="offering-extra-visual-source-webp"
+                          type="image/webp"
+                          srcSet={offering.visual.imageWebpSrcSet}
+                          sizes={offering.visual.sizes}
+                        />
+                      ) : null}
+                      <img
+                        className={styles.extraVisualImage}
+                        data-testid="offering-extra-visual-image"
+                        src={offering.visual.image}
+                        alt={offering.visual.alt ?? offering.name}
+                        width={offering.visual.width}
+                        height={offering.visual.height}
+                        loading="eager"
+                        decoding="async"
+                        fetchPriority="high"
+                      />
+                    </picture>
                   ) : (
                     <div className={styles.extraVisualBlank} data-testid="offering-extra-visual-blank" aria-hidden="true" />
                   )
@@ -392,6 +402,7 @@ export function OfferingPageTemplate({ offering, typeLabel }: OfferingPageTempla
           title="Другие услуги"
           description="Можно добавить к заказу еще один формат и собрать более плотную праздничную зону."
           revealOnScroll={false}
+          priorityImageCount={0}
         />
       </div>
       <ExtrasSection />
