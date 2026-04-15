@@ -13,11 +13,11 @@ function sliceBetween(source: string, startMarker: string, endMarker?: string) {
 
 test('tablet-and-mobile header switches to the compact menu layout before nav items start colliding', () => {
   const css = readFileSync(resolve(process.cwd(), 'src/components/layout/SiteHeader.module.css'), 'utf8');
-  const mobileBlock = sliceBetween(css, '@media (max-width: 960px)', '@media (max-width: 420px)');
+  const mobileBlock = sliceBetween(css, '@media (max-width: 1080px)', '@media (max-width: 420px)');
   const mobileNarrowBlock = sliceBetween(css, '@media (max-width: 420px)', '@media (max-width: 360px)');
   const mobileUltraNarrowBlock = sliceBetween(css, '@media (max-width: 360px)');
 
-  expect(css).toContain('@media (max-width: 960px)');
+  expect(css).toContain('@media (max-width: 1080px)');
   expect(mobileBlock).toContain('--header-brand-plate-size-rest: 4.72rem;');
   expect(mobileBlock).toContain('--header-pad-top-compact: calc(0.22rem + env(safe-area-inset-top, 0px));');
   expect(mobileBlock).toContain('--header-brand-gap-rest: 0.76rem;');
@@ -41,6 +41,9 @@ test('tablet-and-mobile header switches to the compact menu layout before nav it
   expect(mobileUltraNarrowBlock).toContain('--header-inner-pad-x-rest: 0.62rem;');
   expect(mobileUltraNarrowBlock).toContain('--header-brand-gap-rest: 0.56rem;');
   expect(mobileUltraNarrowBlock).toContain('--header-brand-plate-size-rest: 3.82rem;');
+  expect(mobileNarrowBlock).toContain(".header[data-header-state='rest'] .brand {");
+  expect(mobileNarrowBlock).toContain("margin-left: -0.62rem;");
+  expect(mobileUltraNarrowBlock).toContain("margin-left: -0.44rem;");
   expect(mobileBlock).not.toContain('white-space: normal;');
   expect(mobileNarrowBlock).not.toContain('white-space: normal;');
   expect(mobileUltraNarrowBlock).not.toContain('white-space: normal;');
@@ -95,7 +98,7 @@ test('header transitions compact sizing more smoothly across scroll states', () 
 
 test('mobile rest header avoids a hard-coded text offset and uses a measured shift variable instead', () => {
   const css = readFileSync(resolve(process.cwd(), 'src/components/layout/SiteHeader.module.css'), 'utf8');
-  const mobileBlock = sliceBetween(css, '@media (max-width: 960px)', '@media (max-width: 420px)');
+  const mobileBlock = sliceBetween(css, '@media (max-width: 1080px)', '@media (max-width: 420px)');
 
   expect(css).toContain('--mobile-brand-text-shift: 0px;');
   expect(mobileBlock).toContain("transform: translateX(var(--mobile-brand-text-shift));");

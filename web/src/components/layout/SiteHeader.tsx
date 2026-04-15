@@ -32,6 +32,7 @@ const NAV_ARIA_LABEL = '\u041e\u0441\u043d\u043e\u0432\u043d\u0430\u044f \u043d\
 const MENU_ARIA_LABEL = '\u041c\u0435\u043d\u044e';
 const CLOSE_MENU_ARIA_LABEL = '\u0417\u0430\u043a\u0440\u044b\u0442\u044c \u043c\u0435\u043d\u044e';
 const ORDER_LABEL = '\u0417\u0430\u043a\u0430\u0437\u0430\u0442\u044c';
+const MOBILE_HEADER_BREAKPOINT_PX = 1080;
 const navItems = siteConfig.navigation;
 
 export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
@@ -191,7 +192,7 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
       return;
     }
 
-    const query = window.matchMedia('(min-width: 961px)');
+    const query = window.matchMedia(`(min-width: ${MOBILE_HEADER_BREAKPOINT_PX + 1}px)`);
     const sync = () => {
       setIsDesktop(query.matches);
       if (query.matches) {

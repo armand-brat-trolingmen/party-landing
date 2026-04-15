@@ -17,6 +17,8 @@ type ResolveMobileBrandTextShiftArgs = {
   menuLeft: number;
 };
 
+const MOBILE_BRAND_MIN_GAP = 8;
+
 const DESKTOP_COMPACT_ENTER_Y = 156;
 const DESKTOP_COMPACT_EXIT_Y = 42;
 const MOBILE_COMPACT_ENTER_Y = 72;
@@ -70,9 +72,15 @@ export function resolveMobileBrandTextShift({
     return 0;
   }
 
-  const desiredTextCenter = (plateRight + menuLeft) / 2;
   const measuredTextCenter = textLeft + textWidth / 2;
   const naturalTextCenter = measuredTextCenter - currentShift;
+  const minTextCenter = plateRight + MOBILE_BRAND_MIN_GAP + textWidth / 2;
+  const maxTextCenter = menuLeft - MOBILE_BRAND_MIN_GAP - textWidth / 2;
+  const desiredTextCenter = (plateRight + menuLeft) / 2;
+  const clampedTextCenter =
+    minTextCenter <= maxTextCenter
+      ? Math.min(Math.max(desiredTextCenter, minTextCenter), maxTextCenter)
+      : Math.max(desiredTextCenter, minTextCenter);
 
-  return desiredTextCenter - naturalTextCenter;
+  return clampedTextCenter - naturalTextCenter;
 }

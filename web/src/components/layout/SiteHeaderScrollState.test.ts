@@ -65,3 +65,17 @@ test('mobile brand text shift falls back to zero when layout metrics are invalid
     }),
   ).toBe(0);
 });
+
+test('mobile brand text shift never allows the title to jump left of the logo on very narrow widths', () => {
+  const nextShift = resolveMobileBrandTextShift({
+    currentShift: 0,
+    plateRight: 94,
+    textLeft: 126,
+    textWidth: 172,
+    menuLeft: 244,
+  });
+
+  const shiftedLeft = 126 + nextShift;
+
+  expect(shiftedLeft).toBeGreaterThanOrEqual(102);
+});
