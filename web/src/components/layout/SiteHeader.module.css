@@ -616,6 +616,10 @@
     width: auto;
     flex: 1 1 auto;
     max-width: calc(100% - var(--header-menu-size) - 1rem);
+    transition:
+      gap 240ms cubic-bezier(0.22, 1, 0.36, 1),
+      max-width 240ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .brandPlate {
@@ -633,9 +637,24 @@
     justify-content: center;
     padding-right: 0;
     text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    max-width: 0;
+    overflow: hidden;
+    pointer-events: none;
+    transform: translate3d(-0.24rem, 0.26rem, 0) scale(0.96);
+    transform-origin: left center;
+    transition:
+      opacity 180ms ease,
+      visibility 180ms ease,
+      max-width 240ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .header[data-header-state='rest'] .brand {
+    grid-template-columns: auto;
+    gap: 0;
+    max-width: calc(var(--header-brand-plate-size) * 1.06);
     margin-left: -0.9rem;
   }
 
@@ -644,10 +663,17 @@
   }
 
   .header[data-header-state='rest'] .brandText {
-    transform: translateX(var(--mobile-brand-text-shift));
+    opacity: 0;
+    visibility: hidden;
+    max-width: 0;
+    pointer-events: none;
+    transform: translate3d(-0.24rem, 0.26rem, 0) scale(0.96);
   }
 
   .header[data-header-state='compact'] .brand {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--header-brand-gap);
+    max-width: calc(100% - var(--header-menu-size) - 1rem);
     margin-left: -0.34rem;
   }
 
@@ -656,7 +682,13 @@
   }
 
   .header[data-header-state='compact'] .brandText {
-    transform: none;
+    opacity: 1;
+    visibility: visible;
+    max-width: var(--header-brand-text-max-width);
+    overflow: visible;
+    pointer-events: auto;
+    transform: translate3d(0, 0, 0) scale(1);
+    animation: mobileBrandTextReveal 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
   .mobilePanel {
@@ -665,6 +697,20 @@
     max-height: calc(100dvh - var(--header-offset) - 12px);
     padding: 0.75rem 0.75rem max(0.75rem, env(safe-area-inset-bottom, 0px));
     border-radius: 1.15rem;
+  }
+}
+
+@keyframes mobileBrandTextReveal {
+  0% {
+    opacity: 0;
+    visibility: hidden;
+    transform: translate3d(-0.4rem, 0.32rem, 0) scale(0.94);
+  }
+
+  100% {
+    opacity: 1;
+    visibility: visible;
+    transform: translate3d(0, 0, 0) scale(1);
   }
 }
 

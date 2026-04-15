@@ -128,12 +128,19 @@ test('header transitions compact sizing more smoothly across scroll states', () 
   expect(css).toContain('backdrop-filter: blur(calc(18px * var(--header-progress)))');
 });
 
-test('mobile rest header uses only the measured shift and does not force the title toward the menu button', () => {
+test('mobile header hides brand text until the compact state and then reveals it with a dedicated animation', () => {
   const css = readFileSync(resolve(process.cwd(), 'src/components/layout/SiteHeader.module.css'), 'utf8');
   const mobileBlock = sliceBetween(css, '@media (max-width: 1080px)', '@media (max-width: 520px)');
 
-  expect(css).toContain('--mobile-brand-text-shift: 0px;');
-  expect(css).not.toContain('--mobile-brand-text-rest-nudge');
-  expect(mobileBlock).toContain("transform: translateX(var(--mobile-brand-text-shift));");
-  expect(mobileBlock).not.toContain('transform: translateX(clamp(');
+  expect(mobileBlock).toContain(".header[data-header-state='rest'] .brand {");
+  expect(mobileBlock).toContain('grid-template-columns: auto;');
+  expect(mobileBlock).toContain(".header[data-header-state='rest'] .brandText {");
+  expect(mobileBlock).toContain('opacity: 0;');
+  expect(mobileBlock).toContain('visibility: hidden;');
+  expect(mobileBlock).toContain('max-width: 0;');
+  expect(mobileBlock).toContain(".header[data-header-state='compact'] .brandText {");
+  expect(mobileBlock).toContain('opacity: 1;');
+  expect(mobileBlock).toContain('visibility: visible;');
+  expect(mobileBlock).toContain('animation: mobileBrandTextReveal 320ms cubic-bezier(0.22, 1, 0.36, 1) both;');
+  expect(css).toContain('@keyframes mobileBrandTextReveal');
 });

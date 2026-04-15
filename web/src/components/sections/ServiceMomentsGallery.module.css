@@ -22,9 +22,9 @@
   width: 100%;
   grid-auto-columns: max(clamp(13rem, 24vw, 17.5rem), calc((100% - (0.9rem * 3)) / 4));
   gap: 0.9rem;
-  min-height: min(50svh, 32rem);
+  min-height: clamp(13rem, 24vw, 17.5rem);
   overflow-x: auto;
-  padding-bottom: 0.25rem;
+  padding-bottom: 0.08rem;
   scroll-snap-type: x mandatory;
   scrollbar-width: thin;
   scrollbar-color: rgba(143, 216, 248, 0.7) rgba(255, 255, 255, 0.5);
@@ -56,6 +56,21 @@
   scroll-snap-align: start;
 }
 
+.slideButton {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  cursor: zoom-in;
+}
+
+.slideButton:focus-visible {
+  outline: 3px solid rgba(255, 126, 182, 0.52);
+  outline-offset: 4px;
+}
+
 .media {
   display: block;
   width: 100%;
@@ -70,6 +85,101 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.slideButton:hover .image,
+.slideButton:focus-visible .image {
+  transform: scale(1.035);
+}
+
+.dialogOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 140;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  background: rgba(10, 14, 22, 0.88);
+  backdrop-filter: blur(12px);
+  animation: galleryPreviewFade 180ms ease both;
+}
+
+.dialog {
+  position: relative;
+  width: 100vw;
+  height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: max(1rem, env(safe-area-inset-top, 0px)) max(1rem, env(safe-area-inset-right, 0px))
+    max(1rem, env(safe-area-inset-bottom, 0px)) max(1rem, env(safe-area-inset-left, 0px));
+  pointer-events: none;
+}
+
+.dialogDescription {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.dialogMedia {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  pointer-events: auto;
+}
+
+.dialogClose {
+  position: absolute;
+  top: max(0.4rem, env(safe-area-inset-top, 0px));
+  right: max(0.4rem, env(safe-area-inset-right, 0px));
+  display: inline-grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  background: rgba(20, 28, 39, 0.7);
+  color: rgba(255, 253, 248, 0.96);
+  font-size: 1.9rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.22);
+}
+
+.dialogPicture {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.dialogImage {
+  width: min(100%, 96rem);
+  height: min(100%, 100svh);
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center center;
+  border-radius: 0;
+  background: transparent;
+}
+
+@keyframes galleryPreviewFade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @media (max-width: 720px) {
@@ -86,5 +196,11 @@
 
   .slide {
     min-height: 11rem;
+  }
+
+  .dialogClose {
+    width: 2.7rem;
+    height: 2.7rem;
+    font-size: 1.7rem;
   }
 }
