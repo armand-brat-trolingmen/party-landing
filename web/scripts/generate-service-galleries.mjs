@@ -1,4 +1,4 @@
-import { mkdir, readdir, rm, writeFile } from 'node:fs/promises';
+import { copyFile, mkdir, readdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
@@ -100,11 +100,15 @@ async function buildManifest() {
       const variantWidths = [...new Set([...BREAKPOINTS.filter((width) => width < targetWidth), targetWidth])];
       const baseName = `image-${String(index + 1).padStart(2, '0')}`;
       const hasAlpha = metadata.hasAlpha === true;
+      const originalExtension = path.extname(inputPath).toLowerCase();
+      const originalFileName = `${baseName}-original${originalExtension}`;
+      const originalOutputPath = path.join(serviceOutputDir, originalFileName);
       const fallbackExtension = hasAlpha ? 'png' : 'jpg';
       const fallbackFileName = `${baseName}.${fallbackExtension}`;
       const fallbackOutputPath = path.join(serviceOutputDir, fallbackFileName);
       const srcSetEntries = [];
 
+      await copyFile(inputPath, originalOutputPath);
       await createFallback(inputPath, fallbackOutputPath, targetWidth, hasAlpha);
 
       for (const variantWidth of variantWidths) {
@@ -118,10 +122,13 @@ async function buildManifest() {
       images.push({
         id: `${service.slug}-${baseName}`,
         src: `/images/service-galleries/${service.slug}/${fallbackFileName}`,
+        originalSrc: `/images/service-galleries/${service.slug}/${originalFileName}`,
         webpSrcSet: srcSetEntries.join(', '),
         sizes: SIZES,
         width: targetWidth,
         height: targetHeight,
+        originalWidth: metadata.width,
+        originalHeight: metadata.height,
         alt: `${service.name} — фото ${index + 1}`,
       });
     }
@@ -131,10 +138,13 @@ async function buildManifest() {
       manifestEntries.push('    {');
       manifestEntries.push(`      id: ${quote(image.id)},`);
       manifestEntries.push(`      src: ${quote(image.src)},`);
+      manifestEntries.push(`      originalSrc: ${quote(image.originalSrc)},`);
       manifestEntries.push(`      webpSrcSet: ${quote(image.webpSrcSet)},`);
       manifestEntries.push(`      sizes: ${quote(image.sizes)},`);
       manifestEntries.push(`      width: ${image.width},`);
       manifestEntries.push(`      height: ${image.height},`);
+      manifestEntries.push(`      originalWidth: ${image.originalWidth},`);
+      manifestEntries.push(`      originalHeight: ${image.originalHeight},`);
       manifestEntries.push(`      alt: ${quote(image.alt)},`);
       manifestEntries.push('    },');
     }
@@ -144,10 +154,13 @@ async function buildManifest() {
   const manifest = `export type ServiceGalleryImage = {
   id: string;
   src: string;
+  originalSrc: string;
   webpSrcSet: string;
   sizes: string;
   width: number;
   height: number;
+  originalWidth: number;
+  originalHeight: number;
   alt: string;
 };
 

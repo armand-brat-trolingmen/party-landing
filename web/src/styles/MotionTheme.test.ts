@@ -84,6 +84,7 @@ test('reviews faq and contact styles rely on internal structure without outer fr
   const reviewsCss = readCss('src/components/sections/ReviewsSection.module.css');
   const faqCss = readCss('src/components/sections/FaqSection.module.css');
   const contactCss = readCss('src/components/sections/ContactPlaceholderSection.module.css');
+  const serviceGalleryCss = readCss('src/components/sections/ServiceMomentsGallery.module.css');
 
   expect(reviewsCss).toContain('.sectionBody {');
   expect(reviewsCss).toContain('.gallery {');
@@ -95,13 +96,15 @@ test('reviews faq and contact styles rely on internal structure without outer fr
   expect(contactCss).toContain('.visualSlot {');
   expect(contactCss).toContain('object-fit: contain;');
   expect(contactCss).not.toContain('.guide {');
+  expect(serviceGalleryCss).toContain('.dialogPicture {');
+  expect(serviceGalleryCss).toContain('justify-content: center;');
+  expect(serviceGalleryCss).toContain('align-items: center;');
 });
 
 test('cta stays a band while the header remains transparent at rest', () => {
   const ctaCss = readCss('src/components/sections/CtaSection.module.css');
   const headerCss = readCss('src/components/layout/SiteHeader.module.css');
   const footerCss = readCss('src/components/layout/SiteFooter.module.css');
-
   expect(ctaCss).toContain('.section {');
   expect(ctaCss).toContain('.homeBand');
   expect(ctaCss).toContain('.innerBand');
@@ -136,6 +139,8 @@ test('mobile breakpoints keep the premium layout but calm the motion and spacing
   expect(headerCss).toContain('text-overflow: clip;');
   expect(headerCss).toContain('width: min(calc(100vw - 0.75rem), 24rem);');
   expect(heroCss).toContain('justify-self: center;');
+  expect(heroCss).toContain('@media (max-width: 640px)');
+  expect(heroCss).toContain('font-size: clamp(2.3rem, 9vw, 3.4rem);');
   expect(carouselCss).toContain('aspect-ratio: 4 / 4.9;');
   expect(servicesCss).toContain('@media (max-width: 720px)');
   expect(extrasCss).toContain('@media (max-width: 720px)');
