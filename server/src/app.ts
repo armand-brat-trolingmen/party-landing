@@ -37,6 +37,12 @@ export function createApp({
   });
 
   app.use(express.json());
+  app.get('/healthz', (_request, response) => {
+    response.status(200).json({
+      ok: true,
+      service: 'server',
+    });
+  });
   app.use('/api/leads', (request, response, next) => {
     const ip = getRequestIp(request);
 

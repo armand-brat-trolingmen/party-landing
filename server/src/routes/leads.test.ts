@@ -6,6 +6,32 @@ import { createLeadsRepository } from '../db/leadsRepository';
 import { runMigrations } from '../db/migrate';
 import { createLeadService } from '../services/leadService';
 
+describe('GET /healthz', () => {
+  test('returns service health payload', async () => {
+    const db = createDatabase(':memory:');
+    runMigrations(db);
+
+    const app = createApp({
+      leadService: createLeadService({
+        repository: createLeadsRepository(db),
+        vkAdapter: {
+          sendLeadNotification: vi.fn(),
+        },
+      }),
+      rateLimitWindowMs: 60000,
+      rateLimitMaxRequests: 5,
+    });
+
+    const response = await request(app).get('/healthz');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      ok: true,
+      service: 'server',
+    });
+  });
+});
+
 describe('POST /api/leads', () => {
   test('returns 400 when payload is invalid', async () => {
     const db = createDatabase(':memory:');
