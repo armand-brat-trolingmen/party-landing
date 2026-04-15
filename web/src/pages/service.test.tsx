@@ -75,12 +75,9 @@ test('renders the redesigned service-only page structure with tariffs and delive
   expect(duration.compareDocumentPosition(note) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   expect(gallery).toBeInTheDocument();
   expect(galleryTrack).toBeInTheDocument();
-  expect(within(gallery).getAllByTestId('offering-gallery-card')).toHaveLength(4);
-  within(gallery)
-    .getAllByTestId('offering-gallery-card')
-    .forEach((card) => {
-      expect(card).toBeEmptyDOMElement();
-    });
+  expect(within(gallery).getAllByTestId('offering-gallery-slide')).toHaveLength(4);
+  expect(within(gallery).getAllByTestId('offering-gallery-image')).toHaveLength(4);
+  expect(within(gallery).getAllByTestId('offering-gallery-image')[0]).toHaveAttribute('loading', 'lazy');
   expect(hero.compareDocumentPosition(gallery) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   expect(gallery.compareDocumentPosition(included) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   expect(included).toHaveTextContent('Монтаж и демонтаж');
@@ -91,7 +88,7 @@ test('renders the redesigned service-only page structure with tariffs and delive
   expect(within(intro).getByTestId('offering-delivery-region')).toHaveTextContent('Рассчитывается индивидуально по удаленности площадки');
   expect(within(intro).getByTestId('offering-tariffs')).toHaveTextContent('2 часа');
   expect(within(intro).getByTestId('offering-tariffs')).toHaveTextContent('12.000 ₽');
-  expect(within(intro).getByTestId('offering-tariffs')).not.toHaveTextContent('Цветная сахарная вата +1.000 ₽');
+  expect(within(intro).getByTestId('offering-tariffs')).not.toHaveTextContent('Цветная сахарная вата +1.000 ₽ к стоимости');
   expect(within(intro).getByTestId('offering-tariffs')).not.toHaveTextContent('Монтаж и демонтаж');
   expect(otherServices.querySelector('[data-service-slug="cotton-candy"]')).not.toBeInTheDocument();
   expect(otherServices.querySelector('.site-reveal')).not.toBeInTheDocument();
@@ -158,7 +155,8 @@ test('renders caramel apples page as a full service page with final tariffs and 
 
   expect(screen.getByRole('heading', { level: 1, name: 'Карамельные яблоки' })).toBeInTheDocument();
   expect(within(intro).getByTestId('offering-hero-image')).toHaveAttribute('src', '/images/services-home/caramel-apples-ui.png');
-  expect(within(gallery).getAllByTestId('offering-gallery-card')).toHaveLength(4);
+  expect(within(gallery).getAllByTestId('offering-gallery-slide')).toHaveLength(2);
+  expect(within(gallery).getAllByTestId('offering-gallery-image')).toHaveLength(2);
   expect(within(intro).getByTestId('offering-included')).toHaveTextContent('Подготовка станции');
   expect(within(intro).getByTestId('offering-tariffs')).toHaveTextContent('50 порций');
   expect(within(intro).getByTestId('offering-tariffs')).toHaveTextContent('1 час');
@@ -172,4 +170,34 @@ test('renders caramel apples page as a full service page with final tariffs and 
   expect(
     within(intro).queryByText('Тариф сейчас в предварительном формате — финальную смету соберём под вашу площадку и нужный объём.'),
   ).not.toBeInTheDocument();
+});
+
+test('renders combo gallery with all cotton candy and popcorn photos', () => {
+  render(
+    <MemoryRouter initialEntries={['/services/cotton-candy-popcorn']}>
+      <Routes>
+        <Route path="/services/:slug" element={<ServicePage />} />
+      </Routes>
+    </MemoryRouter>,
+  );
+
+  const intro = screen.getByTestId('section-offering-intro');
+  const gallery = within(intro).getByTestId('offering-gallery');
+
+  expect(within(gallery).getAllByTestId('offering-gallery-slide')).toHaveLength(7);
+  expect(within(gallery).getAllByTestId('offering-gallery-image')).toHaveLength(7);
+});
+
+test('hides service gallery when there are no real photos for the service yet', () => {
+  render(
+    <MemoryRouter initialEntries={['/services/burgers']}>
+      <Routes>
+        <Route path="/services/:slug" element={<ServicePage />} />
+      </Routes>
+    </MemoryRouter>,
+  );
+
+  const intro = screen.getByTestId('section-offering-intro');
+
+  expect(within(intro).queryByTestId('offering-gallery')).not.toBeInTheDocument();
 });

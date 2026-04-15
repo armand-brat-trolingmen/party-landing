@@ -35,6 +35,30 @@ function renderHeader(initialEntries: string[] = ['/'], legalMode = false) {
   );
 }
 
+function createRect({
+  left = 0,
+  top = 0,
+  width = 0,
+  height = 0,
+}: {
+  left?: number;
+  top?: number;
+  width?: number;
+  height?: number;
+}) {
+  return {
+    x: left,
+    y: top,
+    top,
+    left,
+    width,
+    height,
+    right: left + width,
+    bottom: top + height,
+    toJSON: () => undefined,
+  } as DOMRect;
+}
+
 test('shows desktop navigation with a dedicated order button on the homepage', () => {
   mockViewport(true);
   renderHeader();
@@ -81,6 +105,43 @@ test('keeps mobile navigation collapsed by default and moves order CTA into the 
   expect(menuButton).toHaveAttribute('aria-expanded', 'true');
   expect(screen.getByRole('navigation')).toBeInTheDocument();
   expect(screen.getByTestId('mobile-menu-order-button')).toBeInTheDocument();
+});
+
+test('mobile rest header measures the visible logo edge so the title does not slide back into the artwork', () => {
+  mockViewport(false);
+
+  const rectSpy = vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function mockRect(this: Element) {
+    const element = this as HTMLElement;
+
+    if (element.dataset.testid === 'brand-plate') {
+      return createRect({ left: 8, top: 8, width: 62, height: 62 });
+    }
+
+    if (element.dataset.testid === 'donut-logo') {
+      return createRect({ left: -18, top: -6, width: 122, height: 122 });
+    }
+
+    if (element.dataset.testid === 'menu-button') {
+      return createRect({ left: 304, top: 18, width: 44, height: 44 });
+    }
+
+    if (element.tagName === 'SPAN' && element.textContent === siteConfig.brand.name) {
+      return createRect({ left: 110, top: 20, width: 180, height: 20 });
+    }
+
+    return createRect({ left: 0, top: 0, width: 0, height: 0 });
+  });
+
+  try {
+    renderHeader();
+
+    const header = screen.getByTestId('site-header');
+    fireEvent(window, new Event('resize'));
+
+    expect(Number.parseFloat(header.style.getPropertyValue('--mobile-brand-text-shift'))).toBeGreaterThan(0);
+  } finally {
+    rectSpy.mockRestore();
+  }
 });
 
 test('hides order CTA in legal mode and routes links back to the homepage', () => {

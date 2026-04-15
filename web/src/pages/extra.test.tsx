@@ -15,7 +15,7 @@ test('renders extra-service page content from route params without the extra-ser
 
   expect(screen.getByRole('heading', { level: 1, name: 'Брендирование тележки для кейтеринга' })).toBeInTheDocument();
   expect(hero).not.toHaveTextContent('Дополнительная услуга');
-  expect(hero).toHaveTextContent('от 7.000 ₽');
+  expect(screen.queryByTestId('offering-extra-price')).not.toBeInTheDocument();
   expect(screen.getByTestId('offering-extra-included')).toHaveTextContent('Адаптация оформления тележки');
   expect(screen.getByTestId('offering-extra-visual-source-webp')).toHaveAttribute('srcset', '/images/extras/branding.webp');
   expect(screen.getByTestId('offering-extra-visual-image')).toHaveAttribute('src', '/images/extras/branding-ui.png');
@@ -32,10 +32,8 @@ test('renders equipment rental extra page with its equipment image', () => {
     </MemoryRouter>,
   );
 
-  const hero = screen.getByTestId('offering-extra-hero');
-
   expect(screen.getByRole('heading', { level: 1, name: 'Аренда оборудования' })).toBeInTheDocument();
-  expect(hero).toHaveTextContent('от 6.000 ₽');
+  expect(screen.queryByTestId('offering-extra-price')).not.toBeInTheDocument();
   expect(screen.getByTestId('offering-extra-visual-source-webp')).toHaveAttribute('srcset', '/images/extras/equipment-ui.webp');
   expect(screen.getByTestId('offering-extra-visual-image')).toHaveAttribute('src', '/images/extras/equipment-ui.png');
   expect(screen.queryByTestId('offering-extra-visual-blank')).not.toBeInTheDocument();
@@ -50,10 +48,8 @@ test('renders plov station extra page with its visual', () => {
     </MemoryRouter>,
   );
 
-  const intro = screen.getByTestId('section-offering-intro');
-
   expect(screen.getByRole('heading', { level: 1, name: 'Станция плова' })).toBeInTheDocument();
-  expect(intro).toHaveTextContent('от 10.000 ₽');
+  expect(screen.queryByTestId('offering-extra-price')).not.toBeInTheDocument();
   expect(screen.getByTestId('offering-extra-included')).toHaveTextContent('Подготовка гастрозоны к работе');
   expect(screen.getByTestId('offering-extra-visual-source-webp')).toHaveAttribute('srcset', '/images/extras/plov-ui.webp');
   expect(screen.getByTestId('offering-extra-visual-image')).toHaveAttribute('src', '/images/extras/plov-ui.png');

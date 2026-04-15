@@ -32,15 +32,21 @@ test('tablet-and-mobile header switches to the compact menu layout before nav it
   expect(mobileNarrowBlock).toContain('--header-brand-plate-size-rest: 4.18rem;');
   expect(mobileNarrowBlock).toContain('--header-brand-gap-rest: 0.68rem;');
   expect(mobileNarrowBlock).toContain('--header-brand-gap-compact: 0.38rem;');
+  expect(mobileNarrowBlock).toContain('--header-logo-scale-rest: 2.08;');
+  expect(mobileNarrowBlock).toContain('--header-logo-scale-compact: 1.84;');
   expect(mobileNarrowBlock).toContain('--header-brand-text-size-rest: 0.8rem;');
   expect(mobileNarrowBlock).toContain('--header-brand-text-max-width-rest: 10.4rem;');
   expect(mobileNarrowBlock).toContain('--header-menu-size-rest: 2.62rem;');
   expect(mobileNarrowBlock).toContain('--header-brand-plate-size-compact: 2.88rem;');
   expect(mobileNarrowBlock).toContain('--header-brand-text-size-compact: 0.6rem;');
+  expect(mobileNarrowBlock).toContain('--mobile-brand-text-rest-nudge: 0.48rem;');
   expect(css).toContain('@media (max-width: 360px)');
   expect(mobileUltraNarrowBlock).toContain('--header-inner-pad-x-rest: 0.62rem;');
   expect(mobileUltraNarrowBlock).toContain('--header-brand-gap-rest: 0.56rem;');
   expect(mobileUltraNarrowBlock).toContain('--header-brand-plate-size-rest: 3.82rem;');
+  expect(mobileUltraNarrowBlock).toContain('--header-logo-scale-rest: 1.82;');
+  expect(mobileUltraNarrowBlock).toContain('--header-logo-scale-compact: 1.58;');
+  expect(mobileUltraNarrowBlock).toContain('--mobile-brand-text-rest-nudge: 0.18rem;');
   expect(mobileNarrowBlock).toContain(".header[data-header-state='rest'] .brand {");
   expect(mobileNarrowBlock).toContain("margin-left: -0.62rem;");
   expect(mobileUltraNarrowBlock).toContain("margin-left: -0.44rem;");
@@ -70,6 +76,21 @@ test('compact desktop header eases the logo back down after the hero state', () 
   expect(css).toContain('--header-pad-top-compact: 0.28rem;');
 });
 
+test('intermediate desktop widths tighten the header before the nav starts colliding with the brand block', () => {
+  const css = readFileSync(resolve(process.cwd(), 'src/components/layout/SiteHeader.module.css'), 'utf8');
+  const tabletDesktopBlock = sliceBetween(css, '@media (max-width: 1280px)', '@media (max-width: 1180px)');
+
+  expect(css).toContain('@media (max-width: 1280px)');
+  expect(tabletDesktopBlock).toContain('--header-brand-gap-rest: 1.08rem;');
+  expect(tabletDesktopBlock).toContain('--header-brand-plate-size-rest: 9.4rem;');
+  expect(tabletDesktopBlock).toContain('--header-logo-scale-rest: 1.18;');
+  expect(tabletDesktopBlock).toContain('--header-brand-text-max-width-rest: 16rem;');
+  expect(tabletDesktopBlock).toContain('--header-nav-link-pad-x-rest: 0.42rem;');
+  expect(tabletDesktopBlock).toContain('--header-cta-min-width-rest: 9.8rem;');
+  expect(tabletDesktopBlock).toContain('width: clamp(18rem, 24vw, 22.5rem);');
+  expect(tabletDesktopBlock).toContain('grid-template-columns: auto minmax(11rem, 1fr);');
+});
+
 test('mobile header grows in the static state and shrinks back after scroll', () => {
   const css = readFileSync(resolve(process.cwd(), 'src/components/layout/SiteHeader.module.css'), 'utf8');
 
@@ -96,11 +117,12 @@ test('header transitions compact sizing more smoothly across scroll states', () 
   expect(css).toContain('backdrop-filter: blur(calc(18px * var(--header-progress)))');
 });
 
-test('mobile rest header avoids a hard-coded text offset and uses a measured shift variable instead', () => {
+test('mobile rest header combines the measured shift with a small extra text nudge away from the logo', () => {
   const css = readFileSync(resolve(process.cwd(), 'src/components/layout/SiteHeader.module.css'), 'utf8');
   const mobileBlock = sliceBetween(css, '@media (max-width: 1080px)', '@media (max-width: 420px)');
 
   expect(css).toContain('--mobile-brand-text-shift: 0px;');
-  expect(mobileBlock).toContain("transform: translateX(var(--mobile-brand-text-shift));");
+  expect(mobileBlock).toContain('--mobile-brand-text-rest-nudge: 0.92rem;');
+  expect(mobileBlock).toContain("transform: translateX(calc(var(--mobile-brand-text-shift) + var(--mobile-brand-text-rest-nudge)));");
   expect(mobileBlock).not.toContain('transform: translateX(clamp(');
 });

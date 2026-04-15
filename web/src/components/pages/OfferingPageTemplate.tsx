@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { siteConfig, type OfferingEntity, type ServicePagePackage, type ServicePageTariff } from '../../content';
+import { serviceGalleries } from '../../content/serviceGalleries.generated';
 import { useOrderModal } from '../cta/useOrderModal';
 import { ContactPlaceholderSection } from '../sections/ContactPlaceholderSection';
 import { CtaSection } from '../sections/CtaSection';
@@ -178,9 +179,6 @@ function LegacyOfferingPage({ offering, typeLabel }: OfferingPageTemplateProps) 
                 <p className={styles.description}>{offering.fullDescription}</p>
 
                 <div className={styles.metaRow}>
-                  <span className={styles.priceBadge} data-testid="offering-extra-price">
-                    {offering.price?.display ?? offering.priceFrom}
-                  </span>
                   <button type="button" className={styles.orderButton} onClick={openModal}>
                     Заказать
                   </button>
@@ -261,6 +259,7 @@ export function OfferingPageTemplate({ offering, typeLabel }: OfferingPageTempla
   const heroPrice = offering.price?.display ?? offering.priceFrom;
   const deliveryMoscowAccent = getDeliveryContent(servicePage.delivery.moscow);
   const deliveryRegionAccent = capitalizeFirstLetter(getDeliveryContent(servicePage.delivery.region));
+  const serviceGalleryImages = serviceGalleries[offering.slug] ?? [];
 
   return (
     <>
@@ -346,7 +345,7 @@ export function OfferingPageTemplate({ offering, typeLabel }: OfferingPageTempla
             )}
           </article>
 
-          <ServiceMomentsGallery />
+          <ServiceMomentsGallery images={serviceGalleryImages} />
 
           <div className={styles.detailGrid}>
             <DetailPanel title="В стоимость включено" testId="offering-included">

@@ -454,10 +454,11 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
     }
 
     const syncShift = () => {
+      const brandLogo = brandPlate.querySelector('[data-testid="donut-logo"]') as HTMLElement | null;
       const currentShift = Number.parseFloat(header.style.getPropertyValue('--mobile-brand-text-shift') || '0');
       const nextShift = resolveMobileBrandTextShift({
         currentShift: Number.isFinite(currentShift) ? currentShift : 0,
-        plateRight: brandPlate.getBoundingClientRect().right,
+        plateRight: brandLogo?.getBoundingClientRect().right ?? brandPlate.getBoundingClientRect().right,
         textLeft: brandText.getBoundingClientRect().left,
         textWidth: brandText.getBoundingClientRect().width,
         menuLeft: menuButton.getBoundingClientRect().left,

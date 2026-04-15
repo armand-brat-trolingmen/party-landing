@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "generate:service-galleries": "node scripts/generate-service-galleries.mjs",
     "prerender": "node prerender.js",
     "postbuild": "node generate-sitemap.js",
     "test": "vitest run",

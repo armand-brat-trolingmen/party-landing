@@ -46,8 +46,13 @@ test('hero styles define a premium split layout with a framed poster carousel', 
   expect(css).toContain('min-width: 12.5rem;');
   expect(css).toContain('min-height: 3.75rem;');
   expect(css).toContain('grid-template-columns: minmax(0, 0.9fr) minmax(18rem, 0.82fr);');
+  expect(css).toContain('@media (max-width: 1280px)');
+  expect(css).toContain('grid-template-columns: minmax(0, 0.98fr) minmax(17rem, 0.68fr);');
+  expect(css).toContain('@media (max-width: 1180px)');
+  expect(css).toContain('max-width: min(100%, 40rem);');
   expect(css).toContain('padding-top: clamp(0.6rem, 3vh, 1.2rem);');
   expect(css).toContain('@media (max-width: 420px)');
+  expect(css).toContain('font-size: clamp(1.72rem, 9.4vw, 2.16rem);');
   expect(css).not.toContain('.visualGlow');
   expect(css).not.toContain('.visualGlowSecondary');
 });
