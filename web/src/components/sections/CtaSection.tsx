@@ -14,8 +14,8 @@ export function CtaSection({ id, title, description, sectionTestId = 'section-ct
   const variant = 'home';
   const resolvedId = id ?? (sectionTestId === 'section-cta' ? 'cta' : undefined);
   const leadForm = useLeadForm();
-  const feedbackStatus =
-    leadForm.status === 'success' ? 'success' : leadForm.status === 'error' && leadForm.statusMessage ? 'error' : null;
+  const isSuccess = leadForm.status === 'success';
+  const isError = leadForm.status === 'error' && Boolean(leadForm.statusMessage);
 
   const isNameInvalid = Boolean(leadForm.errors.name) || leadForm.hasGeneralError;
   const isPhoneInvalid = Boolean(leadForm.errors.phone) || leadForm.hasGeneralError;
@@ -59,21 +59,38 @@ export function CtaSection({ id, title, description, sectionTestId = 'section-ct
             />
           </label>
 
-          <button type="submit" className={styles.button} disabled={leadForm.isSubmitDisabled}>
-            {leadForm.submitLabel}
+          <button
+            type="submit"
+            className={`${styles.button} ${isSuccess ? styles.buttonSuccess : ''} ${isError ? styles.buttonError : ''}`}
+            disabled={leadForm.isSubmitDisabled}
+          >
+            {isSuccess ? (
+              <span className={styles.buttonStateContent}>
+                <span className={`${styles.buttonStateIcon} ${styles.buttonStateIconSuccess}`} data-testid="cta-submit-success-icon" aria-hidden="true">
+                  <span className={styles.buttonStateMark}>✓</span>
+                </span>
+                <span>Успешно</span>
+              </span>
+            ) : isError ? (
+              <span className={styles.buttonStateContent}>
+                <span className={`${styles.buttonStateIcon} ${styles.buttonStateIconError}`} data-testid="cta-submit-error-icon" aria-hidden="true">
+                  <span className={styles.buttonStateMark}>×</span>
+                </span>
+                <span>Неуспешно</span>
+              </span>
+            ) : (
+              leadForm.submitLabel
+            )}
           </button>
 
-          {feedbackStatus ? (
-            <p
-              className={`${styles.feedback} ${feedbackStatus === 'success' ? styles.feedbackSuccess : styles.feedbackError}`}
-              aria-live="polite"
-            >
+          {isError ? (
+            <p className={`${styles.feedback} ${styles.feedbackError}`} aria-live="polite">
               {leadForm.statusMessage}
             </p>
           ) : null}
 
           <span className={styles.visuallyHidden} aria-live="polite">
-            {leadForm.status === 'loading' ? 'Отправляем заявку' : leadForm.status === 'success' ? 'Заявка отправлена' : ''}
+            {leadForm.status === 'loading' ? 'Отправляем заявку' : isSuccess ? 'Заявка отправлена' : isError ? 'Заявка не отправлена' : ''}
           </span>
         </form>
       </div>

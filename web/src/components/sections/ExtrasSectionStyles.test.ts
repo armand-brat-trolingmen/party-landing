@@ -19,3 +19,12 @@ test('extras images use the same hover zoom treatment as service cards', () => {
   expect(css).toContain('.cardLink:focus-visible .visualImage {');
   expect(css).toContain('transform: scale(1.075);');
 });
+
+test('extra card names balance into cleaner multi-line titles without forced mid-word breaks', () => {
+  const css = readFileSync(resolve(process.cwd(), 'src/components/sections/ExtrasSection.module.css'), 'utf8');
+
+  expect(css).toContain('text-wrap: balance;');
+  expect(css).toContain('overflow-wrap: normal;');
+  expect(css).toContain('word-break: normal;');
+  expect(css).toContain('max-width: 14ch;');
+});

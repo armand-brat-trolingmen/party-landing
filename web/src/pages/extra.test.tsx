@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import ExtraPage from './extra';
 
-test('renders extra-service page content from route params', () => {
+test('renders extra-service page content from route params without the extra-service eyebrow', () => {
   render(
     <MemoryRouter initialEntries={['/extras/branded-cart']}>
       <Routes>
@@ -14,6 +14,7 @@ test('renders extra-service page content from route params', () => {
   const hero = screen.getByTestId('offering-extra-hero');
 
   expect(screen.getByRole('heading', { level: 1, name: 'Брендирование тележки для кейтеринга' })).toBeInTheDocument();
+  expect(hero).not.toHaveTextContent('Дополнительная услуга');
   expect(hero).toHaveTextContent('от 7.000 ₽');
   expect(screen.getByTestId('offering-extra-included')).toHaveTextContent('Адаптация оформления тележки');
   expect(screen.getByTestId('offering-extra-visual-source-webp')).toHaveAttribute('srcset', '/images/extras/branding.webp');

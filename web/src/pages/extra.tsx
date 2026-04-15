@@ -20,7 +20,7 @@ export default function ExtraPage() {
       <SEO title={extra.seoTitle} description={extra.seoDescription} canonical={`/extras/${extra.slug}`} />
       <StructuredData data={getOfferingStructuredData(extra)} />
       <SiteShell motionPath="story-trail">
-        <OfferingPageTemplate offering={extra} typeLabel="Дополнительная услуга" />
+        <OfferingPageTemplate offering={extra} />
       </SiteShell>
     </>
   );

@@ -8,9 +8,10 @@ const initialValues: LeadFormValues = {
   phone: '',
 };
 
-const successResetDelayMs = 10_000;
+const successResetDelayMs = 30_000;
 const defaultSuccessMessage = 'Ваша заявка успешно отправлена.';
-const defaultErrorMessage = 'Форма не отправилась. Свяжитесь с нами, пожалуйста, по контактам в соцсетях.';
+const defaultErrorMessage =
+  'Если заявка не отправилась, свяжитесь с нами через контакты на сайте — мы быстро поможем с оформлением.';
 
 function omitFieldError(errors: LeadFieldErrors, fieldName: keyof LeadFieldErrors) {
   if (!errors[fieldName]) {
@@ -125,9 +126,7 @@ export function useLeadForm() {
     [values],
   );
 
-  const submitLabel =
-    status === 'loading' ? 'Отправляем...' : status === 'success' ? 'Отправлено' : 'Заказать';
-
+  const submitLabel = status === 'loading' ? 'Отправляем...' : 'Заказать';
   const isSubmitDisabled = status === 'loading' || status === 'success';
 
   return useMemo(

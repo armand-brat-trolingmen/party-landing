@@ -123,9 +123,65 @@
     opacity 220ms ease;
 }
 
+.buttonStateContent {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.72rem;
+}
+
+.buttonStateIcon {
+  display: inline-grid;
+  place-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.84);
+}
+
+.buttonStateIconSuccess {
+  color: #2b9857;
+}
+
+.buttonStateIconError {
+  color: #c13f68;
+}
+
+.buttonStateMark {
+  font-size: 1.04rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.submitButtonSuccess {
+  background: linear-gradient(135deg, #4ed37f 0%, #2ea35c 100%);
+  box-shadow: 0 18px 32px rgba(46, 163, 92, 0.24);
+}
+
+.submitButtonSuccess:hover,
+.submitButtonSuccess:focus-visible {
+  box-shadow: 0 22px 36px rgba(46, 163, 92, 0.28);
+}
+
+.submitButtonError {
+  background: linear-gradient(135deg, #ff7d9e 0%, #e24e79 100%);
+  box-shadow: 0 18px 32px rgba(226, 78, 121, 0.22);
+}
+
+.submitButtonError:hover,
+.submitButtonError:focus-visible {
+  box-shadow: 0 22px 36px rgba(226, 78, 121, 0.28);
+}
+
 .submitButton:disabled {
   cursor: default;
   opacity: 0.94;
+}
+
+.submitButtonSuccess:disabled,
+.submitButtonError:disabled {
+  opacity: 1;
 }
 
 .submitButton:hover,

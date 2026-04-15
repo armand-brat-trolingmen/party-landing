@@ -13,7 +13,7 @@ import styles from './OfferingPageTemplate.module.css';
 
 type OfferingPageTemplateProps = {
   offering: OfferingEntity;
-  typeLabel: string;
+  typeLabel?: string;
 };
 
 function CheckList({ items }: { items: readonly string[] }) {
@@ -168,7 +168,7 @@ function LegacyOfferingPage({ offering, typeLabel }: OfferingPageTemplateProps) 
           <article className={`${styles.leadFrame} site-panel-glow`} data-testid="offering-extra-hero">
             <div className={styles.leadLayout}>
               <div className={styles.copyCard}>
-                <span className={styles.eyebrow}>{typeLabel}</span>
+                {typeLabel ? <span className={styles.eyebrow}>{typeLabel}</span> : null}
                 <div className={styles.extraHeadlineBlock}>
                   <h1 id="offering-title" className={styles.title}>
                     {offering.name}
