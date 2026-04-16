@@ -7,6 +7,7 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: './src/setupTests.ts',
+    testTimeout: 10000,
     exclude: [...configDefaults.exclude, 'e2e/**', 'playwright-report/**', 'test-results/**'],
   },
 });

@@ -52,7 +52,7 @@ test('renders the full services catalog on desktop without hiding cards behind a
   expect(firstImage).toHaveAttribute('height', '1024');
   expect(firstImage).toHaveAttribute(
     'sizes',
-    '(max-width: 720px) calc(100vw - 2.3rem), (max-width: 960px) 44vw, (max-width: 1320px) 29vw, 22vw',
+    '(max-width: 720px) calc(100vw - 2.3rem), (max-width: 1079px) 46vw, 31vw',
   );
   expect(within(firstCard).getByText(services[0].price?.display ?? services[0].priceFrom)).toBeInTheDocument();
   expect(within(catalog).queryByText(services[0].shortDescription)).not.toBeInTheDocument();

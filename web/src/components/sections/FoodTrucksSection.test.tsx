@@ -25,5 +25,7 @@ test('renders the catering food trucks section with gallery assets and story cop
   const images = sectionQueries.getAllByTestId('food-truck-gallery-image');
   expect(images).toHaveLength(6);
   expect(images[0]).toHaveAttribute('src', '/images/food-trucks/food-truck-1.webp');
+  expect(images[4]).toHaveAttribute('alt', 'Фудтрак для кейтеринга на выездном мероприятии, фото 6');
   expect(images[5]).toHaveAttribute('src', '/images/food-trucks/food-truck-4.webp');
+  expect(images.every((image) => !image.getAttribute('alt')?.includes('?'))).toBe(true);
 });

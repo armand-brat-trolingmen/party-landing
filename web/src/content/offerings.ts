@@ -111,7 +111,7 @@ export type ReviewProofEntity = {
 const BRAND_NAME = 'Праздник каждый день';
 
 const HOME_SERVICE_CARD_SIZES =
-  '(max-width: 720px) calc(100vw - 2.3rem), (max-width: 960px) 44vw, (max-width: 1320px) 29vw, 22vw';
+  '(max-width: 720px) calc(100vw - 2.3rem), (max-width: 1079px) 46vw, 31vw';
 
 const HOME_SERVICE_CARD_IMAGE_MAP: Record<string, HomeCardImage> = {
   'cotton-candy': {
