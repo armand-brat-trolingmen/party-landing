@@ -1,10 +1,18 @@
-﻿import { render } from './entry-server';
+import { render } from './entry-server';
 
-test('server entry renders landing HTML and exposes helmet head tags for SSG', () => {
+test('server entry renders the landing page without suspense fallbacks and exposes helmet tags for SSG', () => {
   const result = render('/');
 
   expect(result.appHtml).toContain('Праздник каждый день');
   expect(result.appHtml).toContain('data-testid="section-hero"');
+  expect(result.appHtml).toContain('data-testid="section-food-truck-rental"');
+  expect(result.appHtml).toContain('data-testid="section-food-trucks"');
+  expect(result.appHtml).toContain('data-testid="section-testimonials"');
+  expect(result.appHtml).toContain('data-testid="section-contact"');
+  expect(result.appHtml).toContain('data-testid="section-cta"');
+  expect(result.appHtml).not.toContain('lazy-section-fallback');
+  expect(result.appHtml).not.toContain('lazy-section-skeleton');
+  expect(result.appHtml).not.toContain('aria-busy="true"');
   expect(result.helmet.title).toContain('<title');
   expect(result.helmet.title).toContain('Праздник каждый день');
   expect(result.helmet.meta).toContain('name="description"');
@@ -21,4 +29,3 @@ test('server entry renders landing HTML and exposes helmet head tags for SSG', (
   expect(result.appHtml).toContain('"@type":"WebSite"');
   expect(result.appHtml).toContain('"@type":"Service"');
 });
-

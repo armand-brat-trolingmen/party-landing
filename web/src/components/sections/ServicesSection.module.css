@@ -34,6 +34,8 @@
   display: grid;
   gap: 0.9rem;
   min-height: 100%;
+  min-width: 0;
+  align-content: start;
   color: inherit;
   text-decoration: none;
   cursor: pointer;
@@ -43,7 +45,8 @@
   position: relative;
   display: grid;
   place-items: center;
-  min-height: clamp(13.5rem, 24vw, 17rem);
+  width: 100%;
+  aspect-ratio: 5 / 4;
   border-radius: calc(var(--radius-card) - 0.45rem);
   background: linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(255, 253, 248, 0.96));
   border: 1px solid rgba(31, 52, 74, 0.07);
@@ -52,19 +55,21 @@
 }
 
 .visualWrap[data-image-fit='contain'] {
-  padding: clamp(0.9rem, 2.4vw, 1.35rem);
   background:
     linear-gradient(90deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.92) 68%, rgba(255, 255, 255, 0.72) 100%),
     linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(255, 253, 248, 0.96));
 }
 
 .visualPicture {
-  display: block;
+  display: grid;
+  place-items: center;
   width: 100%;
   height: 100%;
 }
 
 .visualImage {
+  display: block;
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -74,16 +79,15 @@
 }
 
 .visualImage[data-image-fit='contain'] {
-  width: 92%;
-  height: 92%;
+  padding: clamp(0.9rem, 2.4vw, 1.35rem);
+  object-fit: contain;
   transform: none;
   filter: drop-shadow(0 16px 24px rgba(31, 52, 74, 0.08));
-  mask-image: radial-gradient(ellipse at 44% 50%, #000 0 58%, rgba(0, 0, 0, 0.78) 74%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse at 44% 50%, #000 0 58%, rgba(0, 0, 0, 0.78) 74%, transparent 100%);
 }
 
 .visualFallback {
-  min-height: inherit;
+  width: 100%;
+  height: 100%;
   background: linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(255, 253, 248, 0.96));
 }
 
@@ -119,26 +123,6 @@
 .cardLink:hover .visualImage[data-image-fit='contain'],
 .cardLink:focus-visible .visualImage[data-image-fit='contain'] {
   transform: none;
-}
-
-.card[data-reveal-enter='true'] {
-  animation: serviceCardEnter 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: calc(var(--service-reveal-order, 0) * 38ms);
-}
-
-.card[data-reveal-enter='true'] .visualImage {
-  animation: serviceImageEnter 340ms cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: calc(var(--service-reveal-order, 0) * 38ms + 26ms);
-}
-
-.card[data-reveal-exit='true'] {
-  animation: serviceCardExit 280ms cubic-bezier(0.55, 0, 0.22, 1) both;
-  animation-delay: calc((6 - var(--service-reveal-order, 0)) * 18ms);
-}
-
-.card[data-reveal-exit='true'] .visualImage {
-  animation: serviceImageExit 280ms cubic-bezier(0.55, 0, 0.22, 1) both;
-  animation-delay: calc((6 - var(--service-reveal-order, 0)) * 18ms);
 }
 
 .link {
@@ -203,12 +187,8 @@
   background-position: 100% 0;
 }
 
-.revealWrap {
-  display: flex;
-  justify-content: center;
-}
-
 .sliderProgress {
+  display: none;
   position: relative;
   justify-self: center;
   width: min(100%, 10.5rem);
@@ -226,28 +206,6 @@
   box-shadow: 0 0 16px rgba(255, 126, 182, 0.22);
   transform-origin: left center;
   transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.revealButton {
-  min-height: 3.4rem;
-  padding: 0.85rem 1.45rem;
-  border: 1px solid rgba(31, 52, 74, 0.1);
-  border-radius: var(--radius-pill);
-  background: rgba(255, 255, 255, 0.8);
-  color: var(--text-primary);
-  font-weight: 700;
-  cursor: pointer;
-  transition:
-    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 220ms ease,
-    box-shadow 220ms ease;
-}
-
-.revealButton:hover,
-.revealButton:focus-visible {
-  transform: translate3d(0, -2px, 0);
-  border-color: rgba(143, 216, 248, 0.34);
-  box-shadow: 0 16px 28px rgba(31, 52, 74, 0.08);
 }
 
 @keyframes serviceButtonSheen {
@@ -274,63 +232,21 @@
   }
 }
 
-@keyframes serviceCardEnter {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 16px, 0);
-  }
-
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-@keyframes serviceImageEnter {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1.02);
-  }
-}
-
-@keyframes serviceCardExit {
-  from {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-
-  to {
-    opacity: 0;
-    transform: translate3d(0, 10px, 0);
-  }
-}
-
-@keyframes serviceImageExit {
-  from {
-    opacity: 1;
-    transform: scale(1.02);
-  }
-
-  to {
-    opacity: 0;
-    transform: scale(0.97);
-  }
-}
-
 @media (min-width: 760px) {
   .grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media (min-width: 1120px) {
+@media (min-width: 960px) {
   .grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1320px) {
+  .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
@@ -363,13 +279,8 @@
     scroll-snap-stop: always;
   }
 
-  .cardLink {
-    gap: 0.9rem;
-    align-content: start;
-  }
-
-  .visualWrap {
-    min-height: 11.5rem;
+  .visualImage[data-image-fit='contain'] {
+    padding: 1rem;
   }
 
   .copy {
@@ -398,6 +309,7 @@
   }
 
   .sliderProgress {
+    display: block;
     margin-top: 0.2rem;
   }
 }

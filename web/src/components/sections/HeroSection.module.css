@@ -141,25 +141,49 @@
   }
 }
 
-@media (max-width: 1180px) {
+@media (max-width: 960px) {
   .hero {
     min-height: auto;
-    padding-block: clamp(5rem, 10vh, 7rem) clamp(3.8rem, 8vh, 5.6rem);
+    padding-block: clamp(3.5rem, 7vh, 5rem) clamp(2.8rem, 6vh, 4rem);
   }
 
   .container {
     grid-template-columns: 1fr;
     align-content: start;
-    gap: 2rem;
+    gap: clamp(1.2rem, 3vw, 1.8rem);
   }
 
   .copyColumn {
-    max-width: min(100%, 40rem);
+    gap: 1.45rem;
+    max-width: min(100%, 38rem);
   }
 
   .posterColumn {
     justify-self: center;
-    width: min(100%, 29rem);
+    width: min(100%, 22rem);
+  }
+}
+
+@media (max-width: 960px) and (min-width: 721px) {
+  .copyColumn {
+    width: min(100%, 38rem);
+    justify-self: center;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .tagline,
+  .lead,
+  .actions {
+    width: 100%;
+  }
+
+  .lead {
+    max-width: min(100%, 32rem);
+  }
+
+  .actions {
+    justify-content: center;
   }
 }
 

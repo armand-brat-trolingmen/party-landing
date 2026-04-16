@@ -48,8 +48,12 @@ test('hero styles define a premium split layout with a framed poster carousel', 
   expect(css).toContain('grid-template-columns: minmax(0, 0.9fr) minmax(18rem, 0.82fr);');
   expect(css).toContain('@media (max-width: 1280px)');
   expect(css).toContain('grid-template-columns: minmax(0, 0.98fr) minmax(17rem, 0.68fr);');
-  expect(css).toContain('@media (max-width: 1180px)');
-  expect(css).toContain('max-width: min(100%, 40rem);');
+  expect(css).toContain('@media (max-width: 960px)');
+  expect(css).toContain('max-width: min(100%, 38rem);');
+  expect(css).toContain('width: min(100%, 22rem);');
+  expect(css).toContain('@media (max-width: 960px) and (min-width: 721px)');
+  expect(css).toContain('justify-items: center;');
+  expect(css).toContain('text-align: center;');
   expect(css).toContain('padding-top: clamp(0.6rem, 3vh, 1.2rem);');
   expect(css).toContain('@media (max-width: 420px)');
   expect(css).toContain('font-size: clamp(1.72rem, 9.4vw, 2.16rem);');
@@ -65,10 +69,11 @@ test('services styles preserve card interactions but drop the outer frame rule',
   expect(css).toContain('.sectionBody {');
   expect(css).toContain('.card {');
   expect(css).toContain('.cardLink {');
-  expect(css).toContain('.revealButton {');
   expect(css).toContain('@keyframes serviceButtonSheen');
   expect(css).toContain('.link::before');
   expect(css).toContain('transform: translate3d(0, -8px, 0);');
+  expect(css).toContain('aspect-ratio: 5 / 4;');
+  expect(css).toContain('object-fit: contain;');
   expect(css).toContain('scroll-snap-type: x mandatory;');
   expect(css).toContain('grid-auto-columns: 100%;');
   expect(css).toContain('scroll-snap-stop: always;');
