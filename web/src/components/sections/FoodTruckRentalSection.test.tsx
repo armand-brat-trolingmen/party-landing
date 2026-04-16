@@ -27,9 +27,12 @@ test('renders the food truck rental section with models, equipment, pricing, and
   expect(sectionQueries.getByText('Месячная аренда от 80.000 ₽ в месяц')).toBeInTheDocument();
 
   const images = sectionQueries.getAllByTestId('food-truck-rental-image');
+  const webpSources = sectionQueries.getAllByTestId('food-truck-rental-image-webp-source');
   expect(images).toHaveLength(3);
-  expect(images[0]).toHaveAttribute('src', '/images/food-truck-rental/rental-food-truck-1.webp');
-  expect(images[2]).toHaveAttribute('src', '/images/food-truck-rental/rental-food-truck-3.webp');
+  expect(webpSources).toHaveLength(3);
+  expect(webpSources[0]).toHaveAttribute('srcset', '/images/food-truck-rental/rental-food-truck-1.webp');
+  expect(images[0]).toHaveAttribute('src', '/images/food-truck-rental/rental-food-truck-1.jpg');
+  expect(images[2]).toHaveAttribute('src', '/images/food-truck-rental/rental-food-truck-3.jpg');
 
   fireEvent.click(sectionQueries.getByRole('button', { name: 'Узнать условия' }));
   expect(screen.getByRole('dialog')).toBeInTheDocument();

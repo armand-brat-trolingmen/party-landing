@@ -13,11 +13,11 @@ test('mobile extras slider uses compact cards instead of full-width panels', () 
 test('extras images use the same hover zoom treatment as service cards', () => {
   const css = readFileSync(resolve(process.cwd(), 'src/components/sections/ExtrasSection.module.css'), 'utf8');
 
-  expect(css).toContain('transform: scale(1.02);');
-  expect(css).toContain('transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);');
+  expect(css).toContain('transform: translate3d(0, 0, 0) scale(1.02);');
+  expect(css).toContain('transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);');
   expect(css).toContain('.cardLink:hover .visualImage,');
   expect(css).toContain('.cardLink:focus-visible .visualImage {');
-  expect(css).toContain('transform: scale(1.075);');
+  expect(css).toContain('transform: translate3d(0, -4px, 0) scale(1.04);');
 });
 
 test('extra card names balance into cleaner multi-line titles without forced mid-word breaks', () => {
@@ -26,5 +26,5 @@ test('extra card names balance into cleaner multi-line titles without forced mid
   expect(css).toContain('text-wrap: balance;');
   expect(css).toContain('overflow-wrap: normal;');
   expect(css).toContain('word-break: normal;');
-  expect(css).toContain('max-width: 14ch;');
+  expect(css).toContain('max-width: 13ch;');
 });

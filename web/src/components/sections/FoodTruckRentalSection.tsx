@@ -26,17 +26,26 @@ export function FoodTruckRentalSection() {
           <div className={`${styles.photoGrid} reveal-grid`} data-testid="food-truck-rental-gallery">
             {content.items.map((item, index) => (
               <figure key={item.image} className={styles.photoFrame} data-frame-size={index === 0 ? 'tall' : 'wide'}>
-                <img
-                  className={styles.photo}
-                  src={item.image}
-                  alt={item.alt}
-                  width={item.width}
-                  height={item.height}
-                  loading={index === 0 ? 'eager' : 'lazy'}
-                  decoding="async"
-                  fetchPriority={index === 0 ? 'high' : 'low'}
-                  data-testid="food-truck-rental-image"
-                />
+                <picture className={styles.photoPicture}>
+                  {item.imageWebpSrcSet ? (
+                    <source
+                      data-testid="food-truck-rental-image-webp-source"
+                      type="image/webp"
+                      srcSet={item.imageWebpSrcSet}
+                    />
+                  ) : null}
+                  <img
+                    className={styles.photo}
+                    src={item.image}
+                    alt={item.alt}
+                    width={item.width}
+                    height={item.height}
+                    loading={index === 0 ? 'eager' : 'lazy'}
+                    decoding="async"
+                    fetchPriority={index === 0 ? 'high' : 'low'}
+                    data-testid="food-truck-rental-image"
+                  />
+                </picture>
               </figure>
             ))}
           </div>

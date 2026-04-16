@@ -45,6 +45,7 @@
 }
 
 .semanticCard {
+  display: grid;
   overflow: hidden;
   aspect-ratio: 4 / 3;
   margin: 0;
@@ -53,10 +54,30 @@
   box-shadow: 0 16px 34px rgba(31, 52, 74, 0.08);
 }
 
+.semanticPicture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .semanticImage {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+@supports not (aspect-ratio: 1 / 1) {
+  .semanticCard::before,
+  .semanticPicture {
+    grid-area: 1 / 1;
+  }
+
+  .semanticCard::before {
+    content: '';
+    display: block;
+    padding-top: 75%;
+  }
 }
 
 @media (max-width: 900px) {

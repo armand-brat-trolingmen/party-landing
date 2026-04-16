@@ -6,6 +6,8 @@ type GL = Renderer['gl'];
 
 type CircularGalleryItem = {
   image: string;
+  imageWebpSrcSet?: string;
+  sizes?: string;
   alt: string;
   width: number;
   height: number;
@@ -40,6 +42,15 @@ function lerp(start: number, end: number, amount: number) {
 function wrap(value: number, min: number, max: number) {
   const range = max - min;
   return ((((value - min) % range) + range) % range) + min;
+}
+
+function getPrimarySrcFromSrcSet(srcSet?: string) {
+  const firstSource = srcSet?.split(',')[0]?.trim();
+  if (!firstSource) {
+    return null;
+  }
+
+  return firstSource.split(/\s+/)[0] ?? null;
 }
 
 function supportsInteractiveGallery() {
@@ -213,8 +224,10 @@ export function CircularGallery({
 
       const texture = program.uniforms.tMap.value as Texture;
       const image = new window.Image();
-      image.src = item.image;
       image.decoding = 'async';
+      const preferredImageSrc = getPrimarySrcFromSrcSet(item.imageWebpSrcSet) ?? item.image;
+      let hasRetriedWithFallback = false;
+
       image.onload = () => {
         if (destroyed) {
           return;
@@ -226,10 +239,17 @@ export function CircularGallery({
         startLoop();
       };
       image.onerror = () => {
+        if (!hasRetriedWithFallback && preferredImageSrc !== item.image) {
+          hasRetriedWithFallback = true;
+          image.src = item.image;
+          return;
+        }
+
         if (!destroyed) {
           setIsInteractive(false);
         }
       };
+      image.src = preferredImageSrc;
 
       return { mesh, program };
     });
@@ -423,17 +443,28 @@ export function CircularGallery({
       <div className={shouldShowCanvas ? styles.semanticTrackHidden : styles.semanticTrack}>
         {items.map((item) => (
           <figure key={item.image} className={styles.semanticCard}>
-            <img
-              className={styles.semanticImage}
-              data-testid="food-truck-gallery-image"
-              src={item.image}
-              alt={item.alt}
-              width={item.width}
-              height={item.height}
-              loading="lazy"
-              decoding="async"
-              draggable={false}
-            />
+            <picture className={styles.semanticPicture}>
+              {item.imageWebpSrcSet ? (
+                <source
+                  data-testid="food-truck-gallery-source-webp"
+                  type="image/webp"
+                  srcSet={item.imageWebpSrcSet}
+                  sizes={item.sizes}
+                />
+              ) : null}
+              <img
+                className={styles.semanticImage}
+                data-testid="food-truck-gallery-image"
+                src={item.image}
+                alt={item.alt}
+                width={item.width}
+                height={item.height}
+                loading="lazy"
+                decoding="async"
+                draggable={false}
+                sizes={item.sizes}
+              />
+            </picture>
           </figure>
         ))}
       </div>
