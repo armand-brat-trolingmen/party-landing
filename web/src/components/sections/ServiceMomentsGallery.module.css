@@ -20,12 +20,18 @@
   display: grid;
   grid-auto-flow: column;
   width: 100%;
+  min-width: 0;
   grid-auto-columns: max(clamp(13rem, 24vw, 17.5rem), calc((100% - (0.9rem * 3)) / 4));
   gap: 0.9rem;
   min-height: clamp(13rem, 24vw, 17.5rem);
   overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
   padding-bottom: 0.08rem;
-  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 0.1rem;
+  scroll-snap-type: x proximity;
+  touch-action: pan-x pan-y;
   scrollbar-width: thin;
   scrollbar-color: rgba(143, 216, 248, 0.7) rgba(255, 255, 255, 0.5);
 }
@@ -54,6 +60,7 @@
     0 6px 16px rgba(255, 126, 182, 0.08);
   overflow: hidden;
   scroll-snap-align: start;
+  scroll-snap-stop: normal;
 }
 
 .slideButton {

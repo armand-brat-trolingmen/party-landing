@@ -5,12 +5,15 @@ test('services keeps the mobile slider while letting media stay visible and lock
   const css = readFileSync(resolve(process.cwd(), 'src/components/sections/ServicesSection.module.css'), 'utf8');
 
   expect(css).toContain('grid-auto-columns: clamp(16rem, 86vw, 22rem);');
+  expect(css).toContain('@media (min-width: 721px)');
+  expect(css).toContain('grid-template-columns: repeat(2, minmax(0, 1fr));');
   expect(css).toContain('justify-content: start;');
   expect(css).toContain('aspect-ratio: 1 / 1.02;');
   expect(css).toContain('grid-template-rows: auto minmax(0, 1fr);');
   expect(css).toContain('grid-template-rows: minmax(0, 1fr) auto;');
-  expect(css).toContain('scroll-snap-type: x mandatory;');
-  expect(css).toContain('scroll-snap-stop: always;');
+  expect(css).toContain('scroll-snap-type: x proximity;');
+  expect(css).toContain('scroll-snap-stop: normal;');
+  expect(css).toContain('touch-action: pan-x pan-y;');
   expect(css).toContain('object-fit: contain;');
   expect(css).toContain('object-position: center bottom;');
   expect(css).toContain('font-weight: 800;');

@@ -78,10 +78,10 @@ test('services styles preserve card interactions but drop the outer frame rule',
   expect(css).toContain('object-position: center bottom;');
   expect(css).toContain('white-space: nowrap;');
   expect(css).toContain('@media (min-width: 1080px)');
-  expect(css).toContain('scroll-snap-type: x mandatory;');
+  expect(css).toContain('scroll-snap-type: x proximity;');
   expect(css).toContain('grid-auto-columns: clamp(16rem, 86vw, 22rem);');
   expect(css).toContain('justify-content: start;');
-  expect(css).toContain('scroll-snap-stop: always;');
+  expect(css).toContain('scroll-snap-stop: normal;');
   expect(css).not.toContain('@keyframes serviceButtonSheen');
   expect(css).not.toContain('@keyframes serviceButtonShift');
   expect(css).not.toContain('.frame {');

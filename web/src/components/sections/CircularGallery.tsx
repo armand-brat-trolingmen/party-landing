@@ -62,6 +62,13 @@ function supportsInteractiveGallery() {
     return false;
   }
 
+  if (
+    (window.matchMedia?.('(pointer: coarse)').matches ?? false) &&
+    (window.matchMedia?.('(max-width: 900px)').matches ?? false)
+  ) {
+    return false;
+  }
+
   try {
     const canvas = document.createElement('canvas');
     return Boolean(canvas.getContext('webgl') ?? canvas.getContext('experimental-webgl'));
@@ -397,6 +404,25 @@ export function CircularGallery({
       startLoop();
     }
 
+    function handleWheel(event: WheelEvent) {
+      const primaryDelta = Math.abs(event.deltaX) >= Math.abs(event.deltaY) ? event.deltaX : 0;
+      const fallbackDelta = event.shiftKey ? event.deltaY : 0;
+      const rawDelta = primaryDelta || fallbackDelta;
+
+      if (Math.abs(rawDelta) < 0.5) {
+        return;
+      }
+
+      event.preventDefault();
+
+      const deltaScale = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? stageElement.clientWidth : 1;
+      const worldDelta = rawDelta * deltaScale * metrics.pixelsToWorld * 0.78;
+
+      target += worldDelta;
+      dragVelocity = worldDelta * 0.16;
+      startLoop();
+    }
+
     updateMetrics();
     renderScene();
 
@@ -411,6 +437,7 @@ export function CircularGallery({
     stageElement.addEventListener('pointerup', releasePointer);
     stageElement.addEventListener('pointercancel', releasePointer);
     stageElement.addEventListener('lostpointercapture', releasePointer);
+    stageElement.addEventListener('wheel', handleWheel, { passive: false });
 
     return () => {
       destroyed = true;
@@ -424,6 +451,7 @@ export function CircularGallery({
       stageElement.removeEventListener('pointerup', releasePointer);
       stageElement.removeEventListener('pointercancel', releasePointer);
       stageElement.removeEventListener('lostpointercapture', releasePointer);
+      stageElement.removeEventListener('wheel', handleWheel);
       stageElement.dataset.dragging = 'false';
 
       if (canvas.parentNode === stageElement) {
