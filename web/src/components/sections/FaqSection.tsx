@@ -6,14 +6,14 @@ import { StructuredData } from '../StructuredData';
 import { SectionHeading } from '../ui/SectionHeading';
 import styles from './FaqSection.module.css';
 
-export function FaqSection() {
+export function FaqSection({ includeStructuredData = true }: { includeStructuredData?: boolean }) {
   const { ref, revealState } = useScrollReveal();
   const { faq } = siteConfig.homepage;
   const [openItemId, setOpenItemId] = useState<string | null>(faq.items[0]?.id ?? null);
 
   return (
     <section id="faq" className="site-section" data-testid="section-faq" aria-labelledby="faq-title">
-      <StructuredData data={getFaqStructuredData(faq.items)} />
+      {includeStructuredData ? <StructuredData data={getFaqStructuredData(faq.items)} /> : null}
       <div ref={ref} className="site-container site-reveal" data-reveal-state={revealState} data-reveal-stagger="true">
         <div className={styles.sectionBody}>
           <SectionHeading title={<span id="faq-title">{faq.title}</span>} description={faq.description} />

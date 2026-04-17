@@ -3,6 +3,23 @@ import { MemoryRouter, Route, Routes } from 'react-router';
 import { siteConfig } from '../content';
 import ServicePage from './service';
 
+test('service pages keep service schema but skip duplicated faq schema', () => {
+  render(
+    <MemoryRouter initialEntries={['/services/chocolate-fountain']}>
+      <Routes>
+        <Route path="/services/:slug" element={<ServicePage />} />
+      </Routes>
+    </MemoryRouter>,
+  );
+
+  const structuredData = Array.from(document.querySelectorAll('script[type="application/ld+json"]'))
+    .map((node) => node.textContent ?? '')
+    .join(' ');
+
+  expect(structuredData).toContain('BreadcrumbList');
+  expect(structuredData).not.toContain('FAQPage');
+});
+
 test('renders service page content from route params', () => {
   render(
     <MemoryRouter initialEntries={['/services/cotton-candy']}>

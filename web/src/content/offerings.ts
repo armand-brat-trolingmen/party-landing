@@ -307,12 +307,30 @@ const MOMENT_ALT_MAP: Record<string, string> = {
 
 function buildOfferingSeoTitle(offering: Pick<OfferingEntity, 'kind' | 'name'>) {
   return offering.kind === 'service'
-    ? `${offering.name} на мероприятие — ${BRAND_NAME}`
-    : `${offering.name} для мероприятия — ${BRAND_NAME}`;
+    ? `${offering.name} в Москве на мероприятие | ${BRAND_NAME}`
+    : `${offering.name} в Москве | ${BRAND_NAME}`;
 }
 
-function buildOfferingSeoDescription(offering: Pick<OfferingEntity, 'name' | 'shortDescription'>) {
-  return `${offering.name} от ${BRAND_NAME} для мероприятий в Москве и области. ${offering.shortDescription}`;
+function trimSeoText(value: string, maxLength = 165) {
+  const normalizedValue = value.replace(/\s+/g, ' ').trim();
+
+  if (normalizedValue.length <= maxLength) {
+    return normalizedValue;
+  }
+
+  const truncatedValue = normalizedValue.slice(0, maxLength - 1).trimEnd();
+  const safeValue = truncatedValue.replace(/[.,;:!\-–—\s]+$/u, '').trimEnd();
+
+  return `${safeValue}…`;
+}
+
+function buildOfferingSeoDescription(offering: Pick<OfferingEntity, 'kind' | 'name' | 'shortDescription'>) {
+  const lead =
+    offering.kind === 'service'
+      ? `${offering.name} в Москве для праздников и мероприятий.`
+      : `${offering.name} в Москве для оформления и усиления мероприятия.`;
+
+  return trimSeoText(`${lead} ${offering.shortDescription}`);
 }
 
 function buildOfferingAlt(name: string) {
@@ -578,7 +596,7 @@ const rawServices: readonly OfferingEntity[] = [
   createService({
     slug: 'french-hot-dog',
     name: 'Хот-дог (Французский)',
-    shortDescription: 'Удобный формат для событий, где нужен быстрый и понятный street-food с аккуратной подачей.',
+    shortDescription: 'Удобный формат для событий, где нужна быстрая и понятная подача уличной еды с аккуратным видом.',
     fullDescription:
       'Французский хот-дог подходит для мероприятий с активным потоком гостей, когда важно сочетание скорости выдачи и понятного вкуса. Формат легко включается в общий ритм события и хорошо работает как самостоятельная гастрономическая точка.',
     priceFrom: 'от 15.000',

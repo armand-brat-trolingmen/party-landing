@@ -13,7 +13,7 @@ const heroGallerySlides = [
     sizes: heroPosterSlideSizes,
     width: 960,
     height: 1280,
-    alt: 'Party Landing hero gallery photo 1',
+    alt: 'Фото выездного кейтеринга «Праздник каждый день», кадр 1',
   },
   {
     id: 'gallery-02',
@@ -24,7 +24,7 @@ const heroGallerySlides = [
     sizes: heroPosterSlideSizes,
     width: 1920,
     height: 2560,
-    alt: 'Party Landing hero gallery photo 2',
+    alt: 'Фото выездного кейтеринга «Праздник каждый день», кадр 2',
   },
   {
     id: 'gallery-03',
@@ -35,7 +35,7 @@ const heroGallerySlides = [
     sizes: heroPosterSlideSizes,
     width: 1200,
     height: 1600,
-    alt: 'Party Landing hero gallery photo 3',
+    alt: 'Фото выездного кейтеринга «Праздник каждый день», кадр 3',
   },
   {
     id: 'gallery-04',
@@ -46,7 +46,7 @@ const heroGallerySlides = [
     sizes: heroPosterSlideSizes,
     width: 960,
     height: 1280,
-    alt: 'Party Landing hero gallery photo 4',
+    alt: 'Фото выездного кейтеринга «Праздник каждый день», кадр 4',
   },
   {
     id: 'gallery-05',
@@ -57,7 +57,7 @@ const heroGallerySlides = [
     sizes: heroPosterSlideSizes,
     width: 1920,
     height: 2560,
-    alt: 'Party Landing hero gallery photo 5',
+    alt: 'Фото выездного кейтеринга «Праздник каждый день», кадр 5',
   },
   {
     id: 'gallery-06',
@@ -68,7 +68,7 @@ const heroGallerySlides = [
     sizes: heroPosterSlideSizes,
     width: 1920,
     height: 2560,
-    alt: 'Party Landing hero gallery photo 6',
+    alt: 'Фото выездного кейтеринга «Праздник каждый день», кадр 6',
   },
   {
     id: 'gallery-07',
@@ -79,7 +79,7 @@ const heroGallerySlides = [
     sizes: heroPosterSlideSizes,
     width: 959,
     height: 1173,
-    alt: 'Party Landing hero gallery photo 7',
+    alt: 'Фото выездного кейтеринга «Праздник каждый день», кадр 7',
   },
   {
     id: 'gallery-08',
@@ -90,7 +90,7 @@ const heroGallerySlides = [
     sizes: heroPosterSlideSizes,
     width: 1920,
     height: 2560,
-    alt: 'Party Landing hero gallery photo 8',
+    alt: 'Фото выездного кейтеринга «Праздник каждый день», кадр 8',
   },
   {
     id: 'gallery-09',
@@ -101,7 +101,7 @@ const heroGallerySlides = [
     sizes: heroPosterSlideSizes,
     width: 960,
     height: 1280,
-    alt: 'Party Landing hero gallery photo 9',
+    alt: 'Фото выездного кейтеринга «Праздник каждый день», кадр 9',
   },
   {
     id: 'gallery-10',
@@ -112,7 +112,7 @@ const heroGallerySlides = [
     sizes: heroPosterSlideSizes,
     width: 2560,
     height: 1920,
-    alt: 'Party Landing hero gallery photo 10',
+    alt: 'Фото выездного кейтеринга «Праздник каждый день», кадр 10',
   },
   {
     id: 'gallery-11',
@@ -123,7 +123,7 @@ const heroGallerySlides = [
     sizes: heroPosterSlideSizes,
     width: 1920,
     height: 2560,
-    alt: 'Party Landing hero gallery photo 11',
+    alt: 'Фото выездного кейтеринга «Праздник каждый день», кадр 11',
   },
   {
     id: 'gallery-12',
@@ -134,7 +134,7 @@ const heroGallerySlides = [
     sizes: heroPosterSlideSizes,
     width: 919,
     height: 1228,
-    alt: 'Party Landing hero gallery photo 12',
+    alt: 'Фото выездного кейтеринга «Праздник каждый день», кадр 12',
   },
   {
     id: 'gallery-13',
@@ -145,7 +145,7 @@ const heroGallerySlides = [
     sizes: heroPosterSlideSizes,
     width: 1607,
     height: 2000,
-    alt: 'Party Landing hero gallery photo 13',
+    alt: 'Фото выездного кейтеринга «Праздник каждый день», кадр 13',
   },
   {
     id: 'gallery-14',
@@ -156,7 +156,7 @@ const heroGallerySlides = [
     sizes: heroPosterSlideSizes,
     width: 1714,
     height: 2560,
-    alt: 'Party Landing hero gallery photo 14',
+    alt: 'Фото выездного кейтеринга «Праздник каждый день», кадр 14',
   },
 ] as const;
 
@@ -171,7 +171,7 @@ export const heroPosterSlides = [
     sizes: heroPosterSlideSizes,
     width: 1258,
     height: 2048,
-    alt: 'Chocolate fountain on the premium food station',
+    alt: 'Шоколадный фонтан на премиальной гастрономической станции',
     objectPosition: '52% 44%',
   },
   ...heroGallerySlides,

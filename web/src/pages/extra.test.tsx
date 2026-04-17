@@ -2,6 +2,23 @@ import { render, screen, within } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import ExtraPage from './extra';
 
+test('extra pages keep service schema but skip duplicated faq schema', () => {
+  render(
+    <MemoryRouter initialEntries={['/extras/branded-cart']}>
+      <Routes>
+        <Route path="/extras/:slug" element={<ExtraPage />} />
+      </Routes>
+    </MemoryRouter>,
+  );
+
+  const structuredData = Array.from(document.querySelectorAll('script[type="application/ld+json"]'))
+    .map((node) => node.textContent ?? '')
+    .join(' ');
+
+  expect(structuredData).toContain('BreadcrumbList');
+  expect(structuredData).not.toContain('FAQPage');
+});
+
 test('renders branded cart extra page with prices block and moments gallery', () => {
   render(
     <MemoryRouter initialEntries={['/extras/branded-cart']}>

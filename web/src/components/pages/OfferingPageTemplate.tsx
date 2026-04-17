@@ -226,7 +226,7 @@ function LegacyOfferingPage({ offering, typeLabel }: OfferingPageTemplateProps) 
       <ServicesSection allowReveal={false} items={siteConfig.services} />
       <ExtrasSection />
       <TestimonialsSection />
-      <FaqSection />
+      <FaqSection includeStructuredData={false} />
       <ContactPlaceholderSection />
       <CtaSection
         sectionTestId="section-offering-cta"
@@ -404,7 +404,7 @@ export function OfferingPageTemplate({ offering, typeLabel }: OfferingPageTempla
       </div>
       <ExtrasSection />
       <TestimonialsSection />
-      <FaqSection />
+      <FaqSection includeStructuredData={false} />
       <ContactPlaceholderSection />
     </>
   );
