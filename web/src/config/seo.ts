@@ -1,6 +1,9 @@
 ﻿import {
   DEFAULT_LOCALE as ROOT_DEFAULT_LOCALE,
+  OG_IMAGE_HEIGHT,
+  OG_IMAGE_TYPE,
   OG_IMAGE_URL,
+  OG_IMAGE_WIDTH,
   SITE_NAME as ROOT_SITE_NAME,
   SITE_URL as ROOT_SITE_URL,
 } from '../../site.config.js';
@@ -10,6 +13,10 @@ export const SITE_URL = ROOT_SITE_URL;
 export const SITE_NAME = ROOT_SITE_NAME;
 export const DEFAULT_LOCALE = ROOT_DEFAULT_LOCALE;
 export const DEFAULT_OG_IMAGE = OG_IMAGE_URL;
+export const DEFAULT_OG_IMAGE_WIDTH = OG_IMAGE_WIDTH;
+export const DEFAULT_OG_IMAGE_HEIGHT = OG_IMAGE_HEIGHT;
+export const DEFAULT_OG_IMAGE_TYPE = OG_IMAGE_TYPE;
+export const DEFAULT_OG_IMAGE_ALT = `${SITE_NAME} — кейтеринг, сладкие станции и фудтраки для праздников`;
 export const BUSINESS_DESCRIPTION = siteConfig.seo.defaults.businessDescription;
 export const LOGO_URL = toAbsoluteUrl('/brand-logo.png');
 

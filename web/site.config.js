@@ -1,7 +1,10 @@
-﻿const DEFAULT_SITE_URL = 'https://partylanding.vercel.app';
+const DEFAULT_SITE_URL = 'https://party-everyday.ru';
 const DEFAULT_SITE_NAME = 'Праздник каждый день';
 const DEFAULT_LOCALE_VALUE = 'ru_RU';
-const DEFAULT_OG_IMAGE_PATH_VALUE = '/og-image.png';
+const DEFAULT_OG_IMAGE_PATH_VALUE = '/og-image.png?v=20260417';
+const DEFAULT_OG_IMAGE_WIDTH_VALUE = 1200;
+const DEFAULT_OG_IMAGE_HEIGHT_VALUE = 630;
+const DEFAULT_OG_IMAGE_TYPE_VALUE = 'image/png';
 
 function normalizeSiteUrl(url) {
   return String(url || DEFAULT_SITE_URL).trim().replace(/\/+$/, '');
@@ -18,8 +21,10 @@ export const OG_IMAGE_PATH = String(runtimeEnv.OG_IMAGE_PATH ?? runtimeEnv.VITE_
 export const OG_IMAGE_URL = /^https?:\/\//i.test(OG_IMAGE_PATH)
   ? OG_IMAGE_PATH
   : `${SITE_URL}${OG_IMAGE_PATH.startsWith('/') ? OG_IMAGE_PATH : `/${OG_IMAGE_PATH}`}`;
+export const OG_IMAGE_WIDTH = Number(runtimeEnv.OG_IMAGE_WIDTH ?? runtimeEnv.VITE_OG_IMAGE_WIDTH ?? DEFAULT_OG_IMAGE_WIDTH_VALUE);
+export const OG_IMAGE_HEIGHT = Number(runtimeEnv.OG_IMAGE_HEIGHT ?? runtimeEnv.VITE_OG_IMAGE_HEIGHT ?? DEFAULT_OG_IMAGE_HEIGHT_VALUE);
+export const OG_IMAGE_TYPE = String(runtimeEnv.OG_IMAGE_TYPE ?? runtimeEnv.VITE_OG_IMAGE_TYPE ?? DEFAULT_OG_IMAGE_TYPE_VALUE).trim();
 
 export function withSiteUrl(template, siteUrl = SITE_URL) {
   return template.replaceAll(SITE_URL_PLACEHOLDER, normalizeSiteUrl(siteUrl));
 }
-

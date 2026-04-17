@@ -433,8 +433,8 @@ test('extensionless offering urls return route-specific prerendered html', async
   expect(response?.ok()).toBeTruthy();
 
   const html = await response?.text();
-  expect(html).toContain('https://partylanding.vercel.app/services/cotton-candy#service');
-  expect(html).toContain('href="https://partylanding.vercel.app/services/cotton-candy"');
+  expect(html).toContain('https://party-everyday.ru/services/cotton-candy#service');
+  expect(html).toContain('href="https://party-everyday.ru/services/cotton-candy"');
 });
 
 test('service and extra pages render the shared offering shell', async ({ page }) => {

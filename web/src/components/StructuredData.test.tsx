@@ -8,12 +8,12 @@ test('StructuredData renders stable JSON-LD markup for SSR hydration', () => {
         {
           '@type': 'Organization',
           name: 'Праздник каждый день',
-          url: 'https://partylanding.vercel.app/',
+          url: 'https://party-everyday.ru/',
         },
         {
           '@type': 'WebSite',
           name: 'Праздник каждый день',
-          url: 'https://partylanding.vercel.app/',
+          url: 'https://party-everyday.ru/',
         },
       ]}
     />,

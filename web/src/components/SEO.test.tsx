@@ -26,6 +26,14 @@ test('SEO writes title and key meta tags in client mode', async () => {
   expect(document.head.querySelector('meta[property="og:site_name"]')?.getAttribute('content')).toBe(SITE_NAME);
   expect(document.head.querySelector('meta[property="og:url"]')?.getAttribute('content')).toBe(`${SITE_URL}/`);
   expect(document.head.querySelector('meta[property="og:image"]')?.getAttribute('content')).toBe(DEFAULT_OG_IMAGE);
+  expect(document.head.querySelector('meta[property="og:image:secure_url"]')?.getAttribute('content')).toBe(
+    DEFAULT_OG_IMAGE,
+  );
+  expect(document.head.querySelector('meta[property="og:image:width"]')?.getAttribute('content')).toBe('1200');
+  expect(document.head.querySelector('meta[property="og:image:height"]')?.getAttribute('content')).toBe('630');
+  expect(document.head.querySelector('meta[property="og:image:type"]')?.getAttribute('content')).toBe('image/png');
+  expect(document.head.querySelector('meta[property="og:image:alt"]')?.getAttribute('content')).toContain(SITE_NAME);
+  expect(document.head.querySelector('meta[name="twitter:image:alt"]')?.getAttribute('content')).toContain(SITE_NAME);
   expect(document.head.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe(`${SITE_URL}/`);
   expect(document.head.querySelector('meta[name="robots"]')?.getAttribute('content')).toBe(
     'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',

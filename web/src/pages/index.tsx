@@ -12,8 +12,8 @@ export default function IndexPage() {
   return (
     <>
       <SEO
-        title="Праздник каждый день — кейтеринг для праздников в Москве"
-        description="Фудтраки, сладкая вата и шоколадный фонтан для частных, детских и корпоративных событий в Москве и области. Связь в Telegram, WhatsApp и отзывы на Avito."
+        title={siteConfig.seo.home.title}
+        description={siteConfig.seo.home.description}
         canonical="/"
       />
       <Helmet prioritizeSeoTags>

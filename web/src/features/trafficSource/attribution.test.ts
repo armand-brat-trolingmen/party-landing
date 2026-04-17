@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, test } from 'vitest';
+﻿import { afterEach, describe, expect, test } from 'vitest';
 import { ensureLeadSourceCookies, getStoredLeadSources, resolveLeadSource } from './attribution';
 
 afterEach(() => {
@@ -9,7 +9,7 @@ afterEach(() => {
 describe('lead attribution', () => {
   test('prefers utm data when it exists', () => {
     const source = resolveLeadSource(
-      new URL('https://partylanding.vercel.app/?utm_source=yandex&utm_medium=cpc'),
+      new URL('https://party-everyday.ru/?utm_source=yandex&utm_medium=cpc'),
       'https://google.com/search',
     );
 
@@ -18,7 +18,7 @@ describe('lead attribution', () => {
 
   test('detects avito as a separate source and keeps the full referrer url', () => {
     const source = resolveLeadSource(
-      new URL('https://partylanding.vercel.app/'),
+      new URL('https://party-everyday.ru/'),
       'https://www.avito.ru/moskva/predlozheniya_uslug/sladkaya_vata_123456789',
     );
 
@@ -29,7 +29,7 @@ describe('lead attribution', () => {
 
   test('falls back to the full external referrer url when the source is unknown', () => {
     const source = resolveLeadSource(
-      new URL('https://partylanding.vercel.app/'),
+      new URL('https://party-everyday.ru/'),
       'https://partner.example.com/campaign?from=banner',
     );
 
@@ -37,14 +37,14 @@ describe('lead attribution', () => {
   });
 
   test('stores first source once and keeps updating last source from new visits', () => {
-    ensureLeadSourceCookies('https://partylanding.vercel.app/', 'https://google.com/search');
+    ensureLeadSourceCookies('https://party-everyday.ru/', 'https://google.com/search');
     expect(getStoredLeadSources()).toEqual({
       firstLeadSource: 'Google поиск',
       lastLeadSource: 'Google поиск',
     });
 
     ensureLeadSourceCookies(
-      'https://partylanding.vercel.app/',
+      'https://party-everyday.ru/',
       'https://www.avito.ru/moskva/predlozheniya_uslug/sladkaya_vata_123456789',
     );
     expect(getStoredLeadSources()).toEqual({
@@ -54,8 +54,8 @@ describe('lead attribution', () => {
   });
 
   test('does not overwrite the last source on internal site transitions', () => {
-    ensureLeadSourceCookies('https://partylanding.vercel.app/', 'https://vk.com/');
-    ensureLeadSourceCookies('https://partylanding.vercel.app/services/popcorn', 'https://partylanding.vercel.app/');
+    ensureLeadSourceCookies('https://party-everyday.ru/', 'https://vk.com/');
+    ensureLeadSourceCookies('https://party-everyday.ru/services/popcorn', 'https://party-everyday.ru/');
 
     expect(getStoredLeadSources()).toEqual({
       firstLeadSource: 'Переход из VK',

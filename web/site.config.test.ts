@@ -20,9 +20,9 @@ test('site config loads without a process global for browser-like runtimes', () 
   });
 
   expect(JSON.parse(output.trim())).toEqual({
-    siteUrl: 'https://partylanding.vercel.app',
+    siteUrl: 'https://party-everyday.ru',
     siteName: 'Праздник каждый день',
     defaultLocale: 'ru_RU',
-    ogImageUrl: 'https://partylanding.vercel.app/og-image.png',
+    ogImageUrl: 'https://party-everyday.ru/og-image.png?v=20260417',
   });
 });

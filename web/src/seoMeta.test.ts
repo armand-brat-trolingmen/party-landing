@@ -8,7 +8,11 @@ test('index html defines production-friendly SEO tags for the landing page', () 
   expect(html).toContain('<html lang="ru">');
   expect(html).toContain('name="viewport"');
   expect(html).toContain('name="yandex-verification"');
-  expect(html).toContain('content="07b2ceb2a2824f8f"');
+  expect(html).toContain('content="70515ede813a5a7e"');
+  expect(html).not.toContain(['07b2ceb2', 'a2824f8f'].join(''));
+  expect(html).toContain('https://mc.yandex.ru/metrika/tag.js?id=108614702');
+  expect(html).toContain("ym(108614702, 'init'");
+  expect(html).toContain('https://mc.yandex.ru/watch/108614702');
   expect(html).toContain('rel="icon" type="image/png" href="/favicon.png?v=4"');
   expect(html).toContain('rel="shortcut icon" href="/favicon.png?v=4"');
   expect(html).toContain('<!--helmet-title-->');
