@@ -1,13 +1,21 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-test('mobile extras slider uses compact cards instead of full-width panels', () => {
+test('extras catalog has no breakpoint dead zone and keeps a resilient mobile slider', () => {
   const css = readFileSync(resolve(process.cwd(), 'src/components/sections/ExtrasSection.module.css'), 'utf8');
 
+  expect(css).toContain('@media (min-width: 721px)');
+  expect(css).toContain('grid-template-columns: repeat(2, minmax(0, 1fr));');
   expect(css).toContain('grid-auto-columns: clamp(12rem, 64vw, 14rem);');
+  expect(css).toContain('justify-content: start;');
+  expect(css).toContain('overflow-y: hidden;');
+  expect(css).toContain('-webkit-overflow-scrolling: touch;');
+  expect(css).toContain('overscroll-behavior-x: contain;');
+  expect(css).toContain('scroll-snap-type: x proximity;');
+  expect(css).toContain('scroll-snap-stop: normal;');
+  expect(css).toContain('touch-action: pan-x pan-y;');
   expect(css).toContain('min-height: 8rem;');
   expect(css).toContain('display: none;');
-  expect(css).toContain('scroll-snap-type: x mandatory;');
 });
 
 test('extras images use the same hover zoom treatment as service cards', () => {
