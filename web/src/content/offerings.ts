@@ -113,25 +113,30 @@ const BRAND_NAME = 'Праздник каждый день';
 
 const HOME_SERVICE_CARD_SIZES =
   '(max-width: 720px) calc(100vw - 2.3rem), (max-width: 1079px) 46vw, 31vw';
+const HOME_SERVICE_CARD_FALLBACK_DIR = '/images/services-home-fallback';
+
+function getHomeServiceCardFallback(slug: string) {
+  return `${HOME_SERVICE_CARD_FALLBACK_DIR}/${slug}.png`;
+}
 
 const HOME_SERVICE_CARD_IMAGE_MAP: Record<string, HomeCardImage> = {
   'cotton-candy': {
     src: '/images/services-home/cotton-candy.webp',
-    fallbackSrc: '/images/services-home/cotton-candy.webp',
+    fallbackSrc: getHomeServiceCardFallback('cotton-candy'),
     width: 1024,
     height: 1024,
     sizes: HOME_SERVICE_CARD_SIZES,
   },
   popcorn: {
     src: '/images/services-home/popcorn.webp',
-    fallbackSrc: '/images/services-home/popcorn.webp',
+    fallbackSrc: getHomeServiceCardFallback('popcorn'),
     width: 1024,
     height: 1024,
     sizes: HOME_SERVICE_CARD_SIZES,
   },
   'cotton-candy-popcorn': {
     src: '/images/services-home/cotton-candy-popcorn.webp',
-    fallbackSrc: '/images/services-home/cotton-candy-popcorn.webp',
+    fallbackSrc: getHomeServiceCardFallback('cotton-candy-popcorn'),
     width: 1024,
     height: 1024,
     sizes: HOME_SERVICE_CARD_SIZES,
@@ -145,28 +150,28 @@ const HOME_SERVICE_CARD_IMAGE_MAP: Record<string, HomeCardImage> = {
   },
   'roll-ice-cream': {
     src: '/images/services-home/roll-ice-cream.webp',
-    fallbackSrc: '/images/services-home/roll-ice-cream.webp',
+    fallbackSrc: getHomeServiceCardFallback('roll-ice-cream'),
     width: 1024,
     height: 1024,
     sizes: HOME_SERVICE_CARD_SIZES,
   },
   'scoop-ice-cream': {
     src: '/images/services-home/scoop-ice-cream.webp',
-    fallbackSrc: '/images/services-home/scoop-ice-cream.webp',
+    fallbackSrc: getHomeServiceCardFallback('scoop-ice-cream'),
     width: 1024,
     height: 1024,
     sizes: HOME_SERVICE_CARD_SIZES,
   },
   'nitro-ice-cream': {
     src: '/images/services-home/nitro-ice-cream.webp',
-    fallbackSrc: '/images/services-home/nitro-ice-cream.webp',
+    fallbackSrc: getHomeServiceCardFallback('nitro-ice-cream'),
     width: 1024,
     height: 1024,
     sizes: HOME_SERVICE_CARD_SIZES,
   },
   'chocolate-fountain': {
     src: '/images/services-home/chocolate-fountain.webp',
-    fallbackSrc: '/images/services-home/chocolate-fountain.webp',
+    fallbackSrc: getHomeServiceCardFallback('chocolate-fountain'),
     width: 1024,
     height: 1024,
     sizes: HOME_SERVICE_CARD_SIZES,
@@ -180,21 +185,21 @@ const HOME_SERVICE_CARD_IMAGE_MAP: Record<string, HomeCardImage> = {
   },
   'danish-hot-dog': {
     src: '/images/services-home/danish-hot-dog.webp',
-    fallbackSrc: '/images/services-home/danish-hot-dog.webp',
+    fallbackSrc: getHomeServiceCardFallback('danish-hot-dog'),
     width: 1024,
     height: 1024,
     sizes: HOME_SERVICE_CARD_SIZES,
   },
   burgers: {
     src: '/images/services-home/burgers.webp',
-    fallbackSrc: '/images/services-home/burgers.webp',
+    fallbackSrc: getHomeServiceCardFallback('burgers'),
     width: 1024,
     height: 1024,
     sizes: HOME_SERVICE_CARD_SIZES,
   },
   'belgian-waffles': {
     src: '/images/services-home/belgian-waffles.webp',
-    fallbackSrc: '/images/services-home/belgian-waffles.webp',
+    fallbackSrc: getHomeServiceCardFallback('belgian-waffles'),
     width: 1024,
     height: 1024,
     sizes: HOME_SERVICE_CARD_SIZES,
@@ -208,14 +213,14 @@ const HOME_SERVICE_CARD_IMAGE_MAP: Record<string, HomeCardImage> = {
   },
   'champagne-pyramid': {
     src: '/images/services-home/champagne-pyramid.webp',
-    fallbackSrc: '/images/services-home/champagne-pyramid.webp',
+    fallbackSrc: getHomeServiceCardFallback('champagne-pyramid'),
     width: 1024,
     height: 1024,
     sizes: HOME_SERVICE_CARD_SIZES,
   },
   'craft-lemonade': {
     src: '/images/services-home/craft-lemonade.webp',
-    fallbackSrc: '/images/services-home/craft-lemonade.webp',
+    fallbackSrc: getHomeServiceCardFallback('craft-lemonade'),
     width: 1024,
     height: 1024,
     sizes: HOME_SERVICE_CARD_SIZES,
@@ -230,7 +235,7 @@ const HOME_SERVICE_CARD_IMAGE_MAP: Record<string, HomeCardImage> = {
   },
   'bubble-tea': {
     src: '/images/services-home/bubble-tea.webp',
-    fallbackSrc: '/images/services-home/bubble-tea.webp',
+    fallbackSrc: getHomeServiceCardFallback('bubble-tea'),
     width: 1024,
     height: 1024,
     sizes: HOME_SERVICE_CARD_SIZES,
@@ -245,7 +250,7 @@ const HOME_SERVICE_CARD_IMAGE_MAP: Record<string, HomeCardImage> = {
   },
   'foam-cannon': {
     src: '/images/services-home/foam-cannon.webp',
-    fallbackSrc: '/images/services-home/foam-cannon.webp',
+    fallbackSrc: getHomeServiceCardFallback('foam-cannon'),
     width: 1024,
     height: 1024,
     sizes: HOME_SERVICE_CARD_SIZES,

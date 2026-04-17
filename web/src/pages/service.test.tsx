@@ -1,5 +1,6 @@
 import { render, screen, within } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
+import { siteConfig } from '../content';
 import ServicePage from './service';
 
 test('renders service page content from route params', () => {
@@ -39,6 +40,8 @@ test('renders foam cannon packages in a three-column desktop-ready grid and keep
 });
 
 test('renders the redesigned service-only page structure with tariffs delivery and in-flow cta', () => {
+  const cottonCandy = siteConfig.services.find((service) => service.slug === 'cotton-candy');
+
   render(
     <MemoryRouter initialEntries={['/services/cotton-candy']}>
       <Routes>
@@ -63,7 +66,10 @@ test('renders the redesigned service-only page structure with tariffs delivery a
   expect(main).not.toHaveAttribute('data-motion-path', 'story-trail');
   expect(within(intro).queryByText('Основная услуга')).not.toBeInTheDocument();
   expect(within(intro).queryByTestId('offering-hero-placeholder')).not.toBeInTheDocument();
-  expect(within(intro).getByTestId('offering-hero-image')).toHaveAttribute('src', '/images/services-home/cotton-candy.webp');
+  expect(within(intro).getByTestId('offering-hero-image')).toHaveAttribute(
+    'src',
+    cottonCandy?.homeCardImage?.fallbackSrc ?? '',
+  );
   expect(price).toHaveTextContent('Цена');
   expect(price).toHaveTextContent('от 12.000 ₽');
   expect(duration).toHaveTextContent('от 2 часов');

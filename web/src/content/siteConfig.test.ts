@@ -12,6 +12,18 @@ test('siteConfig exposes the required top-level content domains', () => {
   expect(siteConfig).toHaveProperty('seo');
 });
 
+test('service home card fallbacks stay on broadly supported raster formats', () => {
+  const invalidFallbacks = siteConfig.services
+    .filter((service) => service.homeCardImage)
+    .filter((service) => /\.webp$/i.test(service.homeCardImage?.fallbackSrc ?? ''))
+    .map((service) => ({
+      slug: service.slug,
+      fallbackSrc: service.homeCardImage?.fallbackSrc,
+    }));
+
+  expect(invalidFallbacks).toEqual([]);
+});
+
 test('contacts expose raw display and href-ready values', () => {
   expect(siteConfig.contacts.phone.raw).toBe('+79263919225');
   expect(siteConfig.contacts.phone.href).toBe('tel:+79263919225');

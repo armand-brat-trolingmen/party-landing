@@ -36,12 +36,28 @@
 
 .semanticTrack {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  animation: semanticTrackDrift 14s ease-in-out infinite alternate;
+  will-change: transform;
 }
 
 .semanticTrackHidden {
   opacity: 0;
   pointer-events: none;
   z-index: -1;
+}
+
+@keyframes semanticTrackDrift {
+  0% {
+    transform: translate3d(-1.2rem, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -0.18rem, 0);
+  }
+
+  100% {
+    transform: translate3d(1.2rem, 0, 0);
+  }
 }
 
 .semanticCard {
@@ -86,6 +102,8 @@
   }
 
   .semanticTrack {
+    animation: none;
+    transform: none;
     grid-auto-flow: column;
     grid-auto-columns: minmax(15rem, 72vw);
     overflow-x: auto;
@@ -107,5 +125,10 @@
 @media (prefers-reduced-motion: reduce) {
   .root {
     cursor: default;
+  }
+
+  .semanticTrack {
+    animation: none;
+    transform: none;
   }
 }

@@ -443,15 +443,7 @@ export function CircularGallery({
       <div className={shouldShowCanvas ? styles.semanticTrackHidden : styles.semanticTrack}>
         {items.map((item) => (
           <figure key={item.image} className={styles.semanticCard}>
-            <picture className={styles.semanticPicture}>
-              {item.imageWebpSrcSet ? (
-                <source
-                  data-testid="food-truck-gallery-source-webp"
-                  type="image/webp"
-                  srcSet={item.imageWebpSrcSet}
-                  sizes={item.sizes}
-                />
-              ) : null}
+            <div className={styles.semanticPicture}>
               <img
                 className={styles.semanticImage}
                 data-testid="food-truck-gallery-image"
@@ -464,7 +456,7 @@ export function CircularGallery({
                 draggable={false}
                 sizes={item.sizes}
               />
-            </picture>
+            </div>
           </figure>
         ))}
       </div>
