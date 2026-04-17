@@ -3,6 +3,7 @@ import { siteConfig } from '../../content';
 import { ServicesSection } from './ServicesSection';
 
 const services = siteConfig.services;
+const firstService = services[0];
 
 function mockViewport(width: number) {
   Object.defineProperty(window, 'innerWidth', {
@@ -44,8 +45,8 @@ test('renders the full services catalog on desktop without hiding cards behind a
   expect(screen.queryByTestId('services-reveal-button')).not.toBeInTheDocument();
   expect(within(catalog).getByRole('heading', { level: 3, name: services[services.length - 1].name })).toBeInTheDocument();
   expect(firstImage).toBeInTheDocument();
-  expect(firstWebpSource).toHaveAttribute('srcset', expect.stringContaining('/images/services-home/cotton-candy.webp'));
-  expect(firstImage).toHaveAttribute('src', expect.stringContaining('/images/services-home/cotton-candy.webp'));
+  expect(firstWebpSource).toHaveAttribute('srcset', expect.stringContaining(firstService.homeCardImage?.src ?? ''));
+  expect(firstImage).toHaveAttribute('src', expect.stringContaining(firstService.homeCardImage?.fallbackSrc ?? ''));
   expect(firstImage).toHaveAttribute('loading', 'eager');
   expect(firstImage).toHaveAttribute('fetchpriority', 'high');
   expect(firstImage).toHaveAttribute('width', '1024');
@@ -54,8 +55,9 @@ test('renders the full services catalog on desktop without hiding cards behind a
     'sizes',
     '(max-width: 720px) calc(100vw - 2.3rem), (max-width: 1079px) 46vw, 31vw',
   );
-  expect(within(firstCard).getByText(services[0].price?.display ?? services[0].priceFrom)).toBeInTheDocument();
-  expect(within(catalog).queryByText(services[0].shortDescription)).not.toBeInTheDocument();
+  expect(within(firstCard).getByTestId('service-card-description')).toHaveTextContent(firstService.cardDescription ?? firstService.shortDescription);
+  expect(within(firstCard).getByText(firstService.price?.display ?? firstService.priceFrom)).toBeInTheDocument();
+  expect(within(firstCard).queryByText(firstService.shortDescription)).not.toBeInTheDocument();
 });
 
 test('routes each desktop card to its dedicated internal service page', () => {
@@ -65,9 +67,9 @@ test('routes each desktop card to its dedicated internal service page', () => {
   const catalog = screen.getByTestId('services-catalog');
   const firstLink = within(catalog)
     .getAllByRole('link')
-    .find((link) => link.getAttribute('href') === '/services/cotton-candy');
+    .find((link) => link.getAttribute('href') === `/services/${services[0].slug}`);
 
-  expect(firstLink).toHaveAttribute('href', '/services/cotton-candy');
+  expect(firstLink).toHaveAttribute('href', `/services/${services[0].slug}`);
 });
 
 test('keeps the mobile slider with a swipe progress indicator while rendering the full catalog', () => {
@@ -76,6 +78,7 @@ test('keeps the mobile slider with a swipe progress indicator while rendering th
 
   const catalog = screen.getByTestId('services-catalog');
   const firstCard = within(catalog).getAllByTestId('service-card')[0] as HTMLElement;
+  const firstMeta = within(firstCard).getByTestId('service-card-meta');
   const progress = screen.getByTestId('services-slider-progress');
   const images = within(catalog).getAllByTestId('service-card-media-image');
 
@@ -84,10 +87,12 @@ test('keeps the mobile slider with a swipe progress indicator while rendering th
   expect(images.length).toBeGreaterThan(0);
   expect(within(firstCard).getByTestId('service-card-media-source-webp')).toHaveAttribute(
     'srcset',
-    expect.stringContaining('/images/services-home/cotton-candy.webp'),
+    expect.stringContaining(firstService.homeCardImage?.src ?? ''),
   );
-  expect(images[0]).toHaveAttribute('src', expect.stringContaining('/images/services-home/cotton-candy.webp'));
-  expect(within(firstCard).getByText(services[0].price?.display ?? services[0].priceFrom)).toBeInTheDocument();
+  expect(firstMeta).toBeInTheDocument();
+  expect(within(firstCard).getByTestId('service-card-description')).toHaveTextContent(firstService.cardDescription ?? firstService.shortDescription);
+  expect(images[0]).toHaveAttribute('src', expect.stringContaining(firstService.homeCardImage?.fallbackSrc ?? ''));
+  expect(within(firstCard).getByText(firstService.price?.display ?? firstService.priceFrom)).toBeInTheDocument();
   expect(progress).toHaveAttribute('role', 'progressbar');
   expect(progress).toHaveAttribute('aria-valuenow', '0');
 

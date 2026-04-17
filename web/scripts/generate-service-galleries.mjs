@@ -26,7 +26,10 @@ const gallerySources = [
   { slug: 'pancakes', name: 'Блины', folders: ['блины'] },
   { slug: 'champagne-pyramid', name: 'Пирамида из шампанского', folders: ['шампанское'] },
   { slug: 'craft-lemonade', name: 'Крафтовый лимонад', folders: ['лимонад'] },
+  { slug: 'branded-cart', name: 'Брендирование тележки для кейтеринга', folders: ['брендирование'] },
+  { slug: 'tea-station', name: 'Чайная станция', folders: ['чайная станция'] },
   { slug: 'bubble-tea', name: 'Бабл ти', folders: ['баблти'] },
+  { slug: 'plov-station', name: 'Станция плова', folders: ['Плов'] },
 ];
 
 function quote(value) {
@@ -41,11 +44,13 @@ async function collectSourceFiles(folders) {
   const files = [];
 
   for (const folder of folders) {
-    const folderPath = path.join(sourceRoot, folder);
+    const folderPath = await resolveSourceFolderPath(folder);
     const entries = await readdir(folderPath, { withFileTypes: true });
+    const imageEntries = entries.filter((entry) => entry.isFile() && /\.(jpe?g|png)$/i.test(entry.name));
+    const photoEntries = imageEntries.filter((entry) => /^photo/i.test(entry.name));
+    const galleryEntries = photoEntries.length > 0 ? photoEntries : imageEntries;
 
-    const folderFiles = entries
-      .filter((entry) => entry.isFile() && /\.(jpe?g|png)$/i.test(entry.name))
+    const folderFiles = galleryEntries
       .sort((left, right) => left.name.localeCompare(right.name, 'ru'))
       .map((entry) => path.join(folderPath, entry.name));
 
@@ -53,6 +58,25 @@ async function collectSourceFiles(folders) {
   }
 
   return files;
+}
+
+async function resolveSourceFolderPath(folder) {
+  const candidatePaths = [path.join(sourceRoot, folder), path.join(repoRoot, folder)];
+
+  for (const candidatePath of candidatePaths) {
+    try {
+      await readdir(candidatePath);
+      return candidatePath;
+    } catch (error) {
+      if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') {
+        continue;
+      }
+
+      throw error;
+    }
+  }
+
+  throw new Error(`Не удалось найти папку с галереей: ${folder}`);
 }
 
 async function createFallback(inputPath, outputPath, width, hasAlpha) {

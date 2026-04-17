@@ -124,6 +124,7 @@ export function ServicesSection({
             {items.map((service, index) => {
               const shouldPrioritizeImage = isMobile ? index < Math.min(baseMobileEagerCount, 2) : index < baseDesktopPriorityCount;
               const shouldEagerLoadImage = isMobile ? index < mobileEagerCount : index < baseDesktopPriorityCount;
+              const cardDescription = service.cardDescription ?? service.shortDescription;
 
               return (
                 <article key={service.slug} className={styles.card} data-testid="service-card" data-service-slug={service.slug}>
@@ -162,16 +163,21 @@ export function ServicesSection({
                       )}
                     </div>
 
-                    <div className={styles.copy}>
-                      <h3 className={styles.name}>{service.name}</h3>
-                    </div>
+                    <div className={styles.meta} data-testid="service-card-meta">
+                      <div className={styles.copy}>
+                        <h3 className={styles.name}>{service.name}</h3>
+                        <p className={styles.cardDescription} data-testid="service-card-description">
+                          {cardDescription}
+                        </p>
+                      </div>
 
-                    <div className={styles.footer}>
-                      <span className={styles.price}>{service.price?.display ?? service.priceFrom}</span>
-                      <span className={styles.link} aria-hidden="true">
-                        <span>{SERVICE_LINK_TEXT}</span>
-                        <span className={styles.linkArrow}>{'\u2192'}</span>
-                      </span>
+                      <div className={styles.footer}>
+                        <span className={styles.price}>{service.price?.display ?? service.priceFrom}</span>
+                        <span className={styles.link} aria-hidden="true">
+                          <span>{SERVICE_LINK_TEXT}</span>
+                          <span className={styles.linkArrow}>{'\u2192'}</span>
+                        </span>
+                      </div>
                     </div>
                   </a>
                 </article>

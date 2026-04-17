@@ -30,24 +30,9 @@ function CheckList({ items }: { items: readonly string[] }) {
   );
 }
 
-function ResponsibilityList({ items }: { items: readonly string[] }) {
-  return (
-    <div className={styles.responsibilityList}>
-      {items.map((item, index) => (
-        <div key={item} className={styles.responsibilityItem}>
-          <span className={styles.responsibilityNumber} aria-hidden="true">
-            {String(index + 1).padStart(2, '0')}
-          </span>
-          <p>{item}</p>
-        </div>
-      ))}
-    </div>
-  );
-}
-
 function TariffCard({ tariff }: { tariff: ServicePageTariff }) {
   return (
-    <article className={styles.tariffCard}>
+    <article className={styles.tariffCard} data-variant-count={tariff.variants?.length ?? 0}>
       <div className={styles.tariffTopline}>
         <h3 className={styles.tariffTitle}>{tariff.title}</h3>
         {tariff.subtitle ? <span className={styles.tariffSubtitle}>{tariff.subtitle}</span> : null}
@@ -57,7 +42,7 @@ function TariffCard({ tariff }: { tariff: ServicePageTariff }) {
       {tariff.weekdayPrice ? <p className={styles.tariffWeekday}>{tariff.weekdayPrice}</p> : null}
 
       {tariff.variants ? (
-        <div className={styles.tariffVariants}>
+        <div className={styles.tariffVariants} data-variant-count={tariff.variants.length}>
           {tariff.variants.map((variant) => (
             <span key={variant.label} className={styles.tariffVariant}>
               <span>{variant.label}</span>
@@ -98,14 +83,16 @@ function DetailPanel({
   children,
   testId,
   variant = 'panel',
+  className = '',
 }: {
   title: string;
   children: ReactNode;
   testId?: string;
   variant?: 'panel' | 'plain';
+  className?: string;
 }) {
   return (
-    <section className={`${styles.detailPanel} ${variant === 'plain' ? styles.plainDetailPanel : ''}`} data-testid={testId}>
+    <section className={`${styles.detailPanel} ${variant === 'plain' ? styles.plainDetailPanel : ''} ${className}`.trim()} data-testid={testId}>
       <h2 className={styles.detailTitle}>{title}</h2>
       {children}
     </section>
@@ -161,6 +148,7 @@ function formatDurationLabel(value: string) {
 
 function LegacyOfferingPage({ offering, typeLabel }: OfferingPageTemplateProps) {
   const { openModal } = useOrderModal();
+  const extraGalleryImages = serviceGalleries[offering.slug] ?? [];
 
   return (
     <>
@@ -185,10 +173,10 @@ function LegacyOfferingPage({ offering, typeLabel }: OfferingPageTemplateProps) 
                 </div>
 
                 <div className={styles.includedBlock} data-testid="offering-extra-included">
-                  <h2 className={styles.includedTitle}>Что входит в формат</h2>
-                  <ul className={styles.includedList}>
+                  <h2 className={styles.includedTitle}>Цены</h2>
+                  <ul className={`${styles.includedList} ${styles.includedPriceList}`}>
                     {offering.included.map((item) => (
-                      <li key={item} className={styles.includedItem}>
+                      <li key={item} className={`${styles.includedItem} ${styles.includedPriceItem}`}>
                         <span className={styles.includedDot} aria-hidden="true" />
                         <span>{item}</span>
                       </li>
@@ -230,6 +218,8 @@ function LegacyOfferingPage({ offering, typeLabel }: OfferingPageTemplateProps) 
               </div>
             </div>
           </article>
+
+          <ServiceMomentsGallery images={extraGalleryImages} />
         </div>
       </section>
 
@@ -260,6 +250,9 @@ export function OfferingPageTemplate({ offering, typeLabel }: OfferingPageTempla
   const deliveryMoscowAccent = getDeliveryContent(servicePage.delivery.moscow);
   const deliveryRegionAccent = capitalizeFirstLetter(getDeliveryContent(servicePage.delivery.region));
   const serviceGalleryImages = serviceGalleries[offering.slug] ?? [];
+  const ctaTitle = `Нужна услуга «${offering.name}» на ваше событие?`;
+  const ctaDescription =
+    'Оставьте имя и телефон — заказчик свяжется с вами, поможет уточнить детали и подскажет следующий шаг.';
 
   return (
     <>
@@ -351,17 +344,19 @@ export function OfferingPageTemplate({ offering, typeLabel }: OfferingPageTempla
             <DetailPanel title="В стоимость включено" testId="offering-included">
               <CheckList items={servicePage.included} />
             </DetailPanel>
-            <DetailPanel title="Что мы берем на себя" testId="offering-materials">
-              <ResponsibilityList items={servicePage.materials} />
-            </DetailPanel>
           </div>
 
-          <section className={styles.tariffsSection} data-testid="offering-tariffs" aria-labelledby="offering-tariffs-title">
+          <section
+            className={styles.tariffsSection}
+            data-service-slug={offering.slug}
+            data-testid="offering-tariffs"
+            aria-labelledby="offering-tariffs-title"
+          >
             <div className={styles.blockHeading}>
               <h2 id="offering-tariffs-title">Тарифы</h2>
               <p>Формат можно адаптировать под площадку, поток гостей и длительность события.</p>
             </div>
-            <div className={styles.tariffsGrid}>
+            <div className={styles.tariffsGrid} data-service-slug={offering.slug}>
               {servicePage.tariffs.map((tariffItem) => (
                 <TariffCard key={`${tariffItem.title}-${tariffItem.price ?? tariffItem.variants?.map((variant) => variant.price).join('-')}`} tariff={tariffItem} />
               ))}
@@ -390,8 +385,11 @@ export function OfferingPageTemplate({ offering, typeLabel }: OfferingPageTempla
               </article>
             </div>
           </DetailPanel>
+
         </div>
       </section>
+
+      <CtaSection sectionTestId="section-offering-cta" title={ctaTitle} description={ctaDescription} />
 
       <div data-testid="section-offering-other-services">
         <ServicesSection
@@ -408,11 +406,6 @@ export function OfferingPageTemplate({ offering, typeLabel }: OfferingPageTempla
       <TestimonialsSection />
       <FaqSection />
       <ContactPlaceholderSection />
-      <CtaSection
-        sectionTestId="section-offering-cta"
-        title={`Нужна услуга «${offering.name}» на ваше событие?`}
-        description="Оставьте имя и телефон — заказчик свяжется с вами, поможет уточнить детали и подскажет следующий шаг."
-      />
     </>
   );
 }

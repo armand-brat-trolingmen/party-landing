@@ -27,33 +27,36 @@ test('renders extras inside the wide canvas without a framed outer surface', () 
 
   const section = screen.getByTestId('section-extras');
   const sectionQueries = within(section);
+  const extraArticles = within(sectionQueries.getByTestId('extras-track')).getAllByRole('article');
+  const brandedCartTitleLines = within(extraArticles[0]).getAllByTestId('extra-card-title-line');
 
   expect(sectionQueries.getByRole('heading', { level: 2, name: 'Доп. услуги' })).toBeInTheDocument();
   expect(section).not.toHaveAttribute('data-section-tone');
   expect(sectionQueries.getByTestId('extras-track')).toHaveAttribute('data-extras-style', 'continuation-grid');
   expect(sectionQueries.getByTestId('extras-track')).toHaveAttribute('data-mobile-layout', 'grid');
   expect(sectionQueries.queryByTestId('extras-slider-progress')).not.toBeInTheDocument();
-  expect(within(sectionQueries.getByTestId('extras-track')).getAllByRole('article')).toHaveLength(3);
+  expect(extraArticles).toHaveLength(3);
+  expect(brandedCartTitleLines.map((line) => line.textContent)).toEqual(['Брендирование', 'тележки для', 'кейтеринга']);
   expect(sectionQueries.getByRole('heading', { level: 3, name: 'Брендирование тележки для кейтеринга' })).toBeInTheDocument();
   expect(sectionQueries.getByRole('heading', { level: 3, name: 'Аренда оборудования' })).toBeInTheDocument();
-  expect(sectionQueries.getByRole('heading', { level: 3, name: 'Станция плова' })).toBeInTheDocument();
+  expect(sectionQueries.getByRole('heading', { level: 3, name: 'Аренда тележек' })).toBeInTheDocument();
   expect(sectionQueries.queryByText(/от \d/i)).not.toBeInTheDocument();
 
   const visualSlots = sectionQueries.queryAllByTestId('extra-visual-blank');
   const brandingImage = sectionQueries.getByRole('img', { name: /Брендирование тележки для кейтеринга/ });
   const equipmentImage = sectionQueries.getByRole('img', { name: /Аренда оборудования/ });
-  const plovImage = sectionQueries.getByRole('img', { name: /Станция плова/ });
+  const cartRentalImage = sectionQueries.getByRole('img', { name: /Аренда тележек/ });
 
   const sources = sectionQueries.getAllByTestId('extra-visual-source-webp');
 
   expect(visualSlots).toHaveLength(0);
   expect(brandingImage).toHaveAttribute('src', '/images/extras/branding-ui.png');
   expect(equipmentImage).toHaveAttribute('src', '/images/extras/equipment-ui.png');
-  expect(plovImage).toHaveAttribute('src', '/images/extras/plov-ui.png');
+  expect(cartRentalImage).toHaveAttribute('src', '/images/extras/cart-rental-ui.png');
   expect(sources).toHaveLength(3);
   expect(sources[0]).toHaveAttribute('srcset', '/images/extras/branding.webp');
   expect(sources[1]).toHaveAttribute('srcset', '/images/extras/equipment-ui.webp');
-  expect(sources[2]).toHaveAttribute('srcset', '/images/extras/plov-ui.webp');
+  expect(sources[2]).toHaveAttribute('srcset', '/images/extras/cart-rental-ui.webp');
   expect(brandingImage).toHaveAttribute('loading', 'lazy');
   expect(equipmentImage).toHaveAttribute('loading', 'lazy');
   expect(equipmentImage).toHaveAttribute('fetchpriority', 'low');

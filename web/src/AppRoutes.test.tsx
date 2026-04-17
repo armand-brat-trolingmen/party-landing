@@ -37,7 +37,7 @@ test('renders dedicated cookies page route', () => {
 
 test('renders service and extra internal pages', () => {
   const { unmount } = render(
-    <MemoryRouter initialEntries={['/services/cotton-candy']}>
+    <MemoryRouter initialEntries={[`/services/${services[0].slug}`]}>
       <AppRoutes />
     </MemoryRouter>,
   );
@@ -52,6 +52,15 @@ test('renders service and extra internal pages', () => {
   );
 
   expect(screen.getByRole('heading', { level: 1, name: 'Брендирование тележки для кейтеринга' })).toBeInTheDocument();
+  unmount();
+
+  render(
+    <MemoryRouter initialEntries={['/extras/cart-rental']}>
+      <AppRoutes />
+    </MemoryRouter>,
+  );
+
+  expect(screen.getByRole('heading', { level: 1, name: 'Аренда тележек' })).toBeInTheDocument();
 });
 
 test('renders a dedicated Russian not found page for unknown routes', () => {
@@ -65,21 +74,31 @@ test('renders a dedicated Russian not found page for unknown routes', () => {
   expect(screen.getByRole('link', { name: /Вернуться на главную/i })).toHaveAttribute('href', '/');
 });
 
-test('renders not found page for unknown offering slugs', () => {
-  const { unmount } = render(
+test('renders not found page for unknown offering slugs and removed extra routes', () => {
+  const firstRender = render(
     <MemoryRouter initialEntries={['/services/no-such-service']}>
       <AppRoutes />
     </MemoryRouter>,
   );
 
   expect(screen.getByRole('heading', { level: 1, name: /Страница не найдена/i })).toBeInTheDocument();
-  unmount();
+  firstRender.unmount();
 
-  render(
+  const secondRender = render(
     <MemoryRouter initialEntries={['/extras/no-such-extra']}>
       <AppRoutes />
     </MemoryRouter>,
   );
 
   expect(screen.getByRole('heading', { level: 1, name: /Страница не найдена/i })).toBeInTheDocument();
+  secondRender.unmount();
+
+  const thirdRender = render(
+    <MemoryRouter initialEntries={['/extras/plov-station']}>
+      <AppRoutes />
+    </MemoryRouter>,
+  );
+
+  expect(screen.getByRole('heading', { level: 1, name: /Страница не найдена/i })).toBeInTheDocument();
+  thirdRender.unmount();
 });

@@ -70,6 +70,7 @@ export type OfferingEntity = {
   kind: 'service' | 'extra';
   slug: string;
   name: string;
+  cardDescription?: string;
   shortDescription: string;
   fullDescription: string;
   priceFrom: string;
@@ -219,12 +220,28 @@ const HOME_SERVICE_CARD_IMAGE_MAP: Record<string, HomeCardImage> = {
     height: 1024,
     sizes: HOME_SERVICE_CARD_SIZES,
   },
+  'tea-station': {
+    src: '/images/services-home/tea-station-ui.webp',
+    fallbackSrc: '/images/services-home/tea-station-ui.png',
+    width: 1024,
+    height: 1024,
+    sizes: HOME_SERVICE_CARD_SIZES,
+    objectFit: 'contain',
+  },
   'bubble-tea': {
     src: '/images/services-home/bubble-tea.webp',
     fallbackSrc: '/images/services-home/bubble-tea.webp',
     width: 1024,
     height: 1024,
     sizes: HOME_SERVICE_CARD_SIZES,
+  },
+  'plov-station': {
+    src: '/images/extras/plov-ui.webp',
+    fallbackSrc: '/images/extras/plov-ui.png',
+    width: 1024,
+    height: 1024,
+    sizes: HOME_SERVICE_CARD_SIZES,
+    objectFit: 'contain',
   },
   'foam-cannon': {
     src: '/images/services-home/foam-cannon.webp',
@@ -234,6 +251,47 @@ const HOME_SERVICE_CARD_IMAGE_MAP: Record<string, HomeCardImage> = {
     sizes: HOME_SERVICE_CARD_SIZES,
     objectFit: 'contain',
   },
+};
+
+const HOME_SERVICE_CARD_DESCRIPTION_MAP: Record<string, string> = {
+  'cotton-candy':
+    'Воздушная сладкая станция, которая мгновенно собирает гостей вокруг себя, красиво смотрится в кадре и добавляет празднику легкое настроение.',
+  popcorn:
+    'Хрустящий свежий попкорн с теплым ароматом создает атмосферу праздника, легко собирает гостей рядом и нравится и детям, и взрослым.',
+  'cotton-candy-popcorn':
+    'Два любимых формата в одной точке: больше выбора для гостей, больше эмоций в кадре и более насыщенная праздничная зона.',
+  'caramel-apples':
+    'Яркий десерт с сезонным шармом, который выглядит эффектно, вызывает улыбку с первого взгляда и отлично дополняет фотозону.',
+  'roll-ice-cream':
+    'Живое приготовление на глазах у гостей превращает десерт в маленькое представление и добавляет сладкой зоне динамику и яркое впечатление.',
+  'scoop-ice-cream':
+    'Понятный и любимый десертный формат, который быстро разбирают гости, а подача выглядит аккуратно, легко и по-летнему.',
+  'nitro-ice-cream':
+    'Эффектный холодный десерт с дымным эффектом сразу притягивает внимание гостей и делает подачу по-настоящему яркой и запоминающейся.',
+  'chocolate-fountain':
+    'Щедрая шоколадная точка с красивой подачей, которая добавляет столу ощущение праздника, изобилия и теплой десертной атмосферы.',
+  'french-hot-dog':
+    'Быстрый и понятный формат уличной еды, который удобно выдавать в потоке и приятно есть даже во время активной программы.',
+  'danish-hot-dog':
+    'Более сытный хот-дог с ярким вкусом и узнаваемой подачей, который отлично работает как заметная гастрономическая точка мероприятия.',
+  burgers:
+    'Сытная гастроточка, которая закрывает запрос на основное угощение и делает зону питания более уверенной, понятной и востребованной.',
+  'belgian-waffles':
+    'Теплый десерт с уютной подачей и мягким ароматом, который хочется фотографировать, заказывать повторно и подавать с топпингами.',
+  pancakes:
+    'Домашний и аппетитный формат с теплой подачей, который создает уютное настроение и нравится гостям самых разных возрастов.',
+  'champagne-pyramid':
+    'Эффектная встреча гостей, которая сразу задает красивый тон мероприятию и делает первые минуты по-настоящему праздничными.',
+  'craft-lemonade':
+    'Освежающая напиточная станция с чистой красивой подачей, которая легко разбавляет зону угощений и отлично работает в теплый сезон.',
+  'tea-station':
+    'Теплая чайная станция с уютной подачей, ароматными напитками и собранной сервировкой помогает гостям задержаться, согреться и дольше оставаться в событии.',
+  'bubble-tea':
+    'Современный напиточный формат с ярким внешним видом, который моментально цепляет взгляд и добавляет событию красивый заметный акцент.',
+  'plov-station':
+    'Сытная гастрономическая станция с живым приготовлением, выразительным ароматом и щедрой подачей делает угощение заметнее и помогает закрыть горячую часть праздника.',
+  'foam-cannon':
+    'Мощная развлекательная точка для праздников на открытых площадках, которая моментально поднимает настроение и вовлекает гостей в веселье.',
 };
 
 const MOMENT_ALT_MAP: Record<string, string> = {
@@ -261,6 +319,8 @@ function normalizeOffering(offering: OfferingEntity): OfferingEntity {
 
   return {
     ...offering,
+    cardDescription:
+      offering.kind === 'service' ? HOME_SERVICE_CARD_DESCRIPTION_MAP[offering.slug] ?? offering.cardDescription : offering.cardDescription,
     price: {
       from: priceFromValue,
       display: formatRubPriceFrom(priceFromValue),
@@ -461,7 +521,7 @@ const rawServices: readonly OfferingEntity[] = [
     shortDescription: 'Сладкий акцент для мероприятий, где хочется добавить фотогеничную и сезонную десертную подачу.',
     fullDescription:
       'Карамельные яблоки хорошо подходят для ярмарок, сезонных праздников, детских мероприятий и камерных корпоративных форматов, где важна заметная и аккуратная десертная зона. Станция выглядит выразительно сама по себе и легко встраивается в сладкую зону как отдельный акцент.',
-    priceFrom: 'от 12.500',
+    priceFrom: 'от 15.000',
     included: ['Станция выдачи', 'Подготовленные яблоки в карамели', 'Работа оператора'],
     ctaLabel: 'Заказать карамельные яблоки',
     tone: 'caramel',
@@ -544,6 +604,17 @@ const rawServices: readonly OfferingEntity[] = [
     tone: 'gold',
   }),
   createService({
+    slug: 'plov-station',
+    name: 'Станция плова',
+    shortDescription: 'Горячая гастрономическая станция для событий, где нужен сытный формат, ароматная подача и выразительный акцент в зоне питания.',
+    fullDescription:
+      'Станция плова подходит для городских, семейных и корпоративных событий, где хочется добавить горячее блюдо с понятной подачей и живой атмосферой приготовления. Такой формат хорошо работает как самостоятельная гастрозона или как часть более насыщенной выездной кухни.',
+    priceFrom: 'от 10.000',
+    included: ['Станция приготовления', 'Подача под формат события', 'Работа персонала'],
+    ctaLabel: 'Заказать станцию плова',
+    tone: 'gold',
+  }),
+  createService({
     slug: 'belgian-waffles',
     name: 'Бельгийские вафли',
     shortDescription: 'Тёплый десертный формат с понятной подачей для мероприятий с акцентом на уют и сладкую классику.',
@@ -588,6 +659,17 @@ const rawServices: readonly OfferingEntity[] = [
     tone: 'mint',
   }),
   createService({
+    slug: 'tea-station',
+    name: 'Чайная станция',
+    shortDescription: 'Тёплая напиточная зона для мероприятий, где важно добавить уют, ароматную подачу и комфорт для гостей в течение всего события.',
+    fullDescription:
+      'Чайная станция хорошо подходит для осенних, зимних, вечерних и камерных мероприятий, где хочется согреть гостей и сделать напиточную часть программы более уютной. Формат легко адаптируется под частные и корпоративные события и помогает дольше удерживать гостей в зоне общения.',
+    priceFrom: 'от 15.000',
+    included: ['Напиточная стойка', 'Базовые напитки и подача', 'Работа персонала'],
+    ctaLabel: 'Заказать чайную станцию',
+    tone: 'gold',
+  }),
+  createService({
     slug: 'bubble-tea',
     name: 'Бабл ти',
     shortDescription: 'Современный напиточный формат для мероприятий, где хочется добавить заметный и фотогеничный акцент.',
@@ -620,8 +702,12 @@ const rawExtras: readonly OfferingEntity[] = [
       'Аккуратно оформляем тележку под стиль события, чтобы зона выглядела частью общей визуальной концепции.',
     fullDescription:
       'Брендирование тележки для кейтеринга помогает встроить станцию в айдентику бренда, корпоративного события или частного праздника. Мы согласуем визуальные акценты и подачу, чтобы тележка выглядела собранно и уместно на площадке.',
-    priceFrom: 'от 7 000 ₽',
-    included: ['Адаптация оформления тележки', 'Согласование визуальных акцентов', 'Интеграция в общую концепцию'],
+    priceFrom: 'от 3 000 ₽',
+    included: [
+      'Наклейка — 3.000 ₽',
+      'Изготовление крыши с вашим дизайном — 4.500 ₽',
+      'Брендирование стаканчиков — от 15 ₽ за штуку',
+    ],
     ctaLabel: 'Заказать брендирование тележки',
     seoTitle: 'Брендирование тележки для кейтеринга — Праздник каждый день',
     seoDescription:
@@ -643,8 +729,13 @@ const rawExtras: readonly OfferingEntity[] = [
       'Подбираем и предоставляем оборудование, которое помогает аккуратно собрать рабочую зону под формат события.',
     fullDescription:
       'Аренда оборудования подходит, когда для мероприятия нужна дополнительная техническая база или отдельные элементы для рабочей зоны. Мы уточняем задачу, площадку и формат, а затем подбираем оборудование под сценарий события.',
-    priceFrom: 'от 6 000 ₽',
-    included: ['Подбор оборудования', 'Согласование состава аренды', 'Передача под формат площадки'],
+    priceFrom: 'от 3 500 ₽',
+    included: [
+      'Аренда Шоколадного фонтана — от 3.500 ₽',
+      'Аренда Аппарата сахарной ваты ТТМ Карнавал — от 5.500 ₽',
+      'Аренда Аппарата для изготовления попкорна — от 4.000 ₽',
+      'Аренда Звукового оборудования с микрофонами — от 8.500 ₽',
+    ],
     ctaLabel: 'Заказать аренду оборудования',
     seoTitle: 'Аренда оборудования для мероприятия — Праздник каждый день',
     seoDescription:
@@ -660,21 +751,21 @@ const rawExtras: readonly OfferingEntity[] = [
   },
   {
     kind: 'extra',
-    slug: 'plov-station',
-    name: 'Станция плова',
+    slug: 'cart-rental',
+    name: 'Аренда тележек',
     shortDescription:
-      'Гастрономическая точка с более плотной подачей для мероприятий, где нужен сытный формат и выразительный ароматный акцент.',
+      'Подбираем тележки под формат события, чтобы аккуратно оформить выдачу, сохранить стиль площадки и усилить подачу станции.',
     fullDescription:
-      'Станция плова подходит для городских, семейных и корпоративных событий, где хочется добавить горячее блюдо с понятной подачей и живой атмосферой приготовления. Такой формат хорошо работает как самостоятельная гастрозона или как часть более насыщенной выездной кухни.',
-    priceFrom: 'от 10 000 ₽',
-    included: ['Подбор формата станции', 'Согласование подачи под площадку', 'Подготовка гастрозоны к работе'],
-    ctaLabel: 'Заказать станцию плова',
-    seoTitle: 'Станция плова для мероприятия — Праздник каждый день',
+      'Аренда тележек подходит, когда для мероприятия нужна отдельная подача под напитки, десерты, выдачу подарков или встречу гостей. Мы помогаем подобрать тележки под формат площадки и сценарий события, чтобы зона выглядела собранно и уместно.',
+    priceFrom: 'от 5 500 ₽',
+    included: ['Аренда тележки без оборудования и сотрудника — 5.500 ₽'],
+    ctaLabel: 'Заказать аренду тележек',
+    seoTitle: 'Аренда тележек для мероприятия — Праздник каждый день',
     seoDescription:
-      'Станция плова от Праздник каждый день для мероприятий в Москве и области. Подберём формат подачи и встроим горячую гастрозону в общий сценарий события.',
+      'Аренда тележек от Праздник каждый день для мероприятий в Москве и области. Подберём тележки под формат площадки, подачу и сценарий события.',
     visual: {
-      image: '/images/extras/plov-ui.png',
-      imageWebpSrcSet: '/images/extras/plov-ui.webp',
+      image: '/images/extras/cart-rental-ui.png',
+      imageWebpSrcSet: '/images/extras/cart-rental-ui.webp',
       width: 1024,
       height: 1024,
       emoji: '',
@@ -737,7 +828,7 @@ type ServicePageDraft = {
   notes?: string[];
 };
 
-const DEFAULT_SERVICE_PAGE_INCLUDED = ['Монтаж и демонтаж', 'Работа специалиста', 'Расходные материалы', 'Подготовка зоны выдачи'];
+const DEFAULT_SERVICE_PAGE_INCLUDED = ['Монтаж и демонтаж', 'Работа специалиста', 'Расходные материалы'];
 
 const DEFAULT_SERVICE_PAGE_MATERIALS = [
   'Подготовка рабочей зоны под формат мероприятия',
@@ -756,10 +847,7 @@ const CHAMPAGNE_DELIVERY: ServicePageDelivery = DEFAULT_DELIVERY;
 
 const DEFAULT_TARIFF_ITEMS = ['Монтаж и демонтаж', 'Работа специалиста', 'Расходные материалы'];
 
-const COMBO_DISCOUNT_BADGE: ServicePageComboBadge = {
-  label: 'Комбо −20%',
-  text: 'Скидка действует при заказе пирамиды из шампанского вместе с шоколадным фонтаном и применяется к этим двум услугам.',
-};
+const CHOCOLATE_AND_CHAMPAGNE_DISCOUNT_NOTE = 'При заказе Шоколадного фонтана и Пирамиды из шампанского, действует скидка 20% на услугу "Пирамида из шампанского".';
 
 const DURATION_PATTERN = /(\d+\s*(?:часов|часа|час|минуты|минута|минут))/u;
 
@@ -828,16 +916,16 @@ const SERVICE_PAGE_CONTENT_BY_SLUG: Record<string, ServicePageContent> = {
     tariffs: [tariff('2 часа', '21.000 ₽'), tariff('3 часа', '30.000 ₽'), tariff('4 часа', '38.000 ₽')],
   }),
   'caramel-apples': createServicePage({
-    included: ['Монтаж и демонтаж', 'Подготовка станции', 'Расходные материалы', 'Работа специалиста'],
+    included: ['Монтаж и демонтаж', 'Расходные материалы', 'Работа специалиста'],
     materials: [
       'Подбираем формат подачи под площадку и поток гостей',
       'Готовим яблоки, карамель и расходные материалы под согласованный объём',
       'Настраиваем станцию так, чтобы она выглядела аккуратно и спокойно работала в ритме мероприятия',
     ],
     tariffs: [
-      portionTariff('50 порций', '1 час', '12.500 ₽'),
-      portionTariff('100 порций', '2 часа', '22.000 ₽'),
-      portionTariff('150 порций', '3 часа', '31.500 ₽'),
+      portionTariff('50 порций', '1 час', '15.000 ₽'),
+      portionTariff('100 порций', '2 часа', '27.000 ₽'),
+      portionTariff('150 порций', '3 часа', '37.500 ₽'),
     ],
   }),
   'roll-ice-cream': createServicePage({
@@ -858,7 +946,7 @@ const SERVICE_PAGE_CONTENT_BY_SLUG: Record<string, ServicePageContent> = {
     ],
   }),
   'chocolate-fountain': createServicePage({
-    comboBadge: COMBO_DISCOUNT_BADGE,
+    notes: [CHOCOLATE_AND_CHAMPAGNE_DISCOUNT_NOTE],
     tariffs: [
       {
         title: '1 час',
@@ -939,6 +1027,22 @@ const SERVICE_PAGE_CONTENT_BY_SLUG: Record<string, ServicePageContent> = {
       portionTariff('100 порций', '3 часа', '48.000 ₽'),
     ],
   }),
+  'plov-station': createServicePage({
+    included: ['Монтаж и демонтаж', 'Работа повара', 'Расходные материалы'],
+    materials: [
+      'Подбираем формат станции и подачу под площадку и количество гостей',
+      'Собираем состав по мероприятию: подача, логистика и рабочая зона',
+      'Финальную смету уточняем под сценарий события и нужный объем порций',
+    ],
+    tariffs: [
+      {
+        title: 'Индивидуальный расчет',
+        price: 'от 10.000 ₽',
+        note: 'Финальную смету соберём под площадку, состав и количество гостей.',
+        items: DEFAULT_TARIFF_ITEMS,
+      },
+    ],
+  }),
   'belgian-waffles': createServicePage({
     tariffs: [
       portionTariff('50 порций', '1 час', '17.000 ₽'),
@@ -956,7 +1060,7 @@ const SERVICE_PAGE_CONTENT_BY_SLUG: Record<string, ServicePageContent> = {
   'champagne-pyramid': createServicePage({
     duration: '1 час',
     delivery: CHAMPAGNE_DELIVERY,
-    comboBadge: COMBO_DISCOUNT_BADGE,
+    notes: [CHOCOLATE_AND_CHAMPAGNE_DISCOUNT_NOTE],
     included: [
       'Качественные бокалы, которые подчеркнут изысканность вашего праздника',
       'Эффект дыма',
@@ -972,6 +1076,52 @@ const SERVICE_PAGE_CONTENT_BY_SLUG: Record<string, ServicePageContent> = {
       portionTariff('50 порций', '1 час', '15.000 ₽'),
       portionTariff('100 порций', '2 часа', '24.000 ₽'),
       portionTariff('150 порций', '3 часа', '32.000 ₽'),
+    ],
+  }),
+  'tea-station': createServicePage({
+    included: ['Монтаж и демонтаж', 'Работа специалиста', 'Расходные материалы'],
+    materials: [
+      'Подбираем напиточную станцию под сезон, формат площадки и поток гостей',
+      'Готовим подачу, посуду и расходные материалы под выбранный вариант станции',
+      'Настраиваем выдачу так, чтобы гости быстро получали напитки без перегруза зоны',
+    ],
+    tariffs: [
+      {
+        title: 'Сбитень',
+        variants: [
+          { label: '100 порций', price: '20.000 ₽' },
+          { label: '150 порций', price: '29.000 ₽' },
+          { label: '200 порций', price: '34.000 ₽' },
+        ],
+        items: DEFAULT_TARIFF_ITEMS,
+      },
+      {
+        title: 'Чайная станция "Стандарт"',
+        variants: [
+          { label: '100 порций', price: '15.000 ₽' },
+          { label: '150 порций', price: '20.000 ₽' },
+          { label: '200 порций', price: '26.000 ₽' },
+        ],
+        items: DEFAULT_TARIFF_ITEMS,
+      },
+      {
+        title: 'Чайная станция с самоваром',
+        variants: [
+          { label: '100 порций', price: '25.000 ₽' },
+          { label: '150 порций', price: '35.000 ₽' },
+          { label: '200 порций', price: '44.000 ₽' },
+        ],
+        items: DEFAULT_TARIFF_ITEMS,
+      },
+      {
+        title: 'Глинтвейн',
+        variants: [
+          { label: '100 порций', price: '27.000 ₽' },
+          { label: '150 порций', price: '38.000 ₽' },
+          { label: '200 порций', price: '47.000 ₽' },
+        ],
+        items: DEFAULT_TARIFF_ITEMS,
+      },
     ],
   }),
   'bubble-tea': createServicePage({
@@ -1065,7 +1215,22 @@ const SERVICE_PAGE_CONTENT_BY_SLUG: Record<string, ServicePageContent> = {
   }),
 };
 
-export const services: readonly OfferingEntity[] = rawServices.map(normalizeOffering);
+const PRIORITIZED_SERVICE_SLUGS = ['chocolate-fountain'] as const;
+
+function prioritizeServices(items: readonly OfferingEntity[]) {
+  const priorityBySlug = new Map<string, number>(PRIORITIZED_SERVICE_SLUGS.map((slug, index) => [slug, index]));
+
+  return items
+    .map((item, index) => ({
+      item,
+      index,
+      priority: priorityBySlug.get(item.slug) ?? PRIORITIZED_SERVICE_SLUGS.length + index,
+    }))
+    .sort((left, right) => left.priority - right.priority || left.index - right.index)
+    .map(({ item }) => item);
+}
+
+export const services: readonly OfferingEntity[] = prioritizeServices(rawServices).map(normalizeOffering);
 export const extras: readonly OfferingEntity[] = rawExtras.map(normalizeOffering);
 export const moments: readonly MomentEntity[] = rawMoments.map(normalizeMoment);
 

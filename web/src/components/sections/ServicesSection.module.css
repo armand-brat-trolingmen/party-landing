@@ -34,7 +34,7 @@
 .cardLink {
   display: grid;
   gap: 1.15rem;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(0, 1fr);
   height: 100%;
   min-height: 100%;
   min-width: 0;
@@ -42,6 +42,15 @@
   color: inherit;
   text-decoration: none;
   cursor: pointer;
+}
+
+.meta {
+  display: grid;
+  gap: 0.95rem;
+  min-height: 0;
+  min-width: 0;
+  align-content: stretch;
+  grid-template-rows: minmax(0, 1fr) auto;
 }
 
 .visualWrap {
@@ -111,13 +120,26 @@
 .copy {
   display: grid;
   align-content: start;
-  gap: 0.45rem;
+  gap: 0.58rem;
   min-height: 0;
+  min-width: 0;
 }
 
 .name {
-  font-size: clamp(1.46rem, 1.8vw, 1.88rem);
-  line-height: 0.98;
+  margin: 0;
+  color: var(--text-primary);
+  font-size: clamp(1.46rem, 1.7vw, 1.72rem);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+
+.cardDescription {
+  margin: 0;
+  max-width: 34ch;
+  color: var(--text-secondary);
+  font-size: 0.98rem;
+  line-height: 1.4;
 }
 
 .footer {
@@ -133,9 +155,10 @@
 
 .price {
   color: var(--text-primary);
-  font-size: clamp(1.46rem, 1.8vw, 1.82rem);
-  font-weight: 650;
-  line-height: 1;
+  font-size: clamp(1.46rem, 1.7vw, 1.72rem);
+  font-weight: 640;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
   white-space: nowrap;
   font-variant-numeric: lining-nums tabular-nums;
 }
@@ -294,42 +317,61 @@
   }
 
   .visualWrap {
-    aspect-ratio: 5 / 4;
+    aspect-ratio: 1 / 1.02;
   }
 
   @supports not (aspect-ratio: 1 / 1) {
     .visualWrap::before {
-      padding-top: 80%;
+      padding-top: 102%;
     }
   }
 
   .visualPicture {
-    padding: 0.2rem;
+    padding: 0.12rem;
   }
 
   .visualImage[data-image-fit='contain'] {
-    padding: 1rem;
+    padding: 0.55rem 0.55rem 0.25rem;
+  }
+
+  .meta {
+    gap: 0.78rem;
+    grid-template-rows: minmax(0, 1fr) auto;
+    align-items: stretch;
   }
 
   .copy {
-    gap: 0.3rem;
+    gap: 0.38rem;
   }
 
   .name {
-    font-size: 1.2rem;
-    line-height: 1.04;
+    font-size: 1.24rem;
+    font-weight: 800;
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+  }
+
+  .cardDescription {
+    max-width: none;
+    font-size: 0.92rem;
+    line-height: 1.36;
   }
 
   .footer {
-    display: block;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    min-width: 0;
+    padding-top: 0;
   }
 
   .price {
     display: block;
     color: var(--text-primary);
-    font-size: 0.96rem;
-    font-weight: 800;
-    line-height: 1.12;
+    font-size: 1.24rem;
+    font-weight: 640;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
   }
 
   .link {

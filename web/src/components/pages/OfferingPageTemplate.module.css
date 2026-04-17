@@ -232,6 +232,26 @@
   line-height: 1.52;
 }
 
+.includedPriceList {
+  grid-template-columns: 1fr;
+  gap: 0.6rem;
+}
+
+.includedPriceItem {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.includedPriceItem .includedDot {
+  width: 0.42rem;
+  height: 0.42rem;
+  margin-top: 0.5rem;
+  box-shadow: none;
+}
+
 .includedDot {
   width: 0.5rem;
   height: 0.5rem;
@@ -509,48 +529,6 @@
   background: var(--accent-primary);
 }
 
-.responsibilityList {
-  display: grid;
-  gap: 0.8rem;
-}
-
-.responsibilityItem {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 0.9rem;
-  align-items: start;
-  padding: 0.9rem 1rem;
-  border-radius: calc(var(--radius-card) - 0.8rem);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(250, 253, 255, 0.98)),
-    radial-gradient(circle at 10% 18%, rgba(255, 238, 245, 0.42), rgba(255, 238, 245, 0) 44%);
-  border: 1px solid rgba(31, 52, 74, 0.08);
-}
-
-.responsibilityNumber {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 2.45rem;
-  height: 2.45rem;
-  padding: 0 0.55rem;
-  border-radius: 999px;
-  background: rgba(255, 126, 182, 0.12);
-  color: var(--text-primary);
-  font-family: var(--font-display);
-  font-size: 0.92rem;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.responsibilityItem p {
-  margin: 0;
-  color: var(--text-muted);
-  font-size: 0.98rem;
-  font-weight: 600;
-  line-height: 1.55;
-}
-
 .tariffsSection,
 .packageSection {
   display: grid;
@@ -615,6 +593,7 @@
 .addition {
   display: inline-grid;
   width: 100%;
+  min-width: 0;
   gap: 0.28rem;
   min-height: 2.25rem;
   align-items: start;
@@ -629,6 +608,7 @@
   font-family: var(--font-display);
   font-size: clamp(1rem, 1.8vw, 1.3rem);
   line-height: 1;
+  white-space: nowrap;
 }
 
 .addition {
@@ -725,6 +705,10 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .includedPriceList {
+    grid-template-columns: 1fr;
+  }
+
   .serviceHero {
     grid-template-columns: minmax(0, 0.95fr) minmax(22rem, 0.9fr);
   }
@@ -736,6 +720,34 @@
 
   .tariffsGrid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .tariffsSection[data-service-slug='tea-station'] .tariffsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.2rem;
+  }
+
+  .tariffsSection[data-service-slug='tea-station'] .tariffCard[data-variant-count='3'] {
+    padding-inline: clamp(0.95rem, 1.9vw, 1.2rem);
+  }
+
+  .tariffsSection[data-service-slug='tea-station'] .tariffVariants[data-variant-count='3'] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.48rem;
+  }
+
+  .tariffsSection[data-service-slug='tea-station'] .tariffVariant {
+    gap: 0.2rem;
+    padding: 0.58rem 0.5rem;
+  }
+
+  .tariffsSection[data-service-slug='tea-station'] .tariffVariant > span {
+    font-size: 0.72rem;
+    line-height: 1.12;
+  }
+
+  .tariffsSection[data-service-slug='tea-station'] .tariffVariant strong {
+    font-size: clamp(0.94rem, 0.95vw, 1.08rem);
   }
 
   .packageGrid[data-package-count='3'] {

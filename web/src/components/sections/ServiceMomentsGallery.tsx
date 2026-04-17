@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import type { ServiceGalleryImage } from '../../content/serviceGalleries.generated';
 import styles from './ServiceMomentsGallery.module.css';
@@ -7,10 +7,27 @@ type ServiceMomentsGalleryProps = {
   images: readonly ServiceGalleryImage[];
 };
 
+function focusWithoutScroll(element: HTMLElement | null) {
+  if (!element) {
+    return;
+  }
+
+  try {
+    element.focus({ preventScroll: true });
+  } catch {
+    element.focus();
+  }
+}
+
+const useSafeLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
+
+type GalleryCloseReason = 'pointer' | 'keyboard';
+
 export function ServiceMomentsGallery({ images }: ServiceMomentsGalleryProps) {
   const [activeImageId, setActiveImageId] = useState<string | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const triggerRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const closeReasonRef = useRef<GalleryCloseReason>('pointer');
 
   if (!images.length) {
     return null;
@@ -18,7 +35,12 @@ export function ServiceMomentsGallery({ images }: ServiceMomentsGalleryProps) {
 
   const activeImage = images.find((image) => image.id === activeImageId) ?? null;
 
-  useEffect(() => {
+  function closePreview(reason: GalleryCloseReason) {
+    closeReasonRef.current = reason;
+    setActiveImageId(null);
+  }
+
+  useSafeLayoutEffect(() => {
     if (!activeImage) {
       return;
     }
@@ -34,7 +56,7 @@ export function ServiceMomentsGallery({ images }: ServiceMomentsGalleryProps) {
 
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
-        setActiveImageId(null);
+        closePreview('keyboard');
       }
     }
 
@@ -45,9 +67,11 @@ export function ServiceMomentsGallery({ images }: ServiceMomentsGalleryProps) {
     document.body.style.right = '0';
     document.body.style.width = '100%';
     window.addEventListener('keydown', handleKeyDown);
-    closeButtonRef.current?.focus();
+    focusWithoutScroll(closeButtonRef.current);
 
     return () => {
+      const shouldRestoreTriggerFocus = closeReasonRef.current === 'keyboard';
+
       document.body.style.overflow = previousBodyOverflow;
       document.body.style.position = previousBodyPosition;
       document.body.style.top = previousBodyTop;
@@ -56,7 +80,10 @@ export function ServiceMomentsGallery({ images }: ServiceMomentsGalleryProps) {
       document.body.style.width = previousBodyWidth;
       window.removeEventListener('keydown', handleKeyDown);
       window.scrollTo({ top: scrollY, left: 0, behavior: 'auto' });
-      activeTrigger?.focus();
+      if (shouldRestoreTriggerFocus) {
+        focusWithoutScroll(activeTrigger);
+      }
+      closeReasonRef.current = 'pointer';
     };
   }, [activeImage]);
 
@@ -66,7 +93,7 @@ export function ServiceMomentsGallery({ images }: ServiceMomentsGalleryProps) {
           <div
             className={styles.dialogOverlay}
             role="presentation"
-            onClick={() => setActiveImageId(null)}
+            onClick={() => closePreview('pointer')}
             data-testid="offering-gallery-dialog-overlay"
             data-dialog-state="open"
           >
@@ -83,18 +110,21 @@ export function ServiceMomentsGallery({ images }: ServiceMomentsGalleryProps) {
                 Полноэкранный просмотр фотографии услуги.
               </p>
 
-              <div className={styles.dialogMedia} onClick={(event) => event.stopPropagation()}>
+              <div className={styles.dialogMedia}>
                 <button
                   ref={closeButtonRef}
                   type="button"
                   className={styles.dialogClose}
-                  onClick={() => setActiveImageId(null)}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    closePreview(event.detail === 0 ? 'keyboard' : 'pointer');
+                  }}
                   aria-label="Закрыть фото услуги"
                 >
                   ×
                 </button>
 
-                <picture className={styles.dialogPicture}>
+                <picture className={styles.dialogPicture} onClick={(event) => event.stopPropagation()}>
                   <img
                     className={styles.dialogImage}
                     src={activeImage.originalSrc}
@@ -131,7 +161,10 @@ export function ServiceMomentsGallery({ images }: ServiceMomentsGalleryProps) {
                 className={styles.slideButton}
                 data-testid="offering-gallery-open-button"
                 aria-label={`Открыть фото ${index + 1} на весь экран`}
-                onClick={() => setActiveImageId(image.id)}
+                onClick={() => {
+                  closeReasonRef.current = 'pointer';
+                  setActiveImageId(image.id);
+                }}
               >
                 <picture className={styles.media}>
                   <source data-testid="offering-gallery-source-webp" type="image/webp" srcSet={image.webpSrcSet} sizes={image.sizes} />

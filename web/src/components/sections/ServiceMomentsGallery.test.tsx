@@ -47,14 +47,65 @@ test('opens a fullscreen service gallery preview from a slide button on any view
   expect(dialog).toHaveAttribute('aria-modal', 'true');
   expect(dialog).toHaveAttribute('data-dialog-presentation', 'fullscreen');
   expect(overlay).toHaveAttribute('data-dialog-state', 'open');
-  expect(dialogQueries.getByRole('img', { name: 'Тестовое фото услуги 1' })).toHaveAttribute(
-    'src',
-    '/images/test/service-1-original.jpg',
-  );
+  expect(dialogQueries.getByRole('img', { name: 'Тестовое фото услуги 1' })).toHaveAttribute('src', '/images/test/service-1-original.jpg');
   expect(dialogQueries.getAllByRole('button')).toHaveLength(1);
 
   fireEvent.keyDown(window, { key: 'Escape' });
 
   expect(screen.queryByRole('dialog', { name: 'Фотография услуги' })).not.toBeInTheDocument();
+  window.scrollTo = originalScrollTo;
+});
+
+test('closes the fullscreen preview from empty screen space without refocusing the trigger button', () => {
+  const originalScrollTo = window.scrollTo;
+  const scrollToMock = vi.fn();
+
+  window.scrollTo = scrollToMock;
+  Object.defineProperty(window, 'scrollY', {
+    configurable: true,
+    writable: true,
+    value: 480,
+  });
+
+  render(<ServiceMomentsGallery images={galleryImages} />);
+
+  const triggerButton = screen.getByRole('button', { name: 'Открыть фото 1 на весь экран' });
+  const triggerFocusSpy = vi.spyOn(triggerButton, 'focus');
+
+  fireEvent.click(triggerButton);
+  fireEvent.click(screen.getByTestId('offering-gallery-dialog-overlay'));
+
+  expect(screen.queryByRole('dialog', { name: 'Фотография услуги' })).not.toBeInTheDocument();
+  expect(scrollToMock).toHaveBeenCalledWith({ top: 480, left: 0, behavior: 'auto' });
+  expect(triggerFocusSpy).not.toHaveBeenCalled();
+
+  triggerFocusSpy.mockRestore();
+  window.scrollTo = originalScrollTo;
+});
+
+test('restores focus to the trigger only for keyboard close flows', () => {
+  const originalScrollTo = window.scrollTo;
+  const scrollToMock = vi.fn();
+
+  window.scrollTo = scrollToMock;
+  Object.defineProperty(window, 'scrollY', {
+    configurable: true,
+    writable: true,
+    value: 320,
+  });
+
+  render(<ServiceMomentsGallery images={galleryImages} />);
+
+  const triggerButton = screen.getByRole('button', { name: 'Открыть фото 1 на весь экран' });
+  const triggerFocusSpy = vi.spyOn(triggerButton, 'focus');
+
+  fireEvent.click(triggerButton);
+  fireEvent.keyDown(window, { key: 'Escape' });
+
+  expect(screen.queryByRole('dialog', { name: 'Фотография услуги' })).not.toBeInTheDocument();
+  expect(scrollToMock).toHaveBeenCalledWith({ top: 320, left: 0, behavior: 'auto' });
+  expect(triggerFocusSpy).toHaveBeenCalledWith({ preventScroll: true });
+
+  triggerFocusSpy.mockRestore();
   window.scrollTo = originalScrollTo;
 });

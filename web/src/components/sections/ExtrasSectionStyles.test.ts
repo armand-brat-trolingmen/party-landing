@@ -23,8 +23,9 @@ test('extras images use the same hover zoom treatment as service cards', () => {
 test('extra card names balance into cleaner multi-line titles without forced mid-word breaks', () => {
   const css = readFileSync(resolve(process.cwd(), 'src/components/sections/ExtrasSection.module.css'), 'utf8');
 
-  expect(css).toContain('text-wrap: balance;');
+  expect(css).toContain('text-wrap: pretty;');
   expect(css).toContain('overflow-wrap: normal;');
   expect(css).toContain('word-break: normal;');
-  expect(css).toContain('max-width: 13ch;');
+  expect(css).toContain('hyphens: none;');
+  expect(css).toContain('max-width: 15.5ch;');
 });
