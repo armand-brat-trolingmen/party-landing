@@ -4,17 +4,22 @@ import { ExtrasSection } from './ExtrasSection';
 
 const extras = siteConfig.extras;
 const firstExtra = extras[0];
+const MOBILE_SLIDER_QUERY = '(max-width: 720px) and (pointer: coarse)';
 
 function toLooseNamePattern(value: string) {
   return new RegExp(value.split(/\s+/).join('\\s*'), 'i');
 }
 
-function mockViewport(isMobile: boolean) {
+function mockViewport(isMobile: boolean, options?: { coarsePointer?: boolean }) {
+  const coarsePointer = options?.coarsePointer ?? isMobile;
+
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
     configurable: true,
     value: vi.fn().mockImplementation((query: string) => ({
-      matches: query.includes('max-width: 720px') ? isMobile : false,
+      matches:
+        (query.includes('max-width: 720px') ? isMobile : false) &&
+        (query.includes('pointer: coarse') ? coarsePointer : true),
       media: query,
       onchange: null,
       addEventListener: vi.fn(),
@@ -67,7 +72,7 @@ test('renders extras inside the wide canvas without a framed outer surface', () 
 });
 
 test('switches extras to a compact mobile slider without a swipe progress indicator', () => {
-  mockViewport(true);
+  mockViewport(true, { coarsePointer: true });
   render(<ExtrasSection />);
 
   const track = screen.getByTestId('extras-track');
@@ -76,6 +81,18 @@ test('switches extras to a compact mobile slider without a swipe progress indica
   expect(track).toHaveAttribute('data-mobile-layout', 'slider-compact');
   expect(firstLink).toHaveAttribute('data-link-appearance', 'card');
   expect(screen.queryByTestId('extras-slider-progress')).not.toBeInTheDocument();
+});
+
+test('keeps narrow fine-pointer desktops in the grid layout instead of enabling the mobile slider', () => {
+  mockViewport(true, { coarsePointer: false });
+  render(<ExtrasSection />);
+
+  const track = screen.getByTestId('extras-track');
+  const firstLink = within(track).getAllByRole('link')[0];
+
+  expect(window.matchMedia).toHaveBeenCalledWith(MOBILE_SLIDER_QUERY);
+  expect(track).toHaveAttribute('data-mobile-layout', 'grid');
+  expect(firstLink).toHaveAttribute('data-link-appearance', 'button');
 });
 
 test('can promote only the requested extras images when rendered above the fold', () => {

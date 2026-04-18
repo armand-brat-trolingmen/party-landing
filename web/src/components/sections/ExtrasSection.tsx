@@ -5,6 +5,8 @@ import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { SectionHeading } from '../ui/SectionHeading';
 import styles from './ExtrasSection.module.css';
 
+const MOBILE_SLIDER_QUERY = '(max-width: 720px) and (pointer: coarse)';
+
 const EXTRA_CARD_NAME_LINES: Partial<Record<string, readonly string[]>> = {
   'branded-cart': ['Брендирование', 'тележки для', 'кейтеринга'],
   'equipment-rental': ['Аренда', 'оборудования'],
@@ -31,7 +33,8 @@ export function ExtrasSection({
   priorityImageCount = 0,
 }: ExtrasSectionProps) {
   const { ref, revealState } = useScrollReveal();
-  const isMobile = useMediaQuery('(max-width: 720px)');
+  // Match the services section: keep the slider for touch phones only so narrow desktops stay on the grid.
+  const isMobile = useMediaQuery(MOBILE_SLIDER_QUERY);
   const { scrollerRef } = useHorizontalScrollProgress(isMobile);
 
   return (

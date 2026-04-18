@@ -4,8 +4,12 @@ import { resolve } from 'node:path';
 test('extras catalog has no breakpoint dead zone and keeps a resilient mobile slider', () => {
   const css = readFileSync(resolve(process.cwd(), 'src/components/sections/ExtrasSection.module.css'), 'utf8');
 
-  expect(css).toContain('@media (min-width: 721px)');
   expect(css).toContain('grid-template-columns: repeat(2, minmax(0, 1fr));');
+  expect(css).toContain('@media (min-width: 1120px)');
+  expect(css).toContain('grid-template-columns: repeat(3, minmax(0, 1fr));');
+  expect(css).toContain('@media (max-width: 720px)');
+  expect(css).toContain('grid-template-columns: none;');
+  expect(css).toContain('grid-auto-flow: column;');
   expect(css).toContain('grid-auto-columns: clamp(12rem, 64vw, 14rem);');
   expect(css).toContain('justify-content: start;');
   expect(css).toContain('overflow-y: hidden;');
