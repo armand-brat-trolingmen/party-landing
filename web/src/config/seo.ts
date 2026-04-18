@@ -140,7 +140,7 @@ export function getOfferingStructuredData(offering: OfferingEntity) {
   const homeUrl = toAbsoluteUrl('/');
   const localBusinessId = `${homeUrl}${LOCAL_BUSINESS_ID}`;
   const pageUrl = toAbsoluteUrl(offering.kind === 'service' ? `/services/${offering.slug}` : `/extras/${offering.slug}`);
-  const collectionUrl = toAbsoluteUrl(offering.kind === 'service' ? '/services' : '/extras');
+  const collectionUrl = toAbsoluteUrl(offering.kind === 'service' ? '/#services' : '/#extras');
   const collectionName = offering.kind === 'service' ? 'Услуги' : 'Дополнительные услуги';
 
   return [

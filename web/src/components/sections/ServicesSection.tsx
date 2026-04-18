@@ -17,11 +17,9 @@ type ServicesSectionProps = {
   priorityImageCount?: number;
 };
 
-const MOBILE_SLIDER_QUERY = '(max-width: 720px)';
+const MOBILE_SLIDER_QUERY = '(max-width: 720px) and (pointer: coarse)';
 const MIN_MOBILE_EAGER_IMAGES = 4;
 const MOBILE_IMAGE_LOOKAHEAD = 4;
-const SERVICE_LINK_LABEL_PREFIX =
-  '\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0443 \u0443\u0441\u043B\u0443\u0433\u0438';
 const SERVICE_LINK_TEXT = '\u041F\u043E\u0434\u0440\u043E\u0431\u043D\u0435\u0435';
 const SERVICES_PROGRESS_LABEL = '\u041F\u0440\u043E\u043A\u0440\u0443\u0442\u043A\u0430 \u0443\u0441\u043B\u0443\u0433';
 
@@ -34,6 +32,7 @@ export function ServicesSection({
   priorityImageCount = 3,
 }: ServicesSectionProps) {
   const { ref, revealState } = useScrollReveal();
+  // Keep the horizontal slider for touch phones only so narrow laptops stay on the desktop/tablet grid.
   const isMobile = useMediaQuery(MOBILE_SLIDER_QUERY);
   const { scrollerRef, progress } = useHorizontalScrollProgress(isMobile);
   const progressVisual = Math.max(progress, 16);
@@ -41,16 +40,9 @@ export function ServicesSection({
   const baseDesktopPriorityCount = Math.max(priorityImageCount, 0);
   const baseMobileEagerCount = Math.min(items.length, Math.max(baseDesktopPriorityCount, MIN_MOBILE_EAGER_IMAGES));
   const [mobileEagerCount, setMobileEagerCount] = useState(baseMobileEagerCount);
-
-  useEffect(() => {
-    setMobileEagerCount((current) => {
-      if (!isMobile) {
-        return baseMobileEagerCount;
-      }
-
-      return Math.min(items.length, Math.max(current, baseMobileEagerCount));
-    });
-  }, [baseMobileEagerCount, isMobile, items.length]);
+  const effectiveMobileEagerCount = isMobile
+    ? Math.min(items.length, Math.max(mobileEagerCount, baseMobileEagerCount))
+    : baseMobileEagerCount;
 
   useEffect(() => {
     if (!isMobile) {
@@ -81,7 +73,7 @@ export function ServicesSection({
   }, [baseMobileEagerCount, isMobile, items.length, scrollerRef]);
 
   useEffect(() => {
-    const preloadCount = isMobile ? mobileEagerCount : Math.min(items.length, baseDesktopPriorityCount);
+    const preloadCount = isMobile ? effectiveMobileEagerCount : Math.min(items.length, baseDesktopPriorityCount);
 
     items.slice(0, preloadCount).forEach((service) => {
       const image = service.homeCardImage;
@@ -101,7 +93,7 @@ export function ServicesSection({
       preloader.sizes = image.sizes;
       preloader.src = image.fallbackSrc;
     });
-  }, [baseDesktopPriorityCount, isMobile, items, mobileEagerCount]);
+  }, [baseDesktopPriorityCount, effectiveMobileEagerCount, isMobile, items]);
 
   return (
     <section id={sectionId} className="site-section" data-testid="section-services" aria-labelledby={`${sectionId}-title`}>
@@ -123,16 +115,12 @@ export function ServicesSection({
           >
             {items.map((service, index) => {
               const shouldPrioritizeImage = isMobile ? index < Math.min(baseMobileEagerCount, 2) : index < baseDesktopPriorityCount;
-              const shouldEagerLoadImage = isMobile ? index < mobileEagerCount : index < baseDesktopPriorityCount;
+              const shouldEagerLoadImage = isMobile ? index < effectiveMobileEagerCount : index < baseDesktopPriorityCount;
               const cardDescription = service.cardDescription ?? service.shortDescription;
 
               return (
                 <article key={service.slug} className={styles.card} data-testid="service-card" data-service-slug={service.slug}>
-                  <a
-                    className={styles.cardLink}
-                    href={getOfferingPath(service)}
-                    aria-label={`${SERVICE_LINK_LABEL_PREFIX} ${service.name}`}
-                  >
+                  <a className={styles.cardLink} href={getOfferingPath(service)}>
                     <div className={styles.visualWrap} data-image-fit={service.homeCardImage?.objectFit} aria-hidden="true">
                       {service.homeCardImage ? (
                         <picture className={styles.visualPicture}>

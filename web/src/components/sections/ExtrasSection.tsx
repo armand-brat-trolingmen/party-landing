@@ -58,7 +58,6 @@ export function ExtrasSection({
                 <a
                   className={styles.cardLink}
                   href={getOfferingPath(item)}
-                  aria-label={`Открыть страницу услуги ${item.name}`}
                   data-link-appearance={isMobile ? 'card' : 'button'}
                 >
                   <div
@@ -91,7 +90,7 @@ export function ExtrasSection({
                     ) : null}
                   </div>
                   <div className={styles.copy}>
-                    <h3 className={styles.name} aria-label={item.name}>
+                    <h3 className={styles.name}>
                       {nameLines.map((line) => (
                         <span key={line} className={styles.nameLine} data-testid="extra-card-title-line">
                           {line}

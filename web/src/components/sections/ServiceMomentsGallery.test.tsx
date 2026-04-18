@@ -109,3 +109,14 @@ test('restores focus to the trigger only for keyboard close flows', () => {
   triggerFocusSpy.mockRestore();
   window.scrollTo = originalScrollTo;
 });
+
+test('can safely switch from an empty gallery to a populated gallery on rerender', () => {
+  const { rerender } = render(<ServiceMomentsGallery images={[]} />);
+
+  expect(screen.queryByTestId('offering-gallery-track')).not.toBeInTheDocument();
+
+  rerender(<ServiceMomentsGallery images={galleryImages} />);
+
+  expect(screen.getByTestId('offering-gallery-track')).toBeInTheDocument();
+  expect(screen.getAllByTestId('offering-gallery-open-button')).toHaveLength(galleryImages.length);
+});

@@ -5,6 +5,7 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  useSyncExternalStore,
   type CSSProperties,
   type MouseEvent,
 } from 'react';
@@ -35,6 +36,10 @@ const ORDER_LABEL = '\u0417\u0430\u043a\u0430\u0437\u0430\u0442\u044c';
 const MOBILE_HEADER_BREAKPOINT_PX = 1080;
 const navItems = siteConfig.navigation;
 
+function subscribeToHydrationState() {
+  return () => undefined;
+}
+
 export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
   const headerRef = useRef<HTMLElement | null>(null);
   const navRef = useRef<HTMLElement | null>(null);
@@ -48,10 +53,17 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
   const isHomeRoute = location.pathname === '/';
   const { openModal } = useOrderModal();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDesktop, setIsDesktop] = useState(true);
+  const hasHydrated = useSyncExternalStore(subscribeToHydrationState, () => true, () => false);
+  const [isDesktop, setIsDesktop] = useState(() =>
+    typeof window === 'undefined' || typeof window.matchMedia !== 'function'
+      ? true
+      : window.matchMedia(`(min-width: ${MOBILE_HEADER_BREAKPOINT_PX + 1}px)`).matches,
+  );
   const [isScrolled, setIsScrolled] = useState(() => !isHomeRoute || legalMode);
   const [scrollProgress, setScrollProgress] = useState(() => (!isHomeRoute || legalMode ? 1 : 0));
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
+  const shouldRenderDesktopActions = !hasHydrated || isDesktop;
+  const shouldRenderMobileActions = !hasHydrated || !isDesktop;
 
   const prepareCompactHeaderForJump = useCallback(() => {
     const header = headerRef.current;
@@ -519,7 +531,7 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
           </span>
         </a>
 
-        {isDesktop ? (
+        {shouldRenderDesktopActions ? (
           <div className={styles.desktopActions}>
             <nav aria-label={NAV_ARIA_LABEL} className={styles.nav} ref={navRef}>
               <span className={styles.navIndicator} data-testid="nav-active-indicator" aria-hidden="true" />
@@ -553,7 +565,9 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
               </button>
             ) : null}
           </div>
-        ) : (
+        ) : null}
+
+        {shouldRenderMobileActions ? (
           <div className={styles.mobileActions}>
             <div className={styles.mobile}>
               <button
@@ -634,7 +648,7 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
               ) : null}
             </div>
           </div>
-        )}
+        ) : null}
       </div>
     </header>
   );

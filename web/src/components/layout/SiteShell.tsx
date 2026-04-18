@@ -11,11 +11,6 @@ const LazyOrderModal = lazy(async () => {
   return { default: module.OrderModal };
 });
 
-const LazySpeedInsights = lazy(async () => {
-  const module = await import('@vercel/speed-insights/react');
-  return { default: module.SpeedInsights };
-});
-
 type IdleWindow = Window &
   typeof globalThis & {
     requestIdleCallback?: (callback: IdleRequestCallback, options?: IdleRequestOptions) => number;
@@ -69,42 +64,6 @@ function DeferredOrderModal() {
   );
 }
 
-function DeferredSpeedInsights() {
-  const [isReady, setIsReady] = useState(false);
-
-  useEffect(() => {
-    if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
-      return;
-    }
-
-    const load = () => {
-      startTransition(() => {
-        setIsReady(true);
-      });
-    };
-
-    const idleWindow = window as IdleWindow;
-
-    if (typeof idleWindow.requestIdleCallback === 'function' && typeof idleWindow.cancelIdleCallback === 'function') {
-      const idleId = idleWindow.requestIdleCallback(load, { timeout: 2400 });
-      return () => idleWindow.cancelIdleCallback?.(idleId);
-    }
-
-    const timeoutId = globalThis.setTimeout(load, 1200);
-    return () => globalThis.clearTimeout(timeoutId);
-  }, []);
-
-  if (!isReady) {
-    return null;
-  }
-
-  return (
-    <Suspense fallback={null}>
-      <LazySpeedInsights />
-    </Suspense>
-  );
-}
-
 export function SiteShell({ children, motionPath, mainClassName, legalMode = false }: SiteShellProps) {
   useEffect(() => {
     ensureLeadSourceCookies();
@@ -119,7 +78,6 @@ export function SiteShell({ children, motionPath, mainClassName, legalMode = fal
       <SiteFooter />
       <CookieBanner />
       <DeferredOrderModal />
-      <DeferredSpeedInsights />
     </OrderModalProvider>
   );
 }

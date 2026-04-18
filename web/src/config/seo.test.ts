@@ -59,7 +59,7 @@ test('offering structured data includes local business context and breadcrumb na
         expect.objectContaining({
           position: 2,
           name: 'Услуги',
-          item: 'https://party-everyday.ru/services',
+          item: 'https://party-everyday.ru/#services',
         }),
         expect.objectContaining({
           position: 3,
@@ -67,6 +67,26 @@ test('offering structured data includes local business context and breadcrumb na
           item: `https://party-everyday.ru/services/${offering?.slug}`,
         }),
       ],
+    }),
+  );
+});
+
+test('extra structured data points breadcrumb collection links to a real homepage section', () => {
+  const extra = siteConfig.extras.find((item) => item.slug === 'branded-cart');
+
+  expect(extra).toBeDefined();
+
+  const graph = getOfferingStructuredData(extra!);
+  const breadcrumb = graph.find((entry) => entry['@type'] === 'BreadcrumbList');
+
+  expect(breadcrumb).toEqual(
+    expect.objectContaining({
+      itemListElement: expect.arrayContaining([
+        expect.objectContaining({
+          position: 2,
+          item: 'https://party-everyday.ru/#extras',
+        }),
+      ]),
     }),
   );
 });

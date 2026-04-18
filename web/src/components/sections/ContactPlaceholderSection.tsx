@@ -164,7 +164,7 @@ export function ContactPlaceholderSection() {
           <div className={`${styles.layout} reveal-grid`} data-testid="contact-layout" data-contact-layout="split-canvas">
             <div className={styles.copy}>
               <div className={styles.details}>
-                <a className={styles.contactItem} href={siteConfig.contacts.phone.href} aria-label={siteConfig.contacts.phone.display}>
+                <a className={styles.contactItem} href={siteConfig.contacts.phone.href}>
                   <span className={styles.contactBadge}>
                     <PhoneIcon />
                   </span>
@@ -174,7 +174,7 @@ export function ContactPlaceholderSection() {
                   </span>
                 </a>
 
-                <a className={styles.contactItem} href={siteConfig.contacts.email.href} aria-label={siteConfig.contacts.email.display}>
+                <a className={styles.contactItem} href={siteConfig.contacts.email.href}>
                   <span className={styles.contactBadge}>
                     <EmailIcon />
                   </span>

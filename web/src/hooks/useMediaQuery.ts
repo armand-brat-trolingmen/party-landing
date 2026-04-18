@@ -1,7 +1,16 @@
 import { useEffect, useState } from 'react';
 
+function getInitialMatch(query: string) {
+  if (typeof window === 'undefined' || !window.matchMedia) {
+    return false;
+  }
+
+  return window.matchMedia(query).matches;
+}
+
 export function useMediaQuery(query: string) {
-  const [matches, setMatches] = useState(false);
+  // Read matchMedia immediately when the browser is available so hydration avoids a false desktop-first flip.
+  const [matches, setMatches] = useState(() => getInitialMatch(query));
 
   useEffect(() => {
     if (typeof window === 'undefined' || !window.matchMedia) {

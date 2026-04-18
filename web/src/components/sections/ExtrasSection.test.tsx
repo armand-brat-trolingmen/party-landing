@@ -3,6 +3,11 @@ import { siteConfig } from '../../content';
 import { ExtrasSection } from './ExtrasSection';
 
 const extras = siteConfig.extras;
+const firstExtra = extras[0];
+
+function toLooseNamePattern(value: string) {
+  return new RegExp(value.split(/\s+/).join('\\s*'), 'i');
+}
 
 function mockViewport(isMobile: boolean) {
   Object.defineProperty(window, 'matchMedia', {
@@ -27,29 +32,25 @@ test('renders extras inside the wide canvas without a framed outer surface', () 
 
   const section = screen.getByTestId('section-extras');
   const sectionQueries = within(section);
-  const extraArticles = within(sectionQueries.getByTestId('extras-track')).getAllByRole('article');
-  const brandedCartTitleLines = within(extraArticles[0]).getAllByTestId('extra-card-title-line');
-
-  expect(sectionQueries.getByRole('heading', { level: 2, name: 'Доп. услуги' })).toBeInTheDocument();
-  expect(section).not.toHaveAttribute('data-section-tone');
-  expect(sectionQueries.getByTestId('extras-track')).toHaveAttribute('data-extras-style', 'continuation-grid');
-  expect(sectionQueries.getByTestId('extras-track')).toHaveAttribute('data-mobile-layout', 'grid');
-  expect(sectionQueries.queryByTestId('extras-slider-progress')).not.toBeInTheDocument();
-  expect(extraArticles).toHaveLength(3);
-  expect(brandedCartTitleLines.map((line) => line.textContent)).toEqual(['Брендирование', 'тележки для', 'кейтеринга']);
-  expect(sectionQueries.getByRole('heading', { level: 3, name: 'Брендирование тележки для кейтеринга' })).toBeInTheDocument();
-  expect(sectionQueries.getByRole('heading', { level: 3, name: 'Аренда оборудования' })).toBeInTheDocument();
-  expect(sectionQueries.getByRole('heading', { level: 3, name: 'Аренда тележек' })).toBeInTheDocument();
-  expect(sectionQueries.queryByText(/от \d/i)).not.toBeInTheDocument();
-
-  const visualSlots = sectionQueries.queryAllByTestId('extra-visual-blank');
-  const brandingImage = sectionQueries.getByRole('img', { name: /Брендирование тележки для кейтеринга/ });
-  const equipmentImage = sectionQueries.getByRole('img', { name: /Аренда оборудования/ });
-  const cartRentalImage = sectionQueries.getByRole('img', { name: /Аренда тележек/ });
-
+  const track = sectionQueries.getByTestId('extras-track');
+  const extraArticles = within(track).getAllByRole('article');
+  const extraLinks = within(track).getAllByRole('link');
+  const brandingImage = sectionQueries.getByRole('img', { name: new RegExp(firstExtra.name, 'i') });
+  const equipmentImage = sectionQueries.getByRole('img', { name: new RegExp(extras[1].name, 'i') });
+  const cartRentalImage = sectionQueries.getByRole('img', { name: new RegExp(extras[2].name, 'i') });
   const sources = sectionQueries.getAllByTestId('extra-visual-source-webp');
 
-  expect(visualSlots).toHaveLength(0);
+  expect(sectionQueries.getByRole('heading', { level: 2, name: siteConfig.homepage.extras.title })).toBeInTheDocument();
+  expect(section).not.toHaveAttribute('data-section-tone');
+  expect(track).toHaveAttribute('data-extras-style', 'continuation-grid');
+  expect(track).toHaveAttribute('data-mobile-layout', 'grid');
+  expect(sectionQueries.queryByTestId('extras-slider-progress')).not.toBeInTheDocument();
+  expect(extraArticles).toHaveLength(3);
+  expect(sectionQueries.getByRole('heading', { level: 3, name: toLooseNamePattern(firstExtra.name) })).toBeInTheDocument();
+  expect(sectionQueries.getByRole('heading', { level: 3, name: toLooseNamePattern(extras[1].name) })).toBeInTheDocument();
+  expect(sectionQueries.getByRole('heading', { level: 3, name: toLooseNamePattern(extras[2].name) })).toBeInTheDocument();
+  expect(sectionQueries.queryByText(/\u043e\u0442 \d/i)).not.toBeInTheDocument();
+  expect(sectionQueries.queryAllByTestId('extra-visual-blank')).toHaveLength(0);
   expect(brandingImage).toHaveAttribute('src', '/images/extras/branding-ui.png');
   expect(equipmentImage).toHaveAttribute('src', '/images/extras/equipment-ui.png');
   expect(cartRentalImage).toHaveAttribute('src', '/images/extras/cart-rental-ui.png');
@@ -60,10 +61,9 @@ test('renders extras inside the wide canvas without a framed outer surface', () 
   expect(brandingImage).toHaveAttribute('loading', 'lazy');
   expect(equipmentImage).toHaveAttribute('loading', 'lazy');
   expect(equipmentImage).toHaveAttribute('fetchpriority', 'low');
-  expect(sectionQueries.getByRole('link', { name: `Открыть страницу услуги ${extras[0].name}` })).toHaveAttribute(
-    'data-link-appearance',
-    'button',
-  );
+  expect(extraLinks[0]).toHaveAttribute('data-link-appearance', 'button');
+  expect(extraLinks[0]).toHaveAccessibleName(expect.stringContaining(firstExtra.name));
+  expect(extraLinks[0]).toHaveAccessibleName(expect.stringContaining(firstExtra.shortDescription));
 });
 
 test('switches extras to a compact mobile slider without a swipe progress indicator', () => {
@@ -71,7 +71,7 @@ test('switches extras to a compact mobile slider without a swipe progress indica
   render(<ExtrasSection />);
 
   const track = screen.getByTestId('extras-track');
-  const firstLink = within(track).getByRole('link', { name: `Открыть страницу услуги ${extras[0].name}` });
+  const firstLink = within(track).getAllByRole('link')[0];
 
   expect(track).toHaveAttribute('data-mobile-layout', 'slider-compact');
   expect(firstLink).toHaveAttribute('data-link-appearance', 'card');

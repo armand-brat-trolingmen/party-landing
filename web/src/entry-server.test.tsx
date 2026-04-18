@@ -10,6 +10,7 @@ test('server entry renders the landing page without suspense fallbacks and expos
   expect(result.appHtml).toContain('data-testid="section-testimonials"');
   expect(result.appHtml).toContain('data-testid="section-contact"');
   expect(result.appHtml).toContain('data-testid="section-cta"');
+  expect(result.appHtml).toContain('data-testid="menu-button"');
   expect(result.appHtml).not.toContain('lazy-section-fallback');
   expect(result.appHtml).not.toContain('lazy-section-skeleton');
   expect(result.appHtml).not.toContain('aria-busy="true"');

@@ -5,7 +5,9 @@ import { ServicesSection } from './ServicesSection';
 const services = siteConfig.services;
 const firstService = services[0];
 
-function mockViewport(width: number) {
+function mockViewport(width: number, options?: { coarsePointer?: boolean }) {
+  const coarsePointer = options?.coarsePointer ?? false;
+
   Object.defineProperty(window, 'innerWidth', {
     configurable: true,
     writable: true,
@@ -16,7 +18,9 @@ function mockViewport(width: number) {
     writable: true,
     configurable: true,
     value: vi.fn().mockImplementation((query: string) => ({
-      matches: query.includes('max-width: 720px') ? width <= 720 : false,
+      matches:
+        (query.includes('max-width: 720px') ? width <= 720 : true) &&
+        (query.includes('pointer: coarse') ? coarsePointer : true),
       media: query,
       onchange: null,
       addEventListener: vi.fn(),
@@ -70,10 +74,12 @@ test('routes each desktop card to its dedicated internal service page', () => {
     .find((link) => link.getAttribute('href') === `/services/${services[0].slug}`);
 
   expect(firstLink).toHaveAttribute('href', `/services/${services[0].slug}`);
+  expect(firstLink).toHaveAccessibleName(expect.stringContaining(services[0].name));
+  expect(firstLink).toHaveAccessibleName(expect.stringContaining(services[0].price?.display ?? services[0].priceFrom));
 });
 
 test('keeps the mobile slider with a swipe progress indicator while rendering the full catalog', () => {
-  mockViewport(390);
+  mockViewport(390, { coarsePointer: true });
   render(<ServicesSection />);
 
   const catalog = screen.getByTestId('services-catalog');
@@ -112,7 +118,7 @@ test('keeps the mobile slider with a swipe progress indicator while rendering th
 });
 
 test('progressively unlocks more mobile slider images after scrolling so cards do not stay blank', async () => {
-  mockViewport(390);
+  mockViewport(390, { coarsePointer: true });
   render(<ServicesSection />);
 
   const catalog = screen.getByTestId('services-catalog');
@@ -147,4 +153,33 @@ test('progressively unlocks more mobile slider images after scrolling so cards d
 
   expect(within(catalog).getAllByTestId('service-card-media-image')[6]).toHaveAttribute('loading', 'eager');
   expect(catalog.querySelector('[data-service-image-slug="foam-cannon"]')).toHaveStyle({ objectFit: 'contain' });
+});
+
+test('keeps narrow fine-pointer laptops in the grid flow instead of enabling the mobile slider', () => {
+  mockViewport(700, { coarsePointer: false });
+  render(<ServicesSection />);
+
+  const catalog = screen.getByTestId('services-catalog');
+  const progress = screen.getByTestId('services-slider-progress');
+  const images = within(catalog).getAllByTestId('service-card-media-image');
+
+  expect(catalog).toHaveAttribute('data-mobile-layout', 'grid');
+  expect(images[0]).toHaveAttribute('loading', 'eager');
+  expect(images[1]).toHaveAttribute('loading', 'eager');
+  expect(images[2]).toHaveAttribute('loading', 'eager');
+  expect(images[3]).toHaveAttribute('loading', 'lazy');
+
+  Object.defineProperties(catalog, {
+    clientWidth: { configurable: true, value: 320 },
+    scrollWidth: { configurable: true, value: 640 },
+  });
+
+  Object.defineProperty(catalog, 'scrollLeft', {
+    configurable: true,
+    writable: true,
+    value: 160,
+  });
+
+  fireEvent.scroll(catalog);
+  expect(progress).toHaveAttribute('aria-valuenow', '0');
 });

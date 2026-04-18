@@ -12,14 +12,16 @@ test('renders contacts as a split canvas with direct details and an Avito screen
   expect(section).not.toHaveAttribute('data-section-tone');
   expect(sectionQueries.getByTestId('contact-layout')).toHaveAttribute('data-contact-layout', 'split-canvas');
   expect(sectionQueries.queryByText(siteConfig.legal.business.address)).not.toBeInTheDocument();
-  expect(sectionQueries.getByRole('link', { name: siteConfig.contacts.phone.display })).toHaveAttribute(
-    'href',
-    siteConfig.contacts.phone.href,
-  );
-  expect(sectionQueries.getByRole('link', { name: siteConfig.contacts.email.display })).toHaveAttribute(
-    'href',
-    siteConfig.contacts.email.href,
-  );
+  const links = sectionQueries.getAllByRole('link');
+  const phoneLink = links.find((link) => link.getAttribute('href') === siteConfig.contacts.phone.href);
+  const emailLink = links.find((link) => link.getAttribute('href') === siteConfig.contacts.email.href);
+
+  expect(phoneLink).toHaveAttribute('href', siteConfig.contacts.phone.href);
+  expect(phoneLink).toHaveAccessibleName(expect.stringContaining('Телефон'));
+  expect(phoneLink).toHaveAccessibleName(expect.stringContaining(siteConfig.contacts.phone.display));
+  expect(emailLink).toHaveAttribute('href', siteConfig.contacts.email.href);
+  expect(emailLink).toHaveAccessibleName(expect.stringContaining('Почта'));
+  expect(emailLink).toHaveAccessibleName(expect.stringContaining(siteConfig.contacts.email.display));
   expect(sectionQueries.getByTestId('contact-icon-phone')).toBeInTheDocument();
   expect(sectionQueries.getByTestId('contact-icon-email')).toBeInTheDocument();
 

@@ -28,11 +28,6 @@ export function ServiceMomentsGallery({ images }: ServiceMomentsGalleryProps) {
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const triggerRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const closeReasonRef = useRef<GalleryCloseReason>('pointer');
-
-  if (!images.length) {
-    return null;
-  }
-
   const activeImage = images.find((image) => image.id === activeImageId) ?? null;
 
   function closePreview(reason: GalleryCloseReason) {
@@ -86,6 +81,10 @@ export function ServiceMomentsGallery({ images }: ServiceMomentsGalleryProps) {
       closeReasonRef.current = 'pointer';
     };
   }, [activeImage]);
+
+  if (!images.length) {
+    return null;
+  }
 
   const previewDialog =
     activeImage && typeof document !== 'undefined'

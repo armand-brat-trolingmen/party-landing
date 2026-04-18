@@ -7,6 +7,8 @@
   display: grid;
   gap: 1.5rem;
   min-width: 0;
+  /* Keep the stable desktop/tablet grid as the fallback so older Safari does not collapse to one column. */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .card {
@@ -262,12 +264,6 @@
   transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@media (min-width: 721px) {
-  .grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
 @media (min-width: 1080px) {
   .grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -287,6 +283,7 @@
 @media (max-width: 720px) {
   .grid {
     min-width: 0;
+    grid-template-columns: none;
     grid-auto-flow: column;
     grid-auto-columns: clamp(16rem, 86vw, 22rem);
     justify-content: start;

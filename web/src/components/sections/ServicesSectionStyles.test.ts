@@ -4,9 +4,12 @@ import { resolve } from 'node:path';
 test('services keeps the mobile slider while letting media stay visible and locking the mobile meta row', () => {
   const css = readFileSync(resolve(process.cwd(), 'src/components/sections/ServicesSection.module.css'), 'utf8');
 
-  expect(css).toContain('grid-auto-columns: clamp(16rem, 86vw, 22rem);');
-  expect(css).toContain('@media (min-width: 721px)');
   expect(css).toContain('grid-template-columns: repeat(2, minmax(0, 1fr));');
+  expect(css).toContain('grid-auto-columns: clamp(16rem, 86vw, 22rem);');
+  expect(css).toContain('@media (min-width: 1080px)');
+  expect(css).toContain('grid-template-columns: repeat(3, minmax(0, 1fr));');
+  expect(css).toContain('@media (max-width: 720px)');
+  expect(css).toContain('grid-template-columns: none;');
   expect(css).toContain('justify-content: start;');
   expect(css).toContain('aspect-ratio: 1 / 1.02;');
   expect(css).toContain('grid-template-rows: auto minmax(0, 1fr);');
