@@ -112,6 +112,55 @@ test('runs Yandex SmartCaptcha for the inline CTA before submitting the lead', a
   Reflect.deleteProperty(window, 'smartCaptcha');
 });
 
+test('does not rerender SmartCaptcha widget on CTA rerenders', async () => {
+  const renderSmartCaptcha = vi.fn().mockReturnValue(7);
+  const destroySmartCaptcha = vi.fn();
+
+  vi.stubEnv('VITE_SMARTCAPTCHA_SITE_KEY', 'site-key');
+  Object.defineProperty(window, 'smartCaptcha', {
+    configurable: true,
+    value: {
+      render: renderSmartCaptcha,
+      execute: vi.fn(),
+      destroy: destroySmartCaptcha,
+    },
+  });
+
+  useLeadFormMock.mockReturnValue(createLeadFormState());
+
+  const view = render(
+    <MemoryRouter>
+      <OrderModalProvider>
+        <CtaSection />
+      </OrderModalProvider>
+    </MemoryRouter>,
+  );
+
+  await waitFor(() => expect(renderSmartCaptcha).toHaveBeenCalledTimes(1));
+
+  useLeadFormMock.mockReturnValue(
+    createLeadFormState({
+      status: 'loading',
+      submitLabel: 'РћС‚РїСЂР°РІР»СЏРµРј...',
+      isSubmitDisabled: true,
+    }),
+  );
+
+  view.rerender(
+    <MemoryRouter>
+      <OrderModalProvider>
+        <CtaSection />
+      </OrderModalProvider>
+    </MemoryRouter>,
+  );
+
+  await waitFor(() => expect(renderSmartCaptcha).toHaveBeenCalledTimes(1));
+  expect(destroySmartCaptcha).not.toHaveBeenCalled();
+
+  vi.unstubAllEnvs();
+  Reflect.deleteProperty(window, 'smartCaptcha');
+});
+
 test('shows a green success button state in the inline CTA after successful submit', () => {
   useLeadFormMock.mockReturnValue(
     createLeadFormState({

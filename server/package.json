@@ -9,6 +9,7 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",
+    "backup:sqlite": "node dist/scripts/backupSqlite.js",
     "test": "vitest run"
   },
   "dependencies": {

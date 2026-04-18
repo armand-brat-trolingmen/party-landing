@@ -18,6 +18,7 @@ declare global {
     smartCaptcha?: {
       render: (container: HTMLElement | string, options: SmartCaptchaRenderOptions) => number;
       execute: (widgetId?: number) => void;
+      destroy?: (widgetId?: number) => void;
     };
   }
 }
@@ -66,9 +67,17 @@ function SmartCaptchaField({
   const siteKey = getSmartCaptchaSiteKey();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const widgetIdRef = useRef<number | null>(null);
+  const onTokenRef = useRef(onToken);
+  const onExecuteReadyRef = useRef(onExecuteReady);
+
+  useEffect(() => {
+    onTokenRef.current = onToken;
+    onExecuteReadyRef.current = onExecuteReady;
+  }, [onExecuteReady, onToken]);
 
   useEffect(() => {
     if (!siteKey) {
+      onExecuteReadyRef.current(null);
       return undefined;
     }
 
@@ -83,9 +92,10 @@ function SmartCaptchaField({
         widgetIdRef.current = window.smartCaptcha.render(containerRef.current, {
           sitekey: siteKey,
           invisible: true,
-          callback: onToken,
+          // Widget must not be recreated on each form state change.
+          callback: (token: string) => onTokenRef.current(token),
         });
-        onExecuteReady(() => {
+        onExecuteReadyRef.current(() => {
           if (widgetIdRef.current !== null) {
             window.smartCaptcha?.execute(widgetIdRef.current);
           }
@@ -93,16 +103,19 @@ function SmartCaptchaField({
       })
       .catch(() => {
         if (isActive) {
-          onExecuteReady(null);
+          onExecuteReadyRef.current(null);
         }
       });
 
     return () => {
       isActive = false;
-      onExecuteReady(null);
+      if (widgetIdRef.current !== null) {
+        window.smartCaptcha?.destroy?.(widgetIdRef.current);
+      }
+      onExecuteReadyRef.current(null);
       widgetIdRef.current = null;
     };
-  }, [onExecuteReady, onToken, siteKey]);
+  }, [siteKey]);
 
   if (!siteKey) {
     return null;
@@ -127,7 +140,7 @@ export function OrderModal() {
 
       void leadForm.submitWithSmartCaptchaToken(token);
     },
-    [leadForm],
+    [leadForm.submitWithSmartCaptchaToken],
   );
 
   const handleSmartCaptchaExecuteReady = useCallback((execute: (() => void) | null) => {
