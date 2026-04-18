@@ -34,6 +34,7 @@ test('SEO writes title and key meta tags in client mode', async () => {
   expect(document.head.querySelector('meta[property="og:image:type"]')?.getAttribute('content')).toBe('image/png');
   expect(document.head.querySelector('meta[property="og:image:alt"]')?.getAttribute('content')).toContain(SITE_NAME);
   expect(document.head.querySelector('meta[name="twitter:image:alt"]')?.getAttribute('content')).toContain(SITE_NAME);
+  expect(document.head.querySelector('meta[name="referrer"]')?.getAttribute('content')).toBe('origin');
   expect(document.head.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe(`${SITE_URL}/`);
   expect(document.head.querySelector('meta[name="robots"]')?.getAttribute('content')).toBe(
     'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',

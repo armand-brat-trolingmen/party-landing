@@ -45,6 +45,7 @@ export function SEO({
     <Helmet prioritizeSeoTags>
       <title>{title}</title>
       <meta name="description" content={description} />
+      <meta name="referrer" content="origin" />
       <meta name="robots" content={robots} />
       <link rel="canonical" href={canonicalUrl} />
 
