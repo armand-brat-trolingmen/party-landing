@@ -75,6 +75,8 @@ type SmartCaptchaVerifier = {
 
 const submitTooFastThresholdMs = 2500;
 const duplicateLeadWindowMs = 30 * 60 * 1000;
+const genericSuccessMessage = '\u0417\u0430\u044f\u0432\u043a\u0430 \u0441\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u0430';
+const invalidFormMessage = '\u041f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435 \u0437\u0430\u043f\u043e\u043b\u043d\u0435\u043d\u0438\u0435 \u0444\u043e\u0440\u043c\u044b';
 
 const noopSmartCaptchaVerifier: SmartCaptchaVerifier = {
   async verify() {
@@ -148,11 +150,13 @@ export function createLeadService({
   repository,
   vkAdapter,
   smartCaptchaVerifier = noopSmartCaptchaVerifier,
+  smartCaptchaRequired = false,
   nowFactory = () => new Date(),
 }: {
   repository: Repository;
   vkAdapter: VkAdapter;
   smartCaptchaVerifier?: SmartCaptchaVerifier;
+  smartCaptchaRequired?: boolean;
   nowFactory?: () => Date;
 }) {
   return {
@@ -187,8 +191,9 @@ export function createLeadService({
       if (!validation.ok) {
         return {
           ok: false,
+          accepted: false,
           fieldErrors: validation.fieldErrors,
-          message: 'Проверьте заполнение формы',
+          message: invalidFormMessage,
         };
       }
 
@@ -235,7 +240,9 @@ export function createLeadService({
         };
       }
 
-      if (smartCaptchaResult.configured && !smartCaptchaResult.verified) {
+      if (smartCaptchaRequired && !smartCaptchaResult.configured) {
+        spamReasons.push(smartCaptchaResult.reason ?? 'smartcaptcha_not_configured');
+      } else if (smartCaptchaResult.configured && !smartCaptchaResult.verified) {
         spamReasons.push(smartCaptchaResult.reason ?? 'smartcaptcha_failed');
       }
 
@@ -245,7 +252,17 @@ export function createLeadService({
       });
       const spamCheckResult: LeadSpamCheckResult =
         spamReasons.length > 0 ? 'spam' : duplicateLead ? 'duplicate' : 'passed';
-      const spamReason = spamCheckResult === 'duplicate' ? 'duplicate_recent_phone' : normalizeSpamReason(spamReasons);
+
+      if (spamCheckResult !== 'passed') {
+        return {
+          ok: true,
+          accepted: false,
+          vkSendStatus: 'skipped',
+          message: genericSuccessMessage,
+        };
+      }
+
+      const spamReason = normalizeSpamReason(spamReasons);
       const smartCaptchaVerified = smartCaptchaResult.configured ? smartCaptchaResult.verified : false;
       const vkPeerId = vkAdapter.getDefaultPeerIds?.().join(',') || null;
       const leadId = repository.insertLead({
@@ -273,15 +290,6 @@ export function createLeadService({
         vkSendStatus: 'skipped',
         vkSendError: null,
       });
-
-      if (spamCheckResult !== 'passed') {
-        return {
-          ok: true,
-          id: leadId,
-          vkSendStatus: 'skipped',
-          message: 'Заявка сохранена',
-        };
-      }
 
       const vkResult = await vkAdapter.sendLeadNotification({
         name: validation.value.name,
@@ -313,9 +321,10 @@ export function createLeadService({
 
       return {
         ok: true,
+        accepted: true,
         id: leadId,
         vkSendStatus: vkResult.status,
-        message: 'Заявка сохранена',
+        message: genericSuccessMessage,
       };
     },
   };

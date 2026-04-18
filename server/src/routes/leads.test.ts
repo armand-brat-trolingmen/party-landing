@@ -30,9 +30,99 @@ describe('GET /healthz', () => {
       service: 'server',
     });
   });
+
+  test('returns service health payload through the /api prefix', async () => {
+    const db = createDatabase(':memory:');
+    runMigrations(db);
+
+    const app = createApp({
+      leadService: createLeadService({
+        repository: createLeadsRepository(db),
+        vkAdapter: {
+          sendLeadNotification: vi.fn(),
+        },
+      }),
+      rateLimitWindowMs: 60000,
+      rateLimitMaxRequests: 5,
+    });
+
+    const response = await request(app).get('/api/healthz');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      ok: true,
+      service: 'server',
+    });
+  });
 });
 
 describe('POST /api/leads', () => {
+  test('ignores spoofed x-forwarded-for when trust proxy is disabled', async () => {
+    const createLead = vi.fn().mockResolvedValue({
+      ok: true,
+      accepted: true,
+      vkSendStatus: 'skipped',
+      message: 'stored',
+    });
+
+    const app = createApp({
+      leadService: {
+        createLead,
+      },
+      rateLimitWindowMs: 60000,
+      rateLimitMaxRequests: 5,
+      trustProxy: false,
+    });
+
+    const response = await request(app)
+      .post('/api/leads')
+      .set('X-Forwarded-For', '8.8.8.8')
+      .send({
+        name: 'Anna',
+        phone: '+7 (999) 111 22 33',
+      });
+
+    expect(response.status).toBe(201);
+    expect(createLead).toHaveBeenCalledWith(
+      expect.objectContaining({
+        ip: expect.not.stringMatching(/^8\.8\.8\.8$/),
+      }),
+    );
+  });
+
+  test('uses forwarded ip when trust proxy is configured for loopback', async () => {
+    const createLead = vi.fn().mockResolvedValue({
+      ok: true,
+      accepted: true,
+      vkSendStatus: 'skipped',
+      message: 'stored',
+    });
+
+    const app = createApp({
+      leadService: {
+        createLead,
+      },
+      rateLimitWindowMs: 60000,
+      rateLimitMaxRequests: 5,
+      trustProxy: 'loopback',
+    });
+
+    const response = await request(app)
+      .post('/api/leads')
+      .set('X-Forwarded-For', '8.8.8.8')
+      .send({
+        name: 'Anna',
+        phone: '+7 (999) 111 22 33',
+      });
+
+    expect(response.status).toBe(201);
+    expect(createLead).toHaveBeenCalledWith(
+      expect.objectContaining({
+        ip: '8.8.8.8',
+      }),
+    );
+  });
+
   test('returns 400 when payload is invalid', async () => {
     const db = createDatabase(':memory:');
     runMigrations(db);
@@ -91,6 +181,7 @@ describe('POST /api/leads', () => {
     expect(response.status).toBe(201);
     expect(response.body).toMatchObject({
       ok: true,
+      accepted: true,
       vkSendStatus: 'failed',
     });
 
@@ -140,15 +231,13 @@ describe('POST /api/leads', () => {
 
     expect(first.status).toBe(201);
     expect(second.status).toBe(201);
-    expect(second.body.ok).toBe(true);
-
-    const secondLead = repository.findById(second.body.id as number);
-    expect(secondLead).toMatchObject({
-      spamCheckResult: 'spam',
-      spamReason: 'soft_rate_limit',
-      vkSendStatus: 'skipped',
+    expect(second.body).toMatchObject({
+      ok: true,
+      accepted: false,
     });
+    expect(second.body.id).toBeUndefined();
     expect(vkAdapter.sendLeadNotification).toHaveBeenCalledTimes(1);
+    expect(db.prepare('SELECT COUNT(*) AS total FROM leads').get()).toEqual({ total: 1 });
   });
 
   test('accepts first-party attribution and anti-spam fields in the lead payload', async () => {
@@ -194,6 +283,10 @@ describe('POST /api/leads', () => {
       });
 
     expect(response.status).toBe(201);
+    expect(response.body).toMatchObject({
+      ok: true,
+      accepted: true,
+    });
     expect(repository.findById(response.body.id as number)).toMatchObject({
       firstVisitAt: '2026-04-01T10:00:00.000Z',
       lastVisitAt: '2026-04-02T10:00:00.000Z',

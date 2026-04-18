@@ -31,6 +31,7 @@ type LeadService = {
     softRateLimitExceeded?: boolean;
   }): Promise<{
     ok: boolean;
+    accepted?: boolean;
     id?: number;
     vkSendStatus?: 'success' | 'failed' | 'skipped';
     fieldErrors?: Partial<Record<'name' | 'phone', string>>;

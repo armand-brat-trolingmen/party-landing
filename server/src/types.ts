@@ -93,6 +93,7 @@ export type LeadFieldErrors = Partial<Record<'name' | 'phone', string>>;
 
 export type LeadApiResponse = {
   ok: boolean;
+  accepted?: boolean;
   id?: number;
   vkSendStatus?: VkSendStatus;
   fieldErrors?: LeadFieldErrors;

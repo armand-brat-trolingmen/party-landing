@@ -33,6 +33,7 @@ type LeadService = {
     softRateLimitExceeded?: boolean;
   }): Promise<{
     ok: boolean;
+    accepted?: boolean;
     id?: number;
     vkSendStatus?: 'success' | 'failed' | 'skipped';
     fieldErrors?: Partial<Record<'name' | 'phone', string>>;
@@ -45,10 +46,12 @@ export function createApp({
   leadService,
   rateLimitWindowMs,
   rateLimitMaxRequests,
+  trustProxy = false,
 }: {
   leadService: LeadService;
   rateLimitWindowMs: number;
   rateLimitMaxRequests: number;
+  trustProxy?: boolean | string | number | string[];
 }) {
   const app = express();
   const rateLimiter = createRateLimiter({
@@ -56,13 +59,17 @@ export function createApp({
     maxRequests: rateLimitMaxRequests,
   });
 
+  app.set('trust proxy', trustProxy);
   app.use(express.json());
-  app.get('/healthz', (_request, response) => {
+  const sendHealth = (_request: Request, response: Response) => {
     response.status(200).json({
       ok: true,
       service: 'server',
     });
-  });
+  };
+
+  app.get('/healthz', sendHealth);
+  app.get('/api/healthz', sendHealth);
   app.use('/api/leads', (request, response: Response<unknown, LeadRequestLocals>, next) => {
     const ip = getRequestIp(request);
 

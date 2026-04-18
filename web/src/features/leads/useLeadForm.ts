@@ -4,6 +4,12 @@ import { LeadApiError, submitLead } from './api';
 import type { LeadAttributionPayload, LeadFieldErrors, LeadFormValues, LeadSubmitStatus } from './types';
 import { formatPhoneInput, normalizeName, sanitizeNameInput, validateLeadValues } from './validation';
 
+declare global {
+  interface Window {
+    ym?: (counterId: number, method: 'reachGoal', target: string) => void;
+  }
+}
+
 const initialValues: LeadFormValues = {
   name: '',
   phone: '',
@@ -23,6 +29,13 @@ function omitFieldError(errors: LeadFieldErrors, fieldName: keyof LeadFieldError
   const nextErrors = { ...errors };
   delete nextErrors[fieldName];
   return nextErrors;
+}
+
+const metrikaCounterId = 108614702;
+const metrikaFormSubmitGoal = 'form_submit';
+
+function trackSuccessfulLeadSubmit() {
+  window.ym?.(metrikaCounterId, 'reachGoal', metrikaFormSubmitGoal);
 }
 
 export function useLeadForm() {
@@ -127,6 +140,9 @@ export function useLeadForm() {
           form_started_at: formStartedAt,
           smartcaptcha_token: captchaToken,
         });
+        if (result.accepted) {
+          trackSuccessfulLeadSubmit();
+        }
         setValues(initialValues);
         setHoneypotValue('');
         setFormStartedAt(createFormStartedAt());

@@ -49,10 +49,13 @@
 
 - `PORT`
 - `DB_PATH`
+- `TRUST_PROXY`
 - `VK_ENABLED`
 - `VK_ACCESS_TOKEN`
 - `VK_DEFAULT_PEER_ID`
 - `VK_API_VERSION`
+- `SMARTCAPTCHA_SERVER_KEY`
+- `SMARTCAPTCHA_REQUIRED`
 
 Опционально:
 
@@ -61,19 +64,33 @@
 - `VK_DEFAULT_PEER_ID_4`
 - `RATE_LIMIT_WINDOW_MS`
 - `RATE_LIMIT_MAX_REQUESTS`
+- `SQLITE_BACKUP_DIR`
+- `SQLITE_BACKUP_RETENTION_DAYS`
 
 Минимальный пример:
 
 ```env
 PORT=8787
-DB_PATH=./data/leads.sqlite
+DB_PATH=/data/leads.sqlite
+TRUST_PROXY=1
 VK_ENABLED=true
 VK_ACCESS_TOKEN=your_token
 VK_DEFAULT_PEER_ID=2000000001
 VK_API_VERSION=5.199
-RATE_LIMIT_WINDOW_MS=60000
-RATE_LIMIT_MAX_REQUESTS=5
+SMARTCAPTCHA_SERVER_KEY=your_smartcaptcha_server_key
+SMARTCAPTCHA_REQUIRED=true
+RATE_LIMIT_WINDOW_MS=600000
+RATE_LIMIT_MAX_REQUESTS=20
+SQLITE_BACKUP_DIR=/data/backups
+SQLITE_BACKUP_RETENTION_DAYS=14
 ```
+
+Важно по безопасности:
+
+- `TRUST_PROXY=1` корректен для текущей схемы Dokploy, где внешний трафик приходит в API только через reverse proxy.
+- Не открывай порт `8787` напрямую в интернет. Если API можно обойти мимо Dokploy proxy, `TRUST_PROXY=1` снова даст возможность подделывать IP через `X-Forwarded-For`.
+- `SMARTCAPTCHA_REQUIRED=true` означает fail-closed режим: если `SMARTCAPTCHA_SERVER_KEY` не задан, backend не должен стартовать как будто защита включена.
+- `DB_PATH` и `SQLITE_BACKUP_DIR` должны указывать внутрь persistent volume `/data`, иначе база и backup могут потеряться при redeploy.
 
 ## Как связать фронт и API
 

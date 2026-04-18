@@ -34,6 +34,7 @@ export type LeadApiRequest = LeadFormValues &
 
 export type LeadApiResponse = {
   ok: boolean;
+  accepted?: boolean;
   id?: number;
   message?: string;
   fieldErrors?: LeadFieldErrors;

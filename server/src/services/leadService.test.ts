@@ -46,6 +46,7 @@ describe('leadService', () => {
 
     expect(response).toMatchObject({
       ok: true,
+      accepted: true,
       id: 17,
       vkSendStatus: 'success',
     });
@@ -93,17 +94,11 @@ describe('leadService', () => {
 
     expect(response).toMatchObject({
       ok: true,
-      id: 19,
+      accepted: false,
       vkSendStatus: 'skipped',
     });
-    expect(repository.insertLead).toHaveBeenCalledWith(
-      expect.objectContaining({
-        spamCheckResult: 'spam',
-        spamReason: 'soft_rate_limit',
-        smartCaptchaVerified: false,
-        vkSendStatus: 'skipped',
-      }),
-    );
+    expect(response.id).toBeUndefined();
+    expect(repository.insertLead).not.toHaveBeenCalled();
     expect(vkAdapter.sendLeadNotification).not.toHaveBeenCalled();
   });
 
@@ -195,15 +190,11 @@ describe('leadService', () => {
 
     expect(response).toMatchObject({
       ok: true,
-      id: 20,
+      accepted: false,
       vkSendStatus: 'skipped',
     });
-    expect(repository.insertLead).toHaveBeenCalledWith(
-      expect.objectContaining({
-        spamCheckResult: 'spam',
-        spamReason: 'honeypot_filled',
-      }),
-    );
+    expect(response.id).toBeUndefined();
+    expect(repository.insertLead).not.toHaveBeenCalled();
     expect(vkAdapter.sendLeadNotification).not.toHaveBeenCalled();
   });
 
@@ -221,7 +212,7 @@ describe('leadService', () => {
       nowFactory: () => new Date('2026-04-18T12:00:01.000Z'),
     });
 
-    await service.createLead({
+    const response = await service.createLead({
       name: 'Anna',
       phone: '+7 (999) 111 22 33',
       ip: '127.0.0.1',
@@ -229,12 +220,12 @@ describe('leadService', () => {
       form_started_at: String(new Date('2026-04-18T12:00:00.000Z').getTime()),
     } as Parameters<typeof service.createLead>[0] & { form_started_at: string });
 
-    expect(repository.insertLead).toHaveBeenCalledWith(
-      expect.objectContaining({
-        spamCheckResult: 'spam',
-        spamReason: 'submit_too_fast',
-      }),
-    );
+    expect(response).toMatchObject({
+      ok: true,
+      accepted: false,
+      vkSendStatus: 'skipped',
+    });
+    expect(repository.insertLead).not.toHaveBeenCalled();
     expect(vkAdapter.sendLeadNotification).not.toHaveBeenCalled();
   });
 
@@ -262,7 +253,7 @@ describe('leadService', () => {
 
     expect(response).toMatchObject({
       ok: true,
-      id: 22,
+      accepted: false,
       vkSendStatus: 'skipped',
     });
     expect(repository.findRecentLeadByPhone).toHaveBeenCalledWith(
@@ -270,12 +261,8 @@ describe('leadService', () => {
         phone: '+7 (999) 111 22 33',
       }),
     );
-    expect(repository.insertLead).toHaveBeenCalledWith(
-      expect.objectContaining({
-        spamCheckResult: 'duplicate',
-        spamReason: 'duplicate_recent_phone',
-      }),
-    );
+    expect(response.id).toBeUndefined();
+    expect(repository.insertLead).not.toHaveBeenCalled();
     expect(vkAdapter.sendLeadNotification).not.toHaveBeenCalled();
   });
 
@@ -359,16 +346,53 @@ describe('leadService', () => {
 
     expect(response).toMatchObject({
       ok: true,
-      id: 24,
+      accepted: false,
       vkSendStatus: 'skipped',
     });
-    expect(repository.insertLead).toHaveBeenCalledWith(
-      expect.objectContaining({
-        spamCheckResult: 'spam',
-        spamReason: 'smartcaptcha_missing',
-        smartCaptchaVerified: false,
+    expect(response.id).toBeUndefined();
+    expect(repository.insertLead).not.toHaveBeenCalled();
+    expect(vkAdapter.sendLeadNotification).not.toHaveBeenCalled();
+  });
+
+  test('treats unconfigured SmartCaptcha as blocking when captcha is required', async () => {
+    const repository = createRepository();
+    const vkAdapter = createVkAdapter({
+      sendLeadNotification: vi.fn(),
+    });
+    const smartCaptchaVerifier = {
+      verify: vi.fn().mockResolvedValue({
+        configured: false,
+        verified: false,
+        reason: 'smartcaptcha_not_configured',
       }),
-    );
+    };
+
+    const service = createLeadService({
+      repository,
+      vkAdapter,
+      smartCaptchaVerifier,
+      smartCaptchaRequired: true,
+      nowFactory: () => new Date('2026-04-18T12:00:00.000Z'),
+    } as Parameters<typeof createLeadService>[0] & {
+      smartCaptchaVerifier: typeof smartCaptchaVerifier;
+      smartCaptchaRequired: boolean;
+    });
+
+    const response = await service.createLead({
+      name: 'Anna',
+      phone: '+7 (999) 111 22 33',
+      ip: '127.0.0.1',
+      userAgent: 'vitest',
+      smartcaptcha_token: 'verified-token',
+    } as Parameters<typeof service.createLead>[0] & { smartcaptcha_token: string });
+
+    expect(response).toMatchObject({
+      ok: true,
+      accepted: false,
+      vkSendStatus: 'skipped',
+    });
+    expect(response.id).toBeUndefined();
+    expect(repository.insertLead).not.toHaveBeenCalled();
     expect(vkAdapter.sendLeadNotification).not.toHaveBeenCalled();
   });
 });
