@@ -31,12 +31,23 @@
 
 Что делает конфиг:
 
+- отправляет весь `http://` трафик на `https://party-everyday.ru`
+- отправляет `https://www.party-everyday.ru` на `https://party-everyday.ru`
 - отдаёт SPA из `web/dist`
 - отправляет `/api/*` в `server`
 - оставляет `try_files` для клиентских роутов
 - прокидывает `X-Forwarded-*` заголовки в API
 - ставит базовые security headers вместо удалённого `vercel.json`
+- включает HSTS только для основного HTTPS-хоста
 - блокирует доступ к dotfiles, `*.env`, `*.sqlite`, логам и служебным конфигам
+
+Важно:
+
+- в конфиге уже стоят стандартные пути Let's Encrypt:
+  - `/etc/letsencrypt/live/party-everyday.ru/fullchain.pem`
+  - `/etc/letsencrypt/live/party-everyday.ru/privkey.pem`
+- HSTS выставлен без `includeSubDomains` и без `preload`
+  это безопаснее как стартовая настройка, пока нет жёсткого решения по всем поддоменам
 
 ## Переменные для API
 
@@ -61,12 +72,23 @@ RATE_LIMIT_MAX_REQUESTS=5
 2. Собрать сервер: `npm --prefix server ci && npm --prefix server run build`
 3. Обновить содержимое `/var/www/party-everyday/web/dist`
 4. Проверить, что `.env`, SQLite и логи лежат вне `/var/www/party-everyday/web/dist`
-5. Обновить и перезапустить API-процесс
-6. Перезагрузить Nginx: `nginx -t && systemctl reload nginx`
+5. Выпустить сертификат Let's Encrypt для `party-everyday.ru` и `www.party-everyday.ru`
+6. Убедиться, что ACME challenge-директория существует: `/var/www/certbot`
+7. Обновить и перезапустить API-процесс
+8. Перезагрузить Nginx: `nginx -t && systemctl reload nginx`
+
+Пример выпуска сертификата через `certbot`:
+
+```bash
+sudo mkdir -p /var/www/certbot
+sudo certbot certonly --webroot -w /var/www/certbot -d party-everyday.ru -d www.party-everyday.ru
+```
 
 ## Проверка
 
 1. `curl -I https://party-everyday.ru/`
-2. `curl https://party-everyday.ru/api/healthz`
-3. Отправить тестовую заявку из браузера
-4. Проверить запись в SQLite и доставку в VK
+2. `curl -I http://party-everyday.ru/`
+3. `curl -I https://www.party-everyday.ru/`
+4. `curl https://party-everyday.ru/api/healthz`
+5. Отправить тестовую заявку из браузера
+6. Проверить запись в SQLite и доставку в VK
