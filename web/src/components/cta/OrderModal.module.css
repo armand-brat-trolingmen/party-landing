@@ -73,6 +73,14 @@
   gap: 0.5rem;
 }
 
+.honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 .fieldLabel {
   color: var(--text-muted);
   font-size: 0.88rem;
@@ -107,6 +115,10 @@
 .input[aria-invalid='true'] {
   border-color: rgba(194, 65, 113, 0.5);
   box-shadow: 0 0 0 4px rgba(194, 65, 113, 0.18);
+}
+
+.smartCaptcha {
+  min-height: 4.1rem;
 }
 
 .submitButton {

@@ -1,21 +1,33 @@
 import { describe, expect, test, vi } from 'vitest';
 import { createLeadService } from './leadService';
 
+function createRepository(overrides: Record<string, unknown> = {}) {
+  return {
+    countLeadsByIpBetween: vi.fn().mockReturnValue(0),
+    findRecentLeadByPhone: vi.fn().mockReturnValue(null),
+    insertLead: vi.fn().mockReturnValue(17),
+    updateVkStatus: vi.fn(),
+    ...overrides,
+  };
+}
+
+function createVkAdapter(overrides: Record<string, unknown> = {}) {
+  return {
+    sendLeadNotification: vi.fn().mockResolvedValue({
+      status: 'success',
+      error: null,
+    }),
+    getDefaultPeerIds: vi.fn().mockReturnValue([]),
+    ...overrides,
+  };
+}
+
 describe('leadService', () => {
   test('stores all configured peer_ids and passes lead sources into the VK notification payload', async () => {
-    const repository = {
-      countLeadsByIpBetween: vi.fn().mockReturnValue(0),
-      insertLead: vi.fn().mockReturnValue(17),
-      updateVkStatus: vi.fn(),
-    };
-
-    const vkAdapter = {
-      sendLeadNotification: vi.fn().mockResolvedValue({
-        status: 'success',
-        error: null,
-      }),
+    const repository = createRepository();
+    const vkAdapter = createVkAdapter({
       getDefaultPeerIds: vi.fn().mockReturnValue(['2000000042', '2000000043']),
-    };
+    });
 
     const service = createLeadService({
       repository,
@@ -24,12 +36,12 @@ describe('leadService', () => {
     });
 
     const response = await service.createLead({
-      name: 'Анна',
+      name: 'Anna',
       phone: '+7 (999) 111 22 33',
       ip: '127.0.0.1',
       userAgent: 'vitest',
-      firstLeadSource: 'Google поиск',
-      lastLeadSource: 'Яндекс поиск',
+      firstLeadSource: 'Google search',
+      lastLeadSource: 'Yandex search',
     });
 
     expect(response).toMatchObject({
@@ -39,33 +51,31 @@ describe('leadService', () => {
     });
     expect(repository.insertLead).toHaveBeenCalledWith(
       expect.objectContaining({
-        name: 'Анна',
+        name: 'Anna',
         phone: '+7 (999) 111 22 33',
-        firstTrafficSource: 'Google поиск',
-        lastTrafficSource: 'Яндекс поиск',
+        firstTrafficSource: 'Google search',
+        lastTrafficSource: 'Yandex search',
         vkPeerId: '2000000042,2000000043',
       }),
     );
     expect(vkAdapter.sendLeadNotification).toHaveBeenCalledWith(
       expect.objectContaining({
-        name: 'Анна',
+        name: 'Anna',
         phone: '+7 (999) 111 22 33',
-        firstLeadSource: 'Google поиск',
-        lastLeadSource: 'Яндекс поиск',
+        firstLeadSource: 'Google search',
+        lastLeadSource: 'Yandex search',
       }),
     );
   });
-  test('rejects the third approved lead from the same ip during the same Moscow day', async () => {
-    const repository = {
-      countLeadsByIpBetween: vi.fn().mockReturnValue(2),
-      insertLead: vi.fn(),
-      updateVkStatus: vi.fn(),
-    };
 
-    const vkAdapter = {
+  test('marks soft rate limited leads as spam without rejecting the request', async () => {
+    const repository = createRepository({
+      countLeadsByIpBetween: vi.fn().mockReturnValue(2),
+      insertLead: vi.fn().mockReturnValue(19),
+    });
+    const vkAdapter = createVkAdapter({
       sendLeadNotification: vi.fn(),
-      getDefaultPeerIds: vi.fn().mockReturnValue([]),
-    };
+    });
 
     const service = createLeadService({
       repository,
@@ -74,18 +84,246 @@ describe('leadService', () => {
     });
 
     const response = await service.createLead({
-      name: 'Иван',
+      name: 'Anna',
+      phone: '+7 (999) 111 22 33',
+      ip: '127.0.0.1',
+      userAgent: 'vitest',
+      softRateLimitExceeded: true,
+    } as Parameters<typeof service.createLead>[0] & { softRateLimitExceeded: boolean });
+
+    expect(response).toMatchObject({
+      ok: true,
+      id: 19,
+      vkSendStatus: 'skipped',
+    });
+    expect(repository.insertLead).toHaveBeenCalledWith(
+      expect.objectContaining({
+        spamCheckResult: 'spam',
+        spamReason: 'soft_rate_limit',
+        smartCaptchaVerified: false,
+        vkSendStatus: 'skipped',
+      }),
+    );
+    expect(vkAdapter.sendLeadNotification).not.toHaveBeenCalled();
+  });
+
+  test('normalizes first-party attribution and passes it to storage and VK', async () => {
+    const repository = createRepository({
+      insertLead: vi.fn().mockReturnValue(18),
+    });
+    const vkAdapter = createVkAdapter();
+
+    const service = createLeadService({
+      repository,
+      vkAdapter,
+      nowFactory: () => new Date('2026-04-14T12:00:00+03:00'),
+    });
+
+    await service.createLead({
+      name: 'Anna',
+      phone: '+7 (999) 111-22-33',
+      ip: '127.0.0.1',
+      userAgent: 'vitest',
+      firstLeadSource: 'UTM: yandex / cpc / spring',
+      lastLeadSource: 'direct',
+      first_visit_at: '2026-04-01T10:00:00.000Z',
+      last_visit_at: '2026-04-02T10:00:00.000Z',
+      visits_count: '2',
+      first_referrer: 'direct',
+      last_referrer: 'https://partner.example.com/campaign',
+      first_utm_source: 'yandex',
+      first_utm_medium: 'cpc',
+      first_utm_campaign: 'spring',
+      last_utm_source: '',
+      last_utm_medium: '',
+      last_utm_campaign: '',
+    });
+
+    expect(repository.insertLead).toHaveBeenCalledWith(
+      expect.objectContaining({
+        firstVisitAt: '2026-04-01T10:00:00.000Z',
+        lastVisitAt: '2026-04-02T10:00:00.000Z',
+        visitsCount: 2,
+        firstReferrer: 'direct',
+        lastReferrer: 'https://partner.example.com/campaign',
+        firstUtmSource: 'yandex',
+        firstUtmMedium: 'cpc',
+        firstUtmCampaign: 'spring',
+        lastUtmSource: null,
+        lastUtmMedium: null,
+        lastUtmCampaign: null,
+      }),
+    );
+    expect(vkAdapter.sendLeadNotification).toHaveBeenCalledWith(
+      expect.objectContaining({
+        firstVisitAt: '2026-04-01T10:00:00.000Z',
+        lastVisitAt: '2026-04-02T10:00:00.000Z',
+        visitsCount: 2,
+        firstReferrer: 'direct',
+        lastReferrer: 'https://partner.example.com/campaign',
+        firstUtmSource: 'yandex',
+        firstUtmMedium: 'cpc',
+        firstUtmCampaign: 'spring',
+        lastUtmSource: null,
+        lastUtmMedium: null,
+        lastUtmCampaign: null,
+      }),
+    );
+  });
+
+  test('stores honeypot submissions as spam and skips VK delivery', async () => {
+    const repository = createRepository({
+      insertLead: vi.fn().mockReturnValue(20),
+    });
+    const vkAdapter = createVkAdapter({
+      sendLeadNotification: vi.fn(),
+    });
+
+    const service = createLeadService({
+      repository,
+      vkAdapter,
+      nowFactory: () => new Date('2026-04-18T12:00:00.000Z'),
+    });
+
+    const response = await service.createLead({
+      name: 'Anna',
+      phone: '+7 (999) 111 22 33',
+      ip: '127.0.0.1',
+      userAgent: 'vitest',
+      company: 'bot company',
+    } as Parameters<typeof service.createLead>[0] & { company: string });
+
+    expect(response).toMatchObject({
+      ok: true,
+      id: 20,
+      vkSendStatus: 'skipped',
+    });
+    expect(repository.insertLead).toHaveBeenCalledWith(
+      expect.objectContaining({
+        spamCheckResult: 'spam',
+        spamReason: 'honeypot_filled',
+      }),
+    );
+    expect(vkAdapter.sendLeadNotification).not.toHaveBeenCalled();
+  });
+
+  test('stores too-fast submissions as spam and skips VK delivery', async () => {
+    const repository = createRepository({
+      insertLead: vi.fn().mockReturnValue(21),
+    });
+    const vkAdapter = createVkAdapter({
+      sendLeadNotification: vi.fn(),
+    });
+
+    const service = createLeadService({
+      repository,
+      vkAdapter,
+      nowFactory: () => new Date('2026-04-18T12:00:01.000Z'),
+    });
+
+    await service.createLead({
+      name: 'Anna',
+      phone: '+7 (999) 111 22 33',
+      ip: '127.0.0.1',
+      userAgent: 'vitest',
+      form_started_at: String(new Date('2026-04-18T12:00:00.000Z').getTime()),
+    } as Parameters<typeof service.createLead>[0] & { form_started_at: string });
+
+    expect(repository.insertLead).toHaveBeenCalledWith(
+      expect.objectContaining({
+        spamCheckResult: 'spam',
+        spamReason: 'submit_too_fast',
+      }),
+    );
+    expect(vkAdapter.sendLeadNotification).not.toHaveBeenCalled();
+  });
+
+  test('deduplicates recent leads with the same normalized phone and skips VK delivery', async () => {
+    const repository = createRepository({
+      findRecentLeadByPhone: vi.fn().mockReturnValue({ id: 10 }),
+      insertLead: vi.fn().mockReturnValue(22),
+    });
+    const vkAdapter = createVkAdapter({
+      sendLeadNotification: vi.fn(),
+    });
+
+    const service = createLeadService({
+      repository,
+      vkAdapter,
+      nowFactory: () => new Date('2026-04-18T12:00:00.000Z'),
+    });
+
+    const response = await service.createLead({
+      name: 'Anna',
       phone: '+7 (999) 111 22 33',
       ip: '127.0.0.1',
       userAgent: 'vitest',
     });
 
     expect(response).toMatchObject({
-      ok: false,
-      message: 'С этого IP уже отправлено 2 заявки за сегодня. Попробуйте завтра.',
-      statusCode: 429,
+      ok: true,
+      id: 22,
+      vkSendStatus: 'skipped',
     });
-    expect(repository.insertLead).not.toHaveBeenCalled();
+    expect(repository.findRecentLeadByPhone).toHaveBeenCalledWith(
+      expect.objectContaining({
+        phone: '+7 (999) 111 22 33',
+      }),
+    );
+    expect(repository.insertLead).toHaveBeenCalledWith(
+      expect.objectContaining({
+        spamCheckResult: 'duplicate',
+        spamReason: 'duplicate_recent_phone',
+      }),
+    );
     expect(vkAdapter.sendLeadNotification).not.toHaveBeenCalled();
+  });
+
+  test('verifies Yandex SmartCaptcha server-side and stores the verification result', async () => {
+    const repository = createRepository({
+      insertLead: vi.fn().mockReturnValue(23),
+    });
+    const vkAdapter = createVkAdapter();
+    const smartCaptchaVerifier = {
+      verify: vi.fn().mockResolvedValue({
+        configured: true,
+        verified: true,
+        reason: null,
+      }),
+    };
+
+    const service = createLeadService({
+      repository,
+      vkAdapter,
+      smartCaptchaVerifier,
+      nowFactory: () => new Date('2026-04-18T12:00:00.000Z'),
+    } as Parameters<typeof createLeadService>[0] & { smartCaptchaVerifier: typeof smartCaptchaVerifier });
+
+    await service.createLead({
+      name: 'Anna',
+      phone: '+7 (999) 111 22 33',
+      ip: '127.0.0.1',
+      userAgent: 'vitest',
+      smartcaptcha_token: 'verified-token',
+    } as Parameters<typeof service.createLead>[0] & { smartcaptcha_token: string });
+
+    expect(smartCaptchaVerifier.verify).toHaveBeenCalledWith({
+      token: 'verified-token',
+      remoteIp: '127.0.0.1',
+    });
+    expect(repository.insertLead).toHaveBeenCalledWith(
+      expect.objectContaining({
+        spamCheckResult: 'passed',
+        spamReason: null,
+        smartCaptchaVerified: true,
+      }),
+    );
+    expect(vkAdapter.sendLeadNotification).toHaveBeenCalledWith(
+      expect.objectContaining({
+        spamCheckResult: 'passed',
+        spamReason: null,
+        smartCaptchaVerified: true,
+      }),
+    );
   });
 });

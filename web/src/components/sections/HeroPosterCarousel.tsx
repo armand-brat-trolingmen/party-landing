@@ -59,9 +59,9 @@ export function HeroPosterCarousel({ slides, intervalMs = 3000 }: HeroPosterCaro
                     className={styles.poster}
                     src={slide.fallbackImage ?? slide.image}
                     alt={slide.alt}
-                    loading={index <= 1 ? 'eager' : 'lazy'}
+                    loading={index === 0 ? 'eager' : 'lazy'}
                     decoding="async"
-                    fetchPriority={index === 0 ? 'high' : 'auto'}
+                    fetchPriority={index === 0 ? 'high' : 'low'}
                     width={slide.width}
                     height={slide.height}
                     sizes={slide.sizes}

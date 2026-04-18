@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from 'react';
+import { getStoredLeadAttribution } from '../trafficSource/attribution';
 import { LeadApiError, submitLead } from './api';
-import type { LeadFieldErrors, LeadFormValues, LeadSubmitStatus } from './types';
+import type { LeadAttributionPayload, LeadFieldErrors, LeadFormValues, LeadSubmitStatus } from './types';
 import { formatPhoneInput, normalizeName, sanitizeNameInput, validateLeadValues } from './validation';
 
 const initialValues: LeadFormValues = {
@@ -9,6 +10,7 @@ const initialValues: LeadFormValues = {
 };
 
 const successResetDelayMs = 30_000;
+const createFormStartedAt = () => String(Date.now());
 const defaultSuccessMessage = 'Ваша заявка успешно отправлена.';
 const defaultErrorMessage =
   'Если заявка не отправилась, свяжитесь с нами через контакты на сайте — мы быстро поможем с оформлением.';
@@ -29,6 +31,11 @@ export function useLeadForm() {
   const [status, setStatus] = useState<LeadSubmitStatus>('idle');
   const [hasGeneralError, setHasGeneralError] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
+  const [attributionValues, setAttributionValues] = useState<LeadAttributionPayload>(() => getStoredLeadAttribution());
+  const [honeypotValue, setHoneypotValue] = useState('');
+  // Capture immediately so the server can detect form posts that happen too fast.
+  const [formStartedAt, setFormStartedAt] = useState(createFormStartedAt);
+  const [smartCaptchaToken, setSmartCaptchaToken] = useState('');
 
   useEffect(() => {
     if (status !== 'success') {
@@ -49,6 +56,9 @@ export function useLeadForm() {
     setStatus('idle');
     setHasGeneralError(false);
     setStatusMessage('');
+    setHoneypotValue('');
+    setFormStartedAt(createFormStartedAt());
+    setSmartCaptchaToken('');
   }, []);
 
   const clearTransientState = useCallback(() => {
@@ -80,10 +90,12 @@ export function useLeadForm() {
     [clearTransientState],
   );
 
-  const handleSubmit = useCallback(
-    async (event: FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
+  const handleHoneypotChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    setHoneypotValue(event.target.value);
+  }, []);
 
+  const submitCurrentValues = useCallback(
+    async (captchaToken = smartCaptchaToken) => {
       const nextValues = {
         name: normalizeName(values.name),
         phone: values.phone.trim(),
@@ -100,14 +112,25 @@ export function useLeadForm() {
       }
 
       setValues(nextValues);
+      const nextAttributionValues = getStoredLeadAttribution();
+      setAttributionValues(nextAttributionValues);
       setErrors({});
       setHasGeneralError(false);
       setStatusMessage('');
       setStatus('loading');
 
       try {
-        const result = await submitLead(nextValues);
+        const result = await submitLead({
+          ...nextValues,
+          ...nextAttributionValues,
+          company: honeypotValue,
+          form_started_at: formStartedAt,
+          smartcaptcha_token: captchaToken,
+        });
         setValues(initialValues);
+        setHoneypotValue('');
+        setFormStartedAt(createFormStartedAt());
+        setSmartCaptchaToken('');
         setStatusMessage(result.message ?? defaultSuccessMessage);
         setStatus('success');
       } catch (error) {
@@ -123,7 +146,23 @@ export function useLeadForm() {
         setStatus('error');
       }
     },
-    [values],
+    [formStartedAt, honeypotValue, smartCaptchaToken, values],
+  );
+
+  const handleSubmit = useCallback(
+    async (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      await submitCurrentValues();
+    },
+    [submitCurrentValues],
+  );
+
+  const submitWithSmartCaptchaToken = useCallback(
+    async (token: string) => {
+      setSmartCaptchaToken(token);
+      await submitCurrentValues(token);
+    },
+    [submitCurrentValues],
   );
 
   const submitLabel = status === 'loading' ? 'Отправляем...' : 'Заказать';
@@ -135,24 +174,37 @@ export function useLeadForm() {
       errors,
       status,
       hasGeneralError,
+      attributionValues,
+      honeypotValue,
+      formStartedAt,
+      smartCaptchaToken,
       statusMessage,
       submitLabel,
       isSubmitDisabled,
       handleNameChange,
       handlePhoneChange,
+      handleHoneypotChange,
+      setSmartCaptchaToken,
+      submitWithSmartCaptchaToken,
       handleSubmit,
       resetForm,
     }),
     [
       errors,
+      attributionValues,
+      formStartedAt,
+      handleHoneypotChange,
       handleNameChange,
       handlePhoneChange,
       handleSubmit,
       hasGeneralError,
+      honeypotValue,
       isSubmitDisabled,
       resetForm,
+      smartCaptchaToken,
       status,
       statusMessage,
+      submitWithSmartCaptchaToken,
       submitLabel,
       values,
     ],

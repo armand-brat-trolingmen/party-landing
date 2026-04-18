@@ -4,6 +4,10 @@ import { logger } from './utils/logger';
 import { createRateLimiter } from './utils/rateLimit';
 import { getRequestIp } from './utils/requestMeta';
 
+type LeadRequestLocals = {
+  softRateLimitExceeded?: boolean;
+};
+
 type LeadService = {
   createLead(input: {
     name: string;
@@ -12,12 +16,28 @@ type LeadService = {
     userAgent: string | null;
     firstLeadSource?: string;
     lastLeadSource?: string;
+    first_visit_at?: string;
+    last_visit_at?: string;
+    visits_count?: string | number;
+    first_referrer?: string;
+    last_referrer?: string;
+    first_utm_source?: string;
+    first_utm_medium?: string;
+    first_utm_campaign?: string;
+    last_utm_source?: string;
+    last_utm_medium?: string;
+    last_utm_campaign?: string;
+    company?: string;
+    form_started_at?: string;
+    smartcaptcha_token?: string;
+    softRateLimitExceeded?: boolean;
   }): Promise<{
     ok: boolean;
     id?: number;
     vkSendStatus?: 'success' | 'failed' | 'skipped';
     fieldErrors?: Partial<Record<'name' | 'phone', string>>;
     message?: string;
+    statusCode?: number;
   }>;
 };
 
@@ -43,17 +63,10 @@ export function createApp({
       service: 'server',
     });
   });
-  app.use('/api/leads', (request, response, next) => {
+  app.use('/api/leads', (request, response: Response<unknown, LeadRequestLocals>, next) => {
     const ip = getRequestIp(request);
 
-    if (!rateLimiter.isAllowed(ip)) {
-      response.status(429).json({
-        ok: false,
-        message: 'Слишком много запросов, попробуйте позже',
-      });
-      return;
-    }
-
+    response.locals.softRateLimitExceeded = !rateLimiter.isAllowed(ip);
     next();
   });
   app.use('/api/leads', createLeadsRouter({ leadService }));

@@ -93,4 +93,57 @@ describe('vkAdapter', () => {
     expect(result).toEqual({ status: 'skipped', error: null });
     expect(adapter.getDefaultPeerIds()).toEqual([]);
   });
+
+  test('includes first-party attribution details in the VK message', async () => {
+    const fetchImpl = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        response: 551,
+      }),
+    });
+
+    const adapter = createVkAdapter({
+      enabled: true,
+      accessToken: 'token',
+      defaultPeerIds: ['2000000042'],
+      apiVersion: '5.199',
+      fetchImpl,
+    });
+
+    await adapter.sendLeadNotification({
+      name: 'Anna',
+      phone: '+7 (999) 111-22-33',
+      createdAt: '2026-04-14 12:00',
+      firstLeadSource: 'UTM: yandex / cpc / spring',
+      lastLeadSource: 'direct',
+      firstVisitAt: '2026-04-01T10:00:00.000Z',
+      lastVisitAt: '2026-04-02T10:00:00.000Z',
+      visitsCount: 2,
+      firstReferrer: 'direct',
+      lastReferrer: 'https://partner.example.com/campaign',
+      firstUtmSource: 'yandex',
+      firstUtmMedium: 'cpc',
+      firstUtmCampaign: 'spring',
+      lastUtmSource: null,
+      lastUtmMedium: null,
+      lastUtmCampaign: null,
+      spamCheckResult: 'passed',
+      spamReason: null,
+      smartCaptchaVerified: true,
+    } as Parameters<typeof adapter.sendLeadNotification>[0] & {
+      spamCheckResult: 'passed';
+      spamReason: null;
+      smartCaptchaVerified: true;
+    });
+
+    const body = String(fetchImpl.mock.calls[0]?.[1]?.body ?? '');
+    const message = new URLSearchParams(body).get('message');
+
+    expect(message).toContain('first_visit_at: 2026-04-01T10:00:00.000Z');
+    expect(message).toContain('visits_count: 2');
+    expect(message).toContain('last_referrer: https://partner.example.com/campaign');
+    expect(message).toContain('first_utm_campaign: spring');
+    expect(message).toContain('spam_check_result: passed');
+    expect(message).toContain('smartcaptcha_verified: true');
+  });
 });

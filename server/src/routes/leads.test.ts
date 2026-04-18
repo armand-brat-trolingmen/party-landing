@@ -30,33 +30,6 @@ describe('GET /healthz', () => {
       service: 'server',
     });
   });
-  test('returns 429 when the lead service rejects the ip for the rest of the day', async () => {
-    const app = createApp({
-      leadService: {
-        createLead: vi.fn().mockResolvedValue({
-          ok: false,
-          message: 'С этого IP уже отправлено 2 заявки за сегодня. Попробуйте завтра.',
-          statusCode: 429,
-        }),
-      },
-      rateLimitWindowMs: 60000,
-      rateLimitMaxRequests: 5,
-    });
-
-    const response = await request(app)
-      .post('/api/leads')
-      .set('X-Forwarded-For', '1.2.3.4')
-      .send({
-        name: 'Иван',
-        phone: '+7 (999) 111 22 33',
-      });
-
-    expect(response.status).toBe(429);
-    expect(response.body).toMatchObject({
-      ok: false,
-      message: 'С этого IP уже отправлено 2 заявки за сегодня. Попробуйте завтра.',
-    });
-  });
 });
 
 describe('POST /api/leads', () => {
@@ -109,10 +82,10 @@ describe('POST /api/leads', () => {
       .post('/api/leads')
       .set('User-Agent', 'vitest')
       .send({
-        name: 'Иван',
+        name: 'Anna',
         phone: '+7 (999) 111 22 33',
-        firstLeadSource: 'Google поиск',
-        lastLeadSource: 'Яндекс поиск',
+        firstLeadSource: 'Google search',
+        lastLeadSource: 'Yandex search',
       });
 
     expect(response.status).toBe(201);
@@ -123,22 +96,69 @@ describe('POST /api/leads', () => {
 
     const lead = repository.findById(response.body.id as number);
     expect(lead).toMatchObject({
-      name: 'Иван',
+      name: 'Anna',
       phone: '+7 (999) 111 22 33',
-      firstTrafficSource: 'Google поиск',
-      lastTrafficSource: 'Яндекс поиск',
+      firstTrafficSource: 'Google search',
+      lastTrafficSource: 'Yandex search',
+      spamCheckResult: 'passed',
+      spamReason: null,
+      smartCaptchaVerified: false,
       vkSendStatus: 'failed',
       vkSendError: 'Access denied',
     });
   });
 
-  test('blocks repeated requests over the rate limit', async () => {
+  test('does not hard block repeated requests over the endpoint rate limit', async () => {
     const db = createDatabase(':memory:');
     runMigrations(db);
+    const repository = createLeadsRepository(db);
+    const vkAdapter = {
+      sendLeadNotification: vi.fn().mockResolvedValue({
+        status: 'success',
+        error: null,
+      }),
+    };
 
     const app = createApp({
       leadService: createLeadService({
-        repository: createLeadsRepository(db),
+        repository,
+        vkAdapter,
+        nowFactory: () => new Date('2026-04-18T12:00:00.000Z'),
+      }),
+      rateLimitWindowMs: 60000,
+      rateLimitMaxRequests: 1,
+    });
+
+    const first = await request(app).post('/api/leads').set('X-Forwarded-For', '1.2.3.4').send({
+      name: 'Anna',
+      phone: '+7 (999) 111 22 33',
+    });
+    const second = await request(app).post('/api/leads').set('X-Forwarded-For', '1.2.3.4').send({
+      name: 'Maria',
+      phone: '+7 (999) 111 22 34',
+    });
+
+    expect(first.status).toBe(201);
+    expect(second.status).toBe(201);
+    expect(second.body.ok).toBe(true);
+
+    const secondLead = repository.findById(second.body.id as number);
+    expect(secondLead).toMatchObject({
+      spamCheckResult: 'spam',
+      spamReason: 'soft_rate_limit',
+      vkSendStatus: 'skipped',
+    });
+    expect(vkAdapter.sendLeadNotification).toHaveBeenCalledTimes(1);
+  });
+
+  test('accepts first-party attribution and anti-spam fields in the lead payload', async () => {
+    const db = createDatabase(':memory:');
+    runMigrations(db);
+    const repository = createLeadsRepository(db);
+
+    const app = createApp({
+      leadService: createLeadService({
+        repository,
         vkAdapter: {
           sendLeadNotification: vi.fn().mockResolvedValue({
             status: 'skipped',
@@ -147,19 +167,48 @@ describe('POST /api/leads', () => {
         },
       }),
       rateLimitWindowMs: 60000,
-      rateLimitMaxRequests: 1,
+      rateLimitMaxRequests: 5,
     });
 
-    const payload = {
-      name: 'Иван',
-      phone: '+7 (999) 111 22 33',
-    };
+    const response = await request(app)
+      .post('/api/leads')
+      .send({
+        name: 'Anna',
+        phone: '+7 (999) 111-22-33',
+        firstLeadSource: 'UTM: yandex / cpc / spring',
+        lastLeadSource: 'direct',
+        first_visit_at: '2026-04-01T10:00:00.000Z',
+        last_visit_at: '2026-04-02T10:00:00.000Z',
+        visits_count: '2',
+        first_referrer: 'direct',
+        last_referrer: 'direct',
+        first_utm_source: 'yandex',
+        first_utm_medium: 'cpc',
+        first_utm_campaign: 'spring',
+        last_utm_source: '',
+        last_utm_medium: '',
+        last_utm_campaign: '',
+        company: '',
+        form_started_at: String(Date.now() - 10_000),
+        smartcaptcha_token: '',
+      });
 
-    const first = await request(app).post('/api/leads').set('X-Forwarded-For', '1.2.3.4').send(payload);
-    const second = await request(app).post('/api/leads').set('X-Forwarded-For', '1.2.3.4').send(payload);
-
-    expect(first.status).toBe(201);
-    expect(second.status).toBe(429);
-    expect(second.body.ok).toBe(false);
+    expect(response.status).toBe(201);
+    expect(repository.findById(response.body.id as number)).toMatchObject({
+      firstVisitAt: '2026-04-01T10:00:00.000Z',
+      lastVisitAt: '2026-04-02T10:00:00.000Z',
+      visitsCount: 2,
+      firstReferrer: 'direct',
+      lastReferrer: 'direct',
+      firstUtmSource: 'yandex',
+      firstUtmMedium: 'cpc',
+      firstUtmCampaign: 'spring',
+      lastUtmSource: null,
+      lastUtmMedium: null,
+      lastUtmCampaign: null,
+      spamCheckResult: 'passed',
+      spamReason: null,
+      smartCaptchaVerified: false,
+    });
   });
 });

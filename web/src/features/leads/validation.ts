@@ -1,7 +1,7 @@
 import type { LeadFieldErrors, LeadFormValues } from './types';
 
 const namePattern = /^[\p{L}\s-]+$/u;
-const phonePattern = /^\+7 \(\d{3}\) \d{3} \d{2} \d{2}$/;
+const phonePattern = /^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/;
 const maxNameLength = 16;
 
 export function sanitizeNameInput(value: string) {
@@ -40,10 +40,10 @@ export function formatPhoneInput(value: string) {
   }
 
   if (national.length <= 8) {
-    return `+7 (${national.slice(0, 3)}) ${national.slice(3, 6)} ${national.slice(6)}`;
+    return `+7 (${national.slice(0, 3)}) ${national.slice(3, 6)}-${national.slice(6)}`;
   }
 
-  return `+7 (${national.slice(0, 3)}) ${national.slice(3, 6)} ${national.slice(6, 8)} ${national.slice(8, 10)}`;
+  return `+7 (${national.slice(0, 3)}) ${national.slice(3, 6)}-${national.slice(6, 8)}-${national.slice(8, 10)}`;
 }
 
 export function validateLeadValues(values: LeadFormValues) {
@@ -62,7 +62,7 @@ export function validateLeadValues(values: LeadFormValues) {
   if (!normalizedPhone) {
     errors.phone = 'Введите телефон';
   } else if (!phonePattern.test(normalizedPhone)) {
-    errors.phone = 'Телефон должен быть в формате +7 (999) 999 99 99';
+    errors.phone = 'Телефон должен быть в формате +7 (999) 999-99-99';
   }
 
   return errors;

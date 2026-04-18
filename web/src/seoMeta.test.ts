@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { siteConfig } from './content';
 
@@ -14,7 +14,7 @@ test('index html defines production-friendly SEO tags for the landing page', () 
   expect(html).toContain("ym(108614702, 'init'");
   expect(html).toContain('https://mc.yandex.ru/watch/108614702');
   expect(html).toContain('rel="icon" type="image/png" href="/favicon.png?v=4"');
-  expect(html).toContain('rel="shortcut icon" href="/favicon.png?v=4"');
+  expect(html).toContain('rel="shortcut icon" href="/favicon.ico?v=4"');
   expect(html).toContain('<!--helmet-title-->');
   expect(html).toContain('<!--helmet-meta-->');
   expect(html).toContain('<!--helmet-link-->');
@@ -22,6 +22,10 @@ test('index html defines production-friendly SEO tags for the landing page', () 
   expect(html).not.toMatch(/name="robots"[^>]*noindex/i);
   expect(html).not.toMatch(/name="robots"[^>]*nofollow/i);
   expect(html).not.toMatch(/name="robots"[^>]*none/i);
+});
+
+test('public assets include ico favicon for browser fallback requests', () => {
+  expect(existsSync(resolve(import.meta.dirname, '../public/favicon.ico'))).toBe(true);
 });
 
 test('siteConfig exposes centralized SEO copy', () => {

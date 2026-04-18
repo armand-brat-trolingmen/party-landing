@@ -8,6 +8,20 @@ function buildVkMessage(payload: VkNotificationPayload) {
     `Время: ${payload.createdAt}`,
     `Первый источник: ${payload.firstLeadSource ?? 'Не определен'}`,
     `Последний источник: ${payload.lastLeadSource ?? 'Не определен'}`,
+    `first_visit_at: ${payload.firstVisitAt ?? 'not set'}`,
+    `last_visit_at: ${payload.lastVisitAt ?? 'not set'}`,
+    `visits_count: ${payload.visitsCount ?? 'not set'}`,
+    `first_referrer: ${payload.firstReferrer ?? 'not set'}`,
+    `last_referrer: ${payload.lastReferrer ?? 'not set'}`,
+    `first_utm_source: ${payload.firstUtmSource ?? 'not set'}`,
+    `first_utm_medium: ${payload.firstUtmMedium ?? 'not set'}`,
+    `first_utm_campaign: ${payload.firstUtmCampaign ?? 'not set'}`,
+    `last_utm_source: ${payload.lastUtmSource ?? 'not set'}`,
+    `last_utm_medium: ${payload.lastUtmMedium ?? 'not set'}`,
+    `last_utm_campaign: ${payload.lastUtmCampaign ?? 'not set'}`,
+    `spam_check_result: ${payload.spamCheckResult ?? 'not set'}`,
+    `spam_reason: ${payload.spamReason ?? 'not set'}`,
+    `smartcaptcha_verified: ${payload.smartCaptchaVerified ? 'true' : 'false'}`,
   ].join('\n');
 }
 

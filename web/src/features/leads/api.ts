@@ -1,4 +1,4 @@
-import { getStoredLeadSources } from '../trafficSource/attribution';
+import { getStoredLeadAttribution, getStoredLeadSources } from '../trafficSource/attribution';
 import type { LeadApiRequest, LeadApiResponse, LeadFieldErrors } from './types';
 
 export class LeadApiError extends Error {
@@ -12,9 +12,11 @@ export class LeadApiError extends Error {
 }
 
 export async function submitLead(payload: LeadApiRequest) {
+  const leadAttribution = getStoredLeadAttribution();
   const leadSources = getStoredLeadSources();
   const requestPayload: LeadApiRequest = {
     ...payload,
+    ...leadAttribution,
     ...(leadSources.firstLeadSource ? { firstLeadSource: leadSources.firstLeadSource } : {}),
     ...(leadSources.lastLeadSource ? { lastLeadSource: leadSources.lastLeadSource } : {}),
   };

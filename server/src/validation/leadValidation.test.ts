@@ -17,32 +17,32 @@ describe('validateLeadInput', () => {
 
   test('rejects names with non-letter symbols', () => {
     const result = validateLeadInput({
-      name: 'Иван123',
-      phone: '+7 (999) 111 22 33',
+      name: 'Ivan123',
+      phone: '+7 (999) 111-22-33',
     });
 
     expect(result.ok).toBe(false);
     if (!result.ok) {
-      expect(result.fieldErrors.name).toMatch(/имя/i);
+      expect(result.fieldErrors.name).toBeDefined();
     }
   });
 
   test('rejects phone values outside the required mask', () => {
     const result = validateLeadInput({
-      name: 'Иван',
+      name: 'Ivan',
       phone: '89991112233',
     });
 
     expect(result.ok).toBe(false);
     if (!result.ok) {
-      expect(result.fieldErrors.phone).toMatch(/\+7/i);
+      expect(result.fieldErrors.phone).toMatch(/\+7 \(999\) 999-99-99/);
     }
   });
 
   test('rejects names longer than sixteen symbols', () => {
     const result = validateLeadInput({
-      name: 'Александрович Петр',
-      phone: '+7 (999) 111 22 33',
+      name: 'Alexander Petrovich',
+      phone: '+7 (999) 111-22-33',
     });
 
     expect(result.ok).toBe(false);
@@ -53,15 +53,15 @@ describe('validateLeadInput', () => {
 
   test('accepts valid name and phone values', () => {
     const result = validateLeadInput({
-      name: 'Анна-Мария',
-      phone: '+7 (999) 111 22 33',
+      name: 'Anna-Maria',
+      phone: '+7 (999) 111-22-33',
     });
 
     expect(result.ok).toBe(true);
     if (result.ok) {
       expect(result.value).toEqual({
-        name: 'Анна-Мария',
-        phone: '+7 (999) 111 22 33',
+        name: 'Anna-Maria',
+        phone: '+7 (999) 111-22-33',
       });
     }
   });

@@ -69,3 +69,34 @@ test('keeps the success state for thirty seconds before resetting the CTA button
 
   vi.useRealTimers();
 });
+
+test('submits anti-spam metadata together with the lead payload', async () => {
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date('2026-04-18T12:00:00.000Z'));
+  submitLeadMock.mockResolvedValue({
+    ok: true,
+    id: 2,
+    message: 'saved',
+  });
+
+  render(<LeadFormHarness />);
+
+  const [nameInput, phoneInput] = document.querySelectorAll('input');
+  fireEvent.change(nameInput, { target: { value: 'Anna' } });
+  fireEvent.change(phoneInput, { target: { value: '9991234567' } });
+  fireEvent.submit(document.querySelector('form')!);
+
+  await act(async () => {
+    await Promise.resolve();
+  });
+
+  expect(submitLeadMock).toHaveBeenCalledWith(
+    expect.objectContaining({
+      company: '',
+      form_started_at: String(new Date('2026-04-18T12:00:00.000Z').getTime()),
+      smartcaptcha_token: '',
+    }),
+  );
+
+  vi.useRealTimers();
+});
