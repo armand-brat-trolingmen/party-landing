@@ -80,7 +80,7 @@ describe('createSmartCaptchaVerifier', () => {
     });
   });
 
-  test('treats Yandex availability errors as verified to avoid blocking real users', async () => {
+  test('treats Yandex availability errors as failed verification', async () => {
     const fetchImpl = vi.fn().mockResolvedValue({
       ok: false,
       status: 503,
@@ -97,8 +97,27 @@ describe('createSmartCaptchaVerifier', () => {
       }),
     ).resolves.toEqual({
       configured: true,
-      verified: true,
-      reason: null,
+      verified: false,
+      reason: 'smartcaptcha_http_503',
+    });
+  });
+
+  test('treats network errors as failed verification', async () => {
+    const fetchImpl = vi.fn().mockRejectedValue(new Error('network down'));
+    const verifier = createSmartCaptchaVerifier({
+      serverKey: 'server-key',
+      fetchImpl: fetchImpl as unknown as typeof fetch,
+    });
+
+    await expect(
+      verifier.verify({
+        token: 'token',
+        remoteIp: '127.0.0.1',
+      }),
+    ).resolves.toEqual({
+      configured: true,
+      verified: false,
+      reason: 'smartcaptcha_network_error',
     });
   });
 });

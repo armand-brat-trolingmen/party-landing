@@ -148,6 +148,32 @@ test('renders Yandex SmartCaptcha in invisible mode and submits with its token',
   Reflect.deleteProperty(window, 'smartCaptcha');
 });
 
+test('does not bypass SmartCaptcha in the modal when the site key is configured but widget is not ready', () => {
+  const handleSubmit = vi.fn();
+  vi.stubEnv('VITE_SMARTCAPTCHA_SITE_KEY', 'site-key');
+  useLeadFormMock.mockReturnValue(
+    createLeadFormState({
+      handleSubmit,
+    }),
+  );
+
+  render(
+    <MemoryRouter>
+      <OrderModalProvider>
+        <OpenHarness />
+        <OrderModal />
+      </OrderModalProvider>
+    </MemoryRouter>,
+  );
+
+  fireEvent.click(screen.getByRole('button', { name: 'open' }));
+  fireEvent.submit(document.querySelector('form')!);
+
+  expect(handleSubmit).not.toHaveBeenCalled();
+
+  vi.unstubAllEnvs();
+});
+
 test('shows an error button state and fallback help text in the modal when submit fails', () => {
   useLeadFormMock.mockReturnValue(
     createLeadFormState({

@@ -67,8 +67,8 @@ export function createSmartCaptchaVerifier({
         if (!response.ok) {
           return {
             configured: true,
-            verified: true,
-            reason: null,
+            verified: false,
+            reason: `smartcaptcha_http_${response.status}`,
           };
         }
 
@@ -90,8 +90,8 @@ export function createSmartCaptchaVerifier({
       } catch {
         return {
           configured: true,
-          verified: true,
-          reason: null,
+          verified: false,
+          reason: 'smartcaptcha_network_error',
         };
       }
     },

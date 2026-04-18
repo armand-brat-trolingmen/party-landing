@@ -326,4 +326,49 @@ describe('leadService', () => {
       }),
     );
   });
+
+  test('marks configured SmartCaptcha verification failures as spam and skips VK delivery', async () => {
+    const repository = createRepository({
+      insertLead: vi.fn().mockReturnValue(24),
+    });
+    const vkAdapter = createVkAdapter({
+      sendLeadNotification: vi.fn(),
+    });
+    const smartCaptchaVerifier = {
+      verify: vi.fn().mockResolvedValue({
+        configured: true,
+        verified: false,
+        reason: 'smartcaptcha_missing',
+      }),
+    };
+
+    const service = createLeadService({
+      repository,
+      vkAdapter,
+      smartCaptchaVerifier,
+      nowFactory: () => new Date('2026-04-18T12:00:00.000Z'),
+    } as Parameters<typeof createLeadService>[0] & { smartCaptchaVerifier: typeof smartCaptchaVerifier });
+
+    const response = await service.createLead({
+      name: 'Anna',
+      phone: '+7 (999) 111 22 33',
+      ip: '127.0.0.1',
+      userAgent: 'vitest',
+      smartcaptcha_token: '',
+    } as Parameters<typeof service.createLead>[0] & { smartcaptcha_token: string });
+
+    expect(response).toMatchObject({
+      ok: true,
+      id: 24,
+      vkSendStatus: 'skipped',
+    });
+    expect(repository.insertLead).toHaveBeenCalledWith(
+      expect.objectContaining({
+        spamCheckResult: 'spam',
+        spamReason: 'smartcaptcha_missing',
+        smartCaptchaVerified: false,
+      }),
+    );
+    expect(vkAdapter.sendLeadNotification).not.toHaveBeenCalled();
+  });
 });

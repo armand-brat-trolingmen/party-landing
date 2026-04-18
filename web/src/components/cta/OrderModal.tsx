@@ -121,6 +121,10 @@ export function OrderModal() {
 
   const handleSmartCaptchaToken = useCallback(
     (token: string) => {
+      if (!token.trim()) {
+        return;
+      }
+
       void leadForm.submitWithSmartCaptchaToken(token);
     },
     [leadForm],
@@ -136,12 +140,17 @@ export function OrderModal() {
   };
 
   const handleSmartCaptchaSubmit = (event: FormEvent<HTMLFormElement>) => {
-    if (!smartCaptchaSiteKey || !executeSmartCaptchaRef.current) {
+    if (!smartCaptchaSiteKey) {
       void leadForm.handleSubmit(event);
       return;
     }
 
     event.preventDefault();
+
+    if (!executeSmartCaptchaRef.current) {
+      return;
+    }
+
     executeSmartCaptchaRef.current();
   };
 
