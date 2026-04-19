@@ -194,6 +194,12 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
     [canScrollInCurrentPage, isDesktop, scrollToSection],
   );
 
+  const onDirectNavClick = useCallback(() => {
+    if (!isDesktop) {
+      setIsMenuOpen(false);
+    }
+  }, [isDesktop]);
+
   useEffect(() => {
     const timeoutId = window.setTimeout(() => setIsMenuOpen(false), 0);
     return () => window.clearTimeout(timeoutId);
@@ -303,7 +309,7 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
       let nextActive: string | null = null;
 
       for (const item of navItems) {
-        if (!canScrollInCurrentPage(item.id)) {
+        if (item.href || !canScrollInCurrentPage(item.id)) {
           continue;
         }
 
@@ -540,12 +546,17 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
                   <li key={item.id}>
                     <a
                       ref={(node) => {
+                        if (item.href) {
+                          linkRefs.current[item.id] = null;
+                          return;
+                        }
+
                         linkRefs.current[item.id] = node;
                       }}
                       className={styles.navLink}
-                      href={resolveNavHref(item.id)}
-                      onClick={onAnchorClick(item.id)}
-                      data-active={activeSectionId === item.id ? 'true' : 'false'}
+                      href={item.href ?? resolveNavHref(item.id)}
+                      onClick={item.href ? onDirectNavClick : onAnchorClick(item.id)}
+                      data-active={!item.href && activeSectionId === item.id ? 'true' : 'false'}
                     >
                       {item.label}
                     </a>
@@ -615,9 +626,9 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
                           <li key={item.id}>
                             <a
                               className={styles.mobileNavLink}
-                              href={resolveNavHref(item.id)}
-                              onClick={onAnchorClick(item.id)}
-                              data-active={activeSectionId === item.id ? 'true' : 'false'}
+                              href={item.href ?? resolveNavHref(item.id)}
+                              onClick={item.href ? onDirectNavClick : onAnchorClick(item.id)}
+                              data-active={!item.href && activeSectionId === item.id ? 'true' : 'false'}
                             >
                               {item.label}
                             </a>
