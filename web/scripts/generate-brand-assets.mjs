@@ -222,24 +222,24 @@ async function main() {
     await sharp(favicon).webp({ quality: 86, effort: 6 }).toFile(path.join(publicDir, `${candidate}.webp`));
   }
 
-  await writeFile(
-    path.join(publicDir, 'site.webmanifest'),
-    `${JSON.stringify(
-      {
-        name: 'Праздник каждый день',
-        short_name: 'Праздник',
-        icons: [
-          { src: '/icon-192.png', sizes: '192x192', type: 'image/png' },
-          { src: '/icon-512.png', sizes: '512x512', type: 'image/png' },
-        ],
-        theme_color: '#fffdf8',
-        background_color: '#fffdf8',
-        display: 'standalone',
-      },
-      null,
-      2,
-    )}\n`,
-  );
+  const webManifest = `${JSON.stringify(
+    {
+      name: 'Праздник каждый день',
+      short_name: 'Праздник',
+      icons: [
+        { src: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+        { src: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+      ],
+      theme_color: '#fffdf8',
+      background_color: '#fffdf8',
+      display: 'standalone',
+    },
+    null,
+    2,
+  )}\n`;
+
+  await writeFile(path.join(publicDir, 'manifest.json'), webManifest);
+  await writeFile(path.join(publicDir, 'site.webmanifest'), webManifest);
 
   await generateOgImage(favicon);
 }
