@@ -20,7 +20,7 @@ test('renders the homepage as a catalog hub inside the shared site shell', async
   expect(main).toHaveAttribute('data-motion-path', 'canvas-flow');
   expect(main.querySelector('.lazy-section-fallback')).not.toBeInTheDocument();
   expect(footer).toBeInTheDocument();
-  expect(footer.querySelector('a[href="/privacy"]')).toBeInTheDocument();
+  expect(footer.querySelector('a[href="/privacy/"]')).toBeInTheDocument();
 
   await screen.findByTestId('section-cta');
 

@@ -303,7 +303,7 @@ export function CtaSection({ id, title, description, sectionTestId = 'section-ct
 
       <p className={styles.note}>
         Отправляя форму вы принимаете условия передачи данных и согласны с{' '}
-        <a className={styles.noteLink} href="/privacy">
+        <a className={styles.noteLink} href="/privacy/">
           политикой конфиденциальности
         </a>
         .

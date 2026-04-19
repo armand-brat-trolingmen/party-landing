@@ -10,15 +10,15 @@ export const legal = {
   },
   links: [
     {
-      href: '/privacy',
+      href: '/privacy/',
       label: 'Политика конфиденциальности',
     },
     {
-      href: '/offer',
+      href: '/offer/',
       label: 'Договор-оферта',
     },
     {
-      href: '/cookies',
+      href: '/cookies/',
       label: 'Политика использования cookie',
     },
   ] as const satisfies readonly LegalLink[],

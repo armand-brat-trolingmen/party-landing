@@ -92,7 +92,7 @@ test('opens the shared modal with compact fields, capped name length, and privac
   expect(screen.getByRole('textbox', { name: 'Имя' })).toHaveAttribute('maxlength', '16');
   expect(screen.getByRole('textbox', { name: 'Телефон' })).toBeInTheDocument();
   expect(screen.queryByRole('textbox', { name: /Комментарий/i })).not.toBeInTheDocument();
-  expect(screen.getByRole('link', { name: 'политикой конфиденциальности' })).toHaveAttribute('href', '/privacy');
+  expect(screen.getByRole('link', { name: 'политикой конфиденциальности' })).toHaveAttribute('href', '/privacy/');
   expect(screen.queryByRole('link', { name: /договор-оферта/i })).not.toBeInTheDocument();
   expect(screen.queryByRole('link', { name: /cookie/i })).not.toBeInTheDocument();
 });

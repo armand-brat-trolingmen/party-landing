@@ -303,7 +303,7 @@ export function OrderModal() {
 
         <p className={styles.consent}>
           Отправляя форму вы принимаете условия передачи данных и согласны с{' '}
-          <a className={styles.consentLink} href="/privacy">
+          <a className={styles.consentLink} href="/privacy/">
             политикой конфиденциальности
           </a>
           .

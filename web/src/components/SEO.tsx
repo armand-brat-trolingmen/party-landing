@@ -8,6 +8,7 @@ import {
   DEFAULT_OG_IMAGE_TYPE,
   DEFAULT_OG_IMAGE_WIDTH,
   SITE_NAME,
+  toAbsolutePageUrl,
   toAbsoluteUrl,
 } from '../config/seo';
 
@@ -37,7 +38,7 @@ export function SEO({
   noindex = false,
 }: SEOProps) {
   const location = useLocation();
-  const canonicalUrl = toAbsoluteUrl(canonical ?? location.pathname);
+  const canonicalUrl = toAbsolutePageUrl(canonical ?? location.pathname);
   const imageUrl = toAbsoluteUrl(image);
   const robots = resolveRobotsContent(noindex);
 

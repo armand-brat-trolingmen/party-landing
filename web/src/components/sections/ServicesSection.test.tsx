@@ -71,9 +71,9 @@ test('routes each desktop card to its dedicated internal service page', () => {
   const catalog = screen.getByTestId('services-catalog');
   const firstLink = within(catalog)
     .getAllByRole('link')
-    .find((link) => link.getAttribute('href') === `/services/${services[0].slug}`);
+    .find((link) => link.getAttribute('href') === `/services/${services[0].slug}/`);
 
-  expect(firstLink).toHaveAttribute('href', `/services/${services[0].slug}`);
+  expect(firstLink).toHaveAttribute('href', `/services/${services[0].slug}/`);
   expect(firstLink).toHaveAccessibleName(expect.stringContaining(services[0].name));
   expect(firstLink).toHaveAccessibleName(expect.stringContaining(services[0].price?.display ?? services[0].priceFrom));
 });

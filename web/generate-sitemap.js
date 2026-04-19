@@ -70,7 +70,7 @@ function buildSitemapXml(routes) {
   const urls = routes
     .map((route) => {
       const { changefreq, priority } = getRouteMeta(route);
-      const location = route === '/' ? `${SITE_URL}/` : `${SITE_URL}${route}`;
+      const location = route === '/' ? `${SITE_URL}/` : `${SITE_URL}${route}/`;
 
       return [
         '  <url>',

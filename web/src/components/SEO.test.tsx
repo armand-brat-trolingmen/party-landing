@@ -41,3 +41,23 @@ test('SEO writes title and key meta tags in client mode', async () => {
   );
 });
 
+test('SEO canonical and Open Graph URLs follow the slash-final page format', async () => {
+  render(
+    <HelmetProvider>
+      <MemoryRouter initialEntries={['/services/chocolate-fountain']}>
+        <SEO title="Шоколадный фонтан" description="Шоколадный фонтан для мероприятий в Москве." />
+      </MemoryRouter>
+    </HelmetProvider>,
+  );
+
+  await waitFor(() => {
+    expect(document.head.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe(
+      `${SITE_URL}/services/chocolate-fountain/`,
+    );
+  });
+
+  expect(document.head.querySelector('meta[property="og:url"]')?.getAttribute('content')).toBe(
+    `${SITE_URL}/services/chocolate-fountain/`,
+  );
+});
+

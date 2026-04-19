@@ -86,6 +86,21 @@ export function normalizeSeoPath(pathname = '/') {
   return `/${path.replace(/^\/+/, '').replace(/\/+$/, '')}`;
 }
 
+export function normalizeSeoPagePath(pathname = '/') {
+  const path = pathname.trim();
+  const suffixMatch = path.match(/[?#].*$/);
+  const suffix = suffixMatch?.[0] ?? '';
+  const pathWithoutSuffix = suffix ? path.slice(0, -suffix.length) : path;
+  const normalizedPath = normalizeSeoPath(pathWithoutSuffix || '/');
+
+  if (normalizedPath === '/') {
+    return suffix ? `/${suffix}` : '/';
+  }
+
+  // Dokploy/Nginx serves prerendered directories as slash-final pages; canonical signals must match that final URL.
+  return `${normalizedPath}/${suffix}`;
+}
+
 export function toAbsoluteUrl(pathOrUrl = '/') {
   if (/^https?:\/\//i.test(pathOrUrl)) {
     return pathOrUrl;
@@ -93,6 +108,15 @@ export function toAbsoluteUrl(pathOrUrl = '/') {
 
   const normalizedPath = normalizeSeoPath(pathOrUrl);
   return normalizedPath === '/' ? `${SITE_URL}/` : `${SITE_URL}${normalizedPath}`;
+}
+
+export function toAbsolutePageUrl(pathOrUrl = '/') {
+  if (/^https?:\/\//i.test(pathOrUrl)) {
+    const url = new URL(pathOrUrl);
+    return `${url.origin}${normalizeSeoPagePath(`${url.pathname}${url.search}${url.hash}`)}`;
+  }
+
+  return `${SITE_URL}${normalizeSeoPagePath(pathOrUrl)}`;
 }
 
 export function getHomeStructuredData() {
@@ -139,8 +163,8 @@ export function getHomeStructuredData() {
 export function getOfferingStructuredData(offering: OfferingEntity) {
   const homeUrl = toAbsoluteUrl('/');
   const localBusinessId = `${homeUrl}${LOCAL_BUSINESS_ID}`;
-  const pageUrl = toAbsoluteUrl(offering.kind === 'service' ? `/services/${offering.slug}` : `/extras/${offering.slug}`);
-  const collectionUrl = toAbsoluteUrl(offering.kind === 'service' ? '/#services' : '/#extras');
+  const pageUrl = toAbsolutePageUrl(offering.kind === 'service' ? `/services/${offering.slug}` : `/extras/${offering.slug}`);
+  const collectionUrl = toAbsolutePageUrl(offering.kind === 'service' ? '/#services' : '/#extras');
   const collectionName = offering.kind === 'service' ? 'Услуги' : 'Дополнительные услуги';
 
   return [

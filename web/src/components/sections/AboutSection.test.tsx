@@ -22,6 +22,6 @@ test('renders about as a compact premium manifest with a horizontal proof strip'
   expect(sectionQueries.getByTestId('about-proof-strip')).toBeInTheDocument();
   expect(sectionQueries.getAllByTestId('about-fact')).toHaveLength(3);
   expect(sectionQueries.getByText('7+')).toBeInTheDocument();
-  expect(sectionQueries.getByText('300+')).toBeInTheDocument();
-  expect(sectionQueries.getByText('1000+')).toBeInTheDocument();
+  expect(sectionQueries.getByText('1500+')).toBeInTheDocument();
+  expect(sectionQueries.getByText('10000+')).toBeInTheDocument();
 });

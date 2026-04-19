@@ -455,12 +455,12 @@ export const homePageContent = {
       },
       {
         id: 'events',
-        value: '300+',
+        value: '1500+',
         label: 'событий обслужено',
       },
       {
         id: 'clients',
-        value: '1000+',
+        value: '10000+',
         label: 'довольных клиентов',
       },
     ],
@@ -1293,7 +1293,7 @@ export function findExtraBySlug(slug: string) {
 }
 
 export function getOfferingPath(offering: Pick<OfferingEntity, 'kind' | 'slug'>) {
-  return offering.kind === 'service' ? `/services/${offering.slug}` : `/extras/${offering.slug}`;
+  return offering.kind === 'service' ? `/services/${offering.slug}/` : `/extras/${offering.slug}/`;
 }
 
 export function getAllOfferingUrls() {

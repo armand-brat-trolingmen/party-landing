@@ -30,11 +30,11 @@ export function CookieBanner() {
             {isExpanded ? (
               <>
                 Продолжая использовать сайт, Вы соглашаетесь с использованием cookies,{' '}
-                <a className={styles.link} href="/privacy">
+                <a className={styles.link} href="/privacy/">
                   политикой конфиденциальности
                 </a>{' '}
                 и{' '}
-                <a className={styles.link} href="/cookies">
+                <a className={styles.link} href="/cookies/">
                   политикой использования cookie
                 </a>
                 , а также обработкой персональных данных, собираемых посредством метрической программы «Яндекс Метрика», в
@@ -43,7 +43,7 @@ export function CookieBanner() {
             ) : (
               <>
                 Пользуясь сайтом, вы соглашаетесь с использованием cookies и{' '}
-                <a className={styles.link} href="/privacy">
+                <a className={styles.link} href="/privacy/">
                   политикой конфиденциальности
                 </a>
                 .

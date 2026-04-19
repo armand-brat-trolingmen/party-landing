@@ -1,4 +1,4 @@
-import { siteConfig } from './index';
+import { getOfferingPath, siteConfig } from './index';
 
 test('siteConfig exposes the required top-level content domains', () => {
   expect(siteConfig).toHaveProperty('brand');
@@ -38,6 +38,11 @@ test('services expose centralized normalized price values', () => {
   expect(firstService.slug).toBe('chocolate-fountain');
   expect(firstService.price?.from).toBe(11500);
   expect(firstService.price?.display).toBe('от 11.500 ₽');
+});
+
+test('offering paths point to slash-final static pages', () => {
+  expect(getOfferingPath({ kind: 'service', slug: 'chocolate-fountain' })).toBe('/services/chocolate-fountain/');
+  expect(getOfferingPath({ kind: 'extra', slug: 'cart-rental' })).toBe('/extras/cart-rental/');
 });
 
 test('services expose dedicated page tariff content without changing the homepage catalog contract', () => {

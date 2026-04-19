@@ -56,7 +56,7 @@ test('renders the homepage CTA as a compact inline form with privacy consent lin
   expect(sectionQueries.getByLabelText('Телефон')).toHaveAttribute('placeholder', '+7 (999) 999-99-99');
   expect(sectionQueries.getByRole('button', { name: 'Заказать' })).toBeInTheDocument();
   expect(sectionQueries.queryByText(/whatsapp в течение 15 минут/i)).not.toBeInTheDocument();
-  expect(sectionQueries.getByRole('link', { name: 'политикой конфиденциальности' })).toHaveAttribute('href', '/privacy');
+  expect(sectionQueries.getByRole('link', { name: 'политикой конфиденциальности' })).toHaveAttribute('href', '/privacy/');
   expect(sectionQueries.queryByRole('link', { name: /договор-оферта/i })).not.toBeInTheDocument();
   expect(sectionQueries.queryByRole('link', { name: /cookie/i })).not.toBeInTheDocument();
 });

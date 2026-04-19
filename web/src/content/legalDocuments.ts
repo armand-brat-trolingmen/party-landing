@@ -111,7 +111,7 @@ function createContentBlocks(lines: string[]) {
 
 function buildLegalDocument(config: LegalDocumentConfig): LegalDocument {
   const normalizedRaw =
-    config.path === '/privacy' ? config.raw.replace('г. Москва 2025 г.', 'г. Москва 2026 г.') : config.raw;
+    config.path.replace(/\/+$/, '') === '/privacy' ? config.raw.replace('г. Москва 2025 г.', 'г. Москва 2026 г.') : config.raw;
   const blocks = createBlocks(normalizedRaw);
   const intro: LegalDocumentBlock[] = [];
   const sections: LegalDocumentSection[] = [];
@@ -164,7 +164,7 @@ function buildLegalDocument(config: LegalDocumentConfig): LegalDocument {
 
 export const legalDocuments = {
   privacy: buildLegalDocument({
-    path: '/privacy',
+    path: '/privacy/',
     title: 'Политика конфиденциальности',
     seoTitle: 'Политика конфиденциальности | Праздник каждый день',
     description:
@@ -172,7 +172,7 @@ export const legalDocuments = {
     raw: legalRawDocuments.privacy,
   }),
   offer: buildLegalDocument({
-    path: '/offer',
+    path: '/offer/',
     title: 'Договор-оферта',
     seoTitle: 'Договор-оферта | Праздник каждый день',
     description:
@@ -180,7 +180,7 @@ export const legalDocuments = {
     raw: legalRawDocuments.offer,
   }),
   cookies: buildLegalDocument({
-    path: '/cookies',
+    path: '/cookies/',
     title: 'Политика использования cookie',
     seoTitle: 'Политика использования cookie | Праздник каждый день',
     description:

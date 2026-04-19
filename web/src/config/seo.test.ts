@@ -1,5 +1,5 @@
 import { siteConfig } from '../content';
-import { getHomeStructuredData, getOfferingStructuredData } from './seo';
+import { getHomeStructuredData, getOfferingStructuredData, toAbsolutePageUrl, toAbsoluteUrl } from './seo';
 
 test('home structured data exposes organization, local business and website entities for Moscow', () => {
   const graph = getHomeStructuredData();
@@ -64,11 +64,20 @@ test('offering structured data includes local business context and breadcrumb na
         expect.objectContaining({
           position: 3,
           name: offering?.name,
-          item: `https://party-everyday.ru/services/${offering?.slug}`,
+          item: `https://party-everyday.ru/services/${offering?.slug}/`,
         }),
       ],
     }),
   );
+});
+
+test('page URLs use the slash-final static hosting format without changing asset URLs', () => {
+  expect(toAbsolutePageUrl('/services/chocolate-fountain')).toBe(
+    'https://party-everyday.ru/services/chocolate-fountain/',
+  );
+  expect(toAbsolutePageUrl('/extras/cart-rental/')).toBe('https://party-everyday.ru/extras/cart-rental/');
+  expect(toAbsolutePageUrl('/#services')).toBe('https://party-everyday.ru/#services');
+  expect(toAbsoluteUrl('/brand-logo.png')).toBe('https://party-everyday.ru/brand-logo.png');
 });
 
 test('extra structured data points breadcrumb collection links to a real homepage section', () => {
