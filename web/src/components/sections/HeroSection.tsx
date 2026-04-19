@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import { siteConfig } from '../../content';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { HeroPosterCarousel } from './HeroPosterCarousel';
@@ -32,9 +33,12 @@ export function HeroSection() {
         <div className={styles.copyColumn}>
           <h1 className={styles.tagline} aria-label={hero.title}>
             {hero.titleLines.map((line, index) => (
-              <span key={line} className={styles.taglineLine} data-testid={`hero-title-line-${index + 1}`}>
-                {line}
-              </span>
+              <Fragment key={line}>
+                {index > 0 ? ' ' : null}
+                <span className={styles.taglineLine} data-testid={`hero-title-line-${index + 1}`}>
+                  {line}
+                </span>
+              </Fragment>
             ))}
           </h1>
 

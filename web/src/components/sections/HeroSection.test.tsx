@@ -17,7 +17,9 @@ test('renders the editorial hero with a poster carousel and no supporting tag pi
   expect(screen.getByTestId('hero-title-line-1')).toHaveTextContent('Фуд-станции');
   expect(screen.getByTestId('hero-title-line-2')).toHaveTextContent('на ваше');
   expect(screen.getByTestId('hero-title-line-3')).toHaveTextContent('мероприятие');
-  expect(screen.getByRole('heading', { level: 1, name: 'Фуд-станции на ваше мероприятие' })).toBeInTheDocument();
+  const heading = screen.getByRole('heading', { level: 1, name: 'Фуд-станции на ваше мероприятие' });
+  expect(heading).toBeInTheDocument();
+  expect(heading.textContent?.replace(/\s+/g, ' ').trim()).toBe('Фуд-станции на ваше мероприятие');
   expect(screen.queryByText(/москва и область/i)).not.toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Заказать' })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'В каталог' })).toBeInTheDocument();
