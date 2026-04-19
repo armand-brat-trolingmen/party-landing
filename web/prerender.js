@@ -9,7 +9,7 @@ const distDir = resolve(projectRoot, 'dist');
 const distTemplatePath = resolve(distDir, 'index.html');
 const PAGE_PATTERN = /\.(jsx?|tsx?)$/;
 const TEST_FILE_PATTERN = /\.(test|spec)\.(jsx?|tsx?)$/;
-const DYNAMIC_ENTRY_BASENAMES = new Set(['service', 'extra']);
+const DYNAMIC_ENTRY_BASENAMES = new Set(['service', 'extra', 'article']);
 
 async function walkPages(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -101,8 +101,10 @@ async function resolvePageUrls(vite) {
   try {
     const pageFiles = await walkPages(pagesDir);
     const staticUrls = pageFiles.map(filePathToUrl).filter(Boolean);
-    const { getAllOfferingUrls } = await vite.ssrLoadModule('/src/content/index.ts');
-    const dynamicUrls = typeof getAllOfferingUrls === 'function' ? getAllOfferingUrls() : [];
+    const { getAllArticleUrls, getAllOfferingUrls } = await vite.ssrLoadModule('/src/content/index.ts');
+    const offeringUrls = typeof getAllOfferingUrls === 'function' ? getAllOfferingUrls() : [];
+    const articleUrls = typeof getAllArticleUrls === 'function' ? getAllArticleUrls() : [];
+    const dynamicUrls = [...offeringUrls, ...articleUrls];
     const urls = [...new Set([...staticUrls, ...dynamicUrls])].sort();
 
     return urls.length > 0 ? urls : ['/'];
