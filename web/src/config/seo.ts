@@ -9,6 +9,7 @@ import {
 } from '../../site.config.js';
 import { contacts } from '../content/contacts';
 import { legal } from '../content/legal';
+import type { ArticleEntity } from '../content/articles';
 import { services, type OfferingEntity } from '../content/offerings';
 import { buildHomeServiceDescription, getOfferingSeoDescription, seo as contentSeo } from '../content/seo';
 
@@ -216,6 +217,74 @@ export function getOfferingStructuredData(offering: OfferingEntity) {
       },
     },
   ];
+}
+
+export function getArticleStructuredData(article: ArticleEntity) {
+  const homeUrl = toAbsoluteUrl('/');
+  const articlesUrl = toAbsolutePageUrl('/articles');
+  const pageUrl = toAbsolutePageUrl(`/articles/${article.slug}`);
+  const organizationId = `${homeUrl}${ORGANIZATION_ID}`;
+  const graph: Record<string, unknown>[] = [
+    getOrganizationStructuredData(homeUrl),
+    getLocalBusinessStructuredData(homeUrl),
+    {
+      '@type': 'BreadcrumbList',
+      '@id': `${pageUrl}#breadcrumbs`,
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: SITE_NAME,
+          item: homeUrl,
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Статьи',
+          item: articlesUrl,
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: article.h1,
+          item: pageUrl,
+        },
+      ],
+    },
+    {
+      '@type': 'Article',
+      '@id': `${pageUrl}#article`,
+      headline: article.h1,
+      description: article.description,
+      image: toAbsoluteUrl(article.heroImage.src),
+      mainEntityOfPage: pageUrl,
+      inLanguage: 'ru-RU',
+      author: {
+        '@id': organizationId,
+      },
+      publisher: {
+        '@id': organizationId,
+      },
+    },
+  ];
+
+  if (article.faq.length > 0) {
+    graph.push({
+      '@type': 'FAQPage',
+      '@id': `${pageUrl}#faq`,
+      mainEntity: article.faq.map((item, index) => ({
+        '@type': 'Question',
+        '@id': `${pageUrl}#faq-question-${index + 1}`,
+        name: item.question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: item.answer,
+        },
+      })),
+    });
+  }
+
+  return graph;
 }
 
 export function getFaqStructuredData(items: readonly FaqStructuredItem[]) {
