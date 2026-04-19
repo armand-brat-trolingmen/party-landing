@@ -1,5 +1,6 @@
 import { SiteShell } from './components/layout/SiteShell';
 import { AboutSection } from './components/sections/AboutSection';
+import { ArticlesTeaserSection } from './components/sections/ArticlesTeaserSection';
 import { ConceptLoopSection } from './components/sections/ConceptLoopSection';
 import { ContactPlaceholderSection } from './components/sections/ContactPlaceholderSection';
 import { CtaSection } from './components/sections/CtaSection';
@@ -19,6 +20,7 @@ export default function App() {
       <ConceptLoopSection />
       <AboutSection />
       <ServicesSection />
+      <ArticlesTeaserSection />
       <ExtrasSection />
       <FoodTruckRentalSection />
       <FoodTrucksSection />
