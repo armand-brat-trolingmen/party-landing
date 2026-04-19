@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router';
 import NotFoundPage from './pages/404';
+import ArticlePage from './pages/article';
 import ArticlesPage from './pages/articles';
 import CookiesPage from './pages/cookies';
 import ExtraPage from './pages/extra';
@@ -13,6 +14,7 @@ export function AppRoutes() {
     <Routes>
       <Route path="/" element={<IndexPage />} />
       <Route path="/articles" element={<ArticlesPage />} />
+      <Route path="/articles/:slug" element={<ArticlePage />} />
       <Route path="/services/:slug" element={<ServicePage />} />
       <Route path="/extras/:slug" element={<ExtraPage />} />
       <Route path="/privacy" element={<PrivacyPage />} />
