@@ -33,6 +33,7 @@ test('renders the homepage as a catalog hub inside the shared site shell', async
     'section-concept-loop',
     'section-about',
     'section-services',
+    'section-articles-teaser',
     'section-extras',
     'section-food-truck-rental',
     'section-food-trucks',

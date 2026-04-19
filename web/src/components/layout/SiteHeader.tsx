@@ -11,6 +11,7 @@ import {
 } from 'react';
 import { flushSync } from 'react-dom';
 import { useLocation } from 'react-router';
+import type { NavigationItem } from '../../content/types';
 import { siteConfig } from '../../content';
 import { DonutLogo } from '../branding/DonutLogo';
 import { useOrderModal } from '../cta/useOrderModal';
@@ -34,7 +35,7 @@ const MENU_ARIA_LABEL = '\u041c\u0435\u043d\u044e';
 const CLOSE_MENU_ARIA_LABEL = '\u0417\u0430\u043a\u0440\u044b\u0442\u044c \u043c\u0435\u043d\u044e';
 const ORDER_LABEL = '\u0417\u0430\u043a\u0430\u0437\u0430\u0442\u044c';
 const MOBILE_HEADER_BREAKPOINT_PX = 1080;
-const navItems = siteConfig.navigation;
+const navItems: readonly NavigationItem[] = siteConfig.navigation;
 
 function subscribeToHydrationState() {
   return () => undefined;
@@ -194,6 +195,12 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
     [canScrollInCurrentPage, isDesktop, scrollToSection],
   );
 
+  const onDirectNavClick = useCallback(() => {
+    if (!isDesktop) {
+      setIsMenuOpen(false);
+    }
+  }, [isDesktop]);
+
   useEffect(() => {
     const timeoutId = window.setTimeout(() => setIsMenuOpen(false), 0);
     return () => window.clearTimeout(timeoutId);
@@ -303,7 +310,7 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
       let nextActive: string | null = null;
 
       for (const item of navItems) {
-        if (!canScrollInCurrentPage(item.id)) {
+        if (item.href || !canScrollInCurrentPage(item.id)) {
           continue;
         }
 
@@ -540,12 +547,17 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
                   <li key={item.id}>
                     <a
                       ref={(node) => {
+                        if (item.href) {
+                          linkRefs.current[item.id] = null;
+                          return;
+                        }
+
                         linkRefs.current[item.id] = node;
                       }}
                       className={styles.navLink}
-                      href={resolveNavHref(item.id)}
-                      onClick={onAnchorClick(item.id)}
-                      data-active={activeSectionId === item.id ? 'true' : 'false'}
+                      href={item.href ?? resolveNavHref(item.id)}
+                      onClick={item.href ? onDirectNavClick : onAnchorClick(item.id)}
+                      data-active={!item.href && activeSectionId === item.id ? 'true' : 'false'}
                     >
                       {item.label}
                     </a>
@@ -615,9 +627,9 @@ export function SiteHeader({ legalMode = false }: SiteHeaderProps) {
                           <li key={item.id}>
                             <a
                               className={styles.mobileNavLink}
-                              href={resolveNavHref(item.id)}
-                              onClick={onAnchorClick(item.id)}
-                              data-active={activeSectionId === item.id ? 'true' : 'false'}
+                              href={item.href ?? resolveNavHref(item.id)}
+                              onClick={item.href ? onDirectNavClick : onAnchorClick(item.id)}
+                              data-active={!item.href && activeSectionId === item.id ? 'true' : 'false'}
                             >
                               {item.label}
                             </a>

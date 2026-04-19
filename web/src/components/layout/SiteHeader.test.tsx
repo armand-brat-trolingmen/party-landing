@@ -75,8 +75,11 @@ test('shows desktop navigation with a dedicated order button on the homepage', (
   expect(screen.getByTestId('nav-active-indicator')).toBeInTheDocument();
 
   navItems.forEach((item) => {
-    expect(within(navigation).getByRole('link', { name: item.label })).toHaveAttribute('href', `#${item.id}`);
+    const expectedHref = 'href' in item && item.href ? item.href : `#${item.id}`;
+    expect(within(navigation).getByRole('link', { name: item.label })).toHaveAttribute('href', expectedHref);
   });
+
+  expect(within(navigation).getByRole('link', { name: 'Статьи' })).toHaveAttribute('href', '/articles/');
 });
 
 test('keeps route-aware links on internal pages', () => {
@@ -90,6 +93,7 @@ test('keeps route-aware links on internal pages', () => {
   expect(within(navigation).getByRole('link', { name: 'Услуги' })).toHaveAttribute('href', '#services');
   expect(within(navigation).getByRole('link', { name: 'Доп. услуги' })).toHaveAttribute('href', '#extras');
   expect(within(navigation).getByRole('link', { name: 'Отзывы' })).toHaveAttribute('href', '#testimonials');
+  expect(within(navigation).getByRole('link', { name: 'Статьи' })).toHaveAttribute('href', '/articles/');
 });
 
 test('keeps mobile navigation collapsed by default and moves order CTA into the menu', () => {
@@ -103,7 +107,9 @@ test('keeps mobile navigation collapsed by default and moves order CTA into the 
 
   fireEvent.click(menuButton);
   expect(menuButton).toHaveAttribute('aria-expanded', 'true');
-  expect(screen.getByRole('navigation')).toBeInTheDocument();
+  const navigation = screen.getByRole('navigation');
+  expect(navigation).toBeInTheDocument();
+  expect(within(navigation).getByRole('link', { name: 'Статьи' })).toHaveAttribute('href', '/articles/');
   expect(screen.getByTestId('mobile-menu-order-button')).toBeInTheDocument();
 });
 

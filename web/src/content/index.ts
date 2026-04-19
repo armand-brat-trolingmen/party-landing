@@ -6,6 +6,7 @@ import { navigation } from './navigation';
 import { notFound } from './notFound';
 import { extras, reviewProofs, services } from './offerings';
 import { seo } from './seo';
+import { articles } from './articles';
 
 export const siteConfig = {
   brand,
@@ -14,6 +15,7 @@ export const siteConfig = {
   homepage,
   services,
   extras,
+  articles,
   testimonials: reviewProofs,
   faq: homepage.faq.items,
   legal,
@@ -48,4 +50,20 @@ export type {
   ServicePageTariff,
 } from './offerings';
 export { avitoProfileUrl } from './contacts';
+export {
+  articleImages,
+  articles,
+  findArticleBySlug,
+  getAllArticleUrls,
+  getArticlePath,
+  getArticleTextContent,
+} from './articles';
+export type {
+  ArticleEntity,
+  ArticleFaqItem,
+  ArticleIconId,
+  ArticleImage,
+  ArticleSection,
+  ArticleTextBlock,
+} from './articles';
 export { buildHomeServiceDescription, getOfferingSeoDescription, seo } from './seo';

@@ -1,5 +1,12 @@
 import { siteConfig } from '../content';
-import { getHomeStructuredData, getOfferingStructuredData, toAbsolutePageUrl, toAbsoluteUrl } from './seo';
+import { articles } from '../content/articles';
+import {
+  getArticleStructuredData,
+  getHomeStructuredData,
+  getOfferingStructuredData,
+  toAbsolutePageUrl,
+  toAbsoluteUrl,
+} from './seo';
 
 test('home structured data exposes organization, local business and website entities for Moscow', () => {
   const graph = getHomeStructuredData();
@@ -94,6 +101,42 @@ test('extra structured data points breadcrumb collection links to a real homepag
         expect.objectContaining({
           position: 2,
           item: 'https://party-everyday.ru/#extras',
+        }),
+      ]),
+    }),
+  );
+});
+
+test('article structured data includes article breadcrumb and FAQ graph', () => {
+  const article = articles.find((item) => item.slug === 'arenda-fudtraka-na-meropriyatie');
+
+  expect(article).toBeDefined();
+
+  const graph = getArticleStructuredData(article!);
+
+  expect(graph).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({ '@type': 'LocalBusiness' }),
+      expect.objectContaining({ '@type': 'BreadcrumbList' }),
+      expect.objectContaining({ '@type': 'Article', headline: article?.h1 }),
+      expect.objectContaining({ '@type': 'FAQPage' }),
+    ]),
+  );
+
+  const breadcrumb = graph.find((entry) => entry['@type'] === 'BreadcrumbList');
+
+  expect(breadcrumb).toEqual(
+    expect.objectContaining({
+      itemListElement: expect.arrayContaining([
+        expect.objectContaining({
+          position: 2,
+          name: 'Статьи',
+          item: 'https://party-everyday.ru/articles/',
+        }),
+        expect.objectContaining({
+          position: 3,
+          name: article?.h1,
+          item: 'https://party-everyday.ru/articles/arenda-fudtraka-na-meropriyatie/',
         }),
       ]),
     }),

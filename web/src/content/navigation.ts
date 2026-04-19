@@ -6,5 +6,6 @@ export const navigation = [
   { id: 'extras', label: 'Доп. услуги' },
   { id: 'testimonials', label: 'Отзывы' },
   { id: 'faq', label: 'FAQ' },
+  { id: 'articles', label: 'Статьи', href: '/articles/' },
   { id: 'contact', label: 'Контакты' },
 ] as const satisfies readonly NavigationItem[];
