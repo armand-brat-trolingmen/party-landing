@@ -28,8 +28,8 @@ test('articles expose the initial SEO package with stable URLs', () => {
 });
 
 test('article visuals are centralized for future image replacement', () => {
-  expect(articleImages.foodStationGuide.src).toBe('/images/services-home/cotton-candy-popcorn.webp');
-  expect(articleImages.kidsSweetStations.src).toBe('/images/services-home/cotton-candy.webp');
+  expect(articleImages.foodStationGuide.src).toBe('/images/service-galleries/chocolate-fountain/image-01-960.webp');
+  expect(articleImages.kidsSweetStations.src).toBe('/images/service-galleries/cotton-candy-popcorn/image-05-960.webp');
   expect(articleImages.foodTruckRental.src).toBe('/images/food-trucks/food-truck-1.webp');
 
   articles.forEach((article) => {
@@ -53,6 +53,7 @@ test('articles are dense enough and link only to existing service pages', () => 
     expect(article.sections.length).toBeGreaterThanOrEqual(6);
     expect(article.faq.length).toBeGreaterThanOrEqual(3);
     expect(getArticleTextContent(article).length).toBeGreaterThanOrEqual(4500);
+    expect(getArticleTextContent(article)).not.toMatch(/[A-Za-z]/);
 
     article.relatedServiceSlugs.forEach((slug) => {
       expect(serviceSlugs.has(slug)).toBe(true);

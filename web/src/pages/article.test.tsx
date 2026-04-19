@@ -16,8 +16,8 @@ test('renders article detail page with content, related blocks and structured da
   renderArticlePage();
 
   expect(screen.getByRole('heading', { level: 1, name: 'Аренда фудтрака на мероприятие' })).toBeInTheDocument();
-  expect(screen.getByTestId('article-hero-image')).toHaveAttribute('src', '/images/food-trucks/food-truck-1.webp');
-  expect(screen.getByTestId('article-service-icon')).toHaveAttribute('data-article-icon', 'foodTruck');
+  expect(screen.queryByText('Полезный материал')).not.toBeInTheDocument();
+  expect(screen.getByTestId('article-hero-image')).toHaveAttribute('src', '/images/food-trucks/food-truck-1.jpg');
   expect(screen.getByTestId('article-related-services')).toBeInTheDocument();
   expect(screen.getByTestId('article-faq')).toBeInTheDocument();
   expect(screen.getByTestId('article-cta')).toBeInTheDocument();

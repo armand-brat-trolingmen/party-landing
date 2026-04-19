@@ -19,6 +19,7 @@ test('renders articles index with all initial SEO articles', () => {
   renderArticlesPage();
 
   expect(screen.getByRole('heading', { level: 1, name: 'Статьи' })).toBeInTheDocument();
+  expect(screen.queryByText('Статьи', { selector: 'p' })).not.toBeInTheDocument();
   expect(screen.getByRole('link', { name: /Как выбрать фуд-станцию/i })).toHaveAttribute(
     'href',
     '/articles/kak-vybrat-food-station/',

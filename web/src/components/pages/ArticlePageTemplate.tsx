@@ -4,7 +4,6 @@ import {
   findArticleBySlug,
   getArticlePath,
   type ArticleEntity,
-  type ArticleIconId,
   type ArticleTextBlock,
 } from '../../content/articles';
 import { getOfferingPath, services, type OfferingEntity } from '../../content/offerings';
@@ -21,25 +20,6 @@ function isOfferingEntity(value: OfferingEntity | undefined): value is OfferingE
 
 function isArticleEntity(value: ArticleEntity | undefined): value is ArticleEntity {
   return Boolean(value);
-}
-
-function ArticleIcon({ icon }: { icon: ArticleIconId }) {
-  const pathByIcon: Record<ArticleIconId, string> = {
-    foodStation:
-      'M5 18.2h14M6.2 10.4h11.6M7.3 10.4v7.8m9.4-7.8v7.8M8 7.2h8l1.8 3.2H6.2L8 7.2Zm2.1 0V5.8c0-.9.7-1.6 1.6-1.6h.6c.9 0 1.6.7 1.6 1.6v1.4',
-    sweetStation:
-      'M12 4.4c2.5 0 4.4 1.5 4.4 3.4 0 1.7-1.4 3-3.3 3.3l-.6 7.1h-1l-.6-7.1c-1.9-.3-3.3-1.6-3.3-3.3 0-1.9 1.9-3.4 4.4-3.4Zm-4.1 9.2h8.2l1.2 4.6H6.7l1.2-4.6Z',
-    foodTruck:
-      'M4.8 14.6V7.2h9.4v7.4M14.2 10.1h2.8l2.2 2.8v1.7h-5M6.6 16.7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm10.7 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM4.8 14.6h.3m3 0h7.7',
-  };
-
-  return (
-    <span className={styles.serviceIcon} data-testid="article-service-icon" data-article-icon={icon} aria-hidden="true">
-      <svg viewBox="0 0 24 24" focusable="false">
-        <path d={pathByIcon[icon]} />
-      </svg>
-    </span>
-  );
 }
 
 function ArticleBlock({ block }: { block: ArticleTextBlock }) {
@@ -87,11 +67,6 @@ export function ArticlePageTemplate({ article }: ArticlePageTemplateProps) {
               <span aria-current="page">{article.h1}</span>
             </nav>
 
-            <div className={styles.headingRow}>
-              <ArticleIcon icon={article.serviceIcon} />
-              <p className={styles.eyebrow}>Полезный материал</p>
-            </div>
-
             <h1 id="article-title" className={styles.title}>
               {article.h1}
             </h1>
@@ -99,18 +74,21 @@ export function ArticlePageTemplate({ article }: ArticlePageTemplateProps) {
           </div>
 
           <div className={styles.heroMedia}>
-            <img
-              className={styles.heroImage}
-              data-testid="article-hero-image"
-              src={article.heroImage.src}
-              alt={article.heroImage.alt}
-              width={article.heroImage.width}
-              height={article.heroImage.height}
-              loading="eager"
-              decoding="async"
-              fetchPriority="high"
-              style={{ objectPosition: article.heroImage.objectPosition }}
-            />
+            <picture>
+              <source type="image/webp" srcSet={article.heroImage.src} />
+              <img
+                className={styles.heroImage}
+                data-testid="article-hero-image"
+                src={article.heroImage.fallbackSrc}
+                alt={article.heroImage.alt}
+                width={article.heroImage.width}
+                height={article.heroImage.height}
+                loading="eager"
+                decoding="async"
+                fetchPriority="high"
+                style={{ objectPosition: article.heroImage.objectPosition }}
+              />
+            </picture>
           </div>
         </div>
       </section>

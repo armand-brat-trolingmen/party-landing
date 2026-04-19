@@ -46,52 +46,12 @@
   color: rgba(102, 114, 130, 0.55);
 }
 
-.headingRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.7rem;
-  align-items: center;
-}
-
-.serviceIcon {
-  display: inline-grid;
-  place-items: center;
-  width: 3.1rem;
-  height: 3.1rem;
-  border-radius: 1.1rem;
-  background: linear-gradient(135deg, #ffe3ef, #e5f8ff);
-  color: #202632;
-  box-shadow: 0 1rem 2rem rgba(31, 52, 74, 0.1);
-}
-
-.serviceIcon svg {
-  width: 1.7rem;
-  height: 1.7rem;
-}
-
-.serviceIcon path {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.eyebrow {
-  margin: 0;
-  color: #ff5f9a;
-  font-size: 0.8rem;
-  font-weight: 900;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
 .title {
   max-width: 14ch;
   margin: 0;
   color: #202632;
-  font-size: clamp(3rem, 8vw, 6.7rem);
-  line-height: 0.86;
+  font-size: clamp(2.65rem, 5.8vw, 5rem);
+  line-height: 0.92;
   letter-spacing: -0.07em;
   text-wrap: balance;
 }
@@ -106,6 +66,8 @@
 }
 
 .heroMedia {
+  display: grid;
+  place-items: center;
   min-width: 0;
   padding: clamp(0.8rem, 2vw, 1.1rem);
   border: 1px solid rgba(32, 38, 50, 0.08);
@@ -122,7 +84,7 @@
   aspect-ratio: 4 / 3;
   height: auto;
   max-height: clamp(18rem, 42vw, 31rem);
-  object-fit: cover;
+  object-fit: contain;
   border-radius: clamp(1rem, 2.4vw, 1.55rem);
 }
 
@@ -372,8 +334,8 @@
 
   .title {
     max-width: none;
-    font-size: clamp(2.35rem, 13vw, 4.8rem);
-    line-height: 0.92;
+    font-size: clamp(2.15rem, 9vw, 3.5rem);
+    line-height: 0.96;
   }
 
   .lead {

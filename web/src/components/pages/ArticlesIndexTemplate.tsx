@@ -15,7 +15,6 @@ export function ArticlesIndexTemplate({ articles }: ArticlesIndexTemplateProps) 
     <section className={styles.section} aria-labelledby="articles-title" data-testid="articles-index">
       <div className="site-container">
         <header className={styles.header}>
-          <p className={styles.eyebrow}>Статьи</p>
           <h1 id="articles-title" className={styles.title}>
             Статьи
           </h1>
