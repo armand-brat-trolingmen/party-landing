@@ -13,8 +13,11 @@ test('index html defines production-friendly SEO tags for the landing page', () 
   expect(html).toContain('https://mc.yandex.ru/metrika/tag.js?id=108614702');
   expect(html).toContain("ym(108614702, 'init'");
   expect(html).toContain('https://mc.yandex.ru/watch/108614702');
-  expect(html).toContain('rel="icon" type="image/png" href="/favicon.png?v=4"');
-  expect(html).toContain('rel="shortcut icon" href="/favicon.ico?v=4"');
+  expect(html).toContain('rel="icon" href="/favicon.ico" sizes="any"');
+  expect(html).toContain('rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png"');
+  expect(html).toContain('rel="icon" type="image/png" sizes="256x256" href="/favicon.png"');
+  expect(html).toContain('rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"');
+  expect(html).toContain('rel="manifest" href="/site.webmanifest"');
   expect(html).toContain('<!--helmet-title-->');
   expect(html).toContain('<!--helmet-meta-->');
   expect(html).toContain('<!--helmet-link-->');
@@ -26,6 +29,9 @@ test('index html defines production-friendly SEO tags for the landing page', () 
 
 test('public assets include ico favicon for browser fallback requests', () => {
   expect(existsSync(resolve(import.meta.dirname, '../public/favicon.ico'))).toBe(true);
+  expect(existsSync(resolve(import.meta.dirname, '../public/favicon-32.png'))).toBe(true);
+  expect(existsSync(resolve(import.meta.dirname, '../public/apple-touch-icon.png'))).toBe(true);
+  expect(existsSync(resolve(import.meta.dirname, '../public/site.webmanifest'))).toBe(true);
 });
 
 test('siteConfig exposes centralized SEO copy', () => {

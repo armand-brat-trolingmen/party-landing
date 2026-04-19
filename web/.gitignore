@@ -23,7 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
-.vercel
 fountain-check*.png
 hero-mobile-check.png
 menu-button-*.png

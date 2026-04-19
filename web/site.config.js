@@ -1,7 +1,7 @@
 const DEFAULT_SITE_URL = 'https://party-everyday.ru';
 const DEFAULT_SITE_NAME = 'Праздник каждый день';
 const DEFAULT_LOCALE_VALUE = 'ru_RU';
-const DEFAULT_OG_IMAGE_PATH_VALUE = '/og-image.png?v=20260417';
+const DEFAULT_OG_IMAGE_PATH_VALUE = '/og-image.png?v=20260419';
 const DEFAULT_OG_IMAGE_WIDTH_VALUE = 1200;
 const DEFAULT_OG_IMAGE_HEIGHT_VALUE = 630;
 const DEFAULT_OG_IMAGE_TYPE_VALUE = 'image/png';
