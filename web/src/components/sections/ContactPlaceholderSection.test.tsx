@@ -30,6 +30,8 @@ test('renders contacts as a split canvas with direct details and an Avito screen
 
   expect(visualSlot).toHaveAttribute('data-contact-visual', 'avito');
   expect(avitoImage).toHaveAttribute('src', '/images/contact/avito.jpg');
+  expect(avitoImage).toHaveAttribute('width', '1280');
+  expect(avitoImage).toHaveAttribute('height', '887');
 
   for (const action of siteConfig.homepage.contact.actions) {
     const link = sectionQueries.getByRole('link', { name: action.label });
@@ -58,10 +60,11 @@ test('opens the Avito screenshot in a true fullscreen dialog from the contact vi
   expect(dialogQueries.queryByText('Скриншот Avito')).not.toBeInTheDocument();
   expect(overlay).toHaveAttribute('data-dialog-state', 'open');
   expect(overlay.parentElement).toBe(document.body);
-  expect(dialogQueries.getByRole('img', { name: 'Скриншот профиля Праздник каждый день на Avito' })).toHaveAttribute(
-    'src',
-    '/images/contact/avito.jpg',
-  );
+  const dialogImage = dialogQueries.getByRole('img', { name: 'Скриншот профиля Праздник каждый день на Avito' });
+
+  expect(dialogImage).toHaveAttribute('src', '/images/contact/avito.jpg');
+  expect(dialogImage).toHaveAttribute('width', '1280');
+  expect(dialogImage).toHaveAttribute('height', '887');
 
   fireEvent.keyDown(window, { key: 'Escape' });
 

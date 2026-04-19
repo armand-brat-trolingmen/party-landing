@@ -7,8 +7,8 @@ import styles from './ContactPlaceholderSection.module.css';
 
 const AVITO_SCREENSHOT_SRC = '/images/contact/avito.jpg';
 const AVITO_SCREENSHOT_WEBP_SRC = '/images/contact/avito.webp';
-const AVITO_SCREENSHOT_WIDTH = 1460;
-const AVITO_SCREENSHOT_HEIGHT = 908;
+const AVITO_SCREENSHOT_WIDTH = 1280;
+const AVITO_SCREENSHOT_HEIGHT = 887;
 
 type ContactIconKind = 'telegram' | 'whatsapp' | 'avito';
 
