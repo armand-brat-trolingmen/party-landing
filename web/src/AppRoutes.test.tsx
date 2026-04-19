@@ -63,6 +63,16 @@ test('renders service and extra internal pages', () => {
   expect(screen.getByRole('heading', { level: 1, name: 'Аренда тележек' })).toBeInTheDocument();
 });
 
+test('renders articles index route', () => {
+  render(
+    <MemoryRouter initialEntries={['/articles']}>
+      <AppRoutes />
+    </MemoryRouter>,
+  );
+
+  expect(screen.getByRole('heading', { level: 1, name: 'Статьи' })).toBeInTheDocument();
+});
+
 test('renders a dedicated Russian not found page for unknown routes', () => {
   render(
     <MemoryRouter initialEntries={['/missing-page']}>
