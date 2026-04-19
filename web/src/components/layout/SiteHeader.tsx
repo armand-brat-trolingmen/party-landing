@@ -11,6 +11,7 @@ import {
 } from 'react';
 import { flushSync } from 'react-dom';
 import { useLocation } from 'react-router';
+import type { NavigationItem } from '../../content/types';
 import { siteConfig } from '../../content';
 import { DonutLogo } from '../branding/DonutLogo';
 import { useOrderModal } from '../cta/useOrderModal';
@@ -34,7 +35,7 @@ const MENU_ARIA_LABEL = '\u041c\u0435\u043d\u044e';
 const CLOSE_MENU_ARIA_LABEL = '\u0417\u0430\u043a\u0440\u044b\u0442\u044c \u043c\u0435\u043d\u044e';
 const ORDER_LABEL = '\u0417\u0430\u043a\u0430\u0437\u0430\u0442\u044c';
 const MOBILE_HEADER_BREAKPOINT_PX = 1080;
-const navItems = siteConfig.navigation;
+const navItems: readonly NavigationItem[] = siteConfig.navigation;
 
 function subscribeToHydrationState() {
   return () => undefined;
