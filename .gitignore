@@ -10,3 +10,13 @@ server/node_modules/
 server/dist/
 server/.env
 server/data/
+
+# Local workspace clutter and imported skill bundles
+/SKILL review.md
+/photo_2026-04-17_21-10-37.jpg
+/transparent_result.png
+/проект.md
+/docs/project-handoff-report-*.md
+/docs/site-audit-report-*.md
+/ui-ux-pro-max-skill-2.5.0/
+/yandex-codex-skill/
