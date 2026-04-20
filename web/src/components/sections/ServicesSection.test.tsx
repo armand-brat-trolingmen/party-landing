@@ -129,9 +129,11 @@ test('progressively unlocks more mobile slider images after scrolling so cards d
   expect(images[0]).toHaveAttribute('loading', 'eager');
   expect(images[1]).toHaveAttribute('loading', 'eager');
   expect(images[2]).toHaveAttribute('loading', 'eager');
-  expect(images[3]).toHaveAttribute('loading', 'eager');
+  expect(images[3]).toHaveAttribute('loading', 'lazy');
   expect(deferredImage).toHaveAttribute('loading', 'lazy');
   expect(images[0]).toHaveAttribute('fetchpriority', 'high');
+  expect(images[1]).toHaveAttribute('fetchpriority', 'high');
+  expect(images[2]).toHaveAttribute('fetchpriority', 'auto');
   expect(deferredImage).toHaveAttribute('fetchpriority', 'low');
 
   Object.defineProperties(catalog, {

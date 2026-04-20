@@ -52,6 +52,11 @@ test('services expose dedicated page tariff content without changing the homepag
   const champagnePyramid = siteConfig.services.find((service) => service.slug === 'champagne-pyramid');
   const foamCannon = siteConfig.services.find((service) => service.slug === 'foam-cannon');
   const caramelApples = siteConfig.services.find((service) => service.slug === 'caramel-apples');
+  const rollIceCream = siteConfig.services.find((service) => service.slug === 'roll-ice-cream');
+  const scoopIceCream = siteConfig.services.find((service) => service.slug === 'scoop-ice-cream');
+  const nitroIceCream = siteConfig.services.find((service) => service.slug === 'nitro-ice-cream');
+  const frenchHotDog = siteConfig.services.find((service) => service.slug === 'french-hot-dog');
+  const danishHotDog = siteConfig.services.find((service) => service.slug === 'danish-hot-dog');
   const teaStation = siteConfig.services.find((service) => service.slug === 'tea-station');
   const plovStation = siteConfig.services.find((service) => service.slug === 'plov-station');
   const discountNote =
@@ -59,6 +64,11 @@ test('services expose dedicated page tariff content without changing the homepag
 
   expect(combo?.name).toBe('Сахарная вата + попкорн');
   expect(siteConfig.services.map((service) => service.name)).not.toContain('Сладкая вата + попкорн');
+  expect(rollIceCream?.name).toBe('Ролл-мороженое');
+  expect(scoopIceCream?.name).toBe('Шариковое мороженое');
+  expect(nitroIceCream?.name).toBe('Азотное мороженое');
+  expect(frenchHotDog?.name).toBe('Французский хот-дог');
+  expect(danishHotDog?.name).toBe('Датский хот-дог');
   expect(cottonCandy?.servicePage?.tariffs).toEqual(
     expect.arrayContaining([
       expect.objectContaining({ title: '2 часа', price: '12.000 ₽' }),
@@ -141,10 +151,23 @@ test('services expose dedicated page tariff content without changing the homepag
       }),
       expect.objectContaining({
         title: 'Глинтвейн',
-        variants: [
-          { label: '100 порций', price: '27.000 ₽' },
-          { label: '150 порций', price: '38.000 ₽' },
-          { label: '200 порций', price: '47.000 ₽' },
+        sections: [
+          {
+            title: 'Безалкогольный',
+            variants: [
+              { label: '50 порций', price: '15.000 ₽' },
+              { label: '100 порций', price: '25.000 ₽' },
+              { label: '150 порций', price: '35.000 ₽' },
+            ],
+          },
+          {
+            title: 'Алкогольный',
+            variants: [
+              { label: '50 порций', price: '20.000 ₽' },
+              { label: '100 порций', price: '34.000 ₽' },
+              { label: '150 порций', price: '45.000 ₽' },
+            ],
+          },
         ],
       }),
     ]),
@@ -170,7 +193,7 @@ test('extras expose only the current additional service catalog', () => {
   ]);
   expect(siteConfig.extras.find((extra) => extra.slug === 'branded-cart')?.visual).toMatchObject({
     image: '/images/extras/branding-ui.png',
-    imageWebpSrcSet: '/images/extras/branding.webp',
+    imageWebpSrcSet: '/images/extras/branding-ui.webp',
   });
   expect(siteConfig.extras.find((extra) => extra.slug === 'equipment-rental')?.visual).toMatchObject({
     image: '/images/extras/equipment-ui.png',

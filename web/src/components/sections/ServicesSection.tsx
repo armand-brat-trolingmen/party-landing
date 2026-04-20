@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getOfferingPath, siteConfig, type OfferingEntity } from '../../content';
 import { useHorizontalScrollProgress } from '../../hooks/useHorizontalScrollProgress';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
@@ -18,8 +18,8 @@ type ServicesSectionProps = {
 };
 
 const MOBILE_SLIDER_QUERY = '(max-width: 720px) and (pointer: coarse)';
-const MIN_MOBILE_EAGER_IMAGES = 4;
-const MOBILE_IMAGE_LOOKAHEAD = 4;
+const MIN_MOBILE_EAGER_IMAGES = 2;
+const MOBILE_IMAGE_LOOKAHEAD = 2;
 const SERVICE_LINK_TEXT = '\u041F\u043E\u0434\u0440\u043E\u0431\u043D\u0435\u0435';
 const SERVICES_PROGRESS_LABEL = '\u041F\u0440\u043E\u043A\u0440\u0443\u0442\u043A\u0430 \u0443\u0441\u043B\u0443\u0433';
 
@@ -36,9 +36,8 @@ export function ServicesSection({
   const isMobile = useMediaQuery(MOBILE_SLIDER_QUERY);
   const { scrollerRef, progress } = useHorizontalScrollProgress(isMobile);
   const progressVisual = Math.max(progress, 16);
-  const preloadCacheRef = useRef(new Set<string>());
   const baseDesktopPriorityCount = Math.max(priorityImageCount, 0);
-  const baseMobileEagerCount = Math.min(items.length, Math.max(baseDesktopPriorityCount, MIN_MOBILE_EAGER_IMAGES));
+  const baseMobileEagerCount = Math.min(items.length, MIN_MOBILE_EAGER_IMAGES);
   const [mobileEagerCount, setMobileEagerCount] = useState(baseMobileEagerCount);
   const effectiveMobileEagerCount = isMobile
     ? Math.min(items.length, Math.max(mobileEagerCount, baseMobileEagerCount))
@@ -71,29 +70,6 @@ export function ServicesSection({
       window.removeEventListener('resize', syncEagerRange);
     };
   }, [baseMobileEagerCount, isMobile, items.length, scrollerRef]);
-
-  useEffect(() => {
-    const preloadCount = isMobile ? effectiveMobileEagerCount : Math.min(items.length, baseDesktopPriorityCount);
-
-    items.slice(0, preloadCount).forEach((service) => {
-      const image = service.homeCardImage;
-      if (!image) {
-        return;
-      }
-
-      const cacheKey = `${image.src}|${image.fallbackSrc}|${image.sizes}`;
-      if (preloadCacheRef.current.has(cacheKey)) {
-        return;
-      }
-
-      preloadCacheRef.current.add(cacheKey);
-      const preloader = new Image();
-      preloader.decoding = 'async';
-      preloader.srcset = image.src;
-      preloader.sizes = image.sizes;
-      preloader.src = image.fallbackSrc;
-    });
-  }, [baseDesktopPriorityCount, effectiveMobileEagerCount, isMobile, items]);
 
   return (
     <section id={sectionId} className="site-section" data-testid="section-services" aria-labelledby={`${sectionId}-title`}>

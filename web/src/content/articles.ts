@@ -66,8 +66,8 @@ export const articleImages = {
     src: '/images/food-trucks/food-truck-1.webp',
     fallbackSrc: '/images/food-trucks/food-truck-1.jpg',
     alt: 'Фудтрак на мероприятии',
-    width: 1200,
-    height: 800,
+    width: 1280,
+    height: 960,
     objectPosition: 'center',
   },
 } as const satisfies Record<string, ArticleImage>;

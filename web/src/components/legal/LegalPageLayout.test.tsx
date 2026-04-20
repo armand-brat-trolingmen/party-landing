@@ -48,6 +48,11 @@ test('keeps distinct legal page titles while rendering the real offer and cookie
   expect(screen.getByText(/«14» апреля 2026 года/)).toBeInTheDocument();
   expect(screen.getByRole('heading', { level: 2, name: '1. ОБЩИЕ ПОЛОЖЕНИЯ' })).toBeInTheDocument();
   expect(screen.getByText(/Полным и безоговорочным акцептом настоящей оферты/)).toBeInTheDocument();
+  expect(screen.queryByText(/подготовка и согласование программы Мероприятия/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/бронирование площадки для проведения Мероприятия/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/подготовка и сбор реквизита, костюмов, декораций/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/транспортировка реквизита, костюмов, декораций/i)).not.toBeInTheDocument();
+  expect(screen.getByText(/перевозка, погрузка и разгрузка оборудования, тележек и расходных материалов/i)).toBeInTheDocument();
 
   rerender(
     <HelmetProvider>
@@ -62,5 +67,7 @@ test('keeps distinct legal page titles while rendering the real offer and cookie
   expect(screen.getByRole('heading', { level: 2, name: '1. Общие положения' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { level: 2, name: '2. Что такое Cookies?' })).toBeInTheDocument();
   expect(screen.getByText(/Яндекс Метрика/)).toBeInTheDocument();
-  expect(screen.getByText(/Google Tag Manager/)).toBeInTheDocument();
+  expect(screen.queryByText(/Roistat/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/Google Tag Manager/)).not.toBeInTheDocument();
+  expect(screen.queryByText(/Google Analytics/)).not.toBeInTheDocument();
 });

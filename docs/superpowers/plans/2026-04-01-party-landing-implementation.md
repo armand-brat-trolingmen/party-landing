@@ -420,7 +420,6 @@ Write `web/src/styles/tokens.css`:
 Write `web/src/styles/global.css`:
 
 ```css
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
 @import './tokens.css';
 
 html {

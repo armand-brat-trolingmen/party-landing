@@ -34,9 +34,9 @@ export function HeroSection() {
           <h1 className={styles.tagline} aria-label={hero.title}>
             {hero.titleLines.map((line, index) => (
               <Fragment key={line}>
-                {index > 0 ? ' ' : null}
                 <span className={styles.taglineLine} data-testid={`hero-title-line-${index + 1}`}>
                   {line}
+                  {index < hero.titleLines.length - 1 ? ' ' : null}
                 </span>
               </Fragment>
             ))}

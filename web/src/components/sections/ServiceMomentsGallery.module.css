@@ -92,6 +92,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center center;
   transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -109,12 +110,14 @@
   padding: 0;
   background: rgba(10, 14, 22, 0.88);
   backdrop-filter: blur(12px);
+  overscroll-behavior: contain;
+  touch-action: none;
   animation: galleryPreviewFade 180ms ease both;
 }
 
 .dialog {
-  position: fixed;
-  inset: 0;
+  width: 100%;
+  min-height: 100%;
   pointer-events: none;
 }
 
@@ -131,12 +134,16 @@
 }
 
 .dialogMedia {
-  position: fixed;
-  inset: max(1rem, env(safe-area-inset-top, 0px)) max(1rem, env(safe-area-inset-right, 0px))
-    max(1rem, env(safe-area-inset-bottom, 0px)) max(1rem, env(safe-area-inset-left, 0px));
+  position: relative;
   display: grid;
   place-items: center;
-  min-height: 0;
+  width: 100%;
+  min-height: 100svh;
+  padding:
+    max(1rem, env(safe-area-inset-top, 0px))
+    max(1rem, env(safe-area-inset-right, 0px))
+    max(1rem, env(safe-area-inset-bottom, 0px))
+    max(1rem, env(safe-area-inset-left, 0px));
   pointer-events: auto;
 }
 
@@ -146,36 +153,33 @@
   right: max(0.4rem, env(safe-area-inset-right, 0px));
   display: inline-grid;
   place-items: center;
-  width: 3rem;
-  height: 3rem;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 8px;
-  background: rgba(20, 28, 39, 0.7);
-  color: rgba(255, 253, 248, 0.96);
-  font-size: 1.9rem;
+  width: 3.1rem;
+  height: 3.1rem;
+  border: 1px solid rgba(120, 88, 56, 0.16);
+  border-radius: 999px;
+  background: #f5e2ce;
+  color: #56372a;
+  font-size: 1.95rem;
+  font-weight: 500;
   line-height: 1;
   cursor: pointer;
-  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.16);
 }
 
 .dialogPicture {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate3d(-50%, -50%, 0);
   max-width: calc(100vw - 2rem);
   max-height: calc(100svh - 2rem);
   margin: 0 auto;
-  padding: 0.52rem;
-  border: 1px solid rgba(255, 255, 255, 0.48);
+  padding: 0.42rem;
+  border: 1px solid rgba(120, 88, 56, 0.14);
   border-radius: 1.22rem;
-  background: rgba(255, 255, 255, 0.03);
+  background: #f5e2ce;
   box-shadow:
     0 20px 40px rgba(0, 0, 0, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+    inset 0 1px 0 rgba(255, 255, 255, 0.34);
 }
 
 .dialogImage {
@@ -217,8 +221,8 @@
   }
 
   .dialogClose {
-    width: 2.7rem;
-    height: 2.7rem;
+    width: 2.8rem;
+    height: 2.8rem;
     font-size: 1.7rem;
   }
 

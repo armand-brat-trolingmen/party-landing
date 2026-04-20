@@ -270,6 +270,50 @@
   }
 }
 
+@media (max-width: 1079px) and (min-width: 721px) {
+  .card {
+    padding: 1.05rem;
+  }
+
+  .cardLink {
+    gap: 0.9rem;
+  }
+
+  .visualWrap {
+    aspect-ratio: 1 / 0.68;
+  }
+
+  @supports not (aspect-ratio: 1 / 1) {
+    .visualWrap::before {
+      padding-top: 68%;
+    }
+  }
+
+  .visualPicture {
+    padding: 0.3rem;
+  }
+
+  .visualImage[data-image-fit='contain'] {
+    padding: 0.45rem 0.45rem 0.2rem;
+  }
+
+  .name,
+  .price {
+    font-size: 1.3rem;
+  }
+
+  .cardDescription {
+    max-width: none;
+    font-size: 0.93rem;
+  }
+
+  .link {
+    min-height: 2.9rem;
+    padding: 0.52rem 0.72rem 0.52rem 0.92rem;
+    font-size: 0.9rem;
+  }
+}
+
 @media (min-width: 721px) {
   .footer {
     min-width: 0;

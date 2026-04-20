@@ -11,4 +11,9 @@ test('service moments gallery uses resilient native horizontal scrolling', () =>
   expect(css).toContain('touch-action: pan-x pan-y;');
   expect(css).toContain('scroll-snap-type: x proximity;');
   expect(css).toContain('scroll-snap-stop: normal;');
+  expect(css).toContain('object-fit: cover;');
+  expect(css).toContain('object-position: center center;');
+  expect(css).toContain('overscroll-behavior: contain;');
+  expect(css).toContain('border-radius: 999px;');
+  expect(css).toContain('background: #f5e2ce;');
 });

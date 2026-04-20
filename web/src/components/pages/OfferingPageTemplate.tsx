@@ -31,8 +31,10 @@ function CheckList({ items }: { items: readonly string[] }) {
 }
 
 function TariffCard({ tariff }: { tariff: ServicePageTariff }) {
+  const variantCount = tariff.variants?.length ?? Math.max(...(tariff.sections?.map((section) => section.variants.length) ?? [0]));
+
   return (
-    <article className={styles.tariffCard} data-variant-count={tariff.variants?.length ?? 0}>
+    <article className={styles.tariffCard} data-variant-count={variantCount}>
       <div className={styles.tariffTopline}>
         <h3 className={styles.tariffTitle}>{tariff.title}</h3>
         {tariff.subtitle ? <span className={styles.tariffSubtitle}>{tariff.subtitle}</span> : null}
@@ -48,6 +50,24 @@ function TariffCard({ tariff }: { tariff: ServicePageTariff }) {
               <span>{variant.label}</span>
               <strong>{variant.price}</strong>
             </span>
+          ))}
+        </div>
+      ) : null}
+
+      {tariff.sections?.length ? (
+        <div className={styles.tariffSections}>
+          {tariff.sections.map((section) => (
+            <div key={section.title} className={styles.tariffSection}>
+              <h4 className={styles.tariffSectionTitle}>{section.title}</h4>
+              <div className={styles.tariffVariants} data-variant-count={section.variants.length}>
+                {section.variants.map((variant) => (
+                  <span key={`${section.title}-${variant.label}`} className={styles.tariffVariant}>
+                    <span>{variant.label}</span>
+                    <strong>{variant.price}</strong>
+                  </span>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       ) : null}

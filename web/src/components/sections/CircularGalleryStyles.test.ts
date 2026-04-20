@@ -14,6 +14,10 @@ test('circular gallery keeps a desktop-only drift animation for the non-WebGL fa
   expect(css).toContain('overscroll-behavior-x: contain;');
   expect(css).toContain('scroll-snap-type: x proximity;');
   expect(css).toContain('scroll-snap-stop: normal;');
+  expect(css).toContain('background: transparent;');
+  expect(css).toContain('object-fit: cover;');
+  expect(css).toContain('object-position: center center;');
+  expect(css).not.toContain('object-fit: contain;');
   expect(css).toMatch(
     /@media \(max-width: 900px\) \{[\s\S]*?\.semanticTrack \{[\s\S]*?animation: none;[\s\S]*?transform: none;[\s\S]*?\}/,
   );

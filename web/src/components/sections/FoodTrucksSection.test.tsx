@@ -24,11 +24,11 @@ test('renders the catering food trucks section with gallery assets and story cop
   expect(sectionQueries.queryByText('Месячная аренда от 80.000 ₽ в месяц')).not.toBeInTheDocument();
 
   const images = sectionQueries.getAllByTestId('food-truck-gallery-image');
-  expect(images).toHaveLength(6);
+  expect(images).toHaveLength(10);
   expect(gallery).toHaveAttribute('data-gallery-mode', 'fallback');
   expect(sectionQueries.queryByTestId('food-truck-gallery-source-webp')).not.toBeInTheDocument();
   expect(images[0]).toHaveAttribute('src', '/images/food-trucks/food-truck-1.jpg');
-  expect(images[4]).toHaveAttribute('alt', 'Фудтрак для кейтеринга на выездном мероприятии, фото 6');
-  expect(images[5]).toHaveAttribute('src', '/images/food-trucks/food-truck-4.jpg');
+  expect(images[4]).toHaveAttribute('alt', 'Фудтрак для кейтеринга на выездном мероприятии, фото 5');
+  expect(images[9]).toHaveAttribute('src', '/images/food-trucks/food-truck-10.jpg');
   expect(images.every((image) => !image.getAttribute('alt')?.includes('?'))).toBe(true);
 });

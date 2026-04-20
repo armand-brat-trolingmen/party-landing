@@ -44,7 +44,7 @@ test('renders branded cart extra page with prices block and moments gallery', ()
   expect(included).toHaveTextContent('от 15 ₽ за штуку');
   expect(within(gallery).getAllByTestId('offering-gallery-slide')).toHaveLength(6);
   expect(within(gallery).getAllByTestId('offering-gallery-image')).toHaveLength(6);
-  expect(screen.getByTestId('offering-extra-visual-source-webp')).toHaveAttribute('srcset', '/images/extras/branding.webp');
+  expect(screen.getByTestId('offering-extra-visual-source-webp')).toHaveAttribute('srcset', '/images/extras/branding-ui.webp');
   expect(screen.getByTestId('offering-extra-visual-image')).toHaveAttribute('src', '/images/extras/branding-ui.png');
   expect(screen.queryByTestId('offering-extra-visual-blank')).not.toBeInTheDocument();
   expect(screen.getByTestId('section-offering-cta')).toHaveAttribute('data-cta-variant', 'home');
@@ -72,9 +72,15 @@ test('renders equipment rental extra page with updated price list', () => {
   expect(included).toHaveTextContent('от 4.000 ₽');
   expect(included).toHaveTextContent('Аренда Звукового оборудования с микрофонами');
   expect(included).toHaveTextContent('от 8.500 ₽');
+  expect(included).toHaveTextContent('Аренда настольного морозильного ларя для шарикового мороженого');
+  expect(included).toHaveTextContent('6.000 ₽');
+  expect(screen.getByTestId('offering-extra-hero')).toHaveTextContent(/за оборудование берется залог/i);
+  expect(screen.getByTestId('offering-extra-hero')).toHaveTextContent(/сумма согласовывается при формировании заказа/i);
   expect(screen.getByTestId('offering-extra-visual-source-webp')).toHaveAttribute('srcset', '/images/extras/equipment-ui.webp');
   expect(screen.getByTestId('offering-extra-visual-image')).toHaveAttribute('src', '/images/extras/equipment-ui.png');
-  expect(screen.queryByTestId('offering-gallery')).not.toBeInTheDocument();
+  const gallery = screen.getByTestId('offering-gallery');
+  expect(within(gallery).getAllByTestId('offering-gallery-slide')).toHaveLength(4);
+  expect(within(gallery).getAllByTestId('offering-gallery-image')).toHaveLength(4);
   expect(screen.queryByTestId('offering-extra-visual-blank')).not.toBeInTheDocument();
 });
 
@@ -94,6 +100,8 @@ test('renders cart rental extra page with its dedicated visual', () => {
   expect(screen.getByTestId('offering-extra-included')).toHaveTextContent('5.500 ₽');
   expect(screen.getByTestId('offering-extra-visual-source-webp')).toHaveAttribute('srcset', '/images/extras/cart-rental-ui.webp');
   expect(screen.getByTestId('offering-extra-visual-image')).toHaveAttribute('src', '/images/extras/cart-rental-ui.png');
-  expect(screen.queryByTestId('offering-gallery')).not.toBeInTheDocument();
+  const gallery = screen.getByTestId('offering-gallery');
+  expect(within(gallery).getAllByTestId('offering-gallery-slide')).toHaveLength(6);
+  expect(within(gallery).getAllByTestId('offering-gallery-image')).toHaveLength(6);
   expect(screen.queryByTestId('offering-extra-visual-blank')).not.toBeInTheDocument();
 });

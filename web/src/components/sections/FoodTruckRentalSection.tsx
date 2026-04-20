@@ -25,7 +25,7 @@ export function FoodTruckRentalSection() {
 
           <div className={`${styles.photoGrid} reveal-grid`} data-testid="food-truck-rental-gallery">
             {content.items.map((item, index) => (
-              <figure key={item.image} className={styles.photoFrame} data-frame-size={index === 0 ? 'tall' : 'wide'}>
+              <figure key={item.image} className={styles.photoFrame}>
                 <picture className={styles.photoPicture}>
                   {item.imageWebpSrcSet ? (
                     <source

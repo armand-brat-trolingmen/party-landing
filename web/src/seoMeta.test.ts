@@ -7,9 +7,8 @@ test('index html defines production-friendly SEO tags for the landing page', () 
 
   expect(html).toContain('<html lang="ru">');
   expect(html).toContain('name="viewport"');
-  expect(html).toContain("https://www.googletagmanager.com/gtm.js?id=' + i + dl");
-  expect(html).toContain("})(window, document, 'script', 'dataLayer', 'GTM-TL8KRHKH');");
-  expect(html).toContain('https://www.googletagmanager.com/ns.html?id=GTM-TL8KRHKH');
+  expect(html).not.toContain('googletagmanager.com');
+  expect(html).not.toContain('GTM-TL8KRHKH');
   expect(html).toContain('name="yandex-verification"');
   expect(html).toContain('content="70515ede813a5a7e"');
   expect(html).not.toContain(['07b2ceb2', 'a2824f8f'].join(''));

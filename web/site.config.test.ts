@@ -23,6 +23,6 @@ test('site config loads without a process global for browser-like runtimes', () 
     siteUrl: 'https://party-everyday.ru',
     siteName: 'Праздник каждый день',
     defaultLocale: 'ru_RU',
-    ogImageUrl: 'https://party-everyday.ru/og-image.png?v=20260419',
+    ogImageUrl: 'https://party-everyday.ru/og-image.png?v=20260420',
   });
 });

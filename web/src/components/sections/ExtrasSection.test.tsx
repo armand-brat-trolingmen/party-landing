@@ -4,8 +4,6 @@ import { ExtrasSection } from './ExtrasSection';
 
 const extras = siteConfig.extras;
 const firstExtra = extras[0];
-const MOBILE_SLIDER_QUERY = '(max-width: 720px) and (pointer: coarse)';
-
 function toLooseNamePattern(value: string) {
   return new RegExp(value.split(/\s+/).join('\\s*'), 'i');
 }
@@ -60,7 +58,7 @@ test('renders extras inside the wide canvas without a framed outer surface', () 
   expect(equipmentImage).toHaveAttribute('src', '/images/extras/equipment-ui.png');
   expect(cartRentalImage).toHaveAttribute('src', '/images/extras/cart-rental-ui.png');
   expect(sources).toHaveLength(3);
-  expect(sources[0]).toHaveAttribute('srcset', '/images/extras/branding.webp');
+  expect(sources[0]).toHaveAttribute('srcset', '/images/extras/branding-ui.webp');
   expect(sources[1]).toHaveAttribute('srcset', '/images/extras/equipment-ui.webp');
   expect(sources[2]).toHaveAttribute('srcset', '/images/extras/cart-rental-ui.webp');
   expect(brandingImage).toHaveAttribute('loading', 'lazy');
@@ -71,28 +69,39 @@ test('renders extras inside the wide canvas without a framed outer surface', () 
   expect(extraLinks[0]).toHaveAccessibleName(expect.stringContaining(firstExtra.shortDescription));
 });
 
-test('switches extras to a compact mobile slider without a swipe progress indicator', () => {
+test('keeps extras in the grid flow on coarse mobile devices instead of switching to a slider', () => {
   mockViewport(true, { coarsePointer: true });
   render(<ExtrasSection />);
 
   const track = screen.getByTestId('extras-track');
   const firstLink = within(track).getAllByRole('link')[0];
 
-  expect(track).toHaveAttribute('data-mobile-layout', 'slider-compact');
-  expect(firstLink).toHaveAttribute('data-link-appearance', 'card');
+  expect(track).toHaveAttribute('data-mobile-layout', 'grid');
+  expect(firstLink).toHaveAttribute('data-link-appearance', 'button');
   expect(screen.queryByTestId('extras-slider-progress')).not.toBeInTheDocument();
 });
 
-test('keeps narrow fine-pointer desktops in the grid layout instead of enabling the mobile slider', () => {
+test('keeps narrow fine-pointer desktops in the grid layout without device-specific switching', () => {
   mockViewport(true, { coarsePointer: false });
   render(<ExtrasSection />);
 
   const track = screen.getByTestId('extras-track');
   const firstLink = within(track).getAllByRole('link')[0];
 
-  expect(window.matchMedia).toHaveBeenCalledWith(MOBILE_SLIDER_QUERY);
   expect(track).toHaveAttribute('data-mobile-layout', 'grid');
   expect(firstLink).toHaveAttribute('data-link-appearance', 'button');
+});
+
+test('renders extra card titles as whole phrases without forced per-line spans', () => {
+  mockViewport(false);
+  render(<ExtrasSection />);
+
+  const headings = screen.getAllByRole('heading', { level: 3 });
+
+  expect(screen.queryByTestId('extra-card-title-line')).not.toBeInTheDocument();
+  expect(headings[0]).toHaveTextContent(/брендирование\s+тележки\s+для\s+кейтеринга/i);
+  expect(headings[1]).toHaveTextContent(/аренда\s+оборудования/i);
+  expect(headings[2]).toHaveTextContent(/аренда\s+тележек/i);
 });
 
 test('can promote only the requested extras images when rendered above the fold', () => {

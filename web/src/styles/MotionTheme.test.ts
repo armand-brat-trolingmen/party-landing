@@ -78,6 +78,8 @@ test('services styles preserve card interactions but drop the outer frame rule',
   expect(css).toContain('object-position: center bottom;');
   expect(css).toContain('white-space: nowrap;');
   expect(css).toContain('@media (min-width: 1080px)');
+  expect(css).toContain('@media (max-width: 1079px) and (min-width: 721px)');
+  expect(css).toContain('aspect-ratio: 1 / 0.68;');
   expect(css).toContain('scroll-snap-type: x proximity;');
   expect(css).toContain('grid-auto-columns: clamp(16rem, 86vw, 22rem);');
   expect(css).toContain('justify-content: start;');
@@ -88,8 +90,8 @@ test('services styles preserve card interactions but drop the outer frame rule',
   expect(extrasCss).not.toContain('@keyframes extraButtonSheen');
   expect(extrasCss).not.toContain('@keyframes extraButtonShift');
   expect(extrasCss).toContain('.link::before');
-  expect(extrasCss).toContain('grid-auto-columns: clamp(12rem, 64vw, 14rem);');
   expect(extrasCss).toContain('grid-template-columns: repeat(3, minmax(0, 1fr));');
+  expect(extrasCss).toContain('grid-template-columns: 1fr;');
   expect(offeringCss).toContain('.orderButton::before');
   expect(offeringCss).toContain('@keyframes orderButtonSheen');
 });
@@ -164,6 +166,6 @@ test('mobile breakpoints keep the premium layout but calm the motion and spacing
   expect(ctaCss).toContain('word-break: break-word;');
   expect(offeringCss).toContain('@media (max-width: 720px)');
   expect(offeringCss).toContain('text-wrap: balance;');
-  expect(offeringCss).toContain('overflow-wrap: anywhere;');
+  expect(offeringCss).toContain('overflow-wrap: normal;');
   expect(contactCss).toContain('min-height: 14.5rem;');
 });

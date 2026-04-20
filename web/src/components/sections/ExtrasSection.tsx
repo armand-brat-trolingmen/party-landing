@@ -1,17 +1,7 @@
 import { getOfferingPath, siteConfig, type OfferingEntity } from '../../content';
-import { useHorizontalScrollProgress } from '../../hooks/useHorizontalScrollProgress';
-import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { SectionHeading } from '../ui/SectionHeading';
 import styles from './ExtrasSection.module.css';
-
-const MOBILE_SLIDER_QUERY = '(max-width: 720px) and (pointer: coarse)';
-
-const EXTRA_CARD_NAME_LINES: Partial<Record<string, readonly string[]>> = {
-  'branded-cart': ['Брендирование', 'тележки для', 'кейтеринга'],
-  'equipment-rental': ['Аренда', 'оборудования'],
-  'cart-rental': ['Аренда', 'тележек'],
-};
 
 type ExtrasSectionProps = {
   items?: readonly OfferingEntity[];
@@ -21,10 +11,6 @@ type ExtrasSectionProps = {
   priorityImageCount?: number;
 };
 
-function getExtraCardNameLines(item: OfferingEntity) {
-  return EXTRA_CARD_NAME_LINES[item.slug] ?? [item.name];
-}
-
 export function ExtrasSection({
   items = siteConfig.extras,
   sectionId = 'extras',
@@ -33,9 +19,6 @@ export function ExtrasSection({
   priorityImageCount = 0,
 }: ExtrasSectionProps) {
   const { ref, revealState } = useScrollReveal();
-  // Match the services section: keep the slider for touch phones only so narrow desktops stay on the grid.
-  const isMobile = useMediaQuery(MOBILE_SLIDER_QUERY);
-  const { scrollerRef } = useHorizontalScrollProgress(isMobile);
 
   return (
     <section id={sectionId} className="site-section" data-testid="section-extras" aria-labelledby={`${sectionId}-title`}>
@@ -44,24 +27,22 @@ export function ExtrasSection({
           <SectionHeading title={<span id={`${sectionId}-title`}>{title}</span>} description={description} />
 
           <div
-            ref={scrollerRef}
             className={`${styles.track} reveal-grid`}
             data-testid="extras-track"
             data-extras-style="continuation-grid"
-            data-mobile-layout={isMobile ? 'slider-compact' : 'grid'}
+            data-mobile-layout="grid"
           >
             {items.map((item, index) => {
               const shouldPrioritizeImage = index < priorityImageCount;
               const imageLoading = shouldPrioritizeImage ? 'eager' : 'lazy';
               const imageFetchPriority = shouldPrioritizeImage ? 'high' : 'low';
-              const nameLines = getExtraCardNameLines(item);
 
               return (
               <article key={item.slug} className={styles.card}>
                 <a
                   className={styles.cardLink}
                   href={getOfferingPath(item)}
-                  data-link-appearance={isMobile ? 'card' : 'button'}
+                  data-link-appearance="button"
                 >
                   <div
                     className={styles.visualWrap}
@@ -93,13 +74,7 @@ export function ExtrasSection({
                     ) : null}
                   </div>
                   <div className={styles.copy}>
-                    <h3 className={styles.name}>
-                      {nameLines.map((line) => (
-                        <span key={line} className={styles.nameLine} data-testid="extra-card-title-line">
-                          {line}
-                        </span>
-                      ))}
-                    </h3>
+                    <h3 className={styles.name}>{item.name}</h3>
                     <p className={styles.description}>{item.shortDescription}</p>
                   </div>
                   <div className={styles.footer}>

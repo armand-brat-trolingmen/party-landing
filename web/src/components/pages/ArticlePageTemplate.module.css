@@ -68,10 +68,13 @@
 .heroMedia {
   display: grid;
   place-items: center;
+  justify-self: center;
+  width: fit-content;
+  max-width: 100%;
   min-width: 0;
-  padding: clamp(0.8rem, 2vw, 1.1rem);
+  padding: clamp(0.32rem, 0.8vw, 0.52rem);
   border: 1px solid rgba(32, 38, 50, 0.08);
-  border-radius: clamp(1.4rem, 3vw, 2.2rem);
+  border-radius: clamp(0.92rem, 2vw, 1.34rem);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(255, 252, 248, 0.88)),
     radial-gradient(circle at 24% 18%, rgba(255, 224, 236, 0.5), transparent 42%);
@@ -80,12 +83,12 @@
 
 .heroImage {
   display: block;
-  width: 100%;
-  aspect-ratio: 4 / 3;
+  width: auto;
   height: auto;
+  max-width: 100%;
   max-height: clamp(18rem, 42vw, 31rem);
   object-fit: contain;
-  border-radius: clamp(1rem, 2.4vw, 1.55rem);
+  border-radius: clamp(0.78rem, 1.6vw, 1.06rem);
 }
 
 .bodyLayout {

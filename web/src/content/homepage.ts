@@ -115,17 +115,6 @@ const heroGallerySlides = [
     alt: 'Фото выездного кейтеринга «Праздник каждый день», кадр 10',
   },
   {
-    id: 'gallery-11',
-    image: '/images/hero/hero-gallery-11.jpg',
-    fallbackImage: '/images/hero/hero-gallery-11.jpg',
-    imageWebpSrcSet:
-      '/images/hero/hero-gallery-11-480.webp 480w, /images/hero/hero-gallery-11-720.webp 720w, /images/hero/hero-gallery-11-960.webp 960w, /images/hero/hero-gallery-11-1280.webp 1280w',
-    sizes: heroPosterSlideSizes,
-    width: 1920,
-    height: 2560,
-    alt: 'Фото выездного кейтеринга «Праздник каждый день», кадр 11',
-  },
-  {
     id: 'gallery-12',
     image: '/images/hero/hero-gallery-12.jpg',
     fallbackImage: '/images/hero/hero-gallery-12.jpg',
@@ -144,7 +133,7 @@ const heroGallerySlides = [
       '/images/hero/hero-gallery-13-480.webp 480w, /images/hero/hero-gallery-13-720.webp 720w, /images/hero/hero-gallery-13-960.webp 960w, /images/hero/hero-gallery-13-1280.webp 1280w',
     sizes: heroPosterSlideSizes,
     width: 1607,
-    height: 2000,
+    height: 1700,
     alt: 'Фото выездного кейтеринга «Праздник каждый день», кадр 13',
   },
   {
@@ -283,7 +272,7 @@ export const homepage = {
   foodTruckRental: {
     title: 'Аренда фудтраков',
     description:
-      'Фудтрак можно взять на краткосрочный или долгосрочный срок: под фестиваль, сезонную точку, бренд-зону или выездную кухню с готовой технической базой.',
+      'Фудтрак можно взять на краткосрочный или долгосрочный срок: под фестиваль, сезонную точку, бренд-зону или выездную кухню с готовой технической базой. Доставляем фудтраки по всей России, условия доставки согласуем индивидуально под маршрут и сроки.',
     items: [
       {
         image: '/images/food-truck-rental/rental-food-truck-1.jpg',
@@ -304,6 +293,13 @@ export const homepage = {
         imageWebpSrcSet: '/images/food-truck-rental/rental-food-truck-3.webp',
         alt: 'Желтый фудтрак SpaceBox 5 для аренды',
         width: 1120,
+        height: 1152,
+      },
+      {
+        image: '/images/food-truck-rental/rental-food-truck-4.jpg',
+        imageWebpSrcSet: '/images/food-truck-rental/rental-food-truck-4.webp',
+        alt: 'Фудтрак для аренды с готовой технической базой',
+        width: 1120,
         height: 840,
       },
     ],
@@ -321,7 +317,7 @@ export const homepage = {
     ],
     pricing: ['Посуточная аренда от 15.000 ₽ в сутки', 'Месячная аренда от 80.000 ₽ в месяц'],
     terms:
-      'Итоговая стоимость зависит от срока аренды, модели, площадки, формата работы и комплектации. Детали размещения, подключений и дополнительного оборудования согласуем индивидуально.',
+      'Итоговая стоимость зависит от срока аренды, модели, площадки, формата работы, комплектации и логистики. Доставка осуществляется по всей России, условия доставки и маршрут согласуем индивидуально.',
     ctaLabel: 'Узнать условия',
   },
   foodTrucks: {
@@ -339,7 +335,7 @@ export const homepage = {
         imageWebpSrcSet: '/images/food-trucks/food-truck-2.webp',
         alt: 'Фудтрак для кейтеринга на выездном мероприятии, фото 2',
         width: 1280,
-        height: 960,
+        height: 1317,
       },
       {
         image: '/images/food-trucks/food-truck-3.jpg',
@@ -347,6 +343,13 @@ export const homepage = {
         alt: 'Фудтрак для кейтеринга на выездном мероприятии, фото 3',
         width: 1280,
         height: 960,
+      },
+      {
+        image: '/images/food-trucks/food-truck-4.jpg',
+        imageWebpSrcSet: '/images/food-trucks/food-truck-4.webp',
+        alt: 'Фудтрак для кейтеринга на выездном мероприятии, фото 4',
+        width: 1280,
+        height: 853,
       },
       {
         image: '/images/food-trucks/food-truck-5.jpg',
@@ -360,14 +363,35 @@ export const homepage = {
         imageWebpSrcSet: '/images/food-trucks/food-truck-6.webp',
         alt: 'Фудтрак для кейтеринга на выездном мероприятии, фото 6',
         width: 1280,
+        height: 1707,
+      },
+      {
+        image: '/images/food-trucks/food-truck-7.jpg',
+        imageWebpSrcSet: '/images/food-trucks/food-truck-7.webp',
+        alt: 'Фудтрак для кейтеринга на выездном мероприятии, фото 7',
+        width: 960,
+        height: 1280,
+      },
+      {
+        image: '/images/food-trucks/food-truck-8.jpg',
+        imageWebpSrcSet: '/images/food-trucks/food-truck-8.webp',
+        alt: 'Фудтрак для кейтеринга на выездном мероприятии, фото 8',
+        width: 1280,
         height: 960,
       },
       {
-        image: '/images/food-trucks/food-truck-4.jpg',
-        imageWebpSrcSet: '/images/food-trucks/food-truck-4.webp',
-        alt: 'Фудтрак для кейтеринга на выездном мероприятии, фото 4',
+        image: '/images/food-trucks/food-truck-9.jpg',
+        imageWebpSrcSet: '/images/food-trucks/food-truck-9.webp',
+        alt: 'Фудтрак для кейтеринга на выездном мероприятии, фото 9',
         width: 1280,
         height: 960,
+      },
+      {
+        image: '/images/food-trucks/food-truck-10.jpg',
+        imageWebpSrcSet: '/images/food-trucks/food-truck-10.webp',
+        alt: 'Фудтрак для кейтеринга на выездном мероприятии, фото 10',
+        width: 1280,
+        height: 1707,
       },
     ],
     storyTitle:

@@ -71,7 +71,11 @@ function supportsInteractiveGallery() {
 
   try {
     const canvas = document.createElement('canvas');
-    return Boolean(canvas.getContext('webgl') ?? canvas.getContext('experimental-webgl'));
+    const contextAttributes = { failIfMajorPerformanceCaveat: true } as const;
+    return Boolean(
+      canvas.getContext('webgl', contextAttributes) ??
+        canvas.getContext('experimental-webgl', contextAttributes),
+    );
   } catch {
     return false;
   }

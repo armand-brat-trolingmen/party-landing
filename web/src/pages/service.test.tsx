@@ -1,6 +1,7 @@
 import { render, screen, within } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { siteConfig } from '../content';
+import { serviceGalleries } from '../content/serviceGalleries.generated';
 import ServicePage from './service';
 
 test('service pages keep service schema but skip duplicated faq schema', () => {
@@ -100,8 +101,8 @@ test('renders the redesigned service-only page structure with tariffs delivery a
   expect(duration.compareDocumentPosition(note) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   expect(gallery).toBeInTheDocument();
   expect(galleryTrack).toBeInTheDocument();
-  expect(within(gallery).getAllByTestId('offering-gallery-slide')).toHaveLength(4);
-  expect(within(gallery).getAllByTestId('offering-gallery-image')).toHaveLength(4);
+  expect(within(gallery).getAllByTestId('offering-gallery-slide')).toHaveLength(7);
+  expect(within(gallery).getAllByTestId('offering-gallery-image')).toHaveLength(7);
   expect(within(gallery).getAllByTestId('offering-gallery-image')[0]).toHaveAttribute('loading', 'lazy');
   expect(hero.compareDocumentPosition(gallery) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   expect(gallery.compareDocumentPosition(included) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
@@ -192,8 +193,8 @@ test('renders caramel apples page as a full service page with final tariffs and 
 
   expect(screen.getByRole('heading', { level: 1, name: 'Карамельные яблоки' })).toBeInTheDocument();
   expect(within(intro).getByTestId('offering-hero-image')).toHaveAttribute('src', '/images/services-home/caramel-apples-ui.png');
-  expect(within(gallery).getAllByTestId('offering-gallery-slide')).toHaveLength(2);
-  expect(within(gallery).getAllByTestId('offering-gallery-image')).toHaveLength(2);
+  expect(within(gallery).getAllByTestId('offering-gallery-slide')).toHaveLength(3);
+  expect(within(gallery).getAllByTestId('offering-gallery-image')).toHaveLength(3);
   expect(within(intro).getByTestId('offering-price')).toHaveTextContent('от 15.000 ₽');
   expect(within(intro).getByTestId('offering-included')).not.toHaveTextContent('Подготовка станции');
   expect(within(intro).getByTestId('offering-tariffs')).toHaveTextContent('50 порций');
@@ -222,11 +223,11 @@ test('renders combo gallery with all cotton candy and popcorn photos', () => {
   const intro = screen.getByTestId('section-offering-intro');
   const gallery = within(intro).getByTestId('offering-gallery');
 
-  expect(within(gallery).getAllByTestId('offering-gallery-slide')).toHaveLength(7);
-  expect(within(gallery).getAllByTestId('offering-gallery-image')).toHaveLength(7);
+  expect(within(gallery).getAllByTestId('offering-gallery-slide')).toHaveLength(5);
+  expect(within(gallery).getAllByTestId('offering-gallery-image')).toHaveLength(5);
 });
 
-test('hides service gallery when there are no real photos for the service yet', () => {
+test('renders burgers gallery after the new photo batch was added', () => {
   render(
     <MemoryRouter initialEntries={['/services/burgers']}>
       <Routes>
@@ -236,8 +237,36 @@ test('hides service gallery when there are no real photos for the service yet', 
   );
 
   const intro = screen.getByTestId('section-offering-intro');
+  const gallery = within(intro).getByTestId('offering-gallery');
 
-  expect(within(intro).queryByTestId('offering-gallery')).not.toBeInTheDocument();
+  expect(within(gallery).getAllByTestId('offering-gallery-slide')).toHaveLength(3);
+  expect(within(gallery).getAllByTestId('offering-gallery-image')).toHaveLength(3);
+});
+
+test('uses the requested updated photo batches for food and drink services', () => {
+  expect(serviceGalleries['belgian-waffles']).toHaveLength(8);
+  expect(serviceGalleries['craft-lemonade']).toHaveLength(3);
+  expect(serviceGalleries['bubble-tea']).toHaveLength(6);
+  expect(serviceGalleries['roll-ice-cream']).toHaveLength(7);
+  expect(serviceGalleries['roll-ice-cream']?.[0]?.alt).toContain('Ролл-мороженое');
+  expect(serviceGalleries['scoop-ice-cream']).toHaveLength(5);
+  expect(serviceGalleries['scoop-ice-cream']?.[0]?.alt).toContain('Шариковое мороженое');
+  expect(serviceGalleries['french-hot-dog']).toHaveLength(6);
+  expect(serviceGalleries['danish-hot-dog']).toHaveLength(6);
+  expect(serviceGalleries['french-hot-dog']?.[0]?.alt).toContain('Французский хот-дог');
+  expect(serviceGalleries['danish-hot-dog']?.[0]?.alt).toContain('Датский хот-дог');
+  expect(serviceGalleries['french-hot-dog']).not.toContainEqual(
+    expect.objectContaining({ originalWidth: 1170, originalHeight: 1504 }),
+  );
+  expect(serviceGalleries['danish-hot-dog']).not.toContainEqual(
+    expect.objectContaining({ originalWidth: 1170, originalHeight: 1504 }),
+  );
+  expect(serviceGalleries['chocolate-fountain']).toHaveLength(6);
+  expect(serviceGalleries['popcorn']).toHaveLength(4);
+  expect(serviceGalleries['nitro-ice-cream']).toHaveLength(2);
+  expect(serviceGalleries['nitro-ice-cream']?.[0]?.alt).toContain('Азотное мороженое');
+  expect(serviceGalleries['pancakes']).toHaveLength(3);
+  expect(serviceGalleries['champagne-pyramid']).toHaveLength(5);
 });
 
 test('renders tea station page with grouped tariff variants and service gallery', () => {
@@ -265,7 +294,10 @@ test('renders tea station page with grouped tariff variants and service gallery'
   expect(tariffs).toHaveTextContent('Чайная станция с самоваром');
   expect(tariffs).toHaveTextContent('44.000 ₽');
   expect(tariffs).toHaveTextContent('Глинтвейн');
-  expect(tariffs).toHaveTextContent('47.000 ₽');
+  expect(tariffs).toHaveTextContent('Безалкогольный');
+  expect(tariffs).toHaveTextContent('35.000 ₽');
+  expect(tariffs).toHaveTextContent('Алкогольный');
+  expect(tariffs).toHaveTextContent('45.000 ₽');
 });
 
 test('renders plov station as a regular service page and not as an extra-only route', () => {

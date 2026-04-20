@@ -47,7 +47,7 @@ test('article detail links related services without broken slugs', () => {
 
   const relatedServices = screen.getByTestId('article-related-services');
 
-  expect(within(relatedServices).getByRole('link', { name: /Хот-дог \(Французский\)/i })).toHaveAttribute(
+  expect(within(relatedServices).getByRole('link', { name: /Французский хот-дог/i })).toHaveAttribute(
     'href',
     '/services/french-hot-dog/',
   );

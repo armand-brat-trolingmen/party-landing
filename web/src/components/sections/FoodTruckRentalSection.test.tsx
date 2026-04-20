@@ -28,11 +28,16 @@ test('renders the food truck rental section with models, equipment, pricing, and
 
   const images = sectionQueries.getAllByTestId('food-truck-rental-image');
   const webpSources = sectionQueries.getAllByTestId('food-truck-rental-image-webp-source');
-  expect(images).toHaveLength(3);
-  expect(webpSources).toHaveLength(3);
+  expect(images).toHaveLength(4);
+  expect(webpSources).toHaveLength(4);
   expect(webpSources[0]).toHaveAttribute('srcset', '/images/food-truck-rental/rental-food-truck-1.webp');
   expect(images[0]).toHaveAttribute('src', '/images/food-truck-rental/rental-food-truck-1.jpg');
+  expect(images[0].closest('figure')).not.toHaveAttribute('style');
   expect(images[2]).toHaveAttribute('src', '/images/food-truck-rental/rental-food-truck-3.jpg');
+  expect(images[2].closest('figure')).not.toHaveAttribute('style');
+  expect(images[3]).toHaveAttribute('src', '/images/food-truck-rental/rental-food-truck-4.jpg');
+  expect(section).toHaveTextContent('Доставляем фудтраки по всей России');
+  expect(section).toHaveTextContent('Доставка осуществляется по всей России');
 
   fireEvent.click(sectionQueries.getByRole('button', { name: 'Узнать условия' }));
   expect(screen.getByRole('dialog')).toBeInTheDocument();

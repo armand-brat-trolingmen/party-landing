@@ -22,6 +22,7 @@ function focusWithoutScroll(element: HTMLElement | null) {
 const useSafeLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
 
 type GalleryCloseReason = 'pointer' | 'keyboard';
+const nonPassiveListenerOptions: AddEventListenerOptions = { passive: false };
 
 export function ServiceMomentsGallery({ images }: ServiceMomentsGalleryProps) {
   const [activeImageId, setActiveImageId] = useState<string | null>(null);
@@ -40,13 +41,13 @@ export function ServiceMomentsGallery({ images }: ServiceMomentsGalleryProps) {
       return;
     }
 
-    const scrollY = window.scrollY;
+    const documentElement = document.documentElement;
+    const scrollbarCompensation = Math.max(window.innerWidth - documentElement.clientWidth, 0);
+    const previousDocumentOverflow = documentElement.style.overflow;
+    const previousDocumentOverscrollBehavior = documentElement.style.overscrollBehavior;
     const previousBodyOverflow = document.body.style.overflow;
-    const previousBodyPosition = document.body.style.position;
-    const previousBodyTop = document.body.style.top;
-    const previousBodyLeft = document.body.style.left;
-    const previousBodyRight = document.body.style.right;
-    const previousBodyWidth = document.body.style.width;
+    const previousBodyPaddingRight = document.body.style.paddingRight;
+    const previousBodyTouchAction = document.body.style.touchAction;
     const activeTrigger = triggerRefs.current[activeImage.id];
 
     function handleKeyDown(event: KeyboardEvent) {
@@ -55,26 +56,33 @@ export function ServiceMomentsGallery({ images }: ServiceMomentsGalleryProps) {
       }
     }
 
+    function preventScroll(event: Event) {
+      event.preventDefault();
+    }
+
+    documentElement.style.overflow = 'hidden';
+    documentElement.style.overscrollBehavior = 'contain';
     document.body.style.overflow = 'hidden';
-    document.body.style.position = 'fixed';
-    document.body.style.top = `-${scrollY}px`;
-    document.body.style.left = '0';
-    document.body.style.right = '0';
-    document.body.style.width = '100%';
+    document.body.style.touchAction = 'none';
+    if (scrollbarCompensation > 0) {
+      document.body.style.paddingRight = `${scrollbarCompensation}px`;
+    }
     window.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('wheel', preventScroll, nonPassiveListenerOptions);
+    document.addEventListener('touchmove', preventScroll, nonPassiveListenerOptions);
     focusWithoutScroll(closeButtonRef.current);
 
     return () => {
       const shouldRestoreTriggerFocus = closeReasonRef.current === 'keyboard';
 
+      documentElement.style.overflow = previousDocumentOverflow;
+      documentElement.style.overscrollBehavior = previousDocumentOverscrollBehavior;
       document.body.style.overflow = previousBodyOverflow;
-      document.body.style.position = previousBodyPosition;
-      document.body.style.top = previousBodyTop;
-      document.body.style.left = previousBodyLeft;
-      document.body.style.right = previousBodyRight;
-      document.body.style.width = previousBodyWidth;
+      document.body.style.paddingRight = previousBodyPaddingRight;
+      document.body.style.touchAction = previousBodyTouchAction;
       window.removeEventListener('keydown', handleKeyDown);
-      window.scrollTo({ top: scrollY, left: 0, behavior: 'auto' });
+      document.removeEventListener('wheel', preventScroll, nonPassiveListenerOptions);
+      document.removeEventListener('touchmove', preventScroll, nonPassiveListenerOptions);
       if (shouldRestoreTriggerFocus) {
         focusWithoutScroll(activeTrigger);
       }
@@ -166,7 +174,14 @@ export function ServiceMomentsGallery({ images }: ServiceMomentsGalleryProps) {
                 }}
               >
                 <picture className={styles.media}>
-                  <source data-testid="offering-gallery-source-webp" type="image/webp" srcSet={image.webpSrcSet} sizes={image.sizes} />
+                  {image.webpSrcSet ? (
+                    <source
+                      data-testid="offering-gallery-source-webp"
+                      type="image/webp"
+                      srcSet={image.webpSrcSet}
+                      sizes={image.sizes}
+                    />
+                  ) : null}
                   <img
                     className={styles.image}
                     data-testid="offering-gallery-image"
