@@ -6,6 +6,7 @@ import sharp from 'sharp';
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const webRoot = path.resolve(scriptDir, '..');
 const sourcePath = path.join(webRoot, 'assets', 'brand-logo-source.jpg');
+const badgeSourcePath = path.join(webRoot, 'assets', 'brand-logo-badge-source.png');
 const publicDir = path.join(webRoot, 'public');
 
 function isLikelyBackground(r, g, b) {
@@ -103,16 +104,80 @@ async function loadMaskedLogo() {
   });
 }
 
-async function makeLogoBuffer(maskedLogo, size, paddingRatio, background = { r: 0, g: 0, b: 0, alpha: 0 }) {
+function getAlphaBounds(data, width, height, channels) {
+  let minX = width;
+  let minY = height;
+  let maxX = -1;
+  let maxY = -1;
+
+  for (let index = 0; index < width * height; index += 1) {
+    const alpha = data[index * channels + 3];
+
+    if (alpha === 0) {
+      continue;
+    }
+
+    const x = index % width;
+    const y = Math.floor(index / width);
+    minX = Math.min(minX, x);
+    minY = Math.min(minY, y);
+    maxX = Math.max(maxX, x);
+    maxY = Math.max(maxY, y);
+  }
+
+  if (maxX < 0 || maxY < 0) {
+    throw new Error('Source image is fully transparent and cannot be used for brand assets.');
+  }
+
+  return {
+    left: minX,
+    top: minY,
+    width: maxX - minX + 1,
+    height: maxY - minY + 1,
+  };
+}
+
+async function loadTrimmedAlphaImage(inputPath, pad = 12) {
+  const { data, info } = await sharp(inputPath)
+    .rotate()
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+
+  const { width, height, channels } = info;
+  const bounds = getAlphaBounds(data, width, height, channels);
+  const left = Math.max(0, bounds.left - pad);
+  const top = Math.max(0, bounds.top - pad);
+  const right = Math.min(width - 1, bounds.left + bounds.width - 1 + pad);
+  const bottom = Math.min(height - 1, bounds.top + bounds.height - 1 + pad);
+
+  return sharp(data, { raw: { width, height, channels } }).extract({
+    left,
+    top,
+    width: right - left + 1,
+    height: bottom - top + 1,
+  });
+}
+
+async function makeLogoBuffer(
+  maskedLogo,
+  size,
+  paddingRatio,
+  background = { r: 0, g: 0, b: 0, alpha: 0 },
+  flattenOnBackground = false,
+) {
   const innerSize = Math.round(size * (1 - paddingRatio * 2));
   const padding = Math.floor((size - innerSize) / 2);
+  let pipeline = maskedLogo.clone().resize(innerSize, innerSize, {
+    fit: 'contain',
+    background: { r: 0, g: 0, b: 0, alpha: 0 },
+  });
 
-  return maskedLogo
-    .clone()
-    .resize(innerSize, innerSize, {
-      fit: 'contain',
-      background: { r: 0, g: 0, b: 0, alpha: 0 },
-    })
+  if (flattenOnBackground && background.alpha > 0) {
+    pipeline = pipeline.flatten({ background });
+  }
+
+  return pipeline
     .extend({
       top: padding,
       bottom: size - innerSize - padding,
@@ -153,28 +218,70 @@ function makeIco(entries) {
   return Buffer.concat(buffers);
 }
 
-function roundedRectSvg(width, height, radius, fill, stroke = 'none') {
+function buildOgCardSvg() {
   return Buffer.from(
-    `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg"><rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" rx="${radius}" fill="${fill}" stroke="${stroke}"/></svg>`,
+    `<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="bg" x1="72" y1="44" x2="1118" y2="584" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#EDF5F3"/>
+          <stop offset="0.56" stop-color="#F7FBFB"/>
+          <stop offset="1" stop-color="#FFF0F4"/>
+        </linearGradient>
+        <radialGradient id="glowWarm" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(977 183) rotate(90) scale(230)">
+          <stop stop-color="#FFECCB" stop-opacity="0.88"/>
+          <stop offset="1" stop-color="#FFECCB" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="glowPink" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1090 93) rotate(90) scale(148)">
+          <stop stop-color="#F9C7D6" stop-opacity="0.44"/>
+          <stop offset="1" stop-color="#F9C7D6" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="glowMint" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(716 544) rotate(90) scale(210)">
+          <stop stop-color="#D6F4F0" stop-opacity="0.7"/>
+          <stop offset="1" stop-color="#D6F4F0" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <rect width="1200" height="630" rx="34" fill="url(#bg)"/>
+      <circle cx="977" cy="183" r="230" fill="url(#glowWarm)"/>
+      <circle cx="1090" cy="93" r="148" fill="url(#glowPink)"/>
+      <circle cx="716" cy="544" r="210" fill="url(#glowMint)"/>
+      <rect x="48" y="50" width="1104" height="534" rx="38" fill="rgba(255,255,255,0.66)" stroke="rgba(255,255,255,0.74)"/>
+      <text x="84" y="132" fill="#47616B" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" letter-spacing="5">ВЫЕЗДНОЙ КЕЙТЕРИНГ В МОСКВЕ</text>
+      <text x="84" y="250" fill="#21262B" font-family="Arial, Helvetica, sans-serif" font-size="88" font-weight="900">Праздник</text>
+      <text x="84" y="358" fill="#21262B" font-family="Arial, Helvetica, sans-serif" font-size="88" font-weight="900">каждый день</text>
+      <text x="84" y="432" fill="#465158" font-family="Arial, Helvetica, sans-serif" font-size="36" font-weight="700">Сладкие станции, фудтраки</text>
+      <text x="84" y="476" fill="#465158" font-family="Arial, Helvetica, sans-serif" font-size="36" font-weight="700">и праздничные форматы под ключ</text>
+      <rect x="82" y="514" width="124" height="42" rx="21" fill="#F3D2E0"/>
+      <rect x="226" y="514" width="154" height="42" rx="21" fill="#D7EBEA"/>
+      <rect x="400" y="514" width="138" height="42" rx="21" fill="#FCEBB8"/>
+      <text x="144" y="541" text-anchor="middle" fill="#435059" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">вата</text>
+      <text x="303" y="541" text-anchor="middle" fill="#435059" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">попкорн</text>
+      <text x="469" y="541" text-anchor="middle" fill="#435059" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">фудтраки</text>
+    </svg>`,
   );
 }
 
 async function generateOgImage(brandLogoBuffer) {
   const ogPath = path.join(publicDir, 'og-image.png');
   const ogWebpPath = path.join(publicDir, 'og-image.webp');
-  const cover = roundedRectSvg(238, 136, 26, 'rgba(255,253,248,0.94)', 'rgba(31,52,74,0.06)');
   const logo = await sharp(brandLogoBuffer)
-    .resize(170, 112, {
+    .resize(330, 330, {
       fit: 'contain',
       background: { r: 0, g: 0, b: 0, alpha: 0 },
     })
     .png()
     .toBuffer();
 
-  const png = await sharp(ogPath)
+  const png = await sharp({
+    create: {
+      width: 1200,
+      height: 630,
+      channels: 4,
+      background: { r: 0, g: 0, b: 0, alpha: 0 },
+    },
+  })
     .composite([
-      { input: cover, left: 828, top: 50 },
-      { input: logo, left: 862, top: 62 },
+      { input: buildOgCardSvg() },
+      { input: logo, left: 770, top: 116 },
     ])
     .png({ compressionLevel: 9 })
     .toBuffer();
@@ -187,15 +294,17 @@ async function main() {
   await mkdir(publicDir, { recursive: true });
 
   const maskedLogo = await loadMaskedLogo();
+  const badgeLogo = await loadTrimmedAlphaImage(badgeSourcePath);
   const brandLogo = await makeLogoBuffer(maskedLogo, 1024, 0.2);
   const brandLogoUi = await makeLogoBuffer(maskedLogo, 384, 0.2);
-  const favicon = await makeLogoBuffer(maskedLogo, 256, 0.06);
-  const appleIcon = await makeLogoBuffer(maskedLogo, 180, 0.08, { r: 255, g: 253, b: 248, alpha: 1 });
-  const icon192 = await makeLogoBuffer(maskedLogo, 192, 0.08, { r: 255, g: 253, b: 248, alpha: 1 });
-  const icon512 = await makeLogoBuffer(maskedLogo, 512, 0.08, { r: 255, g: 253, b: 248, alpha: 1 });
-  const favicon16 = await makeLogoBuffer(maskedLogo, 16, 0.04);
-  const favicon32 = await makeLogoBuffer(maskedLogo, 32, 0.04);
-  const favicon48 = await makeLogoBuffer(maskedLogo, 48, 0.04);
+  const ogLogo = await makeLogoBuffer(maskedLogo, 512, 0.08);
+  const favicon = await makeLogoBuffer(badgeLogo, 256, 0.02);
+  const appleIcon = await makeLogoBuffer(badgeLogo, 180, 0.05, { r: 255, g: 253, b: 248, alpha: 1 }, true);
+  const icon192 = await makeLogoBuffer(badgeLogo, 192, 0.05, { r: 255, g: 253, b: 248, alpha: 1 }, true);
+  const icon512 = await makeLogoBuffer(badgeLogo, 512, 0.05, { r: 255, g: 253, b: 248, alpha: 1 }, true);
+  const favicon16 = await makeLogoBuffer(badgeLogo, 16, 0.01);
+  const favicon32 = await makeLogoBuffer(badgeLogo, 32, 0.01);
+  const favicon48 = await makeLogoBuffer(badgeLogo, 48, 0.01);
 
   await writeFile(path.join(publicDir, 'brand-logo.png'), brandLogo);
   await writeFile(path.join(publicDir, 'brand-logo-ui.png'), brandLogoUi);
@@ -241,7 +350,7 @@ async function main() {
   await writeFile(path.join(publicDir, 'manifest.json'), webManifest);
   await writeFile(path.join(publicDir, 'site.webmanifest'), webManifest);
 
-  await generateOgImage(favicon);
+  await generateOgImage(ogLogo);
 }
 
 main().catch((error) => {

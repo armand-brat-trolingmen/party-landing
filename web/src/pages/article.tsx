@@ -21,8 +21,6 @@ export default function ArticlePage() {
         title={article.title}
         description={article.description}
         canonical={`/articles/${article.slug}`}
-        image={article.heroImage.src}
-        imageAlt={article.heroImage.alt}
         type="article"
       />
       <StructuredData data={getArticleStructuredData(article)} />

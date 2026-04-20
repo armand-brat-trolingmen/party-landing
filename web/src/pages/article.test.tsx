@@ -1,14 +1,18 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
+import { HelmetProvider } from 'react-helmet-async';
 import { MemoryRouter, Route, Routes } from 'react-router';
+import { DEFAULT_OG_IMAGE } from '../config/seo';
 import ArticlePage from './article';
 
 function renderArticlePage(path = '/articles/arenda-fudtraka-na-meropriyatie') {
   return render(
-    <MemoryRouter initialEntries={[path]}>
-      <Routes>
-        <Route path="/articles/:slug" element={<ArticlePage />} />
-      </Routes>
-    </MemoryRouter>,
+    <HelmetProvider>
+      <MemoryRouter initialEntries={[path]}>
+        <Routes>
+          <Route path="/articles/:slug" element={<ArticlePage />} />
+        </Routes>
+      </MemoryRouter>
+    </HelmetProvider>,
   );
 }
 
@@ -51,4 +55,14 @@ test('article detail links related services without broken slugs', () => {
     'href',
     '/services/craft-lemonade/',
   );
+});
+
+test('article detail uses the shared site preview image in SEO metadata', async () => {
+  renderArticlePage();
+
+  await waitFor(() => {
+    expect(document.head.querySelector('meta[property="og:image"]')).toHaveAttribute('content', DEFAULT_OG_IMAGE);
+  });
+
+  expect(document.head.querySelector('meta[name="twitter:image"]')).toHaveAttribute('content', DEFAULT_OG_IMAGE);
 });
