@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { FoodTrucksSection } from './FoodTrucksSection';
@@ -37,4 +39,11 @@ test('renders the catering food trucks section with gallery assets and story cop
   expect(images[4]).toHaveAttribute('alt', 'Фудтрак для кейтеринга на выездном мероприятии, фото 5');
   expect(images[9]).toHaveAttribute('src', '/images/food-trucks/food-truck-10.jpg');
   expect(images.every((image) => !image.getAttribute('alt')?.includes('?'))).toBe(true);
+});
+
+test('does not force-disable the interactive food truck gallery in source code', () => {
+  const source = readFileSync(resolve(process.cwd(), 'src/components/sections/FoodTrucksSection.tsx'), 'utf8');
+
+  expect(source).not.toContain('interactiveMode="off"');
+  expect(source).toContain('imageFit="contain"');
 });

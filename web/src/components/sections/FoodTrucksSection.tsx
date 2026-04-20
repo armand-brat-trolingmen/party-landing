@@ -21,7 +21,7 @@ export function FoodTrucksSection() {
 
           <div className={styles.galleryBreakout}>
             <div className={styles.galleryBand}>
-              <CircularGallery items={content.items} imageFit="contain" interactiveMode="off" eagerImageCount={3} />
+              <CircularGallery items={content.items} imageFit="contain" interactiveMode="auto" eagerImageCount={3} />
             </div>
           </div>
 

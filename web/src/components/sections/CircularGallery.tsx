@@ -84,7 +84,83 @@ function supportsInteractiveGallery() {
   }
 }
 
-function createMediaProgram(gl: GL) {
+export function getMediaFragmentShader(imageFit: 'cover' | 'contain') {
+  if (imageFit === 'contain') {
+    return `
+      precision highp float;
+
+      uniform sampler2D tMap;
+      uniform vec2 uImageSizes;
+      uniform vec2 uPlaneSizes;
+      varying vec2 vUv;
+
+      vec2 containUv(vec2 uv, vec2 planeSize, vec2 imageSize) {
+        float planeRatio = planeSize.x / planeSize.y;
+        float imageRatio = imageSize.x / imageSize.y;
+        vec2 ratio = vec2(1.0);
+
+        if (planeRatio > imageRatio) {
+          ratio.x = imageRatio / planeRatio;
+        } else {
+          ratio.y = planeRatio / imageRatio;
+        }
+
+        vec2 offset = (1.0 - ratio) * 0.5;
+
+        if (
+          uv.x < offset.x ||
+          uv.x > offset.x + ratio.x ||
+          uv.y < offset.y ||
+          uv.y > offset.y + ratio.y
+        ) {
+          discard;
+        }
+
+        return (uv - offset) / ratio;
+      }
+
+      void main() {
+        vec2 uv = containUv(vUv, uPlaneSizes, uImageSizes);
+        vec4 color = texture2D(tMap, uv);
+        gl_FragColor = color;
+      }
+    `;
+  }
+
+  return `
+    precision highp float;
+
+    uniform sampler2D tMap;
+    uniform vec2 uImageSizes;
+    uniform vec2 uPlaneSizes;
+    varying vec2 vUv;
+
+    vec2 coverUv(vec2 uv, vec2 planeSize, vec2 imageSize) {
+      float planeRatio = planeSize.x / planeSize.y;
+      float imageRatio = imageSize.x / imageSize.y;
+      vec2 ratio = vec2(1.0);
+
+      if (planeRatio > imageRatio) {
+        ratio.y = imageRatio / planeRatio;
+      } else {
+        ratio.x = planeRatio / imageRatio;
+      }
+
+      return vec2(
+        uv.x * ratio.x + (1.0 - ratio.x) * 0.5,
+        uv.y * ratio.y + (1.0 - ratio.y) * 0.5
+      );
+    }
+
+    void main() {
+      vec2 uv = coverUv(vUv, uPlaneSizes, uImageSizes);
+      vec4 color = texture2D(tMap, uv);
+      gl_FragColor = color;
+    }
+  `;
+}
+
+function createMediaProgram(gl: GL, imageFit: 'cover' | 'contain') {
   return new Program(gl, {
     transparent: true,
     depthTest: true,
@@ -101,37 +177,7 @@ function createMediaProgram(gl: GL) {
         gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
       }
     `,
-    fragment: `
-      precision highp float;
-
-      uniform sampler2D tMap;
-      uniform vec2 uImageSizes;
-      uniform vec2 uPlaneSizes;
-      varying vec2 vUv;
-
-      vec2 coverUv(vec2 uv, vec2 planeSize, vec2 imageSize) {
-        float planeRatio = planeSize.x / planeSize.y;
-        float imageRatio = imageSize.x / imageSize.y;
-        vec2 ratio = vec2(1.0);
-
-        if (planeRatio > imageRatio) {
-          ratio.y = imageRatio / planeRatio;
-        } else {
-          ratio.x = planeRatio / imageRatio;
-        }
-
-        return vec2(
-          uv.x * ratio.x + (1.0 - ratio.x) * 0.5,
-          uv.y * ratio.y + (1.0 - ratio.y) * 0.5
-        );
-      }
-
-      void main() {
-        vec2 uv = coverUv(vUv, uPlaneSizes, uImageSizes);
-        vec4 color = texture2D(tMap, uv);
-        gl_FragColor = color;
-      }
-    `,
+    fragment: getMediaFragmentShader(imageFit),
     uniforms: {
       tMap: { value: new Texture(gl, { generateMipmaps: true }) },
       uImageSizes: { value: [1, 1] },
@@ -235,7 +281,7 @@ export function CircularGallery({
     const geometry = new Plane(gl);
 
     const galleryMeshes: GalleryMesh[] = items.map((item) => {
-      const program = createMediaProgram(gl);
+      const program = createMediaProgram(gl, imageFit);
       const mesh = new Mesh(gl, { geometry, program });
       mesh.setParent(scene);
 
@@ -468,7 +514,7 @@ export function CircularGallery({
         stageElement.removeChild(canvas);
       }
     };
-  }, [isInteractive, items]);
+  }, [imageFit, isInteractive, items]);
 
   return (
     <div

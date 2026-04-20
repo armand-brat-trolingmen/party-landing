@@ -8,7 +8,9 @@ test('circular gallery keeps wheel-driven desktop canvas but bails out on major 
   expect(source).toContain("window.matchMedia?.('(max-width: 900px)').matches");
   expect(source).toContain('failIfMajorPerformanceCaveat: true');
   expect(source).toContain('vec2 coverUv');
-  expect(source).not.toContain('vec2 containUv');
+  expect(source).toContain('vec2 containUv');
+  expect(source).toContain('discard;');
+  expect(source).toContain("export function getMediaFragmentShader(imageFit: 'cover' | 'contain')");
   expect(source).not.toContain('vec4(0.9608, 0.8863, 0.8078, 1.0)');
   expect(source).toContain('function handleWheel(event: WheelEvent)');
   expect(source).toContain("stageElement.addEventListener('wheel', handleWheel, { passive: false });");
