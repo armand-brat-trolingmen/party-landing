@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { getOfferingPath, siteConfig, type OfferingEntity } from '../../content';
 import { useHorizontalScrollProgress } from '../../hooks/useHorizontalScrollProgress';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
@@ -18,8 +17,6 @@ type ServicesSectionProps = {
 };
 
 const MOBILE_SLIDER_QUERY = '(max-width: 720px) and (pointer: coarse)';
-const MIN_MOBILE_EAGER_IMAGES = 2;
-const MOBILE_IMAGE_LOOKAHEAD = 2;
 const SERVICE_LINK_TEXT = '\u041F\u043E\u0434\u0440\u043E\u0431\u043D\u0435\u0435';
 const SERVICES_PROGRESS_LABEL = '\u041F\u0440\u043E\u043A\u0440\u0443\u0442\u043A\u0430 \u0443\u0441\u043B\u0443\u0433';
 
@@ -29,47 +26,14 @@ export function ServicesSection({
   title = siteConfig.homepage.services.title,
   description = siteConfig.homepage.services.description,
   revealOnScroll = true,
-  priorityImageCount = 3,
+  priorityImageCount = items.length,
 }: ServicesSectionProps) {
   const { ref, revealState } = useScrollReveal();
   // Keep the horizontal slider for touch phones only so narrow laptops stay on the desktop/tablet grid.
   const isMobile = useMediaQuery(MOBILE_SLIDER_QUERY);
   const { scrollerRef, progress } = useHorizontalScrollProgress(isMobile);
   const progressVisual = Math.max(progress, 16);
-  const baseDesktopPriorityCount = Math.max(priorityImageCount, 0);
-  const baseMobileEagerCount = Math.min(items.length, MIN_MOBILE_EAGER_IMAGES);
-  const [mobileEagerCount, setMobileEagerCount] = useState(baseMobileEagerCount);
-  const effectiveMobileEagerCount = isMobile
-    ? Math.min(items.length, Math.max(mobileEagerCount, baseMobileEagerCount))
-    : baseMobileEagerCount;
-
-  useEffect(() => {
-    if (!isMobile) {
-      return;
-    }
-
-    const node = scrollerRef.current;
-    if (!node) {
-      return;
-    }
-
-    const syncEagerRange = () => {
-      const slideWidth = Math.max(node.clientWidth, 1);
-      const currentIndex = Math.max(0, Math.round(node.scrollLeft / slideWidth));
-      const nextEagerCount = Math.min(items.length, Math.max(baseMobileEagerCount, currentIndex + MOBILE_IMAGE_LOOKAHEAD + 1));
-
-      setMobileEagerCount((current) => (current >= nextEagerCount ? current : nextEagerCount));
-    };
-
-    syncEagerRange();
-    node.addEventListener('scroll', syncEagerRange, { passive: true });
-    window.addEventListener('resize', syncEagerRange);
-
-    return () => {
-      node.removeEventListener('scroll', syncEagerRange);
-      window.removeEventListener('resize', syncEagerRange);
-    };
-  }, [baseMobileEagerCount, isMobile, items.length, scrollerRef]);
+  const baseDesktopPriorityCount = Math.min(items.length, Math.max(priorityImageCount, 0));
 
   return (
     <section id={sectionId} className="site-section" data-testid="section-services" aria-labelledby={`${sectionId}-title`}>
@@ -90,8 +54,8 @@ export function ServicesSection({
             data-mobile-layout={isMobile ? 'slider-single' : 'grid'}
           >
             {items.map((service, index) => {
-              const shouldPrioritizeImage = isMobile ? index < Math.min(baseMobileEagerCount, 2) : index < baseDesktopPriorityCount;
-              const shouldEagerLoadImage = isMobile ? index < effectiveMobileEagerCount : index < baseDesktopPriorityCount;
+              const shouldPrioritizeImage = isMobile ? index < 2 : index < baseDesktopPriorityCount;
+              const shouldEagerLoadImage = isMobile ? true : index < baseDesktopPriorityCount;
               const cardDescription = service.cardDescription ?? service.shortDescription;
 
               return (

@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { siteConfig } from '../../content';
 import { ServicesSection } from './ServicesSection';
 
@@ -42,6 +42,7 @@ test('renders the full services catalog on desktop without hiding cards behind a
   const firstCard = cards[0] as HTMLElement;
   const firstImage = within(firstCard).getByTestId('service-card-media-image');
   const firstWebpSource = within(firstCard).getByTestId('service-card-media-source-webp');
+  const images = within(catalog).getAllByTestId('service-card-media-image');
 
   expect(within(section).getByRole('heading', { level: 2, name: siteConfig.homepage.services.title })).toBeInTheDocument();
   expect(catalog).toHaveAttribute('data-showcase-style', 'premium-grid');
@@ -59,6 +60,7 @@ test('renders the full services catalog on desktop without hiding cards behind a
     'sizes',
     '(max-width: 720px) calc(100vw - 2.3rem), (max-width: 1079px) 46vw, 31vw',
   );
+  expect(images.every((image) => image.getAttribute('loading') === 'eager')).toBe(true);
   expect(within(firstCard).getByTestId('service-card-description')).toHaveTextContent(firstService.cardDescription ?? firstService.shortDescription);
   expect(within(firstCard).getByText(firstService.price?.display ?? firstService.priceFrom)).toBeInTheDocument();
   expect(within(firstCard).queryByText(firstService.shortDescription)).not.toBeInTheDocument();
@@ -117,43 +119,24 @@ test('keeps the mobile slider with a swipe progress indicator while rendering th
   expect(progress).toHaveAttribute('aria-valuenow', '50');
 });
 
-test('progressively unlocks more mobile slider images after scrolling so cards do not stay blank', async () => {
+test('keeps deep mobile slider images eager so fast swipes do not show blank cards', () => {
   mockViewport(390, { coarsePointer: true });
   render(<ServicesSection />);
 
   const catalog = screen.getByTestId('services-catalog');
   const images = within(catalog).getAllByTestId('service-card-media-image');
-  const deferredImage = images[6];
 
   expect(images.length).toBe(services.length);
   expect(images[0]).toHaveAttribute('loading', 'eager');
   expect(images[1]).toHaveAttribute('loading', 'eager');
   expect(images[2]).toHaveAttribute('loading', 'eager');
-  expect(images[3]).toHaveAttribute('loading', 'lazy');
-  expect(deferredImage).toHaveAttribute('loading', 'lazy');
+  expect(images[3]).toHaveAttribute('loading', 'eager');
+  expect(images[6]).toHaveAttribute('loading', 'eager');
+  expect(images[11]).toHaveAttribute('loading', 'eager');
   expect(images[0]).toHaveAttribute('fetchpriority', 'high');
   expect(images[1]).toHaveAttribute('fetchpriority', 'high');
   expect(images[2]).toHaveAttribute('fetchpriority', 'auto');
-  expect(deferredImage).toHaveAttribute('fetchpriority', 'low');
-
-  Object.defineProperties(catalog, {
-    clientWidth: { configurable: true, value: 320 },
-    scrollWidth: { configurable: true, value: 320 * services.length },
-  });
-
-  Object.defineProperty(catalog, 'scrollLeft', {
-    configurable: true,
-    writable: true,
-    value: 320 * 4,
-  });
-
-  fireEvent.scroll(catalog);
-
-  await act(async () => {
-    await Promise.resolve();
-  });
-
-  expect(within(catalog).getAllByTestId('service-card-media-image')[6]).toHaveAttribute('loading', 'eager');
+  expect(images[6]).toHaveAttribute('fetchpriority', 'auto');
   expect(catalog.querySelector('[data-service-image-slug="foam-cannon"]')).toHaveStyle({ objectFit: 'contain' });
 });
 
@@ -169,7 +152,8 @@ test('keeps narrow fine-pointer laptops in the grid flow instead of enabling the
   expect(images[0]).toHaveAttribute('loading', 'eager');
   expect(images[1]).toHaveAttribute('loading', 'eager');
   expect(images[2]).toHaveAttribute('loading', 'eager');
-  expect(images[3]).toHaveAttribute('loading', 'lazy');
+  expect(images[3]).toHaveAttribute('loading', 'eager');
+  expect(images[10]).toHaveAttribute('loading', 'eager');
 
   Object.defineProperties(catalog, {
     clientWidth: { configurable: true, value: 320 },

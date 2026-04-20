@@ -79,8 +79,8 @@ test('renders equipment rental extra page with updated price list', () => {
   expect(screen.getByTestId('offering-extra-visual-source-webp')).toHaveAttribute('srcset', '/images/extras/equipment-ui.webp');
   expect(screen.getByTestId('offering-extra-visual-image')).toHaveAttribute('src', '/images/extras/equipment-ui.png');
   const gallery = screen.getByTestId('offering-gallery');
-  expect(within(gallery).getAllByTestId('offering-gallery-slide')).toHaveLength(4);
-  expect(within(gallery).getAllByTestId('offering-gallery-image')).toHaveLength(4);
+  expect(within(gallery).getAllByTestId('offering-gallery-slide')).toHaveLength(5);
+  expect(within(gallery).getAllByTestId('offering-gallery-image')).toHaveLength(5);
   expect(screen.queryByTestId('offering-extra-visual-blank')).not.toBeInTheDocument();
 });
 

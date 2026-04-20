@@ -32,7 +32,11 @@ function placeholder(count) {
 
 const gallerySources = [
   { slug: 'cotton-candy', name: 'Сахарная вата', sources: [folder('вата')] },
-  { slug: 'popcorn', name: 'Попкорн', sources: [folder('попкорн')] },
+  {
+    slug: 'popcorn',
+    name: 'Попкорн',
+    sources: [folder('попкорн', { excludeNames: ['photo_2026-04-15_11-46-10.jpg'] })],
+  },
   { slug: 'cotton-candy-popcorn', name: 'Сахарная вата + попкорн', sources: [folder('попкорн и вата')] },
   { slug: 'caramel-apples', name: 'Карамельные яблоки', sources: [existing('caramel-apples', { indices: [1, 2] }), folder('яблоки')] },
   { slug: 'roll-ice-cream', name: 'Ролл-мороженое', sources: [existing('roll-ice-cream', { indices: [1, 2, 3, 4] }), folder('ролл')] },
@@ -61,6 +65,17 @@ const gallerySources = [
   { slug: 'bubble-tea', name: 'Бабл ти', sources: [folder('баблти')] },
   { slug: 'plov-station', name: 'Станция плова', sources: [existing('plov-station', { indices: [1, 2] })] },
 ];
+
+gallerySources.splice(
+  gallerySources.findIndex((entry) => entry.slug === 'chocolate-fountain'),
+  0,
+  { slug: 'foam-cannon', name: 'Пенная пушка', sources: [folder('пушка')] },
+);
+
+const equipmentRentalGallery = gallerySources.find((entry) => entry.slug === 'equipment-rental');
+if (equipmentRentalGallery) {
+  equipmentRentalGallery.sources = [folder('аренда оборудования')];
+}
 
 function quote(value) {
   return JSON.stringify(value);

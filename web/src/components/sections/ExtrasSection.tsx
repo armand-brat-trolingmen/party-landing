@@ -16,7 +16,7 @@ export function ExtrasSection({
   sectionId = 'extras',
   title = siteConfig.homepage.extras.title,
   description = siteConfig.homepage.extras.description,
-  priorityImageCount = 0,
+  priorityImageCount = 1,
 }: ExtrasSectionProps) {
   const { ref, revealState } = useScrollReveal();
 

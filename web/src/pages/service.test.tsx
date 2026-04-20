@@ -49,12 +49,15 @@ test('renders foam cannon packages in a three-column desktop-ready grid and keep
   const intro = screen.getByTestId('section-offering-intro');
   const included = within(intro).getByTestId('offering-included');
   const packageGrid = intro.querySelector('[data-package-count="3"]');
+  const gallery = within(intro).getByTestId('offering-gallery');
 
   expect(packageGrid).toBeInTheDocument();
   expect(within(intro).getAllByText('Пакет Стандарт').length).toBeGreaterThan(0);
   expect(within(intro).getByText('220 литров пены · 30 минут')).toBeInTheDocument();
   expect(within(intro).getByText('Водные бластеры')).toBeInTheDocument();
   expect(included.querySelectorAll('li')).toHaveLength(3);
+  expect(within(gallery).getAllByTestId('offering-gallery-slide')).toHaveLength(4);
+  expect(within(gallery).getAllByTestId('offering-gallery-image')).toHaveLength(4);
 });
 
 test('renders the redesigned service-only page structure with tariffs delivery and in-flow cta', () => {
@@ -262,7 +265,8 @@ test('uses the requested updated photo batches for food and drink services', () 
     expect.objectContaining({ originalWidth: 1170, originalHeight: 1504 }),
   );
   expect(serviceGalleries['chocolate-fountain']).toHaveLength(6);
-  expect(serviceGalleries['popcorn']).toHaveLength(4);
+  expect(serviceGalleries['foam-cannon']).toHaveLength(4);
+  expect(serviceGalleries['popcorn']).toHaveLength(3);
   expect(serviceGalleries['nitro-ice-cream']).toHaveLength(2);
   expect(serviceGalleries['nitro-ice-cream']?.[0]?.alt).toContain('Азотное мороженое');
   expect(serviceGalleries['pancakes']).toHaveLength(3);

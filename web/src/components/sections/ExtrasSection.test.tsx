@@ -61,7 +61,8 @@ test('renders extras inside the wide canvas without a framed outer surface', () 
   expect(sources[0]).toHaveAttribute('srcset', '/images/extras/branding-ui.webp');
   expect(sources[1]).toHaveAttribute('srcset', '/images/extras/equipment-ui.webp');
   expect(sources[2]).toHaveAttribute('srcset', '/images/extras/cart-rental-ui.webp');
-  expect(brandingImage).toHaveAttribute('loading', 'lazy');
+  expect(brandingImage).toHaveAttribute('loading', 'eager');
+  expect(brandingImage).toHaveAttribute('fetchpriority', 'high');
   expect(equipmentImage).toHaveAttribute('loading', 'lazy');
   expect(equipmentImage).toHaveAttribute('fetchpriority', 'low');
   expect(extraLinks[0]).toHaveAttribute('data-link-appearance', 'button');

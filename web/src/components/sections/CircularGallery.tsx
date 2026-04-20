@@ -17,6 +17,9 @@ type CircularGalleryProps = {
   items: readonly CircularGalleryItem[];
   className?: string;
   testId?: string;
+  imageFit?: 'cover' | 'contain';
+  interactiveMode?: 'auto' | 'off';
+  eagerImageCount?: number;
 };
 
 type GalleryMesh = {
@@ -141,6 +144,9 @@ export function CircularGallery({
   items,
   className,
   testId = 'food-trucks-gallery',
+  imageFit = 'cover',
+  interactiveMode = 'auto',
+  eagerImageCount = 1,
 }: CircularGalleryProps) {
   const stageRef = useRef<HTMLDivElement | null>(null);
   const [isInteractive, setIsInteractive] = useState(false);
@@ -153,11 +159,11 @@ export function CircularGallery({
 
   useEffect(() => {
     const rafId = window.requestAnimationFrame(() => {
-      setIsInteractive(items.length > 0 && supportsInteractiveGallery());
+      setIsInteractive(items.length > 0 && interactiveMode === 'auto' && supportsInteractiveGallery());
     });
 
     return () => window.cancelAnimationFrame(rafId);
-  }, [items.length]);
+  }, [interactiveMode, items.length]);
 
   useEffect(() => {
     const stage = stageRef.current;
@@ -473,7 +479,7 @@ export function CircularGallery({
       <div ref={stageRef} className={styles.stage} data-dragging="false" />
 
       <div className={shouldShowCanvas ? styles.semanticTrackHidden : styles.semanticTrack}>
-        {items.map((item) => (
+        {items.map((item, index) => (
           <figure key={item.image} className={styles.semanticCard}>
             <div className={styles.semanticPicture}>
               <img
@@ -483,10 +489,12 @@ export function CircularGallery({
                 alt={item.alt}
                 width={item.width}
                 height={item.height}
-                loading="lazy"
+                loading={index < eagerImageCount ? 'eager' : 'lazy'}
                 decoding="async"
+                fetchPriority={index === 0 ? 'high' : index < eagerImageCount ? 'auto' : 'low'}
                 draggable={false}
                 sizes={item.sizes}
+                style={{ objectFit: imageFit }}
               />
             </div>
           </figure>

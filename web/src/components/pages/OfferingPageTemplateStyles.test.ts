@@ -44,6 +44,18 @@ test('offering hero titles preserve word boundaries on narrow screens', () => {
   expect(css).not.toContain('overflow-wrap: anywhere;');
 });
 
+test('extra offering hero grid allows inner cards to shrink within the mobile viewport', () => {
+  const css = readFileSync(resolve(process.cwd(), 'src/components/pages/OfferingPageTemplate.module.css'), 'utf8');
+
+  expect(css).toMatch(/\.leadLayout\s*\{[^}]*min-width:\s*0;/s);
+  expect(css).toMatch(/\.leadLayout\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\);/s);
+  expect(css).toMatch(/\.visualCard,\s*\.copyCard\s*\{[^}]*width:\s*100%;/s);
+  expect(css).toMatch(/\.visualCard,\s*\.copyCard\s*\{[^}]*min-width:\s*0;/s);
+  expect(css).toMatch(/\.visualCard,\s*\.copyCard\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\);/s);
+  expect(css).toMatch(/@media \(max-width: 720px\)\s*\{[\s\S]*?\.title\s*\{[^}]*font-size:\s*clamp\(1\.45rem,\s*7\.5vw,\s*2rem\);/s);
+  expect(css).toMatch(/@media \(max-width: 720px\)\s*\{[\s\S]*?\.orderButton\s*\{[^}]*width:\s*100%;[^}]*min-width:\s*0;[^}]*max-width:\s*100%;/s);
+});
+
 test('extra offering visuals use a plain white surface so branded artwork does not clash with colored gradients', () => {
   const css = readFileSync(resolve(process.cwd(), 'src/components/pages/OfferingPageTemplate.module.css'), 'utf8');
 

@@ -32,6 +32,11 @@ test('renders the food truck rental section with models, equipment, pricing, and
   expect(webpSources).toHaveLength(4);
   expect(webpSources[0]).toHaveAttribute('srcset', '/images/food-truck-rental/rental-food-truck-1.webp');
   expect(images[0]).toHaveAttribute('src', '/images/food-truck-rental/rental-food-truck-1.jpg');
+  expect(images[0]).toHaveAttribute('loading', 'eager');
+  expect(images[0]).toHaveAttribute('fetchpriority', 'high');
+  expect(images[1]).toHaveAttribute('loading', 'eager');
+  expect(images[1]).toHaveAttribute('fetchpriority', 'auto');
+  expect(images[2]).toHaveAttribute('loading', 'lazy');
   expect(images[0].closest('figure')).not.toHaveAttribute('style');
   expect(images[2]).toHaveAttribute('src', '/images/food-truck-rental/rental-food-truck-3.jpg');
   expect(images[2].closest('figure')).not.toHaveAttribute('style');

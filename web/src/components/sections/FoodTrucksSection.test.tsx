@@ -28,6 +28,12 @@ test('renders the catering food trucks section with gallery assets and story cop
   expect(gallery).toHaveAttribute('data-gallery-mode', 'fallback');
   expect(sectionQueries.queryByTestId('food-truck-gallery-source-webp')).not.toBeInTheDocument();
   expect(images[0]).toHaveAttribute('src', '/images/food-trucks/food-truck-1.jpg');
+  expect(images[0]).toHaveAttribute('loading', 'eager');
+  expect(images[1]).toHaveAttribute('loading', 'eager');
+  expect(images[2]).toHaveAttribute('loading', 'eager');
+  expect(images[3]).toHaveAttribute('loading', 'lazy');
+  expect(images[0]).toHaveStyle({ objectFit: 'contain' });
+  expect(images[1]).toHaveStyle({ objectFit: 'contain' });
   expect(images[4]).toHaveAttribute('alt', 'Фудтрак для кейтеринга на выездном мероприятии, фото 5');
   expect(images[9]).toHaveAttribute('src', '/images/food-trucks/food-truck-10.jpg');
   expect(images.every((image) => !image.getAttribute('alt')?.includes('?'))).toBe(true);

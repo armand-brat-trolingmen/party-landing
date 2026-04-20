@@ -40,9 +40,9 @@ export function FoodTruckRentalSection() {
                     alt={item.alt}
                     width={item.width}
                     height={item.height}
-                    loading={index === 0 ? 'eager' : 'lazy'}
+                    loading={index < 2 ? 'eager' : 'lazy'}
                     decoding="async"
-                    fetchPriority={index === 0 ? 'high' : 'low'}
+                    fetchPriority={index === 0 ? 'high' : index === 1 ? 'auto' : 'low'}
                     data-testid="food-truck-rental-image"
                   />
                 </picture>
