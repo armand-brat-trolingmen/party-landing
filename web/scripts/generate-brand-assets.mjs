@@ -295,16 +295,17 @@ async function main() {
 
   const maskedLogo = await loadMaskedLogo();
   const badgeLogo = await loadTrimmedAlphaImage(badgeSourcePath);
+  const faviconBackground = { r: 255, g: 253, b: 248, alpha: 1 };
   const brandLogo = await makeLogoBuffer(maskedLogo, 1024, 0.2);
   const brandLogoUi = await makeLogoBuffer(maskedLogo, 384, 0.2);
   const ogLogo = await makeLogoBuffer(maskedLogo, 512, 0.08);
-  const favicon = await makeLogoBuffer(badgeLogo, 256, 0.02);
-  const appleIcon = await makeLogoBuffer(badgeLogo, 180, 0.05, { r: 255, g: 253, b: 248, alpha: 1 }, true);
-  const icon192 = await makeLogoBuffer(badgeLogo, 192, 0.05, { r: 255, g: 253, b: 248, alpha: 1 }, true);
-  const icon512 = await makeLogoBuffer(badgeLogo, 512, 0.05, { r: 255, g: 253, b: 248, alpha: 1 }, true);
-  const favicon16 = await makeLogoBuffer(badgeLogo, 16, 0.01);
-  const favicon32 = await makeLogoBuffer(badgeLogo, 32, 0.01);
-  const favicon48 = await makeLogoBuffer(badgeLogo, 48, 0.01);
+  const favicon = await makeLogoBuffer(badgeLogo, 256, 0.02, faviconBackground, true);
+  const appleIcon = await makeLogoBuffer(badgeLogo, 180, 0.05, faviconBackground, true);
+  const icon192 = await makeLogoBuffer(badgeLogo, 192, 0.05, faviconBackground, true);
+  const icon512 = await makeLogoBuffer(badgeLogo, 512, 0.05, faviconBackground, true);
+  const favicon16 = await makeLogoBuffer(badgeLogo, 16, 0.01, faviconBackground, true);
+  const favicon32 = await makeLogoBuffer(badgeLogo, 32, 0.01, faviconBackground, true);
+  const favicon48 = await makeLogoBuffer(badgeLogo, 48, 0.01, faviconBackground, true);
 
   await writeFile(path.join(publicDir, 'brand-logo.png'), brandLogo);
   await writeFile(path.join(publicDir, 'brand-logo-ui.png'), brandLogoUi);
