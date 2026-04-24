@@ -27,6 +27,18 @@ describe('validateLeadInput', () => {
     }
   });
 
+  test('rejects names with markup-like garbage', () => {
+    const result = validateLeadInput({
+      name: '<Anna>',
+      phone: '+7 (999) 111-22-33',
+    });
+
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.fieldErrors.name).toBeDefined();
+    }
+  });
+
   test('rejects phone values outside the required mask', () => {
     const result = validateLeadInput({
       name: 'Ivan',

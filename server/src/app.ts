@@ -1,8 +1,10 @@
 import express, { type NextFunction, type Request, type Response } from 'express';
+import type { OriginPolicy } from './config/originPolicy';
 import { createLeadsRouter } from './routes/leads';
 import { logger } from './utils/logger';
 import { createRateLimiter } from './utils/rateLimit';
 import { getRequestIp } from './utils/requestMeta';
+import { extractOriginHeader, pickRequestOrigin } from './utils/requestOrigin';
 
 type LeadRequestLocals = {
   softRateLimitExceeded?: boolean;
@@ -42,25 +44,76 @@ type LeadService = {
   }>;
 };
 
+const GENERIC_SAVE_ERROR_MESSAGE = 'Не удалось сохранить заявку. Попробуйте позже.';
+const GENERIC_FORBIDDEN_MESSAGE = 'Не удалось обработать запрос. Попробуйте позже.';
+const GENERIC_RATE_LIMIT_MESSAGE = 'Слишком много запросов. Попробуйте позже.';
+
+function applyCorsHeaders(response: Response, origin: string) {
+  response.setHeader('Access-Control-Allow-Origin', origin);
+  response.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+  response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  response.setHeader('Access-Control-Max-Age', '600');
+  response.append('Vary', 'Origin');
+}
+
+function sendRateLimitedResponse(response: Response, retryAfterSeconds: number | null) {
+  if (retryAfterSeconds) {
+    response.setHeader('Retry-After', String(retryAfterSeconds));
+  }
+
+  response.status(429).json({
+    ok: false,
+    message: GENERIC_RATE_LIMIT_MESSAGE,
+  });
+}
+
 export function createApp({
   leadService,
-  rateLimitWindowMs,
-  rateLimitMaxRequests,
+  originPolicy,
+  leadsRateLimitWindowMs,
+  leadsRateLimitMaxRequests,
+  healthRateLimitWindowMs,
+  healthRateLimitMaxRequests,
   trustProxy = false,
 }: {
   leadService: LeadService;
-  rateLimitWindowMs: number;
-  rateLimitMaxRequests: number;
+  originPolicy: OriginPolicy;
+  leadsRateLimitWindowMs: number;
+  leadsRateLimitMaxRequests: number;
+  healthRateLimitWindowMs: number;
+  healthRateLimitMaxRequests: number;
   trustProxy?: boolean | string | number | string[];
 }) {
   const app = express();
-  const rateLimiter = createRateLimiter({
-    windowMs: rateLimitWindowMs,
-    maxRequests: rateLimitMaxRequests,
+  const leadsSoftRateLimiter = createRateLimiter({
+    windowMs: leadsRateLimitWindowMs,
+    maxRequests: leadsRateLimitMaxRequests,
+  });
+  const leadsHardRateLimiter = createRateLimiter({
+    windowMs: leadsRateLimitWindowMs,
+    maxRequests: leadsRateLimitMaxRequests,
+  });
+  const healthRateLimiter = createRateLimiter({
+    windowMs: healthRateLimitWindowMs,
+    maxRequests: healthRateLimitMaxRequests,
   });
 
   app.set('trust proxy', trustProxy);
-  app.use(express.json());
+  app.use(express.json({ limit: '32kb' }));
+
+  const hardLimitByIp =
+    (rateLimiter: ReturnType<typeof createRateLimiter>) =>
+    (request: Request, response: Response, next: NextFunction) => {
+      const decision = rateLimiter.check(getRequestIp(request));
+
+      if (!decision.allowed) {
+        sendRateLimitedResponse(response, decision.retryAfterSeconds);
+        return;
+      }
+
+      next();
+    };
+
   const sendHealth = (_request: Request, response: Response) => {
     response.status(200).json({
       ok: true,
@@ -68,20 +121,67 @@ export function createApp({
     });
   };
 
-  app.get('/healthz', sendHealth);
-  app.get('/api/healthz', sendHealth);
+  app.get('/healthz', hardLimitByIp(healthRateLimiter), sendHealth);
+  app.get('/api/healthz', hardLimitByIp(healthRateLimiter), sendHealth);
+
+  app.use('/api/leads', (request, response, next) => {
+    const originHeader = extractOriginHeader(request.headers);
+
+    if (originHeader && originPolicy.isAllowed(originHeader)) {
+      applyCorsHeaders(response, originHeader);
+    }
+
+    if (request.method === 'OPTIONS') {
+      if (originHeader && originPolicy.isAllowed(originHeader)) {
+        response.status(204).end();
+        return;
+      }
+
+      response.status(403).json({
+        ok: false,
+        message: GENERIC_FORBIDDEN_MESSAGE,
+      });
+      return;
+    }
+
+    next();
+  });
+
+  app.use('/api/leads', (request, response, next) => {
+    if (request.method !== 'POST') {
+      next();
+      return;
+    }
+
+    const requestOrigin = pickRequestOrigin(request.headers);
+
+    if (!requestOrigin.value || !originPolicy.isAllowed(requestOrigin.value)) {
+      response.status(403).json({
+        ok: false,
+        message: GENERIC_FORBIDDEN_MESSAGE,
+      });
+      return;
+    }
+
+    next();
+  });
+
+  app.use('/api/leads', hardLimitByIp(leadsHardRateLimiter));
+
   app.use('/api/leads', (request, response: Response<unknown, LeadRequestLocals>, next) => {
     const ip = getRequestIp(request);
 
-    response.locals.softRateLimitExceeded = !rateLimiter.isAllowed(ip);
+    response.locals.softRateLimitExceeded = !leadsSoftRateLimiter.isAllowed(ip);
     next();
   });
+
   app.use('/api/leads', createLeadsRouter({ leadService }));
+
   app.use((error: unknown, _request: Request, response: Response, _next: NextFunction) => {
     logger.error('Unhandled server error', error);
     response.status(500).json({
       ok: false,
-      message: 'Не удалось сохранить заявку. Попробуйте позже.',
+      message: GENERIC_SAVE_ERROR_MESSAGE,
     });
   });
 

@@ -1,18 +1,18 @@
 # Dokploy: два сервиса
 
-Этот репозиторий нужно деплоить в Dokploy не из корня, а двумя отдельными сервисами:
+Этот репозиторий нужно деплоить в Dokploy двумя отдельными сервисами:
 
 1. `web` — фронтенд
 2. `server` — API для лидов
 
 ## Почему не из корня
 
-Корень репозитория — это управляющий слой для локальной разработки. Боевые сервисы живут в подпапках:
+Корень репозитория нужен для локальной разработки. Боевые сервисы живут в подпапках:
 
 - `web/` — Vite + React SPA
 - `server/` — Express API
 
-Если выбрать корень репозитория как один Node-сервис, Dokploy не сможет корректно запустить и фронт, и API одной командой.
+Если поднимать корень как один Node-сервис, Dokploy не сможет корректно разрулить и фронт, и API одной конфигурацией.
 
 ## Сервис 1: web
 
@@ -22,15 +22,9 @@
 - Builder: `Nixpacks`
 
 Что важно:
-
-- Node берётся из `web/package.json` (`22.x`)
-- `web/nixpacks.toml` подсказывает Nixpacks, что итоговая SPA лежит в `dist`
-- Для health check обычно достаточно `/`
-
-Переменные окружения:
-
-- не обязательны, если фронт ходит в API через внешний reverse proxy
-- если API будет на отдельном домене, фронту нужен прокси/маршрутизация на уровне Dokploy или домена
+- версия Node берется из `web/package.json` (`22.x`);
+- `web/nixpacks.toml` подсказывает Nixpacks, что итоговая SPA лежит в `dist`;
+- обычный health check для web — `/`.
 
 ## Сервис 2: server
 
@@ -40,16 +34,16 @@
 - Builder: `Nixpacks`
 
 Что важно:
+- версия Node берется из `server/package.json` (`22.x`);
+- `server/nixpacks.toml` фиксирует стартовую команду `npm run start`;
+- health check: `/healthz`.
 
-- Node берётся из `server/package.json` (`22.x`)
-- `server/nixpacks.toml` фиксирует стартовую команду `npm run start`
-- Health check: `/healthz`
-
-Обязательные переменные окружения:
+## Обязательные env для server
 
 - `PORT`
 - `DB_PATH`
 - `TRUST_PROXY`
+- `ALLOWED_ORIGINS`
 - `VK_ENABLED`
 - `VK_ACCESS_TOKEN`
 - `VK_DEFAULT_PEER_ID`
@@ -57,11 +51,15 @@
 - `SMARTCAPTCHA_SERVER_KEY`
 - `SMARTCAPTCHA_REQUIRED`
 
-Опционально:
+## Опциональные env для server
 
 - `VK_DEFAULT_PEER_ID_2`
 - `VK_DEFAULT_PEER_ID_3`
 - `VK_DEFAULT_PEER_ID_4`
+- `LEADS_RATE_LIMIT_WINDOW_MS`
+- `LEADS_RATE_LIMIT_MAX_REQUESTS`
+- `HEALTH_RATE_LIMIT_WINDOW_MS`
+- `HEALTH_RATE_LIMIT_MAX_REQUESTS`
 - `RATE_LIMIT_WINDOW_MS`
 - `RATE_LIMIT_MAX_REQUESTS`
 - `SQLITE_BACKUP_DIR`
@@ -73,45 +71,55 @@
 PORT=8787
 DB_PATH=/data/leads.sqlite
 TRUST_PROXY=1
+ALLOWED_ORIGINS=https://party-everyday.ru,https://www.party-everyday.ru,http://party-everyday.ru,http://www.party-everyday.ru
 VK_ENABLED=true
 VK_ACCESS_TOKEN=your_token
 VK_DEFAULT_PEER_ID=2000000001
 VK_API_VERSION=5.199
 SMARTCAPTCHA_SERVER_KEY=your_smartcaptcha_server_key
 SMARTCAPTCHA_REQUIRED=true
-RATE_LIMIT_WINDOW_MS=600000
-RATE_LIMIT_MAX_REQUESTS=20
+LEADS_RATE_LIMIT_WINDOW_MS=60000
+LEADS_RATE_LIMIT_MAX_REQUESTS=10
+HEALTH_RATE_LIMIT_WINDOW_MS=60000
+HEALTH_RATE_LIMIT_MAX_REQUESTS=60
 SQLITE_BACKUP_DIR=/data/backups
 SQLITE_BACKUP_RETENTION_DAYS=14
 ```
 
-Важно по безопасности:
+Legacy fallback:
 
-- `TRUST_PROXY=1` корректен для текущей схемы Dokploy, где внешний трафик приходит в API только через reverse proxy.
-- Не открывай порт `8787` напрямую в интернет. Если API можно обойти мимо Dokploy proxy, `TRUST_PROXY=1` снова даст возможность подделывать IP через `X-Forwarded-For`.
-- `SMARTCAPTCHA_REQUIRED=true` означает fail-closed режим: если `SMARTCAPTCHA_SERVER_KEY` не задан, backend не должен стартовать как будто защита включена.
+```env
+RATE_LIMIT_WINDOW_MS=60000
+RATE_LIMIT_MAX_REQUESTS=10
+```
+
+Используй его только если старый деплой еще не переведен на `LEADS_RATE_LIMIT_*`.
+
+## Важно по безопасности
+
+- `TRUST_PROXY=1` корректен только если внешний трафик до API идет через Dokploy reverse proxy.
+- Не открывай порт backend напрямую в интернет. Иначе `TRUST_PROXY=1` снова делает возможной подделку IP через `X-Forwarded-For`.
+- `SMARTCAPTCHA_REQUIRED=true` — fail-closed режим: если `SMARTCAPTCHA_SERVER_KEY` не задан, backend не должен стартовать.
+- `ALLOWED_ORIGINS` должен содержать только боевые домены сайта. Локальные `localhost` и `127.0.0.1` сервер разрешает сам для разработки.
 - `DB_PATH` и `SQLITE_BACKUP_DIR` должны указывать внутрь persistent volume `/data`, иначе база и backup могут потеряться при redeploy.
 
 ## Как связать фронт и API
 
-Есть два нормальных варианта:
+Лучший вариант для текущего проекта:
 
-1. Повесить оба сервиса на один домен и проксировать `/api/*` в `server`
-2. Дать `server` отдельный поддомен и настроить reverse proxy так, чтобы браузер всё равно ходил на `/api/*`
+- домен фронта обслуживает `web`;
+- путь `/api/*` проксируется в `server`.
 
-Для текущего фронтенда лучший вариант:
-
-- домен фронта обслуживает `web`
-- путь `/api/*` проксируется в `server`
-
-Это сохранит текущие клиентские запросы без изменения кода, потому что фронт уже отправляет лиды на `/api/leads`.
+Это сохраняет текущий клиентский контракт, потому что фронтенд уже отправляет заявки на `/api/leads`.
 
 ## Проверка после деплоя
 
-1. Открой фронт и убедись, что главная загружается
-2. Проверь `GET /healthz` у API
-3. Отправь тестовую заявку
+1. Открой фронт и проверь, что главная загружается.
+2. Проверь `GET /healthz` у API.
+3. Отправь тестовую заявку.
 4. Убедись, что:
-   - API отвечает `201`
-   - запись появляется в SQLite
-   - уведомление в VK отправляется или корректно помечается как `failed/skipped`
+   - API отвечает `201` для валидной формы;
+   - запись появляется в SQLite;
+   - уведомление в VK уходит или корректно помечается как `failed/skipped`;
+   - запрос с чужого origin получает `403`;
+   - флуд по `/api/leads` получает `429`.

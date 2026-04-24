@@ -6,38 +6,58 @@
 
 1. `web` собирается через `Nixpacks`
 2. `server` собирается отдельным сервисом через `Nixpacks`
-3. Домен `party-everyday.ru` настраивается в `Dokploy Domains`
-4. Роутинг делается path-based правилами в `Dokploy`:
+3. домен `party-everyday.ru` настраивается в `Dokploy Domains`
+4. routing делается path-based правилами:
    - `Path: /` -> `web`
    - `Path: /api` -> `server`
 
-Это сохраняет текущий клиентский контракт без переписывания frontend, потому что заявки уже уходят на `/api/leads`.
+Это сохраняет текущий клиентский контракт без переписывания фронтенда, потому что форма уже ходит на `/api/leads`.
 
 ## Что важно
 
-- Репозиторный `nginx`-конфиг удалён, потому что он не используется в текущем Dokploy-деплое.
-- Внешний reverse proxy и TLS обслуживает сам `Dokploy`.
-- Отдельно поддерживать VPS-схему с ручным `nginx`, `certbot`, `systemd` и `pm2` больше не нужно.
+- внешний reverse proxy и TLS обслуживает сам `Dokploy`;
+- репозиторный `nginx`-конфиг в этой схеме не нужен;
+- отдельно поддерживать ручной `nginx + certbot + pm2` для этого проекта больше не надо.
 
-## Минимальные переменные для API
+## Минимальные env для API
 
 ```env
 PORT=8787
 DB_PATH=/data/leads.sqlite
+TRUST_PROXY=1
+ALLOWED_ORIGINS=https://party-everyday.ru,https://www.party-everyday.ru,http://party-everyday.ru,http://www.party-everyday.ru
 VK_ENABLED=true
 VK_ACCESS_TOKEN=...
 VK_DEFAULT_PEER_ID=...
 VK_API_VERSION=5.199
 SMARTCAPTCHA_SERVER_KEY=...
-RATE_LIMIT_WINDOW_MS=600000
-RATE_LIMIT_MAX_REQUESTS=20
+SMARTCAPTCHA_REQUIRED=true
+LEADS_RATE_LIMIT_WINDOW_MS=60000
+LEADS_RATE_LIMIT_MAX_REQUESTS=10
+HEALTH_RATE_LIMIT_WINDOW_MS=60000
+HEALTH_RATE_LIMIT_MAX_REQUESTS=60
 ```
 
-## Минимальные переменные для web
+Legacy fallback для старого конфига:
+
+```env
+RATE_LIMIT_WINDOW_MS=60000
+RATE_LIMIT_MAX_REQUESTS=10
+```
+
+## Минимальные env для web
 
 ```env
 VITE_SMARTCAPTCHA_SITE_KEY=...
 ```
+
+## Почему это безопаснее
+
+- `POST /api/leads` принимает запросы только с разрешенных origin сайта и локальной разработки;
+- чужой `Origin` / `Referer` режется на backend до бизнес-логики;
+- флуд по форме получает `429` до попадания в сервис, БД и VK;
+- `GET /healthz` и `GET /api/healthz` тоже ограничены по частоте;
+- наружу сервер отдает только общие ошибки без внутренних причин.
 
 ## Настройка доменов в Dokploy
 
@@ -55,8 +75,10 @@ VITE_SMARTCAPTCHA_SITE_KEY=...
 
 ## Проверка после деплоя
 
-1. `https://party-everyday.ru/` открывается
-2. `https://party-everyday.ru/api/healthz` отвечает `200`
-3. отправка формы уходит на `/api/leads`
-4. запись появляется в SQLite
-5. VK-уведомление уходит или корректно помечается как `failed/skipped`
+1. `https://party-everyday.ru/` открывается.
+2. `https://party-everyday.ru/api/healthz` отвечает `200`.
+3. Валидная форма отправляется на `/api/leads` и получает `201`.
+4. Запись появляется в SQLite.
+5. VK-уведомление уходит или корректно помечается как `failed/skipped`.
+6. Запросы с чужого origin получают `403`.
+7. Частые запросы на `/api/leads` и `/api/healthz` получают `429`.

@@ -1,10 +1,13 @@
 import request from 'supertest';
 import { describe, expect, test, vi } from 'vitest';
 import { createApp } from '../app';
+import { createOriginPolicy } from '../config/originPolicy';
 import { createDatabase } from '../db/client';
 import { createLeadsRepository } from '../db/leadsRepository';
 import { runMigrations } from '../db/migrate';
 import { createLeadService } from '../services/leadService';
+
+const FIRST_PARTY_ORIGIN = 'https://party-everyday.ru';
 
 describe('GET /healthz', () => {
   test('returns service health payload', async () => {
@@ -18,8 +21,11 @@ describe('GET /healthz', () => {
           sendLeadNotification: vi.fn(),
         },
       }),
-      rateLimitWindowMs: 60000,
-      rateLimitMaxRequests: 5,
+      originPolicy: createOriginPolicy({}),
+      leadsRateLimitWindowMs: 60000,
+      leadsRateLimitMaxRequests: 5,
+      healthRateLimitWindowMs: 60000,
+      healthRateLimitMaxRequests: 60,
     });
 
     const response = await request(app).get('/healthz');
@@ -42,8 +48,11 @@ describe('GET /healthz', () => {
           sendLeadNotification: vi.fn(),
         },
       }),
-      rateLimitWindowMs: 60000,
-      rateLimitMaxRequests: 5,
+      originPolicy: createOriginPolicy({}),
+      leadsRateLimitWindowMs: 60000,
+      leadsRateLimitMaxRequests: 5,
+      healthRateLimitWindowMs: 60000,
+      healthRateLimitMaxRequests: 60,
     });
 
     const response = await request(app).get('/api/healthz');
@@ -69,13 +78,17 @@ describe('POST /api/leads', () => {
       leadService: {
         createLead,
       },
-      rateLimitWindowMs: 60000,
-      rateLimitMaxRequests: 5,
+      originPolicy: createOriginPolicy({}),
+      leadsRateLimitWindowMs: 60000,
+      leadsRateLimitMaxRequests: 5,
+      healthRateLimitWindowMs: 60000,
+      healthRateLimitMaxRequests: 60,
       trustProxy: false,
     });
 
     const response = await request(app)
       .post('/api/leads')
+      .set('Origin', FIRST_PARTY_ORIGIN)
       .set('X-Forwarded-For', '8.8.8.8')
       .send({
         name: 'Anna',
@@ -102,13 +115,17 @@ describe('POST /api/leads', () => {
       leadService: {
         createLead,
       },
-      rateLimitWindowMs: 60000,
-      rateLimitMaxRequests: 5,
+      originPolicy: createOriginPolicy({}),
+      leadsRateLimitWindowMs: 60000,
+      leadsRateLimitMaxRequests: 5,
+      healthRateLimitWindowMs: 60000,
+      healthRateLimitMaxRequests: 60,
       trustProxy: 'loopback',
     });
 
     const response = await request(app)
       .post('/api/leads')
+      .set('Origin', FIRST_PARTY_ORIGIN)
       .set('X-Forwarded-For', '8.8.8.8')
       .send({
         name: 'Anna',
@@ -134,14 +151,20 @@ describe('POST /api/leads', () => {
           sendLeadNotification: vi.fn(),
         },
       }),
-      rateLimitWindowMs: 60000,
-      rateLimitMaxRequests: 5,
+      originPolicy: createOriginPolicy({}),
+      leadsRateLimitWindowMs: 60000,
+      leadsRateLimitMaxRequests: 5,
+      healthRateLimitWindowMs: 60000,
+      healthRateLimitMaxRequests: 60,
     });
 
-    const response = await request(app).post('/api/leads').send({
-      name: '',
-      phone: '',
-    });
+    const response = await request(app)
+      .post('/api/leads')
+      .set('Origin', FIRST_PARTY_ORIGIN)
+      .send({
+        name: '',
+        phone: '',
+      });
 
     expect(response.status).toBe(400);
     expect(response.body.ok).toBe(false);
@@ -164,12 +187,16 @@ describe('POST /api/leads', () => {
           }),
         },
       }),
-      rateLimitWindowMs: 60000,
-      rateLimitMaxRequests: 5,
+      originPolicy: createOriginPolicy({}),
+      leadsRateLimitWindowMs: 60000,
+      leadsRateLimitMaxRequests: 5,
+      healthRateLimitWindowMs: 60000,
+      healthRateLimitMaxRequests: 60,
     });
 
     const response = await request(app)
       .post('/api/leads')
+      .set('Origin', FIRST_PARTY_ORIGIN)
       .set('User-Agent', 'vitest')
       .send({
         name: 'Anna',
@@ -199,47 +226,6 @@ describe('POST /api/leads', () => {
     });
   });
 
-  test('does not hard block repeated requests over the endpoint rate limit', async () => {
-    const db = createDatabase(':memory:');
-    runMigrations(db);
-    const repository = createLeadsRepository(db);
-    const vkAdapter = {
-      sendLeadNotification: vi.fn().mockResolvedValue({
-        status: 'success',
-        error: null,
-      }),
-    };
-
-    const app = createApp({
-      leadService: createLeadService({
-        repository,
-        vkAdapter,
-        nowFactory: () => new Date('2026-04-18T12:00:00.000Z'),
-      }),
-      rateLimitWindowMs: 60000,
-      rateLimitMaxRequests: 1,
-    });
-
-    const first = await request(app).post('/api/leads').set('X-Forwarded-For', '1.2.3.4').send({
-      name: 'Anna',
-      phone: '+7 (999) 111 22 33',
-    });
-    const second = await request(app).post('/api/leads').set('X-Forwarded-For', '1.2.3.4').send({
-      name: 'Maria',
-      phone: '+7 (999) 111 22 34',
-    });
-
-    expect(first.status).toBe(201);
-    expect(second.status).toBe(201);
-    expect(second.body).toMatchObject({
-      ok: true,
-      accepted: false,
-    });
-    expect(second.body.id).toBeUndefined();
-    expect(vkAdapter.sendLeadNotification).toHaveBeenCalledTimes(1);
-    expect(db.prepare('SELECT COUNT(*) AS total FROM leads').get()).toEqual({ total: 1 });
-  });
-
   test('accepts first-party attribution and anti-spam fields in the lead payload', async () => {
     const db = createDatabase(':memory:');
     runMigrations(db);
@@ -255,12 +241,16 @@ describe('POST /api/leads', () => {
           }),
         },
       }),
-      rateLimitWindowMs: 60000,
-      rateLimitMaxRequests: 5,
+      originPolicy: createOriginPolicy({}),
+      leadsRateLimitWindowMs: 60000,
+      leadsRateLimitMaxRequests: 5,
+      healthRateLimitWindowMs: 60000,
+      healthRateLimitMaxRequests: 60,
     });
 
     const response = await request(app)
       .post('/api/leads')
+      .set('Origin', FIRST_PARTY_ORIGIN)
       .send({
         name: 'Anna',
         phone: '+7 (999) 111-22-33',
@@ -303,5 +293,162 @@ describe('POST /api/leads', () => {
       spamReason: null,
       smartCaptchaVerified: false,
     });
+  });
+
+  test('rejects lead submissions from disallowed origins with 403 before the service is called', async () => {
+    const createLead = vi.fn();
+
+    const app = createApp({
+      leadService: {
+        createLead,
+      },
+      originPolicy: createOriginPolicy({}),
+      leadsRateLimitWindowMs: 60000,
+      leadsRateLimitMaxRequests: 10,
+      healthRateLimitWindowMs: 60000,
+      healthRateLimitMaxRequests: 60,
+    });
+
+    const response = await request(app)
+      .post('/api/leads')
+      .set('Origin', 'https://evil.example')
+      .send({
+        name: 'Anna',
+        phone: '+7 (999) 111 22 33',
+      });
+
+    expect(response.status).toBe(403);
+    expect(createLead).not.toHaveBeenCalled();
+  });
+
+  test('accepts lead submissions from an allowed production origin', async () => {
+    const createLead = vi.fn().mockResolvedValue({
+      ok: true,
+      accepted: true,
+      vkSendStatus: 'skipped',
+      message: 'stored',
+    });
+
+    const app = createApp({
+      leadService: {
+        createLead,
+      },
+      originPolicy: createOriginPolicy({}),
+      leadsRateLimitWindowMs: 60000,
+      leadsRateLimitMaxRequests: 10,
+      healthRateLimitWindowMs: 60000,
+      healthRateLimitMaxRequests: 60,
+    });
+
+    const response = await request(app)
+      .post('/api/leads')
+      .set('Origin', FIRST_PARTY_ORIGIN)
+      .send({
+        name: 'Anna',
+        phone: '+7 (999) 111 22 33',
+      });
+
+    expect(response.status).toBe(201);
+    expect(createLead).toHaveBeenCalledTimes(1);
+  });
+
+  test('accepts lead submissions when referer is first-party and origin is absent', async () => {
+    const createLead = vi.fn().mockResolvedValue({
+      ok: true,
+      accepted: true,
+      vkSendStatus: 'skipped',
+      message: 'stored',
+    });
+
+    const app = createApp({
+      leadService: {
+        createLead,
+      },
+      originPolicy: createOriginPolicy({}),
+      leadsRateLimitWindowMs: 60000,
+      leadsRateLimitMaxRequests: 10,
+      healthRateLimitWindowMs: 60000,
+      healthRateLimitMaxRequests: 60,
+    });
+
+    const response = await request(app)
+      .post('/api/leads')
+      .set('Referer', 'https://party-everyday.ru/services/')
+      .send({
+        name: 'Anna',
+        phone: '+7 (999) 111 22 33',
+      });
+
+    expect(response.status).toBe(201);
+    expect(createLead).toHaveBeenCalledTimes(1);
+  });
+
+  test('returns 429 for lead requests above the hard limit', async () => {
+    const createLead = vi.fn().mockResolvedValue({
+      ok: true,
+      accepted: true,
+      vkSendStatus: 'skipped',
+      message: 'stored',
+    });
+
+    const app = createApp({
+      leadService: {
+        createLead,
+      },
+      originPolicy: createOriginPolicy({}),
+      leadsRateLimitWindowMs: 60000,
+      leadsRateLimitMaxRequests: 1,
+      healthRateLimitWindowMs: 60000,
+      healthRateLimitMaxRequests: 60,
+      trustProxy: 'loopback',
+    });
+
+    const first = await request(app)
+      .post('/api/leads')
+      .set('Origin', FIRST_PARTY_ORIGIN)
+      .set('X-Forwarded-For', '1.2.3.4')
+      .send({
+        name: 'Anna',
+        phone: '+7 (999) 111 22 33',
+      });
+
+    const second = await request(app)
+      .post('/api/leads')
+      .set('Origin', FIRST_PARTY_ORIGIN)
+      .set('X-Forwarded-For', '1.2.3.4')
+      .send({
+        name: 'Maria',
+        phone: '+7 (999) 111 22 34',
+      });
+
+    expect(first.status).toBe(201);
+    expect(second.status).toBe(429);
+    expect(createLead).toHaveBeenCalledTimes(1);
+  });
+
+  test('rate limits health endpoints independently from lead submissions', async () => {
+    const db = createDatabase(':memory:');
+    runMigrations(db);
+
+    const app = createApp({
+      leadService: createLeadService({
+        repository: createLeadsRepository(db),
+        vkAdapter: {
+          sendLeadNotification: vi.fn(),
+        },
+      }),
+      originPolicy: createOriginPolicy({}),
+      leadsRateLimitWindowMs: 60000,
+      leadsRateLimitMaxRequests: 10,
+      healthRateLimitWindowMs: 60000,
+      healthRateLimitMaxRequests: 1,
+      trustProxy: 'loopback',
+    });
+
+    const first = await request(app).get('/healthz').set('X-Forwarded-For', '1.2.3.4');
+    const second = await request(app).get('/healthz').set('X-Forwarded-For', '1.2.3.4');
+
+    expect(first.status).toBe(200);
+    expect(second.status).toBe(429);
   });
 });

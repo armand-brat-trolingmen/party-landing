@@ -1,50 +1,80 @@
 # Lead Backend MVP
 
-Простой backend для сбора лидов с сайта `party-landing`.
+Простой backend для приема заявок с сайта `party-landing`.
 
-Что умеет:
-- принимает `name` и `phone` из фронтенда
-- сохраняет лид в локальную SQLite-базу
-- после сохранения пробует отправить уведомление в VK
-- если VK не ответил, лид все равно остается в базе
+Что делает сервер:
+- принимает `name` и `phone` с фронтенда;
+- пишет лид в SQLite;
+- после сохранения пытается отправить уведомление в VK;
+- если VK недоступен, лид все равно остается в базе.
 
 ## Структура
 
-- `src/index.ts` — запуск сервера
-- `src/app.ts` — Express app и middleware
+- `src/index.ts` — запуск сервера и чтение env
+- `src/app.ts` — Express app, CORS/origin gate, rate limits, error handling
 - `src/routes/leads.ts` — `POST /api/leads`
-- `src/validation/leadValidation.ts` — серверная валидация
-- `src/db/` — SQLite клиент, миграция и repository
-- `src/adapters/vkAdapter.ts` — отправка в VK
-- `src/services/leadService.ts` — логика `validate -> save -> VK -> update status`
+- `src/validation/leadValidation.ts` — валидация обязательных полей
+- `src/db/` — SQLite клиент, миграции, repository
+- `src/adapters/vkAdapter.ts` — доставка уведомлений в VK
+- `src/services/leadService.ts` — бизнес-логика `validate -> anti-spam -> save -> VK -> update status`
 
 ## Переменные окружения
 
-Скопируйте [server/.env.example](C:/Users/606ru/OneDrive/Desktop/але/site/.worktrees/codex-leads-mvp/server/.env.example) в `server/.env`.
+Скопируйте `server/.env.example` в `server/.env`.
 
 Обязательные:
 - `PORT=8787`
 - `DB_PATH=./data/leads.sqlite`
+- `TRUST_PROXY=1`
+- `ALLOWED_ORIGINS=https://party-everyday.ru,https://www.party-everyday.ru,http://party-everyday.ru,http://www.party-everyday.ru`
 - `VK_ENABLED=true`
 - `VK_ACCESS_TOKEN=...`
 - `VK_DEFAULT_PEER_ID=...`
+- `VK_API_VERSION=5.199`
+- `SMARTCAPTCHA_SERVER_KEY=...`
+- `SMARTCAPTCHA_REQUIRED=true`
+
+Опциональные:
 - `VK_DEFAULT_PEER_ID_2=...`
 - `VK_DEFAULT_PEER_ID_3=...`
 - `VK_DEFAULT_PEER_ID_4=...`
-- `VK_API_VERSION=5.199`
+- `LEADS_RATE_LIMIT_WINDOW_MS=60000`
+- `LEADS_RATE_LIMIT_MAX_REQUESTS=10`
+- `HEALTH_RATE_LIMIT_WINDOW_MS=60000`
+- `HEALTH_RATE_LIMIT_MAX_REQUESTS=60`
+- `RATE_LIMIT_WINDOW_MS=...`
+- `RATE_LIMIT_MAX_REQUESTS=...`
+- `SQLITE_BACKUP_DIR=./data/backups`
+- `SQLITE_BACKUP_RETENTION_DAYS=14`
 
-Опциональные:
-- `RATE_LIMIT_WINDOW_MS=60000`
-- `RATE_LIMIT_MAX_REQUESTS=5`
+`RATE_LIMIT_WINDOW_MS` и `RATE_LIMIT_MAX_REQUESTS` оставлены как legacy fallback только для lead endpoint. Для новых конфигов используй `LEADS_RATE_LIMIT_*`.
+
+## Безопасность API
+
+Сервер принимает `POST /api/leads` только с:
+- `https://party-everyday.ru`
+- `https://www.party-everyday.ru`
+- `http://party-everyday.ru`
+- `http://www.party-everyday.ru`
+- `http://localhost:*`
+- `http://127.0.0.1:*`
+
+Что важно:
+- один `CORS` не считается полной защитой;
+- сервер дополнительно валидирует `Origin` и fallback на `Referer`;
+- чужой origin получает `403` до бизнес-логики;
+- лид-эндпоинт имеет hard rate limit `10 req/min/IP`;
+- `GET /healthz` и `GET /api/healthz` имеют свой limit `60 req/min/IP`;
+- наружу возвращаются только общие ошибки без внутренних деталей.
 
 ## Где лежит база
 
 SQLite-файл создается по пути из `DB_PATH`.
 
 По умолчанию:
-- [server/data/leads.sqlite](C:/Users/606ru/OneDrive/Desktop/але/site/.worktrees/codex-leads-mvp/server/data/leads.sqlite)
+- `server/data/leads.sqlite`
 
-Папка `server/data/` и локальный `server/.env` уже добавлены в [`.gitignore`](C:/Users/606ru/OneDrive/Desktop/але/site/.worktrees/codex-leads-mvp/.gitignore), поэтому база и секреты не должны уходить в git.
+Папка `server/data/` и локальный `server/.env` уже добавлены в `.gitignore`, поэтому база и секреты не должны попадать в git.
 
 ## Локальный запуск
 
@@ -66,26 +96,25 @@ npm run dev:server
 npm run dev:web
 ```
 
-Фронтенд будет на `http://127.0.0.1:5173`, backend на `http://127.0.0.1:8787`.
+Локально фронтенд будет на `http://127.0.0.1:5173`, backend на `http://127.0.0.1:8787`.
 
 Во время локальной разработки фронтенд проксирует `/api/*` на backend через Vite proxy.
 
 ## Как протестировать
 
 ### Через браузер
-1. Запустите backend
-2. Запустите frontend
-3. Откройте главную страницу
-4. Проверьте:
-   - нижнюю фиолетовую форму
-   - popup-форму
-5. После отправки проверьте, что появился файл SQLite и в таблице `leads` появилась запись
+1. Запустите backend.
+2. Запустите frontend.
+3. Откройте главную страницу.
+4. Проверьте нижнюю форму и popup-форму.
+5. После отправки проверьте, что в `server/data/leads.sqlite` появилась запись.
 
-### Через curl / PowerShell
+### Через curl
 
 ```bash
 curl -X POST http://127.0.0.1:8787/api/leads \
   -H "Content-Type: application/json" \
+  -H "Origin: https://party-everyday.ru" \
   -d "{\"name\":\"Иван\",\"phone\":\"+7 (999) 123 45 67\"}"
 ```
 
@@ -110,24 +139,18 @@ Backend отправляет уведомление через `messages.send`.
 - `VK_DEFAULT_PEER_ID_3`
 - `VK_DEFAULT_PEER_ID_4`
 
-С клиента `peer_id` не приходит вообще. Если указано несколько `peer_id`, один и тот же лид отправляется во все указанные беседы от лица бота.
+С клиента `peer_id` не принимается. Если указано несколько `peer_id`, одна и та же заявка отправляется во все указанные беседы от лица бота.
 
 Для работы нужны:
-- корректный `VK_ACCESS_TOKEN`
-- хотя бы один корректный `VK_DEFAULT_PEER_ID`
-- доступ токена к нужной беседе
-
-Сообщение в VK содержит:
-- имя
-- телефон
-- время
+- корректный `VK_ACCESS_TOKEN`;
+- хотя бы один корректный `VK_DEFAULT_PEER_ID`;
+- доступ токена к нужной беседе.
 
 ## Ограничения VK
 
-- если токен невалидный или у него нет доступа к беседе, VK-отправка вернет ошибку
-- если `VK_ENABLED=false` или не заданы `VK_ACCESS_TOKEN` / все `VK_DEFAULT_PEER_ID*`, отправка будет помечена как `skipped`
-- если отправка удалась не во все беседы, лид всё равно сохранится, а в `vk_send_error` запишется список `peer_id`, куда доставка не прошла
-- это не ломает основной поток: лид все равно сохраняется в SQLite
+- если токен невалидный или у него нет доступа к беседе, VK-отправка вернет ошибку;
+- если `VK_ENABLED=false` или не заданы `VK_ACCESS_TOKEN` / все `VK_DEFAULT_PEER_ID*`, отправка будет помечена как `skipped`;
+- если отправка удалась не во все беседы, лид все равно сохранится, а в `vk_send_error` будет список `peer_id`, где доставка не прошла.
 
 ## Прод-запуск на обычном сервере
 
@@ -143,7 +166,7 @@ npm run build
 npm run server:start
 ```
 
-3. Раздайте `web/dist` как статику через nginx/apache
-4. Проксируйте `/api/leads` на Node backend
+3. Раздайте `web/dist` как статику.
+4. Проксируйте `/api/*` на Node backend.
 
 Для production лучше использовать процесс-менеджер уровня `pm2` или systemd unit.

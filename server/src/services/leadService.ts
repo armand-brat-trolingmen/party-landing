@@ -77,6 +77,11 @@ const submitTooFastThresholdMs = 2500;
 const duplicateLeadWindowMs = 30 * 60 * 1000;
 const genericSuccessMessage = '\u0417\u0430\u044f\u0432\u043a\u0430 \u0441\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u0430';
 const invalidFormMessage = '\u041f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435 \u0437\u0430\u043f\u043e\u043b\u043d\u0435\u043d\u0438\u0435 \u0444\u043e\u0440\u043c\u044b';
+const maxLeadSourceLength = 160;
+const maxAttributionTextLength = 500;
+const maxDateHintLength = 40;
+const maxSmartCaptchaTokenLength = 2048;
+const maxUserAgentLength = 500;
 
 const noopSmartCaptchaVerifier: SmartCaptchaVerifier = {
   async verify() {
@@ -109,16 +114,16 @@ function normalizeLeadSource(source: string | null | undefined) {
     return null;
   }
 
-  const normalized = source.trim().replace(/\s{2,}/g, ' ');
-  return normalized ? normalized.slice(0, 160) : null;
+  const normalized = source.trim().replace(/[\u0000-\u001F\u007F]+/g, ' ').replace(/\s{2,}/g, ' ');
+  return normalized ? normalized.slice(0, maxLeadSourceLength) : null;
 }
 
-function normalizeAttributionText(value: string | null | undefined, maxLength = 500) {
+function normalizeAttributionText(value: string | null | undefined, maxLength = maxAttributionTextLength) {
   if (typeof value !== 'string') {
     return null;
   }
 
-  const normalized = value.trim().replace(/\s{2,}/g, ' ');
+  const normalized = value.trim().replace(/[\u0000-\u001F\u007F]+/g, ' ').replace(/\s{2,}/g, ' ');
   return normalized ? normalized.slice(0, maxLength) : null;
 }
 
@@ -200,20 +205,21 @@ export function createLeadService({
       const now = nowFactory();
       const firstTrafficSource = normalizeLeadSource(input.firstLeadSource);
       const lastTrafficSource = normalizeLeadSource(input.lastLeadSource);
-      const firstVisitAt = normalizeAttributionText(input.first_visit_at, 40);
-      const lastVisitAt = normalizeAttributionText(input.last_visit_at, 40);
+      const firstVisitAt = normalizeAttributionText(input.first_visit_at, maxDateHintLength);
+      const lastVisitAt = normalizeAttributionText(input.last_visit_at, maxDateHintLength);
       const visitsCount = normalizeVisitsCount(input.visits_count);
       const firstReferrer = normalizeAttributionText(input.first_referrer);
       const lastReferrer = normalizeAttributionText(input.last_referrer);
-      const firstUtmSource = normalizeAttributionText(input.first_utm_source, 160);
-      const firstUtmMedium = normalizeAttributionText(input.first_utm_medium, 160);
-      const firstUtmCampaign = normalizeAttributionText(input.first_utm_campaign, 160);
-      const lastUtmSource = normalizeAttributionText(input.last_utm_source, 160);
-      const lastUtmMedium = normalizeAttributionText(input.last_utm_medium, 160);
-      const lastUtmCampaign = normalizeAttributionText(input.last_utm_campaign, 160);
+      const firstUtmSource = normalizeAttributionText(input.first_utm_source, maxLeadSourceLength);
+      const firstUtmMedium = normalizeAttributionText(input.first_utm_medium, maxLeadSourceLength);
+      const firstUtmCampaign = normalizeAttributionText(input.first_utm_campaign, maxLeadSourceLength);
+      const lastUtmSource = normalizeAttributionText(input.last_utm_source, maxLeadSourceLength);
+      const lastUtmMedium = normalizeAttributionText(input.last_utm_medium, maxLeadSourceLength);
+      const lastUtmCampaign = normalizeAttributionText(input.last_utm_campaign, maxLeadSourceLength);
+      const userAgent = normalizeAttributionText(input.userAgent, maxUserAgentLength);
       const spamReasons: string[] = [];
 
-      if (normalizeAttributionText(input.company, 160)) {
+      if (normalizeAttributionText(input.company, maxLeadSourceLength)) {
         spamReasons.push('honeypot_filled');
       }
 
@@ -229,7 +235,7 @@ export function createLeadService({
 
       try {
         smartCaptchaResult = await smartCaptchaVerifier.verify({
-          token: normalizeAttributionText(input.smartcaptcha_token, 2048),
+          token: normalizeAttributionText(input.smartcaptcha_token, maxSmartCaptchaTokenLength),
           remoteIp: input.ip,
         });
       } catch {
@@ -269,7 +275,7 @@ export function createLeadService({
         name: validation.value.name,
         phone: validation.value.phone,
         ip: input.ip,
-        userAgent: input.userAgent,
+        userAgent,
         firstTrafficSource,
         lastTrafficSource,
         firstVisitAt,

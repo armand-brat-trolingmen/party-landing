@@ -28,6 +28,9 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react(), lovableSsgPostbuildPlugin()],
+    build: {
+      emptyOutDir: false,
+    },
     server: {
       proxy: {
         '/api': {

@@ -166,6 +166,65 @@ describe('leadService', () => {
     );
   });
 
+  test('truncates oversized attribution, user-agent, and captcha token before storage and verification', async () => {
+    const repository = createRepository({
+      insertLead: vi.fn().mockReturnValue(25),
+    });
+    const vkAdapter = createVkAdapter();
+    const smartCaptchaVerifier = {
+      verify: vi.fn().mockResolvedValue({
+        configured: true,
+        verified: true,
+        reason: null,
+      }),
+    };
+
+    const service = createLeadService({
+      repository,
+      vkAdapter,
+      smartCaptchaVerifier,
+      nowFactory: () => new Date('2026-04-18T12:00:00.000Z'),
+    } as Parameters<typeof createLeadService>[0] & { smartCaptchaVerifier: typeof smartCaptchaVerifier });
+
+    const oversizedUserAgent = `Mozilla/${'a'.repeat(1000)}`;
+    const oversizedReferrer = `https://partner.example.com/${'b'.repeat(1000)}`;
+    const oversizedToken = 'c'.repeat(5000);
+
+    await service.createLead({
+      name: 'Anna',
+      phone: '+7 (999) 111 22 33',
+      ip: '127.0.0.1',
+      userAgent: oversizedUserAgent,
+      first_referrer: oversizedReferrer,
+      smartcaptcha_token: oversizedToken,
+    });
+
+    expect(repository.insertLead).toHaveBeenCalledWith(
+      expect.objectContaining({
+        userAgent: expect.any(String),
+        firstReferrer: expect.any(String),
+      }),
+    );
+
+    const insertCall = vi.mocked(repository.insertLead).mock.calls[0]?.[0] as {
+      userAgent: string | null;
+      firstReferrer: string | null;
+    };
+
+    expect(insertCall.userAgent?.length).toBeLessThanOrEqual(500);
+    expect(insertCall.firstReferrer?.length).toBeLessThanOrEqual(500);
+    expect(smartCaptchaVerifier.verify).toHaveBeenCalledWith({
+      token: expect.any(String),
+      remoteIp: '127.0.0.1',
+    });
+
+    const verifyCall = smartCaptchaVerifier.verify.mock.calls[0]?.[0] as {
+      token: string | null;
+    };
+
+    expect(verifyCall.token?.length).toBeLessThanOrEqual(2048);
+  });
+
   test('stores honeypot submissions as spam and skips VK delivery', async () => {
     const repository = createRepository({
       insertLead: vi.fn().mockReturnValue(20),
