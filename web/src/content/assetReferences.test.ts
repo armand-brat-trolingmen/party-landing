@@ -39,3 +39,16 @@ test('generated service gallery assets resolve to existing public files', () => 
 
   expect(missingAssets).toEqual([]);
 });
+
+test('bubble tea gallery excludes the repeated cart shot', () => {
+  const bubbleTeaGallery = serviceGalleries['bubble-tea'] ?? [];
+
+  expect(bubbleTeaGallery).toHaveLength(5);
+  expect(bubbleTeaGallery.map((image) => image.id)).toEqual([
+    'bubble-tea-image-01',
+    'bubble-tea-image-02',
+    'bubble-tea-image-03',
+    'bubble-tea-image-04',
+    'bubble-tea-image-05',
+  ]);
+});

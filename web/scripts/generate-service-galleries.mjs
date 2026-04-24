@@ -66,6 +66,12 @@ const gallerySources = [
   { slug: 'plov-station', name: 'Станция плова', sources: [existing('plov-station', { indices: [1, 2] })] },
 ];
 
+for (const source of gallerySources) {
+  if (source.slug === 'bubble-tea') {
+    source.sources = [folder('баблти', { excludeNames: ['photo_2026-04-15_12-25-58.jpg'] })];
+  }
+}
+
 gallerySources.splice(
   gallerySources.findIndex((entry) => entry.slug === 'chocolate-fountain'),
   0,

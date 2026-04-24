@@ -4,6 +4,7 @@ import { siteConfig } from './content';
 
 test('index html defines production-friendly SEO tags for the landing page', () => {
   const html = readFileSync(resolve(import.meta.dirname, '../index.html'), 'utf8');
+  const iconLinks = html.match(/<link rel="icon"[^>]*>/g) ?? [];
 
   expect(html).toContain('<html lang="ru">');
   expect(html).toContain('name="viewport"');
@@ -15,10 +16,11 @@ test('index html defines production-friendly SEO tags for the landing page', () 
   expect(html).toContain('https://mc.yandex.ru/metrika/tag.js?id=108614702');
   expect(html).toContain("ym(108614702, 'init'");
   expect(html).toContain('https://mc.yandex.ru/watch/108614702');
+  expect(iconLinks).toHaveLength(1);
   expect(html).toContain('rel="icon" href="/favicon.ico" sizes="any"');
-  expect(html).toContain('rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png"');
-  expect(html).toContain('rel="icon" type="image/png" sizes="256x256" href="/favicon.png"');
-  expect(html).toContain('rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"');
+  expect(html).not.toContain('favicon-32.png');
+  expect(html).not.toContain('favicon.png');
+  expect(html).not.toContain('apple-touch-icon');
   expect(html).toContain('rel="manifest" type="application/manifest+json" href="/manifest.json"');
   expect(html).toContain('<!--helmet-title-->');
   expect(html).toContain('<!--helmet-meta-->');
@@ -32,7 +34,6 @@ test('index html defines production-friendly SEO tags for the landing page', () 
 test('public assets include ico favicon for browser fallback requests', () => {
   expect(existsSync(resolve(import.meta.dirname, '../public/favicon.ico'))).toBe(true);
   expect(existsSync(resolve(import.meta.dirname, '../public/favicon-32.png'))).toBe(true);
-  expect(existsSync(resolve(import.meta.dirname, '../public/apple-touch-icon.png'))).toBe(true);
   expect(existsSync(resolve(import.meta.dirname, '../public/manifest.json'))).toBe(true);
 });
 

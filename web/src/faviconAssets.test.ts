@@ -19,8 +19,8 @@ async function getCornerAlpha(fileName: string) {
 }
 
 describe('favicon assets', () => {
-  it('render favicon png assets on an opaque background for search and dark UIs', async () => {
-    await expect(getCornerAlpha('favicon.png')).resolves.toEqual([255, 255, 255, 255]);
-    await expect(getCornerAlpha('favicon-32.png')).resolves.toEqual([255, 255, 255, 255]);
+  it('keep only the badge background and do not add a white square behind favicon assets', async () => {
+    await expect(getCornerAlpha('favicon.png')).resolves.toEqual([0, 0, 0, 0]);
+    await expect(getCornerAlpha('favicon-32.png')).resolves.toEqual([0, 0, 0, 0]);
   });
 });
