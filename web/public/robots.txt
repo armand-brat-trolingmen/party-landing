@@ -15,5 +15,3 @@ Allow: /
 
 User-agent: facebookexternalhit
 Allow: /
-
-Sitemap: __SITE_URL__/sitemap.xml

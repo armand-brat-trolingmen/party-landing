@@ -15,5 +15,6 @@ test('public robots.txt exists and allows indexing for Yandex and major bots', (
   expect(robots).toContain('User-agent: Twitterbot');
   expect(robots).toContain('User-agent: facebookexternalhit');
   expect(robots).toContain('Allow: /');
-  expect(robots).toContain('Sitemap: __SITE_URL__/sitemap.xml');
+  expect(robots).not.toContain('Sitemap:');
+  expect(robots).not.toContain('__SITE_URL__');
 });
