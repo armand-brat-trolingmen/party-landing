@@ -1,17 +1,27 @@
+# Public static site rules.
+# Keep render assets open, close only service and internal paths.
 User-agent: *
 Allow: /
+Allow: /assets/
+Allow: /images/
+Allow: /favicon.ico
+Allow: /manifest.json
+Allow: /sitemap.xml
 
-User-agent: Yandex
-Allow: /
-
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /backup/
+Disallow: /backups/
+Disallow: /cache/
+Disallow: /data/
+Disallow: /install/
+Disallow: /logs/
+Disallow: /node_modules/
+Disallow: /private/
+Disallow: /server/
+Disallow: /src/
+Disallow: /temp/
+Disallow: /tmp/
+Disallow: /.env
+Disallow: /.git/
+Disallow: /.github/
